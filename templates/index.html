@@ -20,92 +20,10 @@
 
     <h1 class="header">Diplomacy</h1>
     <div class="container board-image">
-        
-        <!--SEA POSITIONS-->
-        <div id="adr" class="piece turkey-piece">F</div>
-        
+        {% for piece in game_state.pieces %}
+        <div id='{{piece.territory}}' class="piece {{piece.owner}}-piece">{{ piece.piece_type|upper }}</div>
+        {% endfor %}
         <div id="aeg" class="piece turkey-piece">F</div>
-        <div id="bal" class="piece turkey-piece">F</div>
-        <div id="bar" class="piece turkey-piece">F</div>
-        <div id="bla" class="piece turkey-piece">F</div>
-        <div id="bot" class="piece turkey-piece">F</div>
-        <div id="eas" class="piece turkey-piece">F</div>
-        <div id="eng" class="piece turkey-piece">F</div>
-        <div id="gol" class="piece turkey-piece">F</div>
-        <div id="hel" class="piece turkey-piece">F</div>
-        <div id="ion" class="piece turkey-piece">F</div>
-        <div id="iri" class="piece turkey-piece">F</div>
-        <div id="mid" class="piece turkey-piece">F</div>
-        <div id="nat" class="piece turkey-piece">F</div>
-        <div id="nrg" class="piece turkey-piece">F</div>
-        <div id="nth" class="piece turkey-piece">F</div>
-        <div id="ska" class="piece turkey-piece">F</div>
-        <div id="tyn" class="piece turkey-piece">F</div>
-        <div id="wes" class="piece turkey-piece">F</div>
-        
-        <!--LAND POSITIONS-->
-        <div id="alb" class="piece turkey-piece">A</div>
-        <div id="ank" class="piece turkey-piece">A</div>
-        <div id="apu" class="piece italy-piece">A</div>
-        <div id="arm" class="piece turkey-piece">A</div>
-        <div id="bel" class="piece germany-piece">A</div>
-        <div id="ber" class="piece germany-piece">A</div>
-        <div id="boh" class="piece austria-piece">A</div>
-        <div id="bre" class="piece france-piece">A</div>
-        <div id="bud" class="piece austria-piece">A</div>
-        <div id="bul" class="piece turkey-piece">A</div>
-        <div id="bul-ec" class="piece turkey-piece">A</div>
-        <div id="bul-sc" class="piece turkey-piece">A</div>
-        <div id="bur" class="piece france-piece">A</div>
-        <div id="cly" class="piece england-piece">A</div>
-        <div id="con" class="piece turkey-piece">A</div>
-        <div id="den" class="piece germany-piece">A</div>
-        <div id="edi" class="piece england-piece">A</div>
-        <div id="fin" class="piece russia-piece">A</div>
-        <div id="gal" class="piece austria-piece">A</div>
-        <div id="gas" class="piece france-piece">A</div>
-        <div id="gre" class="piece turkey-piece">A</div>
-        <div id="hol" class="piece germany-piece">A</div>
-        <div id="kie" class="piece germany-piece">A</div>
-        <div id="liv" class="piece russia-piece">A</div>
-        <div id="lvp" class="piece england-piece">A</div>
-        <div id="lon" class="piece england-piece">A</div>
-        <div id="mar" class="piece france-piece">A</div>
-        <div id="mos" class="piece russia-piece">A</div>
-        <div id="mun" class="piece germany-piece">A</div>
-        <div id="naf" class="piece france-piece">A</div>
-        <div id="nap" class="piece italy-piece">A</div>
-        <div id="nor" class="piece germany-piece">A</div>
-        <div id="par" class="piece france-piece">A</div>
-        <div id="pic" class="piece france-piece">A</div>
-        <div id="pie" class="piece italy-piece">A</div>
-        <div id="por" class="piece france-piece">A</div>
-        <div id="pru" class="piece germany-piece">A</div>
-        <div id="rom" class="piece italy-piece">A</div>
-        <div id="ruh" class="piece germany-piece">A</div>
-        <div id="rum" class="piece turkey-piece">A</div>
-        <div id="ser" class="piece austria-piece">A</div>
-        <div id="sev" class="piece russia-piece">A</div>
-        <div id="sil" class="piece germany-piece">A</div>
-        <div id="smy" class="piece turkey-piece">A</div>
-        <div id="spa" class="piece france-piece">A</div>
-        <div id="spa-nc" class="piece france-piece">A</div>
-        <div id="spa-sc" class="piece france-piece">A</div>
-        <div id="stp" class="piece russia-piece">A</div>
-        <div id="stp-nc" class="piece russia-piece">A</div>
-        <div id="stp-sc" class="piece russia-piece">A</div>
-        <div id="swe" class="piece germany-piece">A</div>
-        <div id="syr" class="piece turkey-piece">A</div>
-        <div id="tri" class="piece austria-piece">A</div>
-        <div id="tun" class="piece france-piece">A</div>
-        <div id="tus" class="piece italy-piece">A</div>
-        <div id="tyr" class="piece austria-piece">A</div>
-        <div id="ukr" class="piece russia-piece">A</div>
-        <div id="ven" class="piece italy-piece">A</div>
-        <div id="vie" class="piece austria-piece">A</div>
-        <div id="wal" class="piece england-piece">A</div>
-        <div id="war" class="piece russia-piece">A</div>
-        <div id="yor" class="piece england-piece">A</div>
     </div>
 </body>
 
