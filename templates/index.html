@@ -18,12 +18,11 @@
 
 <body>
 
-    <h1 class="header">Diplomacy</h1>
+    <!--<h1 class="header">Diplomacy</h1>-->
     <div class="container board-image">
         {% for piece in game_state.pieces %}
         <div id='{{piece.territory}}' class="piece {{piece.owner}}-piece">{{ piece.piece_type|upper }}</div>
         {% endfor %}
-        <div id="aeg" class="piece turkey-piece">F</div>
     </div>
 </body>
 

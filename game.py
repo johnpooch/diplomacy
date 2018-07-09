@@ -1,25 +1,13 @@
 import os
 from flask import Flask, redirect, render_template, request
 from flask_pymongo import PyMongo
+from opening_positions import game_state
 
 app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb://diplomacy-johnpooch.c9users.io/myDatabase"
 mongo = PyMongo(app)
 
-game_state = {
-    "pieces": [
-        {
-            "territory": "par",
-            "owner": "france",
-            "piece_type": "a",
-        },
-        {
-            "territory": "bur",
-            "owner": "germany",
-            "piece_type": "f",
-        }
-    ]
-}
+
 
 @app.route("/")
 def get_index():
