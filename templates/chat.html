@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>You are logged in as {{ logged_in_as }}</h1>
+
+    <form action="/new" method="POST">
+        <input type="text" name="message" placeholder="What's happening?"/>
+        <input type="hidden" name="username" value="{{ logged_in_as}}"/>
+        <input type="submit" value="Send"/>
+    </form>
+
+    {% for message in all_the_messages %}
+    <p><strong>{{ message.sender }}</strong>: {{ message.body }}</p>
+    {% endfor %}
+    
+</body>
+</html>
