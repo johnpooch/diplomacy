@@ -2,6 +2,7 @@
     text-align: center;
 }
 
+
 .board-image {
     width: 1450px;
     height: 1200px;
@@ -11,6 +12,7 @@
     background-size: cover;
     
     position: absolute;
+    display: inline;
 }
 
 .piece {
