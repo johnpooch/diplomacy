@@ -1,4 +1,30 @@
 territories = {
+    "adr": {
+        "display_name": "Adriatic Sea",
+        "neighbours": [
+            "alb",
+            "apu",
+            "ion",
+            "tri",
+            "ven",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
+    "aeg": {
+        "display_name": "Aegean Sea",
+        "neighbours": [
+            "bla",
+            "bul",
+            "con",
+            "eas",
+            "gre",
+            "ion",
+            "smy",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "alb": {
         "display_name": "Albania",
         "neighbours": [
@@ -13,7 +39,6 @@ territories = {
     },
     "ank": {
         "display_name": "Ankara",
-        "owner": "turkey",
         "nation": "turkey",
         "neighbours": [
             "arm",
@@ -38,7 +63,6 @@ territories = {
     },
     "arm": {
         "display_name": "Armenia",
-        "owner": "turkey",
         "nation": "turkey",
         "neighbours": [
             "ank",
@@ -50,9 +74,33 @@ territories = {
         "territory_type": "coastal",
         "supply-center": True,
     },
+    "bal": {
+        "display_name": "Baltic Sea",
+        "neighbours": [
+            "ber",
+            "bot",
+            "den",
+            "kie",
+            "liv",
+            "pru",
+            "ska",
+            "swe",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
+    "bar": {
+        "display_name": "Baltic Sea",
+        "neighbours": [
+            "nrg",
+            "nry",
+            "stp",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "bel": {
         "display_name": "Belgium",
-        "owner": "neutral",
         "neighbours": [
             "bur",
             "eng",
@@ -62,6 +110,19 @@ territories = {
             ],
         "territory_type": "coastal",
         "supply_center": True,
+    },
+    "bla": {
+        "display_name": "Black Sea",
+        "neighbours": [
+            "ank",
+            "arm",
+            "bul",
+            "con",
+            "rum",
+            "sev",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
     },
     "boh": {
         "display_name": "Bohemia",
@@ -75,9 +136,19 @@ territories = {
         "territory_type": "inland",
         "supply_center": False,
     },
+    "bot": {
+        "display_name": "Gulf of Bothnia",
+        "neighbours": [
+            "bal",
+            "fin",
+            "lvn",
+            "swe",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "bre": {
         "display_name": "Brest",
-        "owner": "france",
         "nation": "france",
         "neighbours": [
             "eng",
@@ -91,7 +162,6 @@ territories = {
     },
     "bud": {
         "display_name": "Budapest",
-        "owner": "austria",
         "nation": "austria",
         "neighbours": [
             "gal",
@@ -105,7 +175,6 @@ territories = {
     },
     "bul": {
         "display_name": "Bulgaria",
-        "owner": "neutral",
         "neighbours": [
             "aeg",
             "bla",
@@ -146,7 +215,6 @@ territories = {
     },
     "con": {
         "display_name": "Constanstinople",
-        "owner": "turkey",
         "nation": "turkey",
         "neighbours": [
             "aeg",
@@ -160,7 +228,6 @@ territories = {
     },
     "den": {
         "display_name": "Denmark",
-        "owner": "neutral",
         "neighbours": [
             "bal",
             "hel",
@@ -171,9 +238,18 @@ territories = {
         "territory_type": "coastal",
         "supply_center": True,
     },
+    "eas": {
+        "display_name": "Eastern Mediterranean Sea",
+        "neighbours": [
+            "aeg",
+            "smy",
+            "syr",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "edi": {
         "display_name": "Edinburgh",
-        "owner": "england",
         "nation": "england",
         "neighbours": [
             "cly",
@@ -185,6 +261,21 @@ territories = {
             ],
         "territory_type": "coastal",
         "supply-center": True,
+    },
+    "eng": {
+        "display_name": "English Channel",
+        "neighbours": [
+            "bel",
+            "bre",
+            "iri",
+            "lon",
+            "mid",
+            "nth",
+            "pic",
+            "wal",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
     },
     "fin": {
         "display_name": "Finland",
@@ -213,7 +304,6 @@ territories = {
     },
     "gas": {
         "display_name": "Gascony",
-        "owner": "france",
         "nation": "france",
         "neighbours": [
             "bre",
@@ -226,9 +316,21 @@ territories = {
         "territory_type": "inland",
         "supply_center": True,
     },
+    "gol": {
+        "display_name": "Gulf of Lyon",
+        "neighbours": [
+            "mar",
+            "pie",
+            "spa",
+            "tus",
+            "tyn",
+            "wes",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "gre": {
         "display_name": "Greece",
-        "owner": "neutral",
         "neighbours": [
             "aeg",
             "alb",
@@ -239,9 +341,19 @@ territories = {
         "territory_type": "coastal",
         "supply_center": True,
     },
+    "hel": {
+        "display_name": "Helgoand Bight",
+        "neighbours": [
+            "den",
+            "hol",
+            "kie",
+            "nth",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "hol": {
         "display_name": "Holland",
-        "owner": "neutral",
         "neighbours": [
             "bel",
             "hel",
@@ -252,10 +364,35 @@ territories = {
         "territory_type": "coastal",
         "supply_center": True,
     },
+    "ion": {
+        "display_name": "Ionian Sea",
+        "neighbours": [
+            "aeg",
+            "alb",
+            "apu",
+            "gre",
+            "nap",
+            "tun",
+            "tyn",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
+    "iri": {
+        "display_name": "Irish Sea",
+        "neighbours": [
+            "eng",
+            "lvp",
+            "mid",
+            "nat",
+            "wal",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "kie": {
         "display_name": "Kiel",
         "nation": "germany",
-        "owner": "germany",
         "neighbours": [
             "bal",
             "bur",
@@ -268,7 +405,6 @@ territories = {
     },
     "lon": {
         "display_name": "London",
-        "owner": "england",
         "nation": "england",
         "neighbours": [
             "eng",
@@ -294,7 +430,6 @@ territories = {
     },
     "lvp": {
         "display_name": "Liverpool",
-        "owner": "england",
         "nation": "england",
         "neighbours": [
             "cly",
@@ -309,7 +444,6 @@ territories = {
     },
     "mar": {
         "display_name": "Marseilles",
-        "owner": "france",
         "nation": "france",
         "neighbours": [
             "bur",
@@ -321,25 +455,24 @@ territories = {
         "territory_type": "coastal",
         "supply_center": True,
     },
-    "mun": {
-        "display_name": "Munich",
-        "nation": "germany",
-        "owner": "germany",
+    "mid": {
+        "display_name": "Mid Atlantic",
         "neighbours": [
-            "ber",
-            "boh",
-            "bur",
-            "kie",
-            "sil",
-            "ruh",
-            "tyr",
+            "bre",
+            "eng",
+            "gas",
+            "iri",
+            "naf",
+            "nat",
+            "spa",
+            "por",
+            "wes",
             ],
-        "territory_type": "inland",
-        "supply_center": True,
+        "territory_type": "sea",
+        "supply_center": False,
     },
     "mos": {
         "display_name": "Moscow",
-        "owner": "russia",
         "nation": "russia",
         "neighbours": [
             "arm",
@@ -349,6 +482,21 @@ territories = {
             "sev",
             "ukr",
             "war",
+            ],
+        "territory_type": "inland",
+        "supply_center": True,
+    },
+    "mun": {
+        "display_name": "Munich",
+        "nation": "germany",
+        "neighbours": [
+            "ber",
+            "boh",
+            "bur",
+            "kie",
+            "sil",
+            "ruh",
+            "tyr",
             ],
         "territory_type": "inland",
         "supply_center": True,
@@ -365,7 +513,6 @@ territories = {
     },
     "nap": {
         "display_name": "Naples",
-        "owner": "italy",
         "nation": "italy",
         "neighbours": [
             "apu",
@@ -376,9 +523,51 @@ territories = {
         "territory_type": "coastal",
         "supply_center": True,
     },
+    "nat": {
+        "display_name": "North Atlantic",
+        "neighbours": [
+            "cly",
+            "iri",
+            "lvp",
+            "mid",
+            "nrg",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
+    "nrg": {
+        "display_name": "Norwegian Sea",
+        "neighbours": [
+            "bar",
+            "cly",
+            "edi",
+            "nat",
+            "nry",
+            "nth",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
+    "nth": {
+        "display_name": "North Sea",
+        "neighbours": [
+            "bel",
+            "den",
+            "edi",
+            "eng",
+            "hel",
+            "hol",
+            "lon",
+            "nrg",
+            "nwy",
+            "ska",
+            "yor",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "par": {
         "display_name": "Paris",
-        "owner": "france",
         "nation": "france",
         "neighbours": [
             "bre",
@@ -415,7 +604,6 @@ territories = {
     },
     "por": {
         "display_name": "Portugal",
-        "owner": "neutral",
         "neighbours": [
             "mid",
             "spa",
@@ -430,7 +618,6 @@ territories = {
     },
     "rom": {
         "display_name": "Rome",
-        "owner": "italy",
         "nation": "italy",
         "neighbours": [
             "apu",
@@ -445,7 +632,6 @@ territories = {
     "ruh": {
         "display_name": "Ruhr",
         "nation": "germany",
-        "owner": "germany",
         "neighbours": [
             "bel",
             "bur",
@@ -458,7 +644,6 @@ territories = {
     },
     "rum": {
         "display_name": "Rumania",
-        "owner": "neutral",
         "neighbours": [
             "bla",
             "bud",
@@ -485,7 +670,6 @@ territories = {
     },
     "ser": {
         "display_name": "Serbia",
-        "owner": "neutral",
         "neighbours": [
             "alb",
             "bud",
@@ -499,7 +683,6 @@ territories = {
     },
     "sev": {
         "display_name": "Sevastapol",
-        "owner": "russia",
         "nation": "russia",
         "neighbours": [
             "arm",
@@ -522,9 +705,20 @@ territories = {
             ],
         "territory_type": "inland",
     },
+    "ska": {
+        "display_name": "Skagerrak",
+        "neighbours": [
+            "bal",
+            "den",
+            "nth",
+            "nwy",
+            "swe",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "smy": {
         "display_name": "Smyrna",
-        "owner": "turkey",
         "nation": "turkey",
         "neighbours": [
             "aeg",
@@ -539,7 +733,6 @@ territories = {
     },
     "swe": {
         "display_name": "Sweden",
-        "owner": "neutral",
         "neighbours": [
             "bal",
             "bot",
@@ -564,7 +757,6 @@ territories = {
     },
     "tri": {
         "display_name": "Trieste",
-        "owner": "austria",
         "nation": "austria",
         "neighbours": [
             "adr",
@@ -579,7 +771,6 @@ territories = {
     },
     "tun": {
         "display_name": "Tunisia",
-        "owner": "neutral",
         "neighbours": [
             "ion",
             "naf",
@@ -613,6 +804,20 @@ territories = {
         "territory_type": "inland",
         "supply_center": False,
     },
+    "nth": {
+        "display_name": "Tyrhennian Sea",
+        "neighbours": [
+            "gol",
+            "ion",
+            "nap",
+            "rom",
+            "tun",
+            "tus",
+            "wes",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
+    },
     "ukr": {
         "display_name": "Ukraine",
         "neighbours": [
@@ -627,7 +832,6 @@ territories = {
     },
     "ven": {
         "display_name": "Venice",
-        "owner": "italy",
         "nation": "italy",
         "neighbours": [
             "adr",
@@ -642,7 +846,6 @@ territories = {
         "supply_center": True,
     },
     "vie": {
-        "owner": "austria",
         "nation": "austria",
         "display_name": "Vienna",
         "neighbours": [
@@ -669,7 +872,6 @@ territories = {
     },
     "war": {
         "display_name": "Warsaw",
-        "owner": "russia",
         "nation": "russia",
         "neighbours": [
             "gal",
@@ -681,5 +883,18 @@ territories = {
             ],
         "territory_type": "inland",
         "supply_center": True,
+    },
+    "wes": {
+        "display_name": "Western Mediterranean",
+        "neighbours": [
+            "gol",
+            "mid",
+            "naf",
+            "spa",
+            "tun",
+            "tyn",
+            ],
+        "territory_type": "sea",
+        "supply_center": False,
     },
 }

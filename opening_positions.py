@@ -1,4 +1,5 @@
 game_state = {
+    
     "pieces": [
         # Austria
         {
@@ -133,5 +134,46 @@ game_state = {
             "owner": "turkey",
             "piece_type": "a"
         },
-    ]
+    ],
+    
+    "ownership": {
+        "ank": "turkey",
+        "arm": "turkey",
+        "bel": "neutral",
+        "bre": "france",
+        "bud": "austria",
+        "bul": "neutral",
+        "con": "turkey",
+        "den": "neutral",
+        "edi": "england",
+        "gas": "france",
+        "gre": "neutral",
+        "hol": "neutral",
+        "kie": "germany",
+        "lon": "england",
+        "lvp": "england",
+        "mar": "france",
+        "mun": "germany",
+        "mos": "russia",
+        "nap": "italy",
+        "par": "france",
+        "por": "neutral",
+        "rom": "italy",
+        "ruh": "germany",
+        "rum": "neutral",
+        "ser": "neutral",
+        "sev": "russia",
+        "smy": "turkey",
+        "swe": "neutral",
+        "tri": "austria",
+        "tun": "neutral",
+        "ven": "italy",
+        "vie": "austria",
+        "war": "russia",
+    },
+    
+    "players": {
+        
+    }
+    
 }
