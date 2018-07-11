@@ -1,7 +1,10 @@
+#nav {
+    position: inherit;
+}
+
 .header {
     text-align: center;
 }
-
 
 .board-image {
     width: 1450px;
