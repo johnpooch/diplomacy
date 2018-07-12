@@ -13,15 +13,13 @@ game_state = {}
 
 # Functions -------------------------------------
 
+def write_to_file(filename, data):
+    with open(filename, "a") as file:
+        file.writelines(data)
+
 def add_announcements(username, announcement):
-    time_stamp = datetime.now().strftime("%H:%M:%S")
-    announcement_dict = {"time_stamp": time_stamp, "from": username, "announcement": announcement}
-    with open("data/announcements.txt", "a") as announcements:
-        announcements.writelines("({}) {}: {}\n".format(
-            announcement_dict["time_stamp"],
-            announcement_dict["from"],
-            announcement_dict["announcement"],
-            ))
+    announcement = "({}) {}: {}\n".format(datetime.now().strftime("%H:%M:%S"), username, announcement)
+    write_to_file("data/announcements.txt", announcement)
     
 def get_all_announcements():
     announcements_list = []
@@ -42,8 +40,7 @@ def board():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        with open("data/users.txt", "a") as user_list:
-            user_list.writelines(request.form["username"] + "\n")
+        write_to_file("data/users.txt", request.form["username"] + "\n")
         return redirect("")
     return render_template("login.html")
     
