@@ -1,8 +1,11 @@
 Flask==1.0.2
 Flask-PyMongo==2.0.0
+Flask-WTF==0.14.2
 Jinja2==2.10
 MarkupSafe==1.0
 PyYAML==3.13
+WTForms==2.2.1
+WTForms-Dynamic-Fields==0.1a3
 Werkzeug==0.14.1
 argh==0.26.2
 click==6.7

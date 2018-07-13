@@ -1,15 +1,33 @@
 import os
 from datetime import datetime
-from flask import Flask, redirect, render_template, request, flash
+from flask import Flask, redirect, render_template, request, flash, request
 from flask_pymongo import PyMongo
 from game_engine import available_nations, initialise_game_state, create_player, get_game_state
+from territories import territories
+from wtforms import StringField, SubmitField, SelectField, HiddenField, TextField, FieldList, FormField
+from wtforms.validators import DataRequired
+import pymongo
+from forms import OrderForm
 
 app = Flask(__name__)
 app.secret_key = "some_secret"
-app.config["MONGO_URI"] = "mongodb://diplomacy-johnpooch.c9users.io/myDatabase"
-mongo = PyMongo(app)
+
+# Vars ------------------------------------------
 
 game_state = {}
+
+# -----------------------------------------------
+
+
+# Mongo -----------------------------------------
+
+app.config["MONGO_DBNAME"] = "diplomacydb"
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+
+mongo = PyMongo(app)
+
+# -----------------------------------------------
+
 
 # Functions -------------------------------------
 
@@ -26,6 +44,9 @@ def get_all_announcements():
     with open("data/announcements.txt", "r") as announcements: 
         announcements_list = announcements.readlines()
     return announcements_list
+    
+def get_pieces():
+    return mongo.db.pieces.find()
 
 # -----------------------------------------------
     
@@ -56,10 +77,27 @@ def post_announcement(username, announcement):
     
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
-    if request.method == "POST":
-        flash("Thanks {}, your orders have been finalised.".format(request.form["name"]))
-    return render_template("orders.html")
+    form = OrderForm()
+    pieces = mongo.db.pieces.find()
+    for piece in pieces:
+        setattr(form, 'target_2', SelectField('Target', validators=[DataRequired()], choices=[]))
+        form.target.choices = [(neighbour, neighbour) for neighbour in territories[piece["territory"]]["neighbours"]]
+        form.object.choices = [(neighbour, neighbour) for neighbour in territories[piece["territory"]]["neighbours"]]
     
+    if request.method == "POST" and form.validate():
+        
+        order = {
+            "origin": form.origin.name,
+            "command": form.command.data,
+        }
+        if form.command.data in ["support", "convoy", "move"]:
+            order["target"] = form.target.data
+            if form.command.data != "move":
+                order["object"] = form.object.data
+        print(order)
+
+    return render_template("orders.html", form = form)
+  
 @app.route("/announcements")
 def announcements():
     return render_template("announcements.html")

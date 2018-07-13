@@ -804,7 +804,7 @@ territories = {
         "territory_type": "inland",
         "supply_center": False,
     },
-    "nth": {
+    "tyn": {
         "display_name": "Tyrhennian Sea",
         "neighbours": [
             "gol",
