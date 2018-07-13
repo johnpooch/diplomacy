@@ -3,9 +3,10 @@ from datetime import datetime
 from flask import Flask, redirect, render_template, request, flash, request, url_for, session
 from flask_pymongo import PyMongo
 import bcrypt
-from game_engine import available_nations, create_player, get_game_state
+from game_engine import create_player, get_game_state
 from territories import territories
 from wtforms import StringField, SubmitField, SelectField, HiddenField, TextField, FieldList, FormField
+from initial_game_state import *
 from wtforms.validators import DataRequired
 import pymongo
 from forms import RegistrationForm, LoginForm
@@ -32,6 +33,25 @@ mongo = PyMongo(app)
 
 
 # Functions -------------------------------------
+    
+def initialise_game():
+    mongo.db.pieces.remove({})
+    mongo.db.users.remove({})
+    mongo.db.ownership.remove({})
+    mongo.db.orders.remove({})
+    mongo.db.nations.remove({})
+    pieces = mongo.db.pieces
+    for piece in initial_pieces:
+        pieces.insert(piece)
+        
+    nations = mongo.db.nations
+    for nation in initial_nations:
+        nations.insert(nation)
+    mongo.db.ownership.insert(initial_ownership)
+
+
+def are_seven_players_registered():
+    return mongo.db.users.count() >= 7
 
 def write_to_file(filename, data):
     with open(filename, "a") as file:
@@ -60,6 +80,11 @@ def get_pieces():
 
 @app.route("/")
 def board():
+    if not mongo.db.users.count():
+        initialise_game()
+        flash('Game initialised!', 'success')
+        return redirect(url_for("register"))
+    
     game_state = get_game_state()
     return render_template("board.html", game_state = game_state, session = session)
     
@@ -70,6 +95,7 @@ def board():
     
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    game_state = get_game_state()
     form = RegistrationForm()
     if form.validate_on_submit():
         
@@ -80,13 +106,17 @@ def register():
         # refactor?
         if existing_user is None:
             hashpass = bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt())
-            users.insert({"username": request.form["username"], "email": request.form["email"], "password": hashpass })
+            nation = create_player(request.form["username"])
+            users.insert({"username": request.form["username"], "email": request.form["email"], "password": hashpass, "nation": nation })
             session["username"] = request.form["username"]
+            if are_seven_players_registered():
+                game_state = get_game_state()
+                game_state["game_stated"] = True
             flash('Account created for {}!'.format(form.username.data), 'success')
             return redirect(url_for('board'))
         flash('That username already exists', 'danger')
         
-    return render_template("register.html", form = form)
+    return render_template("register.html", form = form, game_state = game_state)
     
 # -----------------------------------------------
     
@@ -95,6 +125,7 @@ def register():
     
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    game_state = get_game_state()
     form = LoginForm()
     if form.validate_on_submit():
         
@@ -111,7 +142,7 @@ def login():
                 flash('Login unsuccessful. Invalid username/password combinationA.', 'danger')
         else:
             flash('Login unsuccessful. Invalid username/password combinationB.', 'danger')
-    return render_template("login.html", form = form)
+    return render_template("login.html", form = form, game_state = game_state)
     
 # -----------------------------------------------
 
@@ -120,6 +151,7 @@ def login():
     
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
+    game_state = get_game_state()
     session["username"] = None
     flash('You have been logged out.', 'success')
     return redirect(url_for('board'))
@@ -131,8 +163,8 @@ def logout():
     
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
-    
-    username = "johnpooch"
+    game_state = get_game_state()
+    username = session["username"]
     user_nation = players[username]["nation"]
     filtered_pieces = []
     
@@ -150,6 +182,7 @@ def orders():
             order = {
                 "origin": origin,
                 "command": command,
+                # NEED TO GET YEAR AND PHASE 
             }
             if command in ["support", "convoy", "move"]:
                 order["target"] = request.form[(piece["territory"] + "-target")]
@@ -157,7 +190,7 @@ def orders():
                     order["object"] = request.form[(piece["territory"] + "-object")]
             print(order)
             
-    return render_template("orders.html", pieces = filtered_pieces, territories = territories)
+    return render_template("orders.html", pieces = filtered_pieces, territories = territories, game_state = game_state)
     
 # -----------------------------------------------
 
@@ -180,6 +213,7 @@ def post_announcement(username, announcement):
     return redirect("announcements")
     
 # -----------------------------------------------
+
 
 
 
