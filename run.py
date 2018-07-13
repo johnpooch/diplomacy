@@ -1,7 +1,8 @@
 import os
 from datetime import datetime
-from flask import Flask, redirect, render_template, request, flash, request, url_for
+from flask import Flask, redirect, render_template, request, flash, request, url_for, session
 from flask_pymongo import PyMongo
+import bcrypt
 from game_engine import available_nations, create_player, get_game_state
 from territories import territories
 from wtforms import StringField, SubmitField, SelectField, HiddenField, TextField, FieldList, FormField
@@ -52,41 +53,81 @@ def get_pieces():
 # -----------------------------------------------
     
     
-# Routes ----------------------------------------
+    
+# ROUTES ==========================================================================================
+
+# board -----------------------------------------
 
 @app.route("/")
 def board():
     game_state = get_game_state()
-    return render_template("board.html", game_state = game_state)
+    return render_template("board.html", game_state = game_state, session = session)
+    
+# -----------------------------------------------
+
+
+# register --------------------------------------
     
 @app.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        flash('Account created for {}!'.format(form.username.data), 'success')
-        return redirect(url_for('board'))
+        
+        users = mongo.db.users
+        # only finds duplicate usernames. should find duiplicate emails too
+        existing_user = users.find_one({"username": request.form["username"]})
+        
+        # refactor?
+        if existing_user is None:
+            hashpass = bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt())
+            users.insert({"username": request.form["username"], "email": request.form["email"], "password": hashpass })
+            session["username"] = request.form["username"]
+            flash('Account created for {}!'.format(form.username.data), 'success')
+            return redirect(url_for('board'))
+        flash('That username already exists', 'danger')
+        
     return render_template("register.html", form = form)
+    
+# -----------------------------------------------
+    
+    
+# login -----------------------------------------
     
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        if form.email.data == "john@john.com" and form.password.data == "password":
-            flash('You have been logged in!', 'success')
-            return redirect(url_for('board'))
+        
+        users = mongo.db.users
+        login_user = users.find_one({"email": request.form["email"]})
+        
+        # are my log in credentials secure?
+        if login_user:
+            if bcrypt.hashpw(request.form["password"].encode("utf-8"), login_user["password"]) == login_user["password"]:
+                session["username"] = login_user["username"]
+                flash('You have been logged in!', 'success')
+                return redirect(url_for('board'))
+            else:
+                flash('Login unsuccessful. Invalid username/password combinationA.', 'danger')
         else:
-            flash('Login unsuccessful. Please check username and password.', 'danger')
+            flash('Login unsuccessful. Invalid username/password combinationB.', 'danger')
     return render_template("login.html", form = form)
     
-@app.route("/announcements/")
-def display_announcements():
-    announcements = get_all_announcements()
-    return render_template("announcements.html", announcements = announcements)
+# -----------------------------------------------
+
+
+# logout -----------------------------------------
     
-@app.route("/announcements/<username>/<announcement>")
-def post_announcement(username, announcement):
-    add_announcements(username, announcement)
-    return redirect("announcements")
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+    session["username"] = None
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('board'))
+    
+# -----------------------------------------------
+
+
+# orders ----------------------------------------
     
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
@@ -103,11 +144,9 @@ def orders():
                 filtered_pieces.append(piece)
         
     if request.method == "POST":
-        
         for piece in filtered_pieces:
             origin = request.form[(piece["territory"] + "-origin")]
             command = request.form[(piece["territory"] + "-command")]
-        
             order = {
                 "origin": origin,
                 "command": command,
@@ -117,14 +156,32 @@ def orders():
                 if command != "move":
                     order["object"] = request.form[(piece["territory"] + "-object")]
             print(order)
-
+            
     return render_template("orders.html", pieces = filtered_pieces, territories = territories)
-  
-@app.route("/announcements")
-def announcements():
-    return render_template("announcements.html")
     
 # -----------------------------------------------
+
+
+# announcements ---------------------------------
+    
+@app.route("/announcements/")
+def announcements():
+    announcements = get_all_announcements()
+    return render_template("announcements.html", announcements = announcements)
+    
+# -----------------------------------------------
+    
+    
+# add announcements ----------------------------- 
+
+@app.route("/announcements/<username>/<announcement>")
+def post_announcement(username, announcement):
+    add_announcements(username, announcement)
+    return redirect("announcements")
+    
+# -----------------------------------------------
+
+
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'), 

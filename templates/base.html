@@ -33,21 +33,36 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-            </li>
-            <!--<li class="nav-item">-->
-            <!--  <a class="nav-link" href="{{ url_for('orders') }}">Orders</a>-->
-            <!--</li>-->
-            <!--<li class="nav-item">-->
-            <!--  <a class="nav-link" href="#">Messages</a>-->
-            <!--</li>-->
-            <!--<li class="nav-item">-->
-            <!--  <a class="nav-link" href="{{ url_for('announcements') }}">Announcements</a>-->
-            <!--</li>-->
+            
+            {% if not session["username"] %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+              </li>
+  
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+              </li>
+            {% endif %}
+            
+            {% if session["username"] %}
+            
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('orders') }}">Orders</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="#">Messages</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('announcements') }}">Announcements</a>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+              </li>
+              
+            {% endif %}
           </ul>
         </div>
       </div>

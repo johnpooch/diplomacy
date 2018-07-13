@@ -150,6 +150,7 @@ game_state = {
             "piece_type": "a"
         },
     ],
+    "game_started": False,
     "phase": 0,
     "year": 1900,
 }
