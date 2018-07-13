@@ -1,16 +1,17 @@
 import os
 from datetime import datetime
-from flask import Flask, redirect, render_template, request, flash, request
+from flask import Flask, redirect, render_template, request, flash, request, url_for
 from flask_pymongo import PyMongo
-from game_engine import available_nations, initialise_game_state, create_player, get_game_state
+from game_engine import available_nations, create_player, get_game_state
 from territories import territories
 from wtforms import StringField, SubmitField, SelectField, HiddenField, TextField, FieldList, FormField
 from wtforms.validators import DataRequired
 import pymongo
-from forms import OrderForm
+from forms import RegistrationForm, LoginForm
+from players import players
 
 app = Flask(__name__)
-app.secret_key = "some_secret"
+app.config['SECRET_KEY'] = "^b$#s3uwbysorx2f3uowzzlxucw8j3stqu7!^452*&i-&ab3g%"
 
 # Vars ------------------------------------------
 
@@ -58,12 +59,24 @@ def board():
     game_state = get_game_state()
     return render_template("board.html", game_state = game_state)
     
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash('Account created for {}!'.format(form.username.data), 'success')
+        return redirect(url_for('board'))
+    return render_template("register.html", form = form)
+    
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == "POST":
-        write_to_file("data/users.txt", request.form["username"] + "\n")
-        return redirect("")
-    return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == "john@john.com" and form.password.data == "password":
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('board'))
+        else:
+            flash('Login unsuccessful. Please check username and password.', 'danger')
+    return render_template("login.html", form = form)
     
 @app.route("/announcements/")
 def display_announcements():
@@ -77,26 +90,35 @@ def post_announcement(username, announcement):
     
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
-    form = OrderForm()
-    pieces = mongo.db.pieces.find()
-    for piece in pieces:
-        setattr(form, 'target_2', SelectField('Target', validators=[DataRequired()], choices=[]))
-        form.target.choices = [(neighbour, neighbour) for neighbour in territories[piece["territory"]]["neighbours"]]
-        form.object.choices = [(neighbour, neighbour) for neighbour in territories[piece["territory"]]["neighbours"]]
     
-    if request.method == "POST" and form.validate():
+    username = "johnpooch"
+    user_nation = players[username]["nation"]
+    filtered_pieces = []
+    
+    cursor = mongo.db.pieces.find()
+    for document in cursor:
+        pieces = document["pieces"]
+        for piece in pieces: 
+            if piece["owner"] == user_nation:
+                filtered_pieces.append(piece)
         
-        order = {
-            "origin": form.origin.name,
-            "command": form.command.data,
-        }
-        if form.command.data in ["support", "convoy", "move"]:
-            order["target"] = form.target.data
-            if form.command.data != "move":
-                order["object"] = form.object.data
-        print(order)
+    if request.method == "POST":
+        
+        for piece in filtered_pieces:
+            origin = request.form[(piece["territory"] + "-origin")]
+            command = request.form[(piece["territory"] + "-command")]
+        
+            order = {
+                "origin": origin,
+                "command": command,
+            }
+            if command in ["support", "convoy", "move"]:
+                order["target"] = request.form[(piece["territory"] + "-target")]
+                if command != "move":
+                    order["object"] = request.form[(piece["territory"] + "-object")]
+            print(order)
 
-    return render_template("orders.html", form = form)
+    return render_template("orders.html", pieces = filtered_pieces, territories = territories)
   
 @app.route("/announcements")
 def announcements():
@@ -108,5 +130,3 @@ if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'), 
             port=int(os.getenv('PORT', 8080)), 
             debug=True)
-            
-            

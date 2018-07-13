@@ -37,21 +37,39 @@
               <a class="nav-link" href="{{ url_for('login') }}">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('orders') }}">Orders</a>
+              <a class="nav-link" href="{{ url_for('register') }}">Register</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Messages</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('announcements') }}">Announcements</a>
-            </li>
+            <!--<li class="nav-item">-->
+            <!--  <a class="nav-link" href="{{ url_for('orders') }}">Orders</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item">-->
+            <!--  <a class="nav-link" href="#">Messages</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item">-->
+            <!--  <a class="nav-link" href="{{ url_for('announcements') }}">Announcements</a>-->
+            <!--</li>-->
           </ul>
         </div>
       </div>
     </nav>
     
-    {% block contents %}
-    {% endblock %}
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+          {% with messages = get_flashed_messages(with_categories=true)  %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+          {% block contents %}
+          {% endblock %}
+        </div>
+      </div>
+    </main>
     
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

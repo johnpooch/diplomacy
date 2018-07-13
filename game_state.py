@@ -1,7 +1,7 @@
 # phase 0 - spring-orders, phase 1 - spring-retreat, phase 2 - spring disbandment, phrase 3 fall-orders,
 # phrase 4 fall-retreat, phrase 5 fall-disbandment, phrase 6 fall-build
 
-opening_game_state = {
+game_state = {
     "ownership": {
         "ank": "turkey",
         "arm": "turkey",
@@ -102,22 +102,6 @@ opening_game_state = {
             "owner": "germany",
             "piece_type": "f"
         },
-        # Germany
-        {
-            "territory": "ber",
-            "owner": "germany",
-            "piece_type": "a"
-        },
-        {
-            "territory": "mun",
-            "owner": "germany",
-            "piece_type": "a"
-        },
-        {
-            "territory": "kie",
-            "owner": "germany",
-            "piece_type": "f"
-        },
         # Italy
         {
             "territory": "rom",
@@ -151,12 +135,6 @@ opening_game_state = {
             "piece_type": "f"
         },
         {
-            "territory": "stp-sc",
-            "owner": "russia",
-            "piece_type": "f"
-        },
-        # Turkey
-        {
             "territory": "con",
             "owner": "turkey",
             "piece_type": "a"
@@ -173,6 +151,5 @@ opening_game_state = {
         },
     ],
     "phase": 0,
-    "players": {},
     "year": 1900,
 }
