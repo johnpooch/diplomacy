@@ -1,6 +1,6 @@
 import bcrypt
 
-players = [
+dummy_players = [
     {
         "username": "player_1",
         "email": "p1@p.com",
