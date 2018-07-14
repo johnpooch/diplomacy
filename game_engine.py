@@ -167,6 +167,12 @@ def get_announcements():
 
 # PROCESS ORDERS ==================================================================================
 
+# unfinalise_users ----------------------------
+
+def unfinalise_users():
+    mongo.db.users.update({}, {"$set": {"orders_finalised": False}}, multi=True)
+    print([user for user in mongo.db.users.find()])
+
 # get orders ---------------------------------
 
 def get_orders():
@@ -180,6 +186,8 @@ def get_pieces():
 # process orders -----------------------------
 
 def process_orders():
+    unfinalise_users()
+    
     pieces = get_pieces()
     orders = get_orders()
 
