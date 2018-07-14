@@ -26,8 +26,8 @@
       <div class="container">
         <a class="navbar-brand" href="{{ url_for('board') }}">Diplomacy</a>
         
-        {% if game_state["game_started"] %}
-          <span>Game is active</span>
+        {% if game_state["game_properties"]["game_started"] %}
+          <small>Game is active</small>
         {% else %}
           <small>Game not active -  waiting for players to join</small>
         {% endif %}
@@ -43,7 +43,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('login') }}">Login</a>
               </li>
-              {% if not game_state["game_started"] %}
+              {% if game_state["game_properties"]["game_started"] %}
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('register') }}">Register</a>
                 </li>

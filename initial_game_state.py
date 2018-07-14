@@ -177,7 +177,10 @@ initial_nations = [
         "available": True
     }
 ]
-game_started = False
 
-phase= 0
-year = 1900
+initial_game_properties = {
+    "game_started": False,
+    "phase": 0,
+    "year": 1900,
+}
+
