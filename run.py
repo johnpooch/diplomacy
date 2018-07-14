@@ -36,7 +36,8 @@ def board():
     
     # if no players are registered, initialise db
     if not mongo.db.users.count():
-        return initialise_game_db()
+        initialise_game_db()
+        return redirect(url_for("register"))
         
     # if seven players are registered, start game
     if mongo.db.users.count() >= 7 and not game_state["game_properties"]["game_started"]:
@@ -44,12 +45,8 @@ def board():
         
     # if all players have finalised order, process orders
     if all(user["orders_finalised"] for user in mongo.db.users.find()):
-        # unfinalise_users()
-        # save_orders_to_log()
-        process_orders()
-        # increment year
-        #  increment phase
-        # clear orders
+        
+        end_turn()
     
     return render_template("board.html", game_state = game_state, session = session)
 
@@ -165,7 +162,7 @@ def fill():
 
 @app.route("/process")
 def process():
-    process_orders()
+    end_turn()
     return redirect(url_for('board'))
 
 # initialise ------------------------------------

@@ -28,7 +28,6 @@ def initialise_game_db():
     mongo.db.ownership.insert(initial_ownership)
     mongo.db.game_properties.insert(initial_game_properties)
     flash('Game initialised!', 'success')
-    return redirect(url_for("register"))
     
 # Populate Users --------------------------------
 
@@ -166,12 +165,76 @@ def get_announcements():
 
 
 # PROCESS ORDERS ==================================================================================
+    
+# increment year ------------------------------
+
+def increment_year():
+    new_year = (mongo.db.game_properties.find_one()["year"] + 1)
+    mongo.db.game_properties.update({}, {"$set": {"year": new_year}})
+    
+# increment phase ------------------------------
+
+def increment_phase():
+    new_phase = ((mongo.db.game_properties.find_one()["phase"] + 1) % 7)
+    mongo.db.game_properties.update({}, {"$set": {"phase": new_phase}})
+    if new_phase == 0: 
+        increment_year()
+     
+# target is accessible by piece_type -------------
+def target_is_accessible_by_piece_type(order, piece):
+    if piece["piece_type"] == "a":
+        return territories[order["target"]]["territory_type"] != "water"
+    else:
+        return territories[order["target"]]["territory_type"] != "inland"
+
+def target_is_neighbour(order):
+    return order["target"] in territories[order["origin"]]["neighbours"]
+        
+# target is neighbour ----------------------------
+
+def target_is_neighbour(order):
+    return order["target"] in territories[order["origin"]]["neighbours"]
+        
+# find valid piece ----------------------------
+
+def find_order_piece(order, pieces):
+    for piece in pieces:
+        if order["origin"] == piece["territory"] and order["nation"] == piece["owner"]:
+            return piece
+    return False
+        
+# process_move --------------------------------
+
+def process_move(order, pieces):
+    
+    piece = find_order_piece(order, pieces)
+    if not piece:
+        print("invalid move. there is no piece at this origin or it does not belong to the user.")
+        return piece
+    if not target_is_neighbour(order):
+        print("invalid move. target is not neighbour.")
+        return piece
+    if not target_is_accessible_by_piece_type(order, piece):
+        print("invalid move. target is not accessible.")
+        return piece
+    
+    print("valid move")
+    return True
+        
+# process_orders ------------------------------
+
+def process_orders(orders, pieces):
+    pieces_after_order = []
+    for order in orders:
+        if order["command"] == "move":
+            pieces_after_order.append(process_move(order, pieces))
+        
+    return pieces
 
 # unfinalise_users ----------------------------
 
 def unfinalise_users():
     mongo.db.users.update({}, {"$set": {"orders_finalised": False}}, multi=True)
-    print([user for user in mongo.db.users.find()])
 
 # get orders ---------------------------------
 
@@ -183,13 +246,18 @@ def get_orders():
 def get_pieces():
     return [piece for piece in mongo.db.pieces.find()]
 
-# process orders -----------------------------
+# end_turn -----------------------------
 
-def process_orders():
+def end_turn():
     unfinalise_users()
-    
     pieces = get_pieces()
     orders = get_orders()
+    
+    pieces = process_orders(orders, pieces)
+    
+    increment_phase()
+    # save_orders_to_log()
+    # clear orders
 
     flash('Orders proccessed!', 'success')
 
@@ -207,7 +275,7 @@ def get_game_state():
     return(game_state)
 
 import random
-from game_state import game_state
 from orders import initial_orders
 from run import mongo
 from flask import abort, Response, flash
+from territories import territories

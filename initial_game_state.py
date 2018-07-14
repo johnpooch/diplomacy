@@ -2,112 +2,134 @@ initial_pieces = [
     {
         "territory": "vie",
         "owner": "austria",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "bud",
         "owner": "austria",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "tri",
         "owner": "austria",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "lon",
         "owner": "england",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "edi",
         "owner": "england",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "lvp",
         "owner": "england",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "par",
         "owner": "france",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "mar",
         "owner": "france",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "bre",
         "owner": "france",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "ber",
         "owner": "germany",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "mun",
         "owner": "germany",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "kie",
         "owner": "germany",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "rom",
         "owner": "italy",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "ven",
         "owner": "italy",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "nap",
         "owner": "italy",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "mos",
         "owner": "russia",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "war",
         "owner": "russia",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "sev",
         "owner": "russia",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "stp",
         "owner": "russia",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "con",
         "owner": "turkey",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     },
     {
         "territory": "ank",
         "owner": "turkey",
-        "piece_type": "f"
+        "piece_type": "f",
+        "invalid_move": False
     },
     {
         "territory": "smy",
         "owner": "turkey",
-        "piece_type": "a"
+        "piece_type": "a",
+        "invalid_move": False
     }
 ]
     
@@ -181,6 +203,6 @@ initial_nations = [
 initial_game_properties = {
     "game_started": False,
     "phase": 0,
-    "year": 1900,
+    "year": 1901,
 }
 
