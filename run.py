@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask, redirect, render_template, request, flash, request, url_for, session
 from flask_pymongo import PyMongo
 import bcrypt
-from game_engine import create_player, get_game_state
+from game_engine import get_game_state
 from territories import territories
 from wtforms import StringField, SubmitField, SelectField, HiddenField, TextField, FieldList, FormField
 from initial_game_state import *
@@ -67,6 +67,37 @@ def initialise_game_db():
     mongo.db.game_properties.insert(initial_game_properties)
     flash('Game initialised!', 'success')
     return redirect(url_for("register"))
+    
+def update_nation_availability(player_nation):
+    nation_to_update = mongo.db.nations.find_one({'name': player_nation})
+    update_doc={"available": False}
+    mongo.db.nations.update_one(nation_to_update, {'$set': update_doc})
+    
+def assign_player_to_nation(username):
+    nations = mongo.db.nations.find()
+    for nation in nations:
+        if nation["available"]:
+            player_nation = nation["name"]
+            break
+    if not player_nation:
+        abort(Response('Something has gone worng. Nation not assigned.'))
+    update_nation_availability(player_nation)
+    return player_nation
+    
+def create_player(request):
+    hashpass = bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt())
+    nation = assign_player_to_nation(request.form["username"])
+    mongo.db.users.insert(
+        {
+        "username": request.form["username"],
+        "email": request.form["email"],
+        "password": hashpass,
+        "nation": nation,
+        "orders_finalised": False
+        }
+    )
+    flash('Account created for {}!'.format(request.form.username.data), 'success')
+    return request.form["username"]
     
 def start_game():
     mongo.db.game_properties.update_one({}, {"$set": {"game_started": True}})
@@ -157,21 +188,12 @@ def board():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        
         users = mongo.db.users
-        # only finds duplicate usernames. should find duiplicate emails too
-        existing_user = users.find_one({"username": request.form["username"]})
-        
-        # refactor?
-        if existing_user is None:
-            hashpass = bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt())
-            nation = create_player(request.form["username"])
-            users.insert({"username": request.form["username"], "email": request.form["email"], "password": hashpass, "nation": nation })
-            session["username"] = request.form["username"]
-            flash('Account created for {}!'.format(form.username.data), 'success')
+        if not users.find_one({"username": request.form["username"]}):
+            session["username"] = create_player(request) # returns username
             return redirect(url_for('board'))
-        flash('That username already exists', 'danger')
-        
+        else:
+            flash('That username already exists', 'danger')
     return render_template("register.html", form = form, game_state = get_game_state())
     
 # -----------------------------------------------

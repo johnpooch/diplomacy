@@ -2,24 +2,8 @@
 from flask import abort, Response
     
     
-def update_nation_availability(player_nation):
-    nation_to_update = mongo.db.nations.find_one({'name': player_nation})
-    update_doc={"available": False}
-    mongo.db.nations.update_one(nation_to_update, {'$set': update_doc})
-    
-def create_player(username):
-    
-    nations = mongo.db.nations.find()
-    for nation in nations:
-        if nation["available"]:
-            player_nation = nation["name"]
-            break
 
-    if not player_nation:
-        abort(Response('Something has gone worng. Nation not assigned.'))
-        
-    update_nation_availability(player_nation)
-    return player_nation
+
 
 def get_game_state():
     
