@@ -179,45 +179,56 @@ def increment_phase():
     mongo.db.game_properties.update({}, {"$set": {"phase": new_phase}})
     if new_phase == 0: 
         increment_year()
+        
+# target has shared coast with origin
+def target_shares_coast_with_origin(order):
+    for neighbour in territories[order["target"]]["neighbours"]:
+            if neighbour["name"] == order["origin"]:
+                return neighbour["shared_coast"]
      
 # target is accessible by piece_type -------------
 def target_is_accessible_by_piece_type(order, piece):
+    target_type = territories[order["target"]]["territory_type"]
     if piece["piece_type"] == "a":
-        return territories[order["target"]]["territory_type"] != "water"
+        return target_type != "water"
     else:
-        return territories[order["target"]]["territory_type"] != "inland"
-
-def target_is_neighbour(order):
-    return order["target"] in territories[order["origin"]]["neighbours"]
+        return target_type == "water" or (target_type == "coastal" and target_shares_coast_with_origin(order))
         
 # target is neighbour ----------------------------
 
 def target_is_neighbour(order):
-    return order["target"] in territories[order["origin"]]["neighbours"]
+    neighbours = territories[order["origin"]]["neighbours"]
+    return any(neighbour["name"] == order["target"] for neighbour in neighbours)
         
-# find valid piece ----------------------------
+# piece exists and_belongs to user --------------
 
-def find_order_piece(order, pieces):
+def piece_exists_and_belongs_to_user(order, pieces):
     for piece in pieces:
         if order["origin"] == piece["territory"] and order["nation"] == piece["owner"]:
             return piece
+    print("invalid move. there is no piece at this origin or it does not belong to the user.")
     return False
-        
-# process_move --------------------------------
-
-def process_move(order, pieces):
     
-    piece = find_order_piece(order, pieces)
+# order is valid --------------------------------
+
+def order_is_valid(order, pieces):
+    piece = piece_exists_and_belongs_to_user(order, pieces)
     if not piece:
         print("invalid move. there is no piece at this origin or it does not belong to the user.")
-        return piece
+        return False
     if not target_is_neighbour(order):
         print("invalid move. target is not neighbour.")
-        return piece
+        return False
     if not target_is_accessible_by_piece_type(order, piece):
         print("invalid move. target is not accessible.")
-        return piece
-    
+        return False
+    return True
+        
+# process_move ----------------------------------
+
+def process_move(order, pieces):
+    if not order_is_valid(order, pieces):
+        return False
     print("valid move")
     return True
         

@@ -180,7 +180,7 @@ territories = {
             {"name": "rum", "shared_coast": False},
             {"name": "ser", "shared_coast": False},
             {"name": "tri", "shared_coast": False},
-            {"name": 
+            {"name": "vie", "shared_coast": False},
             ],
         "territory_type": "inland",
         "supply_center": True,
