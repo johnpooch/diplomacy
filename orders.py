@@ -7,7 +7,7 @@ initial_orders = [
         "origin": "edi",
         "target": "nrg",
         "phase": 0,
-        "invalid_move": False
+        "order_is_valid": True
     },
     {
         "object": "",
@@ -17,7 +17,7 @@ initial_orders = [
         "origin": "lvp",
         "target": "yor",
         "phase": 0,
-        "invalid_move": False
+        "order_is_valid": True
     },
     {
         "object": "",
@@ -27,6 +27,6 @@ initial_orders = [
         "origin": "lon",
         "target": "nth",
         "phase": 0,
-        "invalid_move": False
+        "order_is_valid": True
     }
 ]

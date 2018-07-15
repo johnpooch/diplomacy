@@ -181,24 +181,24 @@ def increment_phase():
         increment_year()
         
 # target has shared coast with origin
-def target_shares_coast_with_origin(order):
-    for neighbour in territories[order["target"]]["neighbours"]:
-            if neighbour["name"] == order["origin"]:
+def territory_shares_coast_with_origin(origin, territory):
+    for neighbour in territories[territory]["neighbours"]:
+            if neighbour["name"] == origin:
                 return neighbour["shared_coast"]
      
 # target is accessible by piece_type -------------
-def target_is_accessible_by_piece_type(order, piece):
-    target_type = territories[order["target"]]["territory_type"]
+def territory_is_accessible_by_piece_type(origin, territory, piece):
+    territory_type = territories[territory]["territory_type"]
     if piece["piece_type"] == "a":
-        return target_type != "water"
+        return territory_type != "water"
     else:
-        return target_type == "water" or (target_type == "coastal" and target_shares_coast_with_origin(order))
+        return territory_type == "water" or (territory_type == "coastal" and territory_shares_coast_with_origin(origin, territory))
         
 # target is neighbour ----------------------------
 
-def target_is_neighbour(order):
-    neighbours = territories[order["origin"]]["neighbours"]
-    return any(neighbour["name"] == order["target"] for neighbour in neighbours)
+def territory_is_neighbour(origin, territory):
+    neighbours = territories[origin]["neighbours"]
+    return any(neighbour["name"] == territory for neighbour in neighbours)
         
 # piece exists and_belongs to user --------------
 
@@ -209,37 +209,72 @@ def piece_exists_and_belongs_to_user(order, pieces):
     print("invalid move. there is no piece at this origin or it does not belong to the user.")
     return False
     
-# order is valid --------------------------------
+# supported piece exists ------------------------
 
-def order_is_valid(order, pieces):
+def supported_piece_exists(order, pieces):
+    for piece in pieces:
+        if order["object"] == piece["territory"]:
+            return piece
+    print("invalid move. there is no piece in this territory to support.")
+    return False
+    
+# move is valid --------------------------------
+
+def move_is_valid(order, pieces):
     piece = piece_exists_and_belongs_to_user(order, pieces)
     if not piece:
         print("invalid move. there is no piece at this origin or it does not belong to the user.")
         return False
-    if not target_is_neighbour(order):
+    if not territory_is_neighbour(order["origin"], order["target"]):
         print("invalid move. target is not neighbour.")
         return False
-    if not target_is_accessible_by_piece_type(order, piece):
+    if not territory_is_accessible_by_piece_type(order["origin"], order["target"], piece):
         print("invalid move. target is not accessible.")
         return False
     return True
+    
+# support is valid --------------------------------
+# REFACTOR? - could use same as move
+def move_is_valid(order, pieces):
+    piece = piece_exists_and_belongs_to_user(order, pieces)
+    if not piece:
+        print("invalid move. there is no piece at this origin or it does not belong to the user.")
+        return False
+    if not territory_is_neighbour(order["origin"], order["target"]):
+        print("invalid move. target is not neighbour.")
+        return False
+    if not territory_is_accessible_by_piece_type(order["origin"], order["target"], piece):
+        print("invalid move. target is not accessible.")
+        return False
+    if not supported_piece_exists(order, pieces):
+        return False
+    return True
         
-# process_move ----------------------------------
+# process move ----------------------------------
 
 def process_move(order, pieces):
-    if not order_is_valid(order, pieces):
+    if not move_is_valid(order, pieces):
         return False
-    print("valid move")
+    mongo.db.pieces.update_one({"territory": order["origin"]}, {"$set": {"challenging": order["target"]}})
+    return True
+    
+# process support ----------------------------------
+
+def process_support(order, pieces):
+    if not support_is_valid(order, pieces):
+        return False
+    mongo.db.pieces.update_one({"territory": order["object"]}, {"$inc": {"support": 1}})
     return True
         
 # process_orders ------------------------------
 
 def process_orders(orders, pieces):
-    pieces_after_order = []
+    # convoy before move
     for order in orders:
         if order["command"] == "move":
-            pieces_after_order.append(process_move(order, pieces))
-        
+            order["order_is_valid"] = process_move(order, pieces)
+        if order["command"] == "support":
+            order["order_is_valid"] = process_support(order, pieces)
     return pieces
 
 # unfinalise_users ----------------------------

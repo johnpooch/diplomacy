@@ -4,154 +4,176 @@ initial_pieces = [
         "challenging": "vie",
         "owner": "austria",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "bud",
         "challenging": "bud",
         "owner": "austria",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "tri",
-        "challenging": "tri"
+        "challenging": "tri",
         "owner": "austria",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "lon",
         "challenging": "lon",
         "owner": "england",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "edi",
         "challenging": "edi",
         "owner": "england",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "lvp",
         "challenging": "lvp",
         "owner": "england",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "par",
         "challenging": "par",
         "owner": "france",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "mar",
         "challenging": "mar",
         "owner": "france",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "bre",
         "challenging": "bre",
         "owner": "france",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "ber",
         "challenging": "ber",
         "owner": "germany",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "mun",
         "challenging": "mun",
         "owner": "germany",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "kie",
         "challenging": "kie",
         "owner": "germany",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "rom",
         "challenging": "rom",
         "owner": "italy",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "ven",
         "challenging": "ven",
         "owner": "italy",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "nap",
         "challenging": "nap",
         "owner": "italy",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "mos",
         "challenging": "mos",
         "owner": "russia",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "war",
         "challenging": "war",
         "owner": "russia",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "sev",
         "challenging": "sev",
         "owner": "russia",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "stp",
         "challenging": "stp",
         "owner": "russia",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "con",
         "challenging": "con",
         "owner": "turkey",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "ank",
         "challenging": "ank",
         "owner": "turkey",
         "piece_type": "f",
-        "invalid_move": False
+        "support": 0,
+        
     },
     {
         "territory": "smy",
         "challenging": "smy",
         "owner": "turkey",
         "piece_type": "a",
-        "invalid_move": False
+        "support": 0,
+        
     }
 ]
     
