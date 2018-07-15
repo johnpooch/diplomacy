@@ -160,8 +160,6 @@ def get_announcements():
     with open("data/announcements.txt", "r") as announcements: 
         announcements_list = announcements.readlines()
     return announcements_list
-    
-# -----------------------------------------------
 
 
 # PROCESS ORDERS ==================================================================================
@@ -194,7 +192,7 @@ def territory_is_accessible_by_piece_type(origin, territory, piece):
     else:
         return territory_type == "water" or (territory_type == "coastal" and territory_shares_coast_with_origin(origin, territory))
         
-# target is neighbour ----------------------------
+# territory is neighbour ----------------------------
 
 def territory_is_neighbour(origin, territory):
     neighbours = territories[origin]["neighbours"]
@@ -209,6 +207,56 @@ def piece_exists_and_belongs_to_user(order, pieces):
     print("invalid move. there is no piece at this origin or it does not belong to the user.")
     return False
     
+    
+# SURELY THIS CAN BE REFACTORED??
+# check for neighbour convoy --------------------
+
+def check_for_neighbour_convoy(order, piece, origin):
+    print("checking if neighbour of {0} is convoying {1}".format(origin, order["origin"]))
+    """ find out if a piece has any neighbours that are convoying it """
+    # get neighbours of territory
+    neighbours = territories[origin]["neighbours"]
+    print("NEIGHBOURS: {}".format(neighbours))
+    print("PIECE CONVOYED BY: {}".format(piece["convoyed_by"]))
+    for neighbour in neighbours:
+        # if any neighbour is in the convoy dict
+        if neighbour["name"] in piece["convoyed_by"] and neighbour["name"] != origin:
+            print("YES")
+            # check if that neighbour is a neihgbour of the target
+            if territory_is_neighbour(neighbour["name"], order["target"]):
+                print("one of the neighbours of {0}, {1}, is convoying {2} and is a neighbour of the target.".format(piece["territory"], neighbour["name"], order["origin"]))
+                return True
+            # if it isn't, check if that neighbour has a neighbour which is convoying the piece
+            else: 
+                print("{0} has a convoying neighbour, {1}, but {1} is not neighbouring the target. checking if {1} has a neighbour which is convoying {2}".format(piece["territory"], neighbour["name"], order["origin"]))
+                # if it doesn't it will be false
+                check_for_neighbour_convoy(order, piece, neighbour["name"])
+    print("{0} has no neighbour that is convoying {1}".format(piece["territory"], order["origin"]))
+    return False
+
+    
+# target accessible by convoy -------------------
+
+def target_accessible_by_convoy(order, piece):
+    return check_for_neighbour_convoy(order, piece, order["origin"])
+    
+# move is valid ---------------------------------
+
+def move_is_valid(order, pieces):
+    piece = piece_exists_and_belongs_to_user(order, pieces)
+    if not piece:
+        print("invalid move. there is no piece at this origin or it does not belong to the user.")
+        return False
+    return (target_accessible_by_convoy(order, piece) or territory_is_neighbour(order["origin"], order["target"])) and territory_is_accessible_by_piece_type(order["origin"], order["target"], piece)
+        
+# process move ----------------------------------
+
+def process_move(order, pieces):
+    if not move_is_valid(order, pieces):
+        return False
+    mongo.db.pieces.update_one({"territory": order["origin"]}, {"$set": {"challenging": order["target"]}})
+    return True
+    
 # supported piece exists ------------------------
 
 def supported_piece_exists(order, pieces):
@@ -218,24 +266,9 @@ def supported_piece_exists(order, pieces):
     print("invalid move. there is no piece in this territory to support.")
     return False
     
-# move is valid --------------------------------
-
-def move_is_valid(order, pieces):
-    piece = piece_exists_and_belongs_to_user(order, pieces)
-    if not piece:
-        print("invalid move. there is no piece at this origin or it does not belong to the user.")
-        return False
-    if not territory_is_neighbour(order["origin"], order["target"]):
-        print("invalid move. target is not neighbour.")
-        return False
-    if not territory_is_accessible_by_piece_type(order["origin"], order["target"], piece):
-        print("invalid move. target is not accessible.")
-        return False
-    return True
-    
 # support is valid --------------------------------
 # REFACTOR? - could use same as move
-def move_is_valid(order, pieces):
+def support_is_valid(order, pieces):
     piece = piece_exists_and_belongs_to_user(order, pieces)
     if not piece:
         print("invalid move. there is no piece at this origin or it does not belong to the user.")
@@ -249,32 +282,66 @@ def move_is_valid(order, pieces):
     if not supported_piece_exists(order, pieces):
         return False
     return True
-        
-# process move ----------------------------------
-
-def process_move(order, pieces):
-    if not move_is_valid(order, pieces):
-        return False
-    mongo.db.pieces.update_one({"territory": order["origin"]}, {"$set": {"challenging": order["target"]}})
-    return True
     
 # process support ----------------------------------
 
 def process_support(order, pieces):
     if not support_is_valid(order, pieces):
         return False
-    mongo.db.pieces.update_one({"territory": order["object"]}, {"$inc": {"support": 1}})
+    # check if support already exists
+    object_supports = mongo.db.pieces.find_one({"territory": order["object"]})["support"]
+    if order["target"] in object_supports:
+        object_supports[order["target"]] +=1
+    else:
+        object_supports.update({order["target"]: 1})
+    mongo.db.pieces.update({"territory": order["object"]}, {"$set":{"support": object_supports}})
+    return True
+    
+# supported piece exists ------------------------
+
+def convoyed_piece_exists(order, pieces):
+    for piece in pieces:
+        if order["object"] == piece["territory"]:
+            return True
+    print("invalid move. there is no piece in this territory to support.")
+    return False
+    
+# piece is on water ------------------------------
+
+def piece_is_on_water(order):
+    if territories[order["origin"]]["territory_type"] == "water":
+        return True
+    print("{}: invalid move. piece must be on water to convoy.".format(order["origin"]))
+    return False
+    
+# convoy is valid --------------------------------
+
+def convoy_is_valid(order, pieces):
+    return piece_exists_and_belongs_to_user(order, pieces) and convoyed_piece_exists(order, pieces) and piece_is_on_water(order)
+    
+# process convoy --------------------------------
+
+def process_convoy(order, pieces):
+    if not convoy_is_valid(order, pieces):
+        return False
+    print("CONVOY SUCCESSFUL: ".format)
+    mongo.db.pieces.update({"territory": order["object"]}, {"$push": {"convoyed_by": order["origin"]}})
     return True
         
-# process_orders ------------------------------
+# process orders ------------------------------
 
+# REFACTOR?
 def process_orders(orders, pieces):
     # convoy before move
     for order in orders:
+        if order["command"] == "convoy":
+            order["order_is_valid"] = process_convoy(order, get_pieces())
+    for order in orders:
         if order["command"] == "move":
-            order["order_is_valid"] = process_move(order, pieces)
+            order["order_is_valid"] = process_move(order, get_pieces())
+    for order in orders:
         if order["command"] == "support":
-            order["order_is_valid"] = process_support(order, pieces)
+            order["order_is_valid"] = process_support(order, get_pieces())
     return pieces
 
 # unfinalise_users ----------------------------
@@ -298,7 +365,6 @@ def end_turn():
     unfinalise_users()
     pieces = get_pieces()
     orders = get_orders()
-    
     pieces = process_orders(orders, pieces)
     
     increment_phase()

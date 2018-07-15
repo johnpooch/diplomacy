@@ -1,11 +1,11 @@
 initial_orders = [
     {
-        "object": "",
+        "object": "yor",
         "year": 1900,
-        "command": "move",
+        "command": "convoy",
         "nation": "england",
-        "origin": "edi",
-        "target": "nrg",
+        "origin": "nth",
+        "target": "nwy",
         "phase": 0,
         "order_is_valid": True
     },
@@ -14,8 +14,8 @@ initial_orders = [
         "year": 1900,
         "command": "move",
         "nation": "england",
-        "origin": "lvp",
-        "target": "yor",
+        "origin": "yor",
+        "target": "nwy",
         "phase": 0,
         "order_is_valid": True
     },
@@ -25,7 +25,7 @@ initial_orders = [
         "command": "move",
         "nation": "england",
         "origin": "lon",
-        "target": "nth",
+        "target": "eng",
         "phase": 0,
         "order_is_valid": True
     }

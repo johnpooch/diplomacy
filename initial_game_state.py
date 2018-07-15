@@ -4,7 +4,8 @@ initial_pieces = [
         "challenging": "vie",
         "owner": "austria",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -12,7 +13,8 @@ initial_pieces = [
         "challenging": "bud",
         "owner": "austria",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -20,31 +22,37 @@ initial_pieces = [
         "challenging": "tri",
         "owner": "austria",
         "piece_type": "f",
-        "support": 0,
-        
+        "support": {},
+		"convoyed_by": []
     },
     {
+        # TESTING
         "territory": "lon",
         "challenging": "lon",
         "owner": "england",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
-        "territory": "edi",
-        "challenging": "edi",
+        # TESTING
+        "territory": "nth",
+        "challenging": "nth",
         "owner": "england",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
-        "territory": "lvp",
-        "challenging": "lvp",
+        # TESTING
+        "territory": "yor",
+        "challenging": "yor",
         "owner": "england",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -52,7 +60,8 @@ initial_pieces = [
         "challenging": "par",
         "owner": "france",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -60,7 +69,8 @@ initial_pieces = [
         "challenging": "mar",
         "owner": "france",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -68,7 +78,8 @@ initial_pieces = [
         "challenging": "bre",
         "owner": "france",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -76,7 +87,8 @@ initial_pieces = [
         "challenging": "ber",
         "owner": "germany",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -84,7 +96,8 @@ initial_pieces = [
         "challenging": "mun",
         "owner": "germany",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -92,7 +105,8 @@ initial_pieces = [
         "challenging": "kie",
         "owner": "germany",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -100,7 +114,8 @@ initial_pieces = [
         "challenging": "rom",
         "owner": "italy",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -108,7 +123,8 @@ initial_pieces = [
         "challenging": "ven",
         "owner": "italy",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -116,7 +132,8 @@ initial_pieces = [
         "challenging": "nap",
         "owner": "italy",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -124,7 +141,8 @@ initial_pieces = [
         "challenging": "mos",
         "owner": "russia",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -132,7 +150,8 @@ initial_pieces = [
         "challenging": "war",
         "owner": "russia",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -140,7 +159,8 @@ initial_pieces = [
         "challenging": "sev",
         "owner": "russia",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -148,7 +168,8 @@ initial_pieces = [
         "challenging": "stp",
         "owner": "russia",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -156,7 +177,8 @@ initial_pieces = [
         "challenging": "con",
         "owner": "turkey",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -164,7 +186,8 @@ initial_pieces = [
         "challenging": "ank",
         "owner": "turkey",
         "piece_type": "f",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     },
     {
@@ -172,7 +195,8 @@ initial_pieces = [
         "challenging": "smy",
         "owner": "turkey",
         "piece_type": "a",
-        "support": 0,
+        "support": {},
+		"convoyed_by": []
         
     }
 ]
@@ -249,4 +273,3 @@ initial_game_properties = {
     "phase": 0,
     "year": 1901,
 }
-

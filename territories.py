@@ -581,6 +581,21 @@ territories = {
         "territory_type": "water",
         "supply_center": False,
     },
+    "nwy": {
+        "display_name": "Norway",
+        "nation": "neutral",
+        "neighbours": [
+            {"name": "bar", "shared_coast": False},
+            {"name": "fin", "shared_coast": False},
+            {"name": "nrg", "shared_coast": False},
+            {"name": "nth", "shared_coast": False},
+            {"name": "ska", "shared_coast": False},
+            {"name": "stp", "shared_coast": True},
+            {"name": "swe", "shared_coast": True},
+            ],
+        "territory_type": "coastal",
+        "supply_center": True,
+    },
     "par": {
         "display_name": "Paris",
         "nation": "france",

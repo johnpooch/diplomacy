@@ -46,7 +46,8 @@ def board():
     # if all players have finalised order, process orders
     if all(user["orders_finalised"] for user in mongo.db.users.find()):
         
-        end_turn()
+        # end_turn()
+        print("hello")
     
     return render_template("board.html", game_state = game_state, session = session)
 
@@ -170,6 +171,16 @@ def process():
 @app.route("/initialise")
 def initialise():
     initialise_game_db()
+    return redirect(url_for('board'))
+    
+# test ------------------------------------
+
+@app.route("/test")
+def test():
+    initialise_game_db()
+    populate_users()
+    fill_out_orders()
+    end_turn()
     return redirect(url_for('board'))
 
 if __name__ == '__main__':
