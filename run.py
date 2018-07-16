@@ -1,30 +1,8 @@
-import os
-from datetime import datetime
-from flask import Flask, redirect, render_template, request, flash, request, url_for, session
-from flask_pymongo import PyMongo
-import bcrypt
-from game_engine import *
-from territories import territories
-
-from wtforms.validators import DataRequired
-import pymongo
-from forms import RegistrationForm, LoginForm
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = "^b$#s3uwbysorx2f3uowzzlxucw8j3stqu7!^452*&i-&ab3g%"
-
-# Vars ------------------------------------------
-
-game_state = {}
-
-# Mongo -----------------------------------------
-
-app.config["MONGO_DBNAME"] = "diplomacydb"
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-
-mongo = PyMongo(app)
-
-# -----------------------------------------------
+from dependencies import *
+from process import process
+from setup import initialise_game_db, populate_users, fill_out_orders, start_game
+from get_game_state import get_game_state
+from create_order import filter_pieces_by_user, upload_order_to_db
     
 # ROUTES ==========================================================================================
 
@@ -159,13 +137,6 @@ def fill():
     fill_out_orders()
     return redirect(url_for('board'))
 
-# process_orders -----------------------------------
-
-@app.route("/process")
-def process():
-    end_turn()
-    return redirect(url_for('board'))
-
 # initialise ------------------------------------
 
 @app.route("/initialise")
@@ -180,7 +151,7 @@ def test():
     initialise_game_db()
     populate_users()
     fill_out_orders()
-    end_turn()
+    process()
     return redirect(url_for('board'))
 
 if __name__ == '__main__':
