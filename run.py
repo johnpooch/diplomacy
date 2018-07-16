@@ -99,7 +99,7 @@ def orders():
     pieces = filter_pieces_by_user(username)
         
     if request.method == "POST":
-        create_order(request, pieces, game_state, username)
+        upload_order_to_db(request, pieces, game_state, username)
         return redirect(url_for('board'))
             
     return render_template("orders.html", pieces = pieces, territories = territories, game_state = game_state)

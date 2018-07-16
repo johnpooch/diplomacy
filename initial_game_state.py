@@ -76,8 +76,8 @@ initial_pieces = [
         
     },
     {
-        "territory": "eng",
-        "challenging": "eng",
+        "territory": "wal",
+        "challenging": "wal",
         "owner": "france",
         "piece_type": "f",
         "support": {},

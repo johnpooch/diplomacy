@@ -1,18 +1,18 @@
 # ANNOUNCEMENTS ===================================================================================
 
-# Write to file ---------------------------------
+# Write to file -----------------------------------------------------------------------------------
 
 def write_to_file(filename, data):
     with open(filename, "a") as file:
         file.writelines(data)
 
-# add announcements -----------------------------
+# add announcements -------------------------------------------------------------------------------
 
 def add_announcements(username, announcement):
     announcement = "({}) {}: {}\n".format(datetime.now().strftime("%H:%M:%S"), username, announcement)
     write_to_file("data/announcements.txt", announcement)
 
-# get announcements -----------------------------
+# get announcements -------------------------------------------------------------------------------
     
 def get_announcements():
     announcements_list = []
@@ -22,7 +22,7 @@ def get_announcements():
 
 # SETUP ===========================================================================================
 
-# Clear DB --------------------------------------
+# Clear DB ----------------------------------------------------------------------------------------
 
 def clear_db():
     mongo.db.pieces.remove({})
@@ -32,7 +32,7 @@ def clear_db():
     mongo.db.nations.remove({})
     mongo.db.game_properties.remove({})
     
-# Initialise game DB ----------------------------
+# Initialise game DB ------------------------------------------------------------------------------
 
 def initialise_game_db():
     clear_db()
@@ -46,7 +46,7 @@ def initialise_game_db():
     mongo.db.game_properties.insert(initial_game_properties)
     flash('Game initialised!', 'success')
     
-# Populate Users --------------------------------
+# Populate Users ----------------------------------------------------------------------------------
 
 """ creates seven dummy users """
 
@@ -56,7 +56,7 @@ def populate_users():
     for player in dummy_players:
         users.insert(player)
         
-# Fill out orders -------------------------------
+# Fill out orders ---------------------------------------------------------------------------------
 
 """ creates a list of pre-written orders """
         
@@ -66,19 +66,19 @@ def fill_out_orders():
     for order in initial_orders:
         orders.insert(order)
         
-# Are seven players registered ------------------
+# Are seven players registered --------------------------------------------------------------------
 
 def are_seven_players_registered():
     return mongo.db.users.count() >= 7
         
-# Update nation availability --------------------
+# Update nation availability ----------------------------------------------------------------------
     
 def update_nation_availability(player_nation):
     nation_to_update = mongo.db.nations.find_one({'name': player_nation})
     update_doc={"available": False}
     mongo.db.nations.update_one(nation_to_update, {'$set': update_doc})
     
-# Assign player to nation -----------------------
+# Assign player to nation -------------------------------------------------------------------------
 
 def assign_player_to_nation(username):
     nations = mongo.db.nations.find()
@@ -91,7 +91,7 @@ def assign_player_to_nation(username):
     update_nation_availability(player_nation)
     return player_nation
     
-# Create player ---------------------------------
+# Create player -----------------------------------------------------------------------------------
     
 def create_player(request):
     mongo.db.users.insert(
@@ -107,7 +107,7 @@ def create_player(request):
     return request.form["username"]
     
     
-# Attempt login ------------------------------------
+# Attempt login -----------------------------------------------------------------------------------
 
 def attempt_login(request):
 
@@ -121,7 +121,7 @@ def attempt_login(request):
     flash('Login unsuccessful. Invalid username/password combinationB.', 'danger')
     return False
     
-# Start game ------------------------------------
+# Start game --------------------------------------------------------------------------------------
     
 def start_game():
     mongo.db.game_properties.update_one({}, {"$set": {"game_started": True}})
@@ -131,16 +131,16 @@ def start_game():
 
 # CREATE ORDER ====================================================================================
     
-# Filter pieces by user -------------------------
+# Filter pieces by user ---------------------------------------------------------------------------
     
 def filter_pieces_by_user(username):
     user = mongo.db.users.find_one({"username": username})
     pieces = mongo.db.pieces.find()
     return [piece for piece in pieces if piece["owner"] == user["nation"]]
     
-# Create order ----------------------------------
+# Upload order to DB ------------------------------------------------------------------------------
     
-def create_order(request, pieces, game_state, username):
+def upload_order_to_db(request, pieces, game_state, username):
     for piece in pieces:
         order = {
             "origin": request.form[(piece["territory"] + "-origin")],
@@ -175,7 +175,7 @@ def territory_shares_coast_with_origin(origin, territory):
             if neighbour["name"] == origin:
                 return neighbour["shared_coast"]
      
-# target is accessible by piece_type -------------
+# target is accessible by piece_type --------------------------------------------------------------
 def territory_is_accessible_by_piece_type(origin, territory, piece):
     territory_type = territories[territory]["territory_type"]
     if piece["piece_type"] == "a":
@@ -184,13 +184,13 @@ def territory_is_accessible_by_piece_type(origin, territory, piece):
          # refactor
         return territory_type == "water" or (territory_type == "coastal" and territory_shares_coast_with_origin(origin, territory)) or (territory_type == "coastal" and territories[piece["territory"]]["territory_type"] == "water")
         
-# territory is neighbour ----------------------------
+# territory is neighbour --------------------------------------------------------------------------
 
 def territory_is_neighbour(origin, territory):
     neighbours = territories[origin]["neighbours"]
     return any(neighbour["name"] == territory for neighbour in neighbours)
         
-# piece exists and_belongs to user --------------
+# piece exists and_belongs to user ----------------------------------------------------------------
 
 def piece_exists_and_belongs_to_user(order, pieces):
     for piece in pieces:
@@ -199,7 +199,7 @@ def piece_exists_and_belongs_to_user(order, pieces):
     print("invalid move. there is no piece at this origin or it does not belong to the user.")
     return False
     
-# convoyed piece exists ------------------------
+# convoyed piece exists --------------------------------------------------------------------------
 
 def convoyed_piece_exists(order, pieces):
     for piece in pieces:
@@ -208,7 +208,7 @@ def convoyed_piece_exists(order, pieces):
     print("invalid move. there is no piece in this territory to support.")
     return False
     
-# piece is on water ------------------------------
+# piece is on water --------------------------------------------------------------------------------
 
 def piece_is_on_water(order):
     if territories[order["origin"]]["territory_type"] == "water":
@@ -216,12 +216,12 @@ def piece_is_on_water(order):
     print("{}: invalid move. piece must be on water to convoy.".format(order["origin"]))
     return False
     
-# convoy is valid --------------------------------
+# convoy is valid ----------------------------------------------------------------------------------
 
 def convoy_is_valid(order, pieces):
     return piece_exists_and_belongs_to_user(order, pieces) and convoyed_piece_exists(order, pieces) and piece_is_on_water(order)
     
-# process convoy --------------------------------
+# process convoy ----------------------------------------------------------------------------------
 
 def process_convoy(order, pieces):
     if not convoy_is_valid(order, pieces):
@@ -230,7 +230,7 @@ def process_convoy(order, pieces):
     mongo.db.pieces.update({"territory": order["object"]}, {"$push": {"convoyed_by": order["origin"]}})
     return True
     
-# check for neighbour convoy --------------------
+# check for neighbour convoy ----------------------------------------------------------------------
 
 def check_for_neighbour_convoy(order, piece, origin):
     neighbours = territories[origin]["neighbours"]
@@ -242,12 +242,12 @@ def check_for_neighbour_convoy(order, piece, origin):
                 check_for_neighbour_convoy(order, piece, neighbour["name"])
     return False
 
-# target accessible by convoy -------------------
+# target accessible by convoy ---------------------------------------------------------------------
 
 def target_accessible_by_convoy(order, piece):
     return check_for_neighbour_convoy(order, piece, order["origin"])
 
-# move is valid ---------------------------------
+# move is valid -----------------------------------------------------------------------------------
 
 def move_is_valid(order, pieces):
     piece = piece_exists_and_belongs_to_user(order, pieces)
@@ -256,17 +256,15 @@ def move_is_valid(order, pieces):
         return False
     return (target_accessible_by_convoy(order, piece) or territory_is_neighbour(order["origin"], order["target"])) and territory_is_accessible_by_piece_type(order["origin"], order["target"], piece)
         
-# process move ----------------------------------
+# process move ------------------------------------------------------------------------------------
 
 def process_move(order, pieces):
     if not move_is_valid(order, pieces):
-        print('AAGGGGHHHHHHHH')
-        print(order["origin"])
         return False
     mongo.db.pieces.update_one({"territory": order["origin"]}, {"$set": {"challenging": order["target"]}})
     return True
     
-# supported piece exists ------------------------
+# supported piece exists --------------------------------------------------------------------------
 
 def supported_piece_exists(order, pieces):
     for piece in pieces:
@@ -275,7 +273,7 @@ def supported_piece_exists(order, pieces):
     print("invalid move. there is no piece in this territory to support.")
     return False
     
-# support is valid --------------------------------
+# support is valid ----------------------------------------------------------------------------------
 # REFACTOR? - could use same as move
 def support_is_valid(order, pieces):
     piece = piece_exists_and_belongs_to_user(order, pieces)
@@ -292,7 +290,7 @@ def support_is_valid(order, pieces):
         return False
     return True
     
-# process support ----------------------------------
+# process support ------------------------------------------------------------------------------------
 
 def process_support(order, pieces):
     if not support_is_valid(order, pieces):
@@ -309,13 +307,13 @@ def process_support(order, pieces):
 
 # END TURN ========================================================================================
     
-# increment year --------------------------------
+# increment year ----------------------------------------------------------------------------------
 
 def increment_year():
     new_year = (mongo.db.game_properties.find_one()["year"] + 1)
     mongo.db.game_properties.update({}, {"$set": {"year": new_year}})
     
-# increment phase -------------------------------
+# increment phase ---------------------------------------------------------------------------------
 
 def increment_phase():
     new_phase = ((mongo.db.game_properties.find_one()["phase"] + 1) % 7)
@@ -323,22 +321,22 @@ def increment_phase():
     if new_phase == 0: 
         increment_year()
         
-# unfinalise_users ------------------------------
+# unfinalise_users --------------------------------------------------------------------------------
 
 def unfinalise_users():
     mongo.db.users.update({}, {"$set": {"orders_finalised": False}}, multi=True)
 
-# get orders ------------------------------------
+# get orders --------------------------------------------------------------------------------------
 
 def get_orders():
     return [order for order in mongo.db.orders.find()]
 
-# get pieces ------------------------------------
+# get pieces --------------------------------------------------------------------------------------
 
 def get_pieces():
     return [piece for piece in mongo.db.pieces.find()]
     
-# update challenges --------------------------------
+# update challenges -------------------------------------------------------------------------------
 
 def update_challenges(orders):
     for order in orders:
@@ -352,7 +350,7 @@ def update_challenges(orders):
             order["order_is_valid"] = process_support(order, get_pieces())
     return True
     
-# does piece have most support ------------------
+# does piece have most support --------------------------------------------------------------------
 
 #  REFACTOR
 def piece_has_most_support(piece, pieces_to_compare):
@@ -367,7 +365,7 @@ def find_other_pieces_challenging_territory(piece):
     territory = piece["challenging"]
     return [other_piece for other_piece in get_pieces() if other_piece["challenging"] == territory and piece["territory"] != other_piece["territory"]]
     
-# resolve challenges -----------------------------
+# resolve challenges ------------------------------------------------------------------------------
 
 def resolve_challenges():
     for piece in get_pieces():
@@ -375,19 +373,35 @@ def resolve_challenges():
         if piece_has_most_support(piece, pieces_to_compare) or not pieces_to_compare:
             print("{}: order succeded".format(piece["territory"]))
             piece["territory"] = piece["challenging"]
+            mongo.db.pieces.update_one({
+                "territory": piece["territory"],
+                "owner": piece["owner"]
+            }, 
+            {
+                "$set": {"territory": piece["challenging"]}
+            })
         else:
             print("{}: order failed".format(piece["territory"]))
-            
+    return True
+    
+# identify retreats ------------------------------------------------------------------------------
+
+def identify_retreats():
+    # find pieces with matching territories
+    for territory in territories:
+        pieces_to_compare = mongo.db.pieces.find({"terrtitory": territory})
     return True
 
-# end_turn --------------------------------------
+# end_turn ----------------------------------------------------------------------------------------
+
+# THE ABOVE CODE COULD BE MADE NEATER IF I CREATED A FUNCTION TO TURN ALL THE RELEVANT INFO INTO A DICT
 
 def end_turn():
     unfinalise_users()
     orders = get_orders()
     update_challenges(orders)
     resolve_challenges()
-    
+    # identify_retreats()
     increment_phase()
     # save_orders_to_log()
     # clear orders

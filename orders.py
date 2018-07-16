@@ -1,28 +1,18 @@
 initial_orders = [
     {
-        "object": "yor",
+        "object": "nth",
         "year": 1900,
-        "command": "convoy",
+        "command": "hold",
         "nation": "england",
         "origin": "nth",
-        "target": "nwy",
+        "target": "nth",
         "phase": 0,
         "order_is_valid": True
     },
     {
-        "object": "lon",
+        "object": "yor",
         "year": 1900,
         "command": "support",
-        "nation": "england",
-        "origin": "yor",
-        "target": "wal",
-        "phase": 0,
-        "order_is_valid": True
-    },
-    {
-        "object": "",
-        "year": 1900,
-        "command": "move",
         "nation": "england",
         "origin": "lon",
         "target": "wal",
@@ -33,8 +23,18 @@ initial_orders = [
         "object": "",
         "year": 1900,
         "command": "move",
+        "nation": "england",
+        "origin": "yor",
+        "target": "wal",
+        "phase": 0,
+        "order_is_valid": True
+    },
+    {
+        "object": "",
+        "year": 1900,
+        "command": "hold",
         "nation": "france",
-        "origin": "eng",
+        "origin": "wal",
         "target": "wal",
         "phase": 0,
         "order_is_valid": True
