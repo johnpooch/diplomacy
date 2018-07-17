@@ -23,6 +23,7 @@ def find_other_pieces_challenging_territory(piece):
 # resolve challenges ------------------------------------------------------------------------------
 
 def resolve_challenges():
+    write_to_log("\n")
     for piece in get_pieces():
         pieces_to_compare = find_other_pieces_challenging_territory(piece)
         
@@ -49,5 +50,5 @@ def resolve_challenges():
                     })
                     write_to_log("{} must retreat".format(piece["territory"]))
         else:
-            write_to_log("\n{}: order failed".format(piece["territory"]))
+            write_to_log("{}: order failed".format(piece["territory"]))
     return True

@@ -35,7 +35,7 @@ reps = {
     'Bulgaria': 'bul',
     'Greece': 'gre',
     'Paris': 'par',
-    'Tunisia': 'tun',
+    'Tunis': 'tun',
     'Norwegian Sea': 'nrg',
     'Aegean Sea': 'aeg',
     'Vienna': 'vie',
@@ -72,6 +72,6 @@ reps = {
     'Sevastopol': 'sev',
     'Skagerrak': 'ska',
     'Tuscany': 'tus',
-    'Mid Atlantic': 'mid',
+    'Mid-Atlantic Ocean': 'mid',
     'Rome': 'rom',
 }

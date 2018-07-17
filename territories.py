@@ -471,7 +471,7 @@ territories = {
         "supply_center": True,
     },
     "mid": {
-        "display_name": "Mid Atlantic",
+        "display_name": "Mid-Atlantic Ocean",
         "neighbours": [
             {"name": "bre", "shared_coast": False},
             {"name": "eng", "shared_coast": False},
@@ -823,7 +823,7 @@ territories = {
         "supply_center": True,
     },
     "tun": {
-        "display_name": "Tunisia",
+        "display_name": "Tunis",
         "neighbours": [
             {"name": "ion", "shared_coast": False},
             {"name": "naf", "shared_coast": True},

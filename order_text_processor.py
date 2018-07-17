@@ -19,20 +19,32 @@ def get_orders_from_txt(file):
         nation = block[0].lower()
         
         for line in block[1:]:
-            x = line.split(" ")
-            valid = (x[-1] == 'resolved')
+            words = line.split(" ")
+            
+            target = ""
+            _object = ""
+            
+            origin = words[0]
+            command = words[1].lower()
+            
+            if words[1] == "MOVE":
+                target = words[2]
+            
+            if words[2] == "CONVOY" or words[2] == "SUPPORT":
+                _object = words[2]
+                target = words[4]
+            
+            valid = (words[-1] == 'resolved')
         
             order = {
                 "nation": nation,
-                "origin": x[0].lower(),
-                "target": x[2].lower(),
-                "command": x[1].lower(),
+                "origin": origin,
+                "target": target,
+                "command": command,
                 "order_is_valid": valid,
-                "object": "",
+                "object": _object,
                 "phase": 0,
                 "year": 1900
             }
-            
             order_list.append(order)
     return order_list
-get_orders_from_txt("order_example.txt")

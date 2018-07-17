@@ -1,0 +1,35 @@
+ENGLAND
+North Sea CONVOY Edinburgh to Norway -> resolved
+Edinburgh MOVE Norway -> resolved
+London HOLD -> resolved
+
+FRANCE
+Spain HOLD -> resolved
+Picardy MOVE Belgium -> resolved
+Brest MOVE Mid-Atlantic Ocean -> resolved
+
+ITALY
+Rome MOVE Apulia -> resolved
+Naples MOVE Tunis -> resolved
+Ionian Sea CONVOY Naples to Tunis -> resolved
+
+GERMANY
+Ruhr SUPPORT Kiel to Holland -> resolved
+Kiel MOVE Holland -> resolved
+Denmark MOVE Sweden -> resolved
+
+AUSTRIA
+Budapest HOLD -> resolved
+Albania MOVE Greece -> resolved
+Serbia SUPPORT Albania to Greece -> resolved
+
+TURKEY
+Bulgaria MOVE Greece -> Attack broken by F Albania - Greece
+Black Sea MOVE Sevastopol -> resolved
+Constantinople MOVE Bulgaria -> Bounced
+
+RUSSIA
+Ukraine HOLD -> resolved
+Gulf of Bothnia HOLD -> resolved
+Galicia HOLD -> resolved
+Rumania HOLD -> resolved

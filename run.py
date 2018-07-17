@@ -130,27 +130,28 @@ def populate():
     populate_users()
     return redirect(url_for('board'))
 
-# fill_orders -----------------------------------
-
-@app.route("/fill")
-def fill():
-    fill_out_orders()
-    return redirect(url_for('board'))
-
 # initialise ------------------------------------
 
 @app.route("/initialise")
 def initialise():
     initialise_game_db()
+    populate_users()
     return redirect(url_for('board'))
     
-# test ------------------------------------
+# test_1 ------------------------------------
 
-@app.route("/test")
-def test():
-    initialise_game_db()
-    populate_users()
-    fill_out_orders()
+@app.route("/test_1")
+def test_1():
+    fill_out_orders("game_histories/game_1/01_spring_1901.txt")
+    end_turn()
+    return redirect(url_for('board'))
+    
+    
+# test_2 ------------------------------------
+
+@app.route("/test_2")
+def test_2():
+    fill_out_orders("game_histories/game_1/02_fall_1901.txt")
     end_turn()
     return redirect(url_for('board'))
 

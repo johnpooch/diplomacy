@@ -55,7 +55,7 @@ def end_turn():
     check_for_retreats()
     
     save_orders_to_history()
-    # mongo.db.orders.remove({})
+    mongo.db.orders.remove({})
     flash('Orders proccessed!', 'success')
     
     # A GET OTHER PIECES FUNCTION WOULD BE GOOD

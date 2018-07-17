@@ -42,10 +42,10 @@ def populate_users():
 
 """ creates a list of pre-written orders """
         
-def fill_out_orders():
+def fill_out_orders(file_name):
     mongo.db.orders.remove({})
     orders = mongo.db.orders
-    for order in get_orders_from_txt("order_example.txt"):
+    for order in get_orders_from_txt(file_name):
         orders.insert(order)
         
 # Are seven players registered --------------------------------------------------------------------

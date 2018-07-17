@@ -24,7 +24,7 @@ russia - processing order for piece at mos: move to ukr
 russia - processing order for piece at war: move to gal
 russia - processing order for piece at sev: move to rum
 
-lon: order failed
 
+lon: order failed
 bre: order failed
 phase incremented. new phase: 1
