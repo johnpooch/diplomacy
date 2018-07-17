@@ -6,6 +6,7 @@ from process_helpers import *
 def target_accessible_by_convoy(order, piece, origin):
     neighbours = territories[origin]["neighbours"]
     for neighbour in neighbours:
+
         if neighbour["name"] in piece["convoyed_by"] and neighbour["name"] != origin:
             if territory_is_neighbour(neighbour["name"], order["target"]):
                 return True

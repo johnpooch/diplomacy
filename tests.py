@@ -1,6 +1,7 @@
 from dependencies import *
 from process_convoy import *
 from process_move import *
+from process_retreats import *
 
 # test_are_equal ----------------------------------------------------------------------------------
 
@@ -170,8 +171,29 @@ def unit_testing():
             ),
         False)
         
-
+    # target is not attacker origin ---------------------------------------------------------------
     
+    test_are_equal(
+        target_is_not_attacker_origin(
+            {"territory": "wal", "nation": "england"},
+            [
+                {"territory": "wal", "nation": "france", "previous_territory": "lon"}, 
+                {"territory": "wal","previous_territory": "wal", "nation": "england"}
+            ],
+            "lon"
+            ),
+    False)
+    
+    test_are_equal(
+        target_is_not_attacker_origin(
+            {"territory": "wal", "nation": "england"},
+            [
+                {"territory": "wal", "nation": "france", "previous_territory": "yor"}, 
+                {"territory": "wal","previous_territory": "wal", "nation": "england"}
+            ],
+            "lon"
+            ),
+    True)
     
     
 unit_testing()

@@ -3,6 +3,7 @@ import bcrypt
 initial_pieces = [
     {
         "territory": "vie",
+        "previous_territory": "vie",
         "challenging": "vie",
         "owner": "austria",
         "piece_type": "a",
@@ -13,6 +14,7 @@ initial_pieces = [
     },
     {
         "territory": "bud",
+        "previous_territory": "bud",
         "challenging": "bud",
         "owner": "austria",
         "piece_type": "a",
@@ -23,6 +25,7 @@ initial_pieces = [
     },
     {
         "territory": "tri",
+        "previous_territory": "tri",
         "challenging": "tri",
         "owner": "austria",
         "piece_type": "f",
@@ -33,6 +36,7 @@ initial_pieces = [
     {
         # TESTING
         "territory": "lon",
+        "previous_territory": "lon",
         "challenging": "lon",
         "owner": "england",
         "piece_type": "f",
@@ -43,8 +47,9 @@ initial_pieces = [
     },
     {
         # TESTING
-        "territory": "nth",
-        "challenging": "nth",
+        "territory": "edi",
+        "previous_territory": "edi",
+        "challenging": "edi",
         "owner": "england",
         "piece_type": "f",
         "support": {},
@@ -54,8 +59,9 @@ initial_pieces = [
     },
     {
         # TESTING
-        "territory": "yor",
-        "challenging": "yor",
+        "territory": "lvp",
+        "previous_territory": "lvp",
+        "challenging": "lvp",
         "owner": "england",
         "piece_type": "a",
         "support": {},
@@ -65,6 +71,7 @@ initial_pieces = [
     },
     {
         "territory": "par",
+        "previous_territory": "par",
         "challenging": "par",
         "owner": "france",
         "piece_type": "a",
@@ -75,6 +82,7 @@ initial_pieces = [
     },
     {
         "territory": "mar",
+        "previous_territory": "mar",
         "challenging": "mar",
         "owner": "france",
         "piece_type": "a",
@@ -84,8 +92,9 @@ initial_pieces = [
         
     },
     {
-        "territory": "wal",
-        "challenging": "wal",
+        "territory": "bre",
+        "previous_territory": "bre",
+        "challenging": "bre",
         "owner": "france",
         "piece_type": "f",
         "support": {},
@@ -95,6 +104,7 @@ initial_pieces = [
     },
     {
         "territory": "ber",
+        "previous_territory": "ber",
         "challenging": "ber",
         "owner": "germany",
         "piece_type": "a",
@@ -105,6 +115,7 @@ initial_pieces = [
     },
     {
         "territory": "mun",
+        "previous_territory": "mun",
         "challenging": "mun",
         "owner": "germany",
         "piece_type": "a",
@@ -115,6 +126,7 @@ initial_pieces = [
     },
     {
         "territory": "kie",
+        "previous_territory": "kie",
         "challenging": "kie",
         "owner": "germany",
         "piece_type": "f",
@@ -125,6 +137,7 @@ initial_pieces = [
     },
     {
         "territory": "rom",
+        "previous_territory": "rom",
         "challenging": "rom",
         "owner": "italy",
         "piece_type": "a",
@@ -135,6 +148,7 @@ initial_pieces = [
     },
     {
         "territory": "ven",
+        "previous_territory": "ven",
         "challenging": "ven",
         "owner": "italy",
         "piece_type": "a",
@@ -145,6 +159,7 @@ initial_pieces = [
     },
     {
         "territory": "nap",
+        "previous_territory": "nap",
         "challenging": "nap",
         "owner": "italy",
         "piece_type": "f",
@@ -155,6 +170,7 @@ initial_pieces = [
     },
     {
         "territory": "mos",
+        "previous_territory": "mos",
         "challenging": "mos",
         "owner": "russia",
         "piece_type": "a",
@@ -165,6 +181,7 @@ initial_pieces = [
     },
     {
         "territory": "war",
+        "previous_territory": "war",
         "challenging": "war",
         "owner": "russia",
         "piece_type": "a",
@@ -175,6 +192,7 @@ initial_pieces = [
     },
     {
         "territory": "sev",
+        "previous_territory": "sev",
         "challenging": "sev",
         "owner": "russia",
         "piece_type": "f",
@@ -185,6 +203,7 @@ initial_pieces = [
     },
     {
         "territory": "stp",
+        "previous_territory": "stp",
         "challenging": "stp",
         "owner": "russia",
         "piece_type": "f",
@@ -195,6 +214,7 @@ initial_pieces = [
     },
     {
         "territory": "con",
+        "previous_territory": "con",
         "challenging": "con",
         "owner": "turkey",
         "piece_type": "a",
@@ -205,6 +225,7 @@ initial_pieces = [
     },
     {
         "territory": "ank",
+        "previous_territory": "ank",
         "challenging": "ank",
         "owner": "turkey",
         "piece_type": "f",
@@ -215,6 +236,7 @@ initial_pieces = [
     },
     {
         "territory": "smy",
+        "previous_territory": "smy",
         "challenging": "smy",
         "owner": "turkey",
         "piece_type": "a",

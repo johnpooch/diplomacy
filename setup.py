@@ -45,7 +45,7 @@ def populate_users():
 def fill_out_orders():
     mongo.db.orders.remove({})
     orders = mongo.db.orders
-    for order in initial_orders:
+    for order in get_orders_from_txt("order_example.txt"):
         orders.insert(order)
         
 # Are seven players registered --------------------------------------------------------------------

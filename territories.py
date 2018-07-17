@@ -89,7 +89,7 @@ territories = {
         "supply_center": False,
     },
     "bar": {
-        "display_name": "Baltic Sea",
+        "display_name": "Barrents Sea",
         "neighbours": [
             {"name": "nrg", "shared_coast": False},
             {"name": "nry", "shared_coast": False},
@@ -226,7 +226,7 @@ territories = {
         "supply-center": False,
     },
     "con": {
-        "display_name": "Constanstinople",
+        "display_name": "Constantinople",
         "nation": "turkey",
         "neighbours": [
             {"name": "aeg", "shared_coast": False},
@@ -707,7 +707,7 @@ territories = {
         "supply_center": True,
     },
     "sev": {
-        "display_name": "Sevastapol",
+        "display_name": "Sevastopol",
         "nation": "russia",
         "neighbours": [
             {"name": "arm", "shared_coast": True},
@@ -760,7 +760,7 @@ territories = {
         "display_name": "Spain",
         "neighbours": [
             {"name": "gas", "shared_coast": True},
-            {"name": "lyo", "shared_coast": False},
+            {"name": "gol", "shared_coast": False},
             {"name": "mar", "shared_coast": True},
             {"name": "mid", "shared_coast": False},
             {"name": "naf", "shared_coast": False},

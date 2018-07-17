@@ -25,9 +25,13 @@ def find_other_pieces_challenging_territory(piece):
 def resolve_challenges():
     for piece in get_pieces():
         pieces_to_compare = find_other_pieces_challenging_territory(piece)
+        
         if piece_has_most_support(piece, pieces_to_compare) or not pieces_to_compare:
-            piece["territory"] = piece["challenging"]
+            
+            previous_territory = piece["territory"]
+            new_territory = piece["challenging"]
             mongo.db.pieces.update_one({
+                "previous_territory": previous_territory,
                 "territory": piece["territory"],
                 "owner": piece["owner"]
             }, 

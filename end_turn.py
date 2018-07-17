@@ -2,7 +2,6 @@ from dependencies import *
 from territories import territories
 from process_orders import process_orders
 from resolve_challenges import resolve_challenges
-from identify_retreats import identify_retreats
 from get_pieces import get_pieces
 from get_orders import get_orders
 
@@ -56,5 +55,7 @@ def end_turn():
     check_for_retreats()
     
     save_orders_to_history()
-    # clear orders
+    # mongo.db.orders.remove({})
     flash('Orders proccessed!', 'success')
+    
+    # A GET OTHER PIECES FUNCTION WOULD BE GOOD

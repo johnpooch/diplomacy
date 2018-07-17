@@ -1,12 +1,30 @@
 user orders unfinalised
-orders retrieved from database
 
 updating challenges
 
-england - processing order for piece at yor: move to wal
-england - processing order for piece at lon: support yor to wal
-wal must retreat
+england - processing order for piece at edi: move to nth
+england - processing order for piece at lvp: move to edi
+england - processing order for piece at lon: move to eng
+france - processing order for piece at mar: move to spa
+france - processing order for piece at par: move to pic
+france - processing order for piece at bre: move to eng
+italy - processing order for piece at ven: move to rom
+italy - processing order for piece at rom: move to nap
+italy - processing order for piece at nap: move to ion
+germany - processing order for piece at mun: move to ruh
+germany - processing order for piece at ber: move to kie
+germany - processing order for piece at kie: move to den
+austria - processing order for piece at vie: move to bud
+austria - processing order for piece at tri: move to alb
+austria - processing order for piece at bud: move to ser
+turkey - processing order for piece at con: move to bul
+turkey - processing order for piece at ank: move to bla
+turkey - processing order for piece at smy: move to con
+russia - processing order for piece at mos: move to ukr
+russia - processing order for piece at war: move to gal
+russia - processing order for piece at sev: move to rum
 
-wal: order failed
+lon: order failed
+
+bre: order failed
 phase incremented. new phase: 1
-orders retrieved from database
