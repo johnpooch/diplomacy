@@ -34,6 +34,16 @@ def resolve_challenges():
             {
                 "$set": {"territory": piece["challenging"]}
             })
+            if pieces_to_compare:
+                for piece in pieces_to_compare:
+                    mongo.db.pieces.update_one({
+                        "territory": piece["territory"],
+                        "owner": piece["owner"]
+                    }, 
+                    {
+                        "$set": {"must_retreat": True}
+                    })
+                    write_to_log("{} must retreat".format(piece["territory"]))
         else:
             write_to_log("\n{}: order failed".format(piece["territory"]))
     return True

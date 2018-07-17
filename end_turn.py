@@ -7,6 +7,20 @@ from get_pieces import get_pieces
 from get_orders import get_orders
 
 # END TURN ========================================================================================
+
+# save orders to history
+
+def save_orders_to_history():
+    order_history = mongo.db.order_history
+    for order in get_orders():
+        order_history.insert(order)
+
+# check for retreats ------------------------------------------------------------------------------
+def check_for_retreats():
+    if any(piece["must_retreat"] for piece in get_pieces()):
+            increment_phase(1)
+    else: 
+        increment_phase(2)
     
 # increment year ----------------------------------------------------------------------------------
 
@@ -17,7 +31,7 @@ def increment_year():
     
 # increment phase ---------------------------------------------------------------------------------
 
-def increment_phase():
+def increment_phase(num):
     new_phase = ((mongo.db.game_properties.find_one()["phase"] + 1) % 7)
     mongo.db.game_properties.update({}, {"$set": {"phase": new_phase}})
     write_to_log("phase incremented. new phase: {}".format(new_phase))
@@ -39,8 +53,8 @@ def end_turn():
     unfinalise_users()
     process_orders(get_orders())
     resolve_challenges()
-    # identify_retreats()
-    increment_phase()
-    # save_orders_to_log()
+    check_for_retreats()
+    
+    save_orders_to_history()
     # clear orders
     flash('Orders proccessed!', 'success')

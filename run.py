@@ -151,7 +151,7 @@ def test():
     initialise_game_db()
     populate_users()
     fill_out_orders()
-    process()
+    end_turn()
     return redirect(url_for('board'))
 
 if __name__ == '__main__':

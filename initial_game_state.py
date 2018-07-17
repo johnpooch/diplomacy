@@ -7,7 +7,8 @@ initial_pieces = [
         "owner": "austria",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -16,7 +17,8 @@ initial_pieces = [
         "owner": "austria",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -25,7 +27,8 @@ initial_pieces = [
         "owner": "austria",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
     },
     {
         # TESTING
@@ -34,7 +37,8 @@ initial_pieces = [
         "owner": "england",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -44,7 +48,8 @@ initial_pieces = [
         "owner": "england",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -54,7 +59,8 @@ initial_pieces = [
         "owner": "england",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -63,7 +69,8 @@ initial_pieces = [
         "owner": "france",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -72,7 +79,8 @@ initial_pieces = [
         "owner": "france",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -81,7 +89,8 @@ initial_pieces = [
         "owner": "france",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -90,7 +99,8 @@ initial_pieces = [
         "owner": "germany",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -99,7 +109,8 @@ initial_pieces = [
         "owner": "germany",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -108,7 +119,8 @@ initial_pieces = [
         "owner": "germany",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -117,7 +129,8 @@ initial_pieces = [
         "owner": "italy",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -126,7 +139,8 @@ initial_pieces = [
         "owner": "italy",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -135,7 +149,8 @@ initial_pieces = [
         "owner": "italy",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -144,7 +159,8 @@ initial_pieces = [
         "owner": "russia",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -153,7 +169,8 @@ initial_pieces = [
         "owner": "russia",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -162,7 +179,8 @@ initial_pieces = [
         "owner": "russia",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -171,7 +189,8 @@ initial_pieces = [
         "owner": "russia",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -180,7 +199,8 @@ initial_pieces = [
         "owner": "turkey",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -189,7 +209,8 @@ initial_pieces = [
         "owner": "turkey",
         "piece_type": "f",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     },
     {
@@ -198,7 +219,8 @@ initial_pieces = [
         "owner": "turkey",
         "piece_type": "a",
         "support": {},
-		"convoyed_by": []
+		"convoyed_by": [],
+		"must_retreat": False
         
     }
 ]

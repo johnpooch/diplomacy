@@ -5,6 +5,8 @@ updating challenges
 
 england - processing order for piece at yor: move to wal
 england - processing order for piece at lon: support yor to wal
+wal must retreat
 
 wal: order failed
 phase incremented. new phase: 1
+orders retrieved from database

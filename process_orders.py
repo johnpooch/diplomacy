@@ -16,7 +16,7 @@ def process_orders(orders):
 
     write_to_log("\nupdating challenges\n")
 
-    # PUT ORDERS IN ARRAY IN CORRECT ORDER
+    # PUT ORDERS IN ARRAY IN CORRECT ORDER?
 
     for order in orders:
         if order["command"] == "convoy":
