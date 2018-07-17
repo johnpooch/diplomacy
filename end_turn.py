@@ -34,7 +34,7 @@ def unfinalise_users():
 
 # RETURN_ARRAY EX: [False, "description or error"]
 
-def process():
+def end_turn():
     clear_log()
     unfinalise_users()
     process_orders(get_orders())

@@ -6,51 +6,5 @@ updating challenges
 england - processing order for piece at yor: move to wal
 england - processing order for piece at lon: support yor to wal
 
-all other orders are 'hold' orders
-
-orders
+wal: order failed
 phase incremented. new phase: 1
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. there is no piece at this origin or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.
-	invalid move. there is no piece at lon or it does not belong to the user.
-	invalid move. there is no piece at lon or it does not belong to the user.
-	invalid move. there is no piece at lon or it does not belong to the user.
-	invalid move. lon is not a neighbour of par.

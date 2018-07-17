@@ -1,4 +1,5 @@
 from dependencies import *
+from process_convoy import *
 from process_move import *
 
 # test_are_equal ----------------------------------------------------------------------------------
@@ -94,7 +95,7 @@ def unit_testing():
             ), 
         False)
         
-    # territory shares coast with origin -----------------------------------------------------
+    # territory shares coast with origin ----------------------------------------------------------
     
     test_are_equal(
         territory_shares_coast_with_origin(
@@ -110,7 +111,67 @@ def unit_testing():
             ), 
         False)
 
+    # check for neighbour convoy ------------------------------------------------------------------
+        
+    test_are_equal(
+        target_accessible_by_convoy(
+            {"origin": "lon", "target": "nwy", "nation": "england"},
+            {"territory": "lon", "convoyed_by": ["nth"]},
+            "lon"), 
+        True)
+    test_are_equal(
+        # true - piece has two convoying pieces between it and target.
+        target_accessible_by_convoy(
+            {"origin": "lon", "target": "swe", "nation": "england"},
+            {"territory": "lon", "convoyed_by": ["nth", "ska"]},
+            "lon"), 
+        True)
+        
+    test_are_equal(
+        # false - piece does not have convoying piece.
+        target_accessible_by_convoy(
+            {"origin": "lon", "target": "nwy", "nation": "england"},
+            {"territory": "lon", "convoyed_by": []},
+            "lon"), 
+        False)
+        
+    # object_piece_exists -----------------------------------------------------------------------
+        
+    test_are_equal(
+        object_piece_exists(
+            {"object": "lon", "target": "nwy", "nation": "england"},
+            [{"territory": "lon"}],
+            ),
+        True)
+    test_are_equal(
+        object_piece_exists(
+            {"object": "lon", "target": "nwy", "nation": "england"},
+            [{"territory": "wal"}],
+            ),
+        False)
         
     print("all units tests successful")
+    
+    # piece_is_on_water ---------------------------------------------------------------------------
+        
+    test_are_equal(
+        piece_is_on_water(
+            {"territory": "nth"},
+            ),
+        True)
+    test_are_equal(
+        piece_is_on_water(
+            {"territory": "lon"},
+            ),
+        False)
+    test_are_equal(
+        piece_is_on_water(
+            {"territory": "par"},
+            ),
+        False)
+        
+
+    
+    
     
 unit_testing()
