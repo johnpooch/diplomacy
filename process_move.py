@@ -25,7 +25,7 @@ def move_is_valid(order, pieces):
     if not piece:
         print("invalid move. there is no piece at this origin or it does not belong to the user.")
         return False
-    return (target_accessible_by_convoy(order, piece) or territory_is_neighbour(order["origin"], order["target"])) and territory_is_accessible_by_piece_type(order["origin"], order["target"], piece)
+    return (target_accessible_by_convoy(order, piece) or territory_is_neighbour(order["origin"], order["target"])) and territory_is_accessible_by_piece_type(piece, territory)
         
 # process move ------------------------------------------------------------------------------------
 

@@ -64,14 +64,52 @@ def unit_testing():
             ), 
         False)
         
-        
+    # territory is accessible by piece type -------------------------------------------------------
+    
     test_are_equal(
         territory_is_accessible_by_piece_type(
-            origin, 
-            territory, 
-            piece
-        ), 
+            {"territory": "par", "piece_type": "a"},
+            "bur"
+            ), 
         True)
+    test_are_equal(
+        # false - army trying to move to water territory
+        territory_is_accessible_by_piece_type(
+            {"territory": "bre", "piece_type": "a"},
+            "eng"
+            ), 
+        False)
+    test_are_equal(
+        # false - army trying to move to water territory
+        territory_is_accessible_by_piece_type(
+            {"territory": "bre", "piece_type": "a"},
+            "eng"
+            ), 
+        False)
+    test_are_equal(
+        # false - fleet trying to move to inland territory
+        territory_is_accessible_by_piece_type(
+            {"territory": "bre", "piece_type": "f"},
+            "par"
+            ), 
+        False)
+        
+    # territory shares coast with origin -----------------------------------------------------
+    
+    test_are_equal(
+        territory_shares_coast_with_origin(
+            "kie",
+            "hol"
+            ), 
+        True)
+    test_are_equal(
+        # false - fleet to move to territory that is not connected by shared coast.
+        territory_shares_coast_with_origin(
+            "ank",
+            "smy"
+            ), 
+        False)
+
         
     print("all units tests successful")
     
