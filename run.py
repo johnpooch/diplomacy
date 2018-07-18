@@ -154,6 +154,16 @@ def test_2():
     fill_out_orders("game_histories/game_1/02_fall_1901.txt")
     end_turn()
     return redirect(url_for('board'))
+    
+@app.route("/test_all") 
+def test_all():
+    initialise_game_db()
+    populate_users()
+    fill_out_orders("game_histories/game_1/01_spring_1901.txt")
+    end_turn()
+    fill_out_orders("game_histories/game_1/02_fall_1901.txt")
+    end_turn()
+    return redirect(url_for('board'))
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'), 

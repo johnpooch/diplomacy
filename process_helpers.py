@@ -1,4 +1,5 @@
 from dependencies import *
+from get_pieces import get_pieces
 
 # territory shares coast with origin --------------------------------------------------------------
 
@@ -6,13 +7,23 @@ def territory_shares_coast_with_origin(origin, territory):
     for neighbour in territories[territory]["neighbours"]:
             if neighbour["name"] == origin:
                 return neighbour["shared_coast"]
+                
+# territory is special coast --------------------------------------------------------------------
+
+def territory_is_special_coast(territory):
+    return "parent_territory" in territories[territory]
+    
+# territory has special coasts --------------------------------------------------------------------
+
+def territory_has_special_coasts(territory):
+    return "special_coasts" in territories[territory]
      
 # target is accessible by piece_type --------------------------------------------------------------
 
 def territory_is_accessible_by_piece_type(piece, territory):
     territory_type = territories[territory]["territory_type"]
     if piece["piece_type"] == "a":
-        return territory_type != "water"
+        return territory_type != "water" or territory_is_special_coast(territory)
     else:
          # refactor
         return territory_type == "water" or (territory_type == "coastal" and territory_shares_coast_with_origin(piece["territory"], territory)) or (territory_type == "coastal" and territories[piece["territory"]]["territory_type"] == "water")
@@ -20,12 +31,18 @@ def territory_is_accessible_by_piece_type(piece, territory):
 # territory is neighbour --------------------------------------------------------------------------
 
 def territory_is_neighbour(origin, territory_to_check):
-    neighbours = territories[origin]["neighbours"]
-    if any(neighbour["name"] == territory_to_check for neighbour in neighbours):
-        return True
+    
+    if "bicoastal" in territories[origin]:
+        print("FUCKer")
+        for piece in get_pieces():
+            if piece["territory"] == origin:
+                piece = piece
+                print("FUCK")
+        neighbours = [neighbour for neighbour in territories[origin]["neighbours"] if neighbour["coast"] == piece["coast"]]
     else:
-        write_to_log("\tinvalid move. {0} is not a neighbour of {1}.".format(origin, territory_to_check))
-        return False
+        neighbours = territories[origin]["neighbours"]
+    # return true if the territory to check is one of its neighbours
+    return any(neighbour["name"] == territory_to_check for neighbour in neighbours)
         
 # object piece exists --------------------------------------------------------------------------
 

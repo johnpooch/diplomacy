@@ -1,3 +1,8 @@
+stp_reps = {
+    'St. Petersburg (South Coast)': 'stp-sc',
+    'St. Petersburg (North Coast)': 'stp-nc',
+}
+
 reps = {
     'Western Mediterranean': 'wes',
     'Edinburgh': 'edi',
@@ -50,6 +55,7 @@ reps = {
     'Barrents Sea': 'bar',
     'Silesia': 'sil',
     'St. Petersburg': 'stp',
+
     'Burgundy': 'bur',
     'Holland': 'hol',
     'Belgium': 'bel',

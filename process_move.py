@@ -25,5 +25,6 @@ def process_move(order, piece):
     if not move_is_valid(order, piece):
         write_to_log("invalid move")
         return False
-    mongo.db.pieces.update_one({"territory": order["origin"]}, {"$set": {"challenging": order["target"]}})
+        
+    mongo.db.pieces.update_one({"territory": order["origin"]}, {"$set": {"challenging": territories[order["target"]]["region"]}})
     return True

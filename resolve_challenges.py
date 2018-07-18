@@ -1,4 +1,5 @@
 from dependencies import *
+from process_helpers import *
 from get_pieces import get_pieces
 from get_orders import get_orders
 
@@ -22,33 +23,38 @@ def find_other_pieces_challenging_territory(piece):
     
 # resolve challenges ------------------------------------------------------------------------------
 
-def resolve_challenges():
+def resolve_challenges(orders):
     write_to_log("\n")
-    for piece in get_pieces():
-        pieces_to_compare = find_other_pieces_challenging_territory(piece)
-        
-        if piece_has_most_support(piece, pieces_to_compare) or not pieces_to_compare:
+    for order in orders:
+        if order["order_is_valid"]:
+            piece = mongo.db.pieces.find_one({"territory": order["origin"]})
+            pieces_to_compare = find_other_pieces_challenging_territory(piece)
             
-            previous_territory = piece["territory"]
-            new_territory = piece["challenging"]
-            mongo.db.pieces.update_one({
-                "previous_territory": previous_territory,
-                "territory": piece["territory"],
-                "owner": piece["owner"]
-            }, 
-            {
-                "$set": {"territory": piece["challenging"]}
-            })
-            if pieces_to_compare:
-                for piece in pieces_to_compare:
-                    mongo.db.pieces.update_one({
-                        "territory": piece["territory"],
-                        "owner": piece["owner"]
-                    }, 
-                    {
-                        "$set": {"must_retreat": True}
-                    })
-                    write_to_log("{} must retreat".format(piece["territory"]))
-        else:
-            write_to_log("{}: order failed".format(piece["territory"]))
+            if piece_has_most_support(piece, pieces_to_compare) or not pieces_to_compare:
+                
+                previous_territory = piece["territory"]
+                new_territory = order["target"]
+                mongo.db.pieces.update_one({
+    
+                    "territory": piece["territory"],
+                    "owner": piece["owner"]
+                }, 
+                {
+                    "$set": {"territory": new_territory, "previous_territory": previous_territory}
+                })
+                
+                if pieces_to_compare:
+                    for piece in pieces_to_compare:
+                        mongo.db.pieces.update_one({
+                            "territory": piece["territory"],
+                            "owner": piece["owner"]
+                        }, 
+                        {
+                            "$set": {"must_retreat": True}
+                        })
+                        write_to_log("{} must retreat".format(piece["territory"]))
+            else:
+                write_to_log("{}: order failed".format(piece["territory"]))
+        else: 
+            print(order["origin"])
     return True

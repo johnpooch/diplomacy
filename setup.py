@@ -6,6 +6,7 @@ from get_game_state import get_game_state
 # Clear DB ----------------------------------------------------------------------------------------
 
 def clear_db():
+    # NEED TO CLEAR ORDER HISTORY
     mongo.db.pieces.remove({})
     mongo.db.users.remove({})
     mongo.db.ownership.remove({})

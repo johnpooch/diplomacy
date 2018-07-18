@@ -1,4 +1,4 @@
-from reps import reps
+from reps import reps, stp_reps
 
 def replace_all(text, dic):
         for i, j in dic.items():
@@ -10,12 +10,17 @@ def get_orders_from_txt(file):
     order_list = []
     
     lines = file.read()
+    lines = replace_all(lines, stp_reps)
     lines = replace_all(lines, reps)
     
     order_blocks = lines.split("\n\n")
     order_blocks = [block.split("\n") for block in order_blocks]
     
-    for block in order_blocks:
+    print(order_blocks[0])
+    phase = order_blocks[0][0]
+    year = order_blocks[0][1]
+    
+    for block in order_blocks[1:]:
         nation = block[0].lower()
         
         for line in block[1:]:
@@ -30,7 +35,7 @@ def get_orders_from_txt(file):
             if words[1] == "MOVE":
                 target = words[2]
             
-            if words[2] == "CONVOY" or words[2] == "SUPPORT":
+            if words[1] == "CONVOY" or words[1] == "SUPPORT":
                 _object = words[2]
                 target = words[4]
             
@@ -43,8 +48,9 @@ def get_orders_from_txt(file):
                 "command": command,
                 "order_is_valid": valid,
                 "object": _object,
-                "phase": 0,
-                "year": 1900
+                "phase": phase,
+                "year": year
             }
             order_list.append(order)
+            
     return order_list
