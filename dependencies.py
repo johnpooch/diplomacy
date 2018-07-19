@@ -9,13 +9,11 @@ import pymongo
 from wtforms.validators import DataRequired
 from forms import RegistrationForm, LoginForm
 
-from orders import initial_orders
 from datetime import datetime
 import bcrypt
 import random
 
 from territories import territories
-from write_to_log import write_to_log, clear_log
 from initial_game_state import *
 
 from order_text_processor import get_orders_from_txt

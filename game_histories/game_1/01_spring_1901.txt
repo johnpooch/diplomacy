@@ -33,6 +33,6 @@ Smyrna MOVE Constantinople -> resolved
 
 RUSSIA
 Moscow MOVE Ukraine -> resolved
-St. Petersburg (South Coast) MOVE Barrents Sea -> resolved
+St. Petersburg (South Coast) MOVE Gulf of Bothnia -> resolved
 Warsaw MOVE Galicia -> resolved
 Sevastopol MOVE Rumania -> resolved
