@@ -1,12 +1,15 @@
 body {
   background: #fafafa;
   color: #333333;
-  margin-top: 5rem;
+  margin-top: 0px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
+
+#draggable { padding: 0.5em; border-radius: 10%; }
+
 
 .bg-steel {
   background-color: #5f788a;
@@ -91,12 +94,36 @@ a.article-title:hover {
     width: 1450px;
     height: 1200px;
     
+    left: 0px;
+    
     background-image: url("../images/bigmap.png");
     background-repeat: no-repeat;
     background-size: cover;
     
     position: absolute;
     display: inline;
+}
+
+.fa-bars {
+  text-align: center;
+  font-size: 3rem;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.floating-button {
+  
+  position: absolute;
+  text-align: center;
+  top: 15vh;
+  left: 15%;
+  border: solid black 2px;
+  background-image: url("../images/logo_diplomacy.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 74px;
+  height: 74px;
+  background-color:inherit;
 }
 
 .piece {

@@ -26,31 +26,58 @@ def get_orders_from_txt(file):
         for line in block[1:]:
             words = line.split(" ")
             
-            target = ""
-            _object = ""
+            # BUILD ===========================
             
-            origin = words[0]
-            command = words[1].lower()
+            if block[0].lower() == "build":
+                print("hello?")
+                command = words[0].lower()
+                if block[1].lower() == "army":
+                    piece_type = "a"
+                else:
+                    piece_type = "f"
+                target = words[2].lower()
+                
+                order = {
+                    "nation": nation,
+                    "origin": "",
+                    "target": target,
+                    "command": command,
+                    "order_is_valid": True,
+                    "object": "",
+                    "phase": phase,
+                    "year": year
+                }
+                print(order)
             
-            if words[1] == "MOVE":
-                target = words[2]
+            # ===================================
             
-            if words[1] == "CONVOY" or words[1] == "SUPPORT":
-                _object = words[2]
-                target = words[4]
+            else: 
+                target = ""
+                _object = ""
+                
+                origin = words[0]
+                command = words[1].lower()
+                
+                if words[1] == "MOVE":
+                    target = words[2]
+                
+                if words[1] == "CONVOY" or words[1] == "SUPPORT":
+                    _object = words[2]
+                    target = words[4]
+                
+                valid = (words[-1] == 'resolved')
             
-            valid = (words[-1] == 'resolved')
-        
-            order = {
-                "nation": nation,
-                "origin": origin,
-                "target": target,
-                "command": command,
-                "order_is_valid": valid,
-                "object": _object,
-                "phase": phase,
-                "year": year
-            }
+                order = {
+                    "nation": nation,
+                    "origin": origin,
+                    "target": target,
+                    "command": command,
+                    "order_is_valid": valid,
+                    "object": _object,
+                    "phase": phase,
+                    "year": year,
+                    "bounced": False,
+                }
             order_list.append(order)
             
     return order_list

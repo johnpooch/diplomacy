@@ -1,5 +1,14 @@
 user orders unfinalised
 
-	invalid move. there is no piece at bre or it does not belong to the user.
-edi: move into nwy successful. Still challenging nwy
-pic: move into bel successful. Still challenging bel
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+	invalid move. there is no piece at BUILD or it does not belong to the user.
+year incremented. new year: 1902
+
+phase updated from 4 to 0.

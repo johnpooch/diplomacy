@@ -8,86 +8,29 @@
     
     <!--bootstrap-->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}"  type="text/css" />
     <link rel="stylesheet" href="{{url_for('static', filename='css/clean-blog.min.css')}}"  type="text/css" />
     <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css" />
     <link rel="stylesheet" href="{{url_for('static', filename='css/land_positions.css')}}" type="text/css"/>
     <link rel="stylesheet" href="{{url_for('static', filename='css/sea_positions.css')}}" type="text/css"/>
 
+
     <title>Diplomacy</title>
 </head>
 
 <body>
     
-    <!-- Navigation -->
-    <nav id="nav" class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-      <div class="container">
-        <a class="navbar-brand" href="{{ url_for('board') }}">Diplomacy</a>
-        
-        {% if game_state["game_properties"]["game_started"] %}
-          <small>Game is active</small>
-        {% else %}
-          <small>Game not active -  waiting for players to join</small>
-        {% endif %}
-        
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fa fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            
-            {% if not session["username"] %}
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-              </li>
-              {% if game_state["game_properties"]["game_started"] %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('register') }}">Register</a>
-                </li>
-              {% endif %}
-            {% endif %}
-            
-            {% if session["username"] %}
-            
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('orders') }}">Orders</a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" href="#">Messages</a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('announcements') }}">Announcements</a>
-              </li>
-              
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-              </li>
-              
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </nav>
-    
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
-          {% with messages = get_flashed_messages(with_categories=true)  %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                  {{ message }}
-                </div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
           {% block contents %}
           {% endblock %}
+          <div id="draggable" class="ui-widget-content floating-button">
+            
+          </div>
         </div>
       </div>
     </main>
@@ -101,6 +44,17 @@
     <!-- Order Form JavaScript -->
     <script src="{{ url_for('static', filename='js/jqBootstrapValidation.js') }}"></script>
     <script src="{{ url_for('static', filename='js/contact_me.js') }}"></script>
+    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+    $( function() {
+      $( "#draggable" ).draggable();
+    } );
+    </script>
+    
 </body>
 
 </html>

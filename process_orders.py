@@ -3,11 +3,26 @@ from dependencies import *
 from territories import territories
 
 
+# CHANGE PLACES ===================================================================================
+
+def change_places(orders):
+    for order in orders:
+        if order["order_is_valid"] and order["command"] == "move":
+            piece = get_origin_by_order(order)
+            mongo.db.pieces.update_one({
+                        "_id": piece["_id"]
+                    }, 
+                    {
+                        "$set": {"territory": piece["challenging"]}
+                    })
+    return True
+
 # RESOLVE CHALLENGES ==============================================================================
     
 # find other pieces challenging territory ---------------------------------------------------------
     
 def find_other_pieces_challenging_territory(piece):
+    print(piece["challenging"])
     territory = piece["challenging"]
     return [other_piece for other_piece in get_pieces() if other_piece["challenging"] == territory and piece["_id"] != other_piece["_id"]]
 
@@ -28,26 +43,45 @@ def piece_has_most_support(piece, pieces_to_compare):
 
 def resolve_challenges(orders):
     
+    """ this function needs to resolve challenges by determining if a piece has the most support into the territory its challenging.
+    If the piece doesn't have the most support it should now be challenging the territory it came from. The process then needs to run recursively until all pieces are challenging the territory it came from. """
+    
     for order in orders:
         if order["order_is_valid"] and order["command"] == "move":
+            
             piece = get_origin_by_order(order)
+            write_to_log("piece at {0} is challenging to {1}".format(piece["territory"], piece["challenging"]))
+            
             pieces_to_compare = find_other_pieces_challenging_territory(piece)
             
-            if piece_has_most_support(piece, pieces_to_compare) or not pieces_to_compare:
+            if not piece_has_most_support(piece, pieces_to_compare) and pieces_to_compare:
                 
-                # THIS NEEDS TO SOMEHOW BE RECURSIVE SO THAT ALL CHALLENGES ARE RESOLVED BEFORE UPDATING TERRITORIES
+                write_to_log("piece at {0} challenging {1} has bounced".format(piece["territory"], piece["challenging"]))
                 
-                previous_territory = order["origin"]
-                new_territory = order["target"]
-                
-                mongo.db.pieces.update_one({
-                    "_id": order["origin_id"]
+                mongo.db.orders.update_one({
+                    "_id": order["_id"]
                 }, 
                 {
-                    "$set": {"territory": new_territory, "previous_territory": previous_territory}
+                    "$set": {"bounced": True}
                 })
-            else:
-                write_to_log("{0}: order failed. target: {1}".format(piece["territory"], order["target"]))
+                
+    for order in get_orders():
+        if order["bounced"]:
+            piece = get_origin_by_order(order)
+            mongo.db.pieces.update_one({
+                    "_id": piece["_id"]
+                }, 
+                {
+                    "$set": {"challenging": piece["territory"]}
+                })
+            write_to_log("bounced piece at {0} is now challenging its own territory".format(piece["territory"]))
+                
+                # CONFLICT
+    for piece in get_pieces():
+        for other_piece in get_pieces():
+            if piece["challenging"] == other_piece["challenging"] and other_piece["_id"] != piece["_id"]:
+                write_to_log("recursing the function because piece at {} is challenging {} the same territory as {}".format(piece["territory"], piece["challenging"], other_piece["territory"]))
+                resolve_challenges(get_orders())
     return True
 
 # =================================================================================================
@@ -258,6 +292,11 @@ def update_challenges(orders):
         if order["command"] == "retreat" and order["origin_id"]:
             order["order_is_valid"] = process_retreat(order, piece)
             mongo.db.orders.update_one({"_id": order["_id"]}, {"$set": {"order_is_valid": order["order_is_valid"]}})
+        
+    for order in orders:
+        if order["command"] == "build":
+            print("happy")
+            
                 
     return True
     
@@ -362,6 +401,8 @@ def end_turn():
     attach_pieces_to_order(get_orders(), get_pieces())
     update_challenges(get_orders())
     resolve_challenges(get_orders())
+    
+    change_places(get_orders())
 
     change_phase(mongo.db.game_properties.find_one({})["phase"])
     

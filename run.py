@@ -163,8 +163,8 @@ def test_all():
     end_turn()
     fill_out_orders("game_histories/game_1/02_fall_1901.txt")
     end_turn()
-    # fill_out_orders("game_histories/game_1/03_fall_retreat_1901.txt")
-    # end_turn()
+    fill_out_orders("game_histories/game_1/03_fall_build_1901.txt")
+    end_turn()
     
     return redirect(url_for('board'))
 
