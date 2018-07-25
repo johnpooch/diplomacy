@@ -1,14 +1,47 @@
 user orders unfinalised
 
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-	invalid move. there is no piece at BUILD or it does not belong to the user.
-year incremented. new year: 1902
+piece at edi is challenging to nwy
+piece at pic is challenging to bel
+piece at bre is challenging to mid
+piece at rom is challenging to apu
+piece at nap is challenging to tun
+piece at kie is challenging to hol
+piece at den is challenging to swe
+piece at alb is challenging to gre
+piece at bul is challenging to gre
+piece at bul challenging gre has bounced
+piece at bla is challenging to sev
+piece at con is challenging to bul
+bounced piece at bul is now challenging its own territory
+recursing the function because piece at bul is challenging bul the same territory as con
+piece at edi is challenging to nwy
+piece at pic is challenging to bel
+piece at bre is challenging to mid
+piece at rom is challenging to apu
+piece at nap is challenging to tun
+piece at kie is challenging to hol
+piece at den is challenging to swe
+piece at alb is challenging to gre
+piece at bul is challenging to bul
+piece at bul challenging bul has bounced
+piece at bla is challenging to sev
+piece at con is challenging to bul
+piece at con challenging bul has bounced
+bounced piece at bul is now challenging its own territory
+bounced piece at con is now challenging its own territory
+recursing the function because piece at con is challenging bul the same territory as bul
+piece at edi is challenging to nwy
+piece at pic is challenging to bel
+piece at bre is challenging to mid
+piece at rom is challenging to apu
+piece at nap is challenging to tun
+piece at kie is challenging to hol
+piece at den is challenging to swe
+piece at alb is challenging to gre
+piece at bul is challenging to bul
+piece at bla is challenging to sev
+piece at con is challenging to con
+bounced piece at bul is now challenging its own territory
+bounced piece at con is now challenging its own territory
 
-phase updated from 4 to 0.
+phase updated from 2 to 4.
