@@ -713,20 +713,7 @@ territories = {
         "territory_type": "coastal",
         "supply_center": True,
     },
-    "ruh": {
-        "region": "ruh",
-        "display_name": "Ruhr",
-        "nation": "germany",
-        "neighbours": [
-            {"name": "bel", "shared_coast": False},
-            {"name": "bur", "shared_coast": False},
-            {"name": "hol", "shared_coast": False},
-            {"name": "kie", "shared_coast": False},
-            {"name": "mun", "shared_coast": False},
-            ],
-        "territory_type": "inland",
-        "supply_center": True,
-    },
+
     "rum": {
         "region": "rum",
         "display_name": "Rumania",
