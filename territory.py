@@ -11,9 +11,8 @@ class Territory():
         return "Name: {}\nDisplay Name: {}, Neighbours: {}\n".format(self.name, self.display_name, self.neighbours)
         
 class Water(Territory):
-    def __init__(self, name, display_name, neighbours, parent_territory):
+    def __init__(self, name, display_name, neighbours):
         Territory.__init__(self, name, display_name, neighbours)
-        self.parent_territory = parent_territory
         
 class Coastal(Territory):
     def __init__(self, name, display_name, neighbours, shared_coast, supply_center):
@@ -22,34 +21,44 @@ class Coastal(Territory):
         self.supply_center = supply_center
         
 class Inland(Territory):
-    def __init__(self, name, display_name, neighbours, supply_center, parent_territory):
+    def __init__(self, name, display_name, neighbours, supply_center):
         Territory.__init__(self, name, display_name, neighbours)
         self.supply_center = supply_center
+        
+class Special_Inland(Inland):
+    def __init__(self, name, display_name, neighbours, supply_center, coasts):
+        Inland.__init__(self, name, display_name, neighbours)
+        self.coasts = coasts
+        
+class Special_Coastal(Water):
+    def __init__(self, name, display_name, neighbours, parent_territory):
+        Water.__init__(self, name, display_name, neighbours)
+        self.parent_territory = parent_territory
+
+# Water Territories -------------------------------------------------------------------------------
+
+adr = Water("adr", "adriatic sea", ["alb", "apu", "ion", "tri", "ven"]),
+aeg = Water("aeg", "aegean sea", ["bla", "bul-int", "bul-sc", "con", "eas", "gre", "ion", "smy"]),
+bal = Water("bal", "baltic sea", ["ber", "bot", "den", "kie", "pru", "ska", "swe"]),
+bar = Water("bar", "barrents sea", ["nrg", "nry", "stp-int", "stp-sc"]),
+bla = Water("bla", "black sea", ["ank", "arm", "bul-int", "bul-nc", "con", "rum", "sev"]),
+bot = Water("bot", "gulf of bothnia", ["bal", "fin", "lvn", "swe", "stp-int", "stp-int"]),
+eas = Water("eas", "eastern mediterranean sea", ["aeg", "smy", "syr"]),
+eng = Water("eng", "english channel", ["bel", "bre", "iri", "lon", "mid", "nth", "pic", "wal"]),
+gol = Water("gol", "gulf of lyon", ["mar", "pie", "spa-int", "spa-sc", "tus", "tyn", "wes"]),
+hel = Water("hel", "heligoland blight", ["den", "hol", "kie", "nth"]),
+ion = Water("ion", "ionian sea", ["aeg", "alb", "apu", "gre", "nap", "tun", "tyn"]),
+iri = Water("iri", "irish sea", ["eng", "lvp", "mid", "nat", "wal"]),
+mid = Water("mid", "mid-atlantic ocean", ["bre", "eng", "gas", "iri", "naf", "nat", "spa-int", "spa-nc", "spa-sc", "por", "wes"]),
+nat = Water("nat", "north atlantic", ["cly", "iri", "lvp", "mid", "nrg"]),
+nrg = Water("nrg", "norwegian sea", ["bar", "cly", "edi", "nat", "nry", "nth"]),
+nth = Water("nth", "north sea", ["bel", "den", "edi", "eng", "hel", "hol", "lon", "nrg", "nwy", "ska", "yor"]),
+ska = Water("ska", "skagerrak", ["bal", "den", "nth", "nwy", "swe"]),
+tyn = Water("tyn", "tyrhennian sea", ["gol", "ion", "nap", "rom", "tun", "tus", "wes"]),
+wes = Water("tyn", "western mediterranean", ["gol", "mid", "naf", "spa", "spa_sc", "tun", "tyn"]),
 
 
-adr = Water("adr", "adriatic sea", ["alb", "apu", "ion", "tri", "ven"], False), 
-aeg = Water("aeg", "aegean sea", ["bla", "bul-int", "bul-sc", "con", "eas", "gre", "ion", "smy"], False),  
-bal = Water("bal", "baltic sea", ["ber", "bot", "den", "kie", "pru", "ska", "swe"], False), 
-bar = Water("bar", "barrents sea", ["nrg", "nry", "stp-int", "stp-sc"], False), 
-bla = Water("bla", "black sea", ["ank", "arm", "bul-int", "bul-nc", "con", "rum", "sev"], False),
-bot = Water("bot", "gulf of bothnia", ["bal", "fin", "lvn", "swe", "stp-int", "stp-int"], False),
-# bul_nc = Water("bul-nc", "bulgaria (north coast)", ["bal", "fin", "lvn", "swe", "stp-int", "stp-int"], bul),
-# bul_sc = Water("bul-sc", "bulgaria (north coast)", ["aeg", "con", "gre"], bul),
-eas = Water("eas", "eastern mediterranean sea", ["aeg", "smy", "syr"], False),
-eng = Water("eng", "english channel", ["bel", "bre", "iri", "lon", "mid", "nth", "pic", "wal"], False),
-gol = Water("gol", "gulf of lyon", ["mar", "pie", "spa-int", "spa-sc", "tus", "tyn", "wes"], False),
-hel = Water("hel", "heligoland blight", ["den", "hol", "kie", "nth"], False),
-ion = Water("ion", "ionian sea", ["aeg", "alb", "apu", "gre", "nap", "tun", "tyn"], False),
-iri = Water("iri", "irish sea", ["eng", "lvp", "mid", "nat", "wal"], False),
-mid = Water("mid", "mid-atlantic ocean", ["bre", "eng", "gas", "iri", "naf", "nat", "spa-int", "spa-nc", "spa-sc", "por", "wes"], False),
-nat = Water("nat", "north atlantic", ["cly", "iri", "lvp", "mid", "nrg"], False),
-nrg = Water("nrg", "norwegian sea", ["bar", "cly", "edi", "nat", "nry", "nth"], False),
-nth = Water("nth", "north sea", ["bel", "den", "edi", "eng", "hel", "hol", "lon", "nrg", "nwy", "ska", "yor"], False),
-ska = Water("ska", "skagerrak", ["bal", "den", "nth", "nwy", "swe"], False),
-stp_sc = Water("stp_sc", "st. petersburg (south coast)", ["bot", "fin", "liv"], True),
-stp_nc = Water("stp_nc", "st. petersburg (north coast)", ["bar", "nwy"], True),
-tyn = Water("tyn", "tyrhennian sea", ["gol", "ion", "nap", "rom", "tun", "tus", "wes"], False),
-wes = Water("tyn", "western mediterranean", ["gol", "mid", "naf", "spa", "spa_sc", "tun", "tyn"], False),
+# Coastal Territories -----------------------------------------------------------------------------
 
 alb = Coastal("alb", "albania", ["adr", "gre", "ion", "ser", "tri"], ["gre", "tri"], False),
 ank = Coastal("ank", "ankara", ["arm", "bla", "con", "smy"], ["arm", "con"], "turkey"),
@@ -91,27 +100,36 @@ ven = Coastal("ven", "venice", ["adr", "apu", "rom", "pie", "tri", "tyn", "tyr"]
 wal = Coastal("wal", "wales", ["eng", "iri", "lon", "lvp", "yor"], ["lon", "lvp"], "england"),
 yor = Coastal("yor", "york", ["edi", "lon", "lvp", "nth", "wal"], ["edi", "lon"], False),
 
-boh = Inland("boh", "bohemia", ["gal", "mun", "sil", "tyr", "vie"], False, False),
-bud = Inland("bud", "budapest", ["gal", "rum", "ser", "tri", "vie"], "austria", False),
-bul = Inland("bul", "bulgaria", ["aeg", "bla", "con", "gre", "rum", "ser"], "neutral", True),
-bur = Inland("bur", "burgundy", ["bre", "bel", "gas", "mar", "mun", "par", "pic", "ruh",], False, False), 
-gal = Inland("gal", "galicia", ["boh", "bud", "rum", "sil", "ukr", "vie", "war"], False, False), 
-mos = Inland("mos", "moscow", ["lvn", "rum", "sev", "stp-int", "ukr", "war"], "russia", False), 
-mun = Inland("mun", "munich", ["ber", "boh", "bur", "kie", "sil", "ruh", "tyr"], "germany", False), 
-par = Inland("par", "paris", ["bre", "bur", "gas", "pic", "sil", "ruh", "tyr"], "france", False), 
-ruh = Inland("ruh", "ruhr", ["bre", "bur", "hol", "kie", "mun"], "germany", False),
-ser = Inland("ser", "serbia", ["alb", "bud", "bul", "gre", "rum", "tri"], "neutral", False),
-sil = Inland("sil", "silesia", ["ber", "boh", "gal", "mun", "war"], False, False),
-spa = Inland("spa", "spain", ["gas", "mar", "por"], "neutral", False),
-stp = Inland("stp", "st. petersburg", ["fin", "lvn", "mos", "nwy"], "russia", True),
-tyr = Inland("tyr", "tyrolia", ["boh", "mun", "tri", "ven", "vie"], False, False),
-ukr = Inland("ukr", "ukraine", ["gal", "mos", "rum", "sev", "war"], False, False),
-vie = Inland("vie", "vienna", ["boh", "bud", "gal", "tri", "tyr"], "italy", False),
-war = Inland("war", "warsaw", ["gal", "lvn", "mos", "sil", "pru", "ukr"], "russia", False),
 
-mid = Water("eng", "english channel", ["nwy"], False)
-bre = Coastal("bre", "brest", ["par"], ["pic"], False)
+# Inland Territories ------------------------------------------------------------------------------
+
+boh = Inland("boh", "bohemia", ["gal", "mun", "sil", "tyr", "vie"], False),
+bud = Inland("bud", "budapest", ["gal", "rum", "ser", "tri", "vie"], "austria"),
+bul = Inland("bul", "bulgaria", ["aeg", "bla", "con", "gre", "rum", "ser"], "neutral"),
+bur = Inland("bur", "burgundy", ["bre", "bel", "gas", "mar", "mun", "par", "pic", "ruh",], False), 
+gal = Inland("gal", "galicia", ["boh", "bud", "rum", "sil", "ukr", "vie", "war"], False), 
+mos = Inland("mos", "moscow", ["lvn", "rum", "sev", "stp-int", "ukr", "war"], "russia"), 
+mun = Inland("mun", "munich", ["ber", "boh", "bur", "kie", "sil", "ruh", "tyr"], "germany"), 
+par = Inland("par", "paris", ["bre", "bur", "gas", "pic", "sil", "ruh", "tyr"], "france"), 
+ruh = Inland("ruh", "ruhr", ["bre", "bur", "hol", "kie", "mun"], "germany"),
+ser = Inland("ser", "serbia", ["alb", "bud", "bul", "gre", "rum", "tri"], "neutral"),
+sil = Inland("sil", "silesia", ["ber", "boh", "gal", "mun", "war"], False),
+stp = Inland("stp", "st. petersburg", ["fin", "lvn", "mos", "nwy"], "russia"),
+tyr = Inland("tyr", "tyrolia", ["boh", "mun", "tri", "ven", "vie"], False),
+ukr = Inland("ukr", "ukraine", ["gal", "mos", "rum", "sev", "war"], False),
+vie = Inland("vie", "vienna", ["boh", "bud", "gal", "tri", "tyr"], "italy"),
+war = Inland("war", "warsaw", ["gal", "lvn", "mos", "sil", "pru", "ukr"], "russia"),
 
 
-print(mid.name)
-print(bre.shared_coast)
+# Special Inland Territories ----------------------------------------------------------------------
+
+bul = Special_Inland("bul", "bulgaria", ["aeg", "bla", "con", "gre", "rum", "ser"], "neutral", ["bul-nc", "bul-sc"]),
+spa = Special_Inland("spa", "spain", ["gas", "mar", "por"], "neutral", ["spa-nc", "spa-sc"]),
+stp = Special_Inland("stp", "st. petersburg", ["fin", "lvn", "mos", "nwy"], "russia", ["stp-nc", "stp-sc"]),
+
+# Special Coastal Territories ---------------------------------------------------------------------
+
+bul_nc = Special_Coastal("bul-nc", "bulgaria (north coast)", ["bal", "fin", "lvn", "swe", "stp-int", "stp-int"], "bul"),
+bul_sc = Special_Coastal("bul-sc", "bulgaria (north coast)", ["aeg", "con", "gre"], "bul"),
+stp_sc = Special_Coastal("stp_sc", "st. petersburg (south coast)", ["bot", "fin", "liv"], "stp"),
+stp_nc = Special_Coastal("stp_nc", "st. petersburg (north coast)", ["bar", "nwy"], "stp"),
