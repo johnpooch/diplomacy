@@ -1,6 +1,6 @@
 stp_reps = {
-    'St. Petersburg (South Coast)': 'stp-sc',
-    'St. Petersburg (North Coast)': 'stp-nc',
+    'St. Petersburg (South Coast)': 'stp_sc',
+    'St. Petersburg (North Coast)': 'stp_nc',
 }
 
 reps = {

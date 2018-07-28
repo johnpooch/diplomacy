@@ -1,14 +1,12 @@
 from dependencies import *
+from objects import *
 
 # GET GAME STATE ===================================================================================
 
 def get_game_state():
     
     game_state = {
-        "pieces" : [record for record in mongo.db.pieces.find()],
-        "ownership": mongo.db.ownership.find_one(),
-        "orders": [record for record in mongo.db.orders.find()],
-        "game_properties": mongo.db.game_properties.find_one(),
-        "users": [record for record in mongo.db.users.find()],
+        "pieces" : [piece for piece in Piece.all_pieces],
+        "game_properties": game_properties, 
     }
     return(game_state)

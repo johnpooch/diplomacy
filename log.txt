@@ -1,47 +1,143 @@
-user orders unfinalised
 
-piece at edi is challenging to nwy
-piece at pic is challenging to bel
-piece at bre is challenging to mid
-piece at rom is challenging to apu
-piece at nap is challenging to tun
-piece at kie is challenging to hol
-piece at den is challenging to swe
-piece at alb is challenging to gre
-piece at bul is challenging to gre
+
+fleet at edi is now challenging nth
+army at lvp is now challenging edi
+fleet at lon is now challenging eng
+army at mar is now challenging spa
+army at par is now challenging pic
+fleet at bre is now challenging eng
+army at ven is now challenging rom
+army at rom is now challenging nap
+fleet at nap is now challenging ion
+army at mun is now challenging ruh
+army at ber is now challenging kie
+fleet at kie is now challenging den
+army at vie is now challenging bud
+fleet at tri is now challenging alb
+army at bud is now challenging ser
+army at con is now challenging bul
+fleet at ank is now challenging bla
+army at smy is now challenging con
+army at mos is now challenging ukr
+fleet at stp_sc is now challenging bot
+army at war is now challenging gal
+fleet at sev is now challenging rum
+
+
+piece at lon challenging eng has bounced
+piece at bre challenging eng has bounced
+
+
+bounced piece at lon is now challenging its own territory
+bounced piece at bre is now challenging its own territory
+
+
+fleet at edi has moved to nth
+army at lvp has moved to edi
+fleet at lon has moved to lon
+army at mar has moved to spa
+army at par has moved to pic
+fleet at bre has moved to bre
+army at ven has moved to rom
+army at rom has moved to nap
+fleet at nap has moved to ion
+army at mun has moved to ruh
+army at ber has moved to kie
+fleet at kie has moved to den
+army at vie has moved to bud
+fleet at tri has moved to alb
+army at bud has moved to ser
+army at con has moved to bul
+fleet at ank has moved to bla
+army at smy has moved to con
+army at mos has moved to ukr
+fleet at stp_sc has moved to bot
+army at war has moved to gal
+fleet at sev has moved to rum
+
+new phase: fall order phase.
+
+
+fleet at nth is now convoying edi to nwy
+fleet at ion is now convoying nap to tun
+army at edi is now challenging nwy
+army at pic is now challenging bel
+fleet at bre is now challenging mid
+army at rom is now challenging apu
+army at nap is now challenging tun
+army at kie is now challenging hol
+fleet at den is now challenging swe
+fleet at alb is now challenging gre
+army at bul is now challenging gre
+fleet at bla is now challenging sev
+army at con is now challenging bul
+
+
 piece at bul challenging gre has bounced
-piece at bla is challenging to sev
-piece at con is challenging to bul
+
+
 bounced piece at bul is now challenging its own territory
+
+
 recursing the function because piece at bul is challenging bul the same territory as con
-piece at edi is challenging to nwy
-piece at pic is challenging to bel
-piece at bre is challenging to mid
-piece at rom is challenging to apu
-piece at nap is challenging to tun
-piece at kie is challenging to hol
-piece at den is challenging to swe
-piece at alb is challenging to gre
-piece at bul is challenging to bul
+
+
 piece at bul challenging bul has bounced
-piece at bla is challenging to sev
-piece at con is challenging to bul
 piece at con challenging bul has bounced
-bounced piece at bul is now challenging its own territory
-bounced piece at con is now challenging its own territory
-recursing the function because piece at con is challenging bul the same territory as bul
-piece at edi is challenging to nwy
-piece at pic is challenging to bel
-piece at bre is challenging to mid
-piece at rom is challenging to apu
-piece at nap is challenging to tun
-piece at kie is challenging to hol
-piece at den is challenging to swe
-piece at alb is challenging to gre
-piece at bul is challenging to bul
-piece at bla is challenging to sev
-piece at con is challenging to con
+
+
 bounced piece at bul is now challenging its own territory
 bounced piece at con is now challenging its own territory
 
-phase updated from 2 to 4.
+
+fleet at nth has moved to nth
+army at edi has moved to nwy
+fleet at lon has moved to lon
+army at spa has moved to spa
+army at pic has moved to bel
+fleet at bre has moved to mid
+army at rom has moved to apu
+army at nap has moved to tun
+fleet at ion has moved to ion
+army at ruh has moved to ruh
+army at kie has moved to hol
+fleet at den has moved to swe
+army at bud has moved to bud
+fleet at alb has moved to gre
+army at ser has moved to ser
+army at bul has moved to bul
+fleet at bla has moved to sev
+army at con has moved to con
+army at ukr has moved to ukr
+fleet at bot has moved to bot
+army at gal has moved to gal
+fleet at rum has moved to rum
+
+
+supply center at nwy, which belonged to neutral, now belongs to england
+supply center at bel, which belonged to neutral, now belongs to france
+supply center at spa, which belonged to neutral, now belongs to france
+supply center at swe, which belonged to neutral, now belongs to germany
+supply center at hol, which belonged to neutral, now belongs to germany
+supply center at ser, which belonged to neutral, now belongs to austria
+supply center at gre, which belonged to neutral, now belongs to austria
+supply center at tun, which belonged to neutral, now belongs to italy
+supply center at rum, which belonged to neutral, now belongs to russia
+supply center at bul, which belonged to neutral, now belongs to turkey
+supply center at sev, which belonged to russia, now belongs to turkey
+
+new phase: fall build phase.
+
+
+fleet built at bre
+army built at par
+fleet built at nap
+army built at mun
+army built at ber
+army built at vie
+fleet built at tri
+fleet built at smy
+fleet built at ank
+
+new phase: spring order phase.
+new year: 1902.

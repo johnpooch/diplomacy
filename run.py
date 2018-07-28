@@ -1,33 +1,15 @@
 from dependencies import *
 from process_orders import end_turn
-from setup import initialise_game_db, populate_users, fill_out_orders, start_game
+from objects import *
 from get_game_state import get_game_state
-from create_order import filter_pieces_by_user, upload_order_to_db
-    
+
 # ROUTES ==========================================================================================
 
 # board -----------------------------------------
 
 @app.route("/")
 def board():
-    game_state = get_game_state()
-    
-    # if no players are registered, initialise db
-    if not mongo.db.users.count():
-        initialise_game_db()
-        return redirect(url_for("register"))
-        
-    # if seven players are registered, start game
-    if mongo.db.users.count() >= 7 and not game_state["game_properties"]["game_started"]:
-        game_state = start_game()
-        
-    # if all players have finalised order, process orders
-    if all(user["orders_finalised"] for user in mongo.db.users.find()):
-        
-        # end_turn()
-        print("hello")
-    
-    return render_template("board.html", game_state = game_state, session = session)
+    return render_template("board.html", armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session)
 
 # register --------------------------------------
     
@@ -142,8 +124,7 @@ def initialise():
 
 @app.route("/test_1")
 def test_1():
-    fill_out_orders("game_histories/game_1/01_spring_1901.txt")
-    end_turn()
+    end_turn("game_histories/game_1/01_spring_1901.txt")
     return redirect(url_for('board'))
     
     
@@ -151,20 +132,14 @@ def test_1():
 
 @app.route("/test_2")
 def test_2():
-    fill_out_orders("game_histories/game_1/02_fall_1901.txt")
-    end_turn()
+    end_turn("game_histories/game_1/02_fall_1901.txt")
     return redirect(url_for('board'))
     
 @app.route("/test_all") 
 def test_all():
-    initialise_game_db()
-    populate_users()
-    fill_out_orders("game_histories/game_1/01_spring_1901.txt")
-    end_turn()
-    fill_out_orders("game_histories/game_1/02_fall_1901.txt")
-    end_turn()
-    fill_out_orders("game_histories/game_1/03_fall_build_1901.txt")
-    end_turn()
+    end_turn("game_histories/game_1/01_spring_1901.txt")
+    end_turn("game_histories/game_1/02_fall_1901.txt")
+    end_turn("game_histories/game_1/03_fall_build_1901.txt")
     
     return redirect(url_for('board'))
 

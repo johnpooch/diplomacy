@@ -13,6 +13,7 @@ from datetime import datetime
 import bcrypt
 import random
 
+
 from territories import territories
 from initial_game_state import *
 

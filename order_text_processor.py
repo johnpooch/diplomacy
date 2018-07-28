@@ -1,4 +1,22 @@
 from reps import reps, stp_reps
+from objects import *
+from instances import *
+from pprint import pprint
+
+def piece_exists_in_territory_and_belongs_to_user(territory):
+    for piece in Piece.all_pieces:
+        if piece.territory == territory:
+            return piece
+
+def find_territory_by_name(name):
+    for territory in Territory.all_territories:
+        if territory.name == name:
+            return territory
+            
+def find_nation_by_name(name):
+    for nation in Nation.all_nations:
+        if nation.name == name:
+            return nation
 
 def replace_all(text, dic):
         for i, j in dic.items():
@@ -16,7 +34,6 @@ def get_orders_from_txt(file):
     order_blocks = lines.split("\n\n")
     order_blocks = [block.split("\n") for block in order_blocks]
     
-    print(order_blocks[0])
     phase = order_blocks[0][0]
     year = order_blocks[0][1]
     
@@ -25,59 +42,27 @@ def get_orders_from_txt(file):
         
         for line in block[1:]:
             words = line.split(" ")
-            
-            # BUILD ===========================
-            
-            if block[0].lower() == "build":
-                print("hello?")
-                command = words[0].lower()
-                if block[1].lower() == "army":
-                    piece_type = "a"
-                else:
-                    piece_type = "f"
-                target = words[2].lower()
-                
-                order = {
-                    "nation": nation,
-                    "origin": "",
-                    "target": target,
-                    "command": command,
-                    "order_is_valid": True,
-                    "object": "",
-                    "phase": phase,
-                    "year": year
-                }
-                print(order)
-            
-            # ===================================
-            
-            else: 
-                target = ""
-                _object = ""
-                
-                origin = words[0]
+
+            if words[0].lower() == "build":
+                command = "build"
+            else:
                 command = words[1].lower()
-                
-                if words[1] == "MOVE":
-                    target = words[2]
-                
-                if words[1] == "CONVOY" or words[1] == "SUPPORT":
-                    _object = words[2]
-                    target = words[4]
-                
-                valid = (words[-1] == 'resolved')
+                origin = find_territory_by_name(words[0])
             
-                order = {
-                    "nation": nation,
-                    "origin": origin,
-                    "target": target,
-                    "command": command,
-                    "order_is_valid": valid,
-                    "object": _object,
-                    "phase": phase,
-                    "year": year,
-                    "bounced": False,
-                }
-            order_list.append(order)
+        
+            if command == "hold":
+                order = Hold(nation, origin)
+            if command == "convoy":
+                order = Convoy(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
+            if command == "move":
+                order = Move(nation, origin, find_territory_by_name(words[2]))
+            if command == "support":
+                order = Support(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
             
-    return order_list
+            if command != "build":
+                piece = piece_exists_in_territory_and_belongs_to_user(find_territory_by_name(words[0]))
+                if piece:
+                    piece.order = order
+    
+            if command == "build":
+                Build(find_nation_by_name(nation), words[1], find_territory_by_name(words[2]))
