@@ -1,6 +1,3 @@
-0
-1901
-
 ENGLAND
 Edinburgh MOVE North Sea -> resolved
 Liverpool MOVE Edinburgh -> resolved

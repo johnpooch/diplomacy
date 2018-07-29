@@ -67,9 +67,13 @@ army at pic is now challenging bel
 fleet at bre is now challenging mid
 army at rom is now challenging apu
 army at nap is now challenging tun
+army at ruh is now supporting kie into hol
+army at kie support: {hol, holland: 1}
 army at kie is now challenging hol
 fleet at den is now challenging swe
 fleet at alb is now challenging gre
+army at ser is now supporting alb into gre
+fleet at alb support: {gre, greece: 1}
 army at bul is now challenging gre
 fleet at bla is now challenging sev
 army at con is now challenging bul
@@ -135,6 +139,7 @@ supply center at sev, which belonged to russia, now belongs to turkey
 new phase: fall build phase.
 
 
+army built at lvp
 fleet built at bre
 army built at par
 fleet built at nap
@@ -151,6 +156,8 @@ new year: 1902.
 
 army at par is now challenging bre
 fleet at bre is now challenging eng
+fleet at mid is now supporting bre into eng
+fleet at bre support: {eng, english channel: 1}
 fleet at nap is now challenging ion
 army at apu is now challenging ven
 fleet at ion is now challenging aeg
@@ -159,8 +166,16 @@ army at mun is now challenging sil
 army at ber is now challenging pru
 army at vie is now challenging gal
 fleet at tri is now challenging adr
+army at bud is now supporting vie into gal
+army at vie support: {gal, galicia: 1}
 army at ser is now challenging rum
 fleet at smy is now challenging aeg
+army at bul is now supporting ser into rum
+army at ser support: {rum, rumania: 1}
+fleet at sev is now supporting ser into rum
+army at ser support: {rum, rumania: 2}
+army at con is now supporting bul into bul
+army at bul support: {bul, bulgaria: 1}
 fleet at ank is now challenging bla
 
 
@@ -191,6 +206,10 @@ bounced piece at nap is now challenging its own territory
 bounced piece at ion is now challenging its own territory
 
 
+fleet at nth has moved to nth
+army at nwy has moved to nwy
+fleet at lon has moved to lon
+army at lvp has moved to lvp
 army at par has moved to bre
 fleet at bre has moved to eng
 army at spa has moved to spa
@@ -220,6 +239,108 @@ army at gal has moved to gal
 fleet at bot has moved to bot
 army at ukr has moved to ukr
 
-piece at rum has been destroyed
+fleet at rum has been destroyed
 
 new phase: spring retreat phase.
+
+
+
+army at gal has been destroyed
+
+new phase: fall order phase.
+
+
+fleet at eng is now convoying bel to wal
+army at bre is now challenging pic
+army at spa is now challenging por
+army at bel is now challenging wal
+fleet at mid is now supporting eng into eng
+fleet at eng support: {eng, english channel: 1}
+fleet at nap is now challenging tyn
+army at ven is now challenging tri
+fleet at ion is now challenging adr
+army at kie is now challenging den
+fleet at swe is now supporting kie into den
+army at kie support: {den, denmark: 1}
+army at sil is now supporting pru into war
+army at pru support: {war, warsaw: 1}
+army at pru is now challenging war
+army at gal is now supporting rum into bud
+army at rum support: {bud, budapest: 1}
+fleet at adr is now challenging tri
+fleet at gre is now challenging bul_sc
+army at bud is now supporting rum into rum
+army at rum support: {rum, rumania: 1, bud, budapest: 1}
+fleet at smy is now challenging eas
+army at bul is now challenging rum
+fleet at sev is now supporting bul into rum
+army at bul support: {rum, rumania: 1}
+army at con is now challenging bul
+fleet at bla is now supporting bul into rum
+army at bul support: {rum, rumania: 2}
+
+
+piece at rum must now retreat
+
+
+piece at ven challenging tri has bounced
+piece at adr challenging tri has bounced
+
+
+bounced piece at ven is now challenging its own territory
+bounced piece at adr is now challenging its own territory
+
+
+recursing the function because piece at ion is challenging adr the same territory as adr
+
+
+piece at rum must now retreat
+
+
+piece at ion challenging adr has bounced
+piece at adr challenging adr has bounced
+
+
+bounced piece at ion is now challenging its own territory
+bounced piece at adr is now challenging its own territory
+
+
+fleet at nth has moved to nth
+army at nwy has moved to nwy
+fleet at lon has moved to lon
+army at lvp has moved to lvp
+fleet at eng has moved to eng
+army at bre has moved to pic
+army at spa has moved to por
+army at bel has moved to wal
+fleet at mid has moved to mid
+fleet at nap has moved to tyn
+army at ven has moved to ven
+army at tun has moved to tun
+fleet at ion has moved to ion
+army at hol has moved to hol
+army at kie has moved to den
+fleet at swe has moved to swe
+army at sil has moved to sil
+army at pru has moved to war
+army at gal has moved to gal
+fleet at adr has moved to adr
+army at rum has moved to rum
+fleet at gre has moved to bul_sc
+army at bud has moved to bud
+fleet at smy has moved to eas
+army at bul has moved to rum
+fleet at sev has moved to sev
+army at con has moved to bul
+fleet at bla has moved to bla
+fleet at bot has moved to bot
+army at ukr has moved to ukr
+
+
+supply center at por, which belonged to neutral, now belongs to france
+supply center at den, which belonged to neutral, now belongs to germany
+supply center at rum, which belonged to russia, now belongs to austria
+supply center at rum, which belonged to austria, now belongs to turkey
+supply center at war, which belonged to russia, now belongs to germany
+
+new phase: fall retreat phase.

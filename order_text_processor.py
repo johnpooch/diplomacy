@@ -34,24 +34,22 @@ def get_orders_from_txt(file):
     order_blocks = lines.split("\n\n")
     order_blocks = [block.split("\n") for block in order_blocks]
     
-    phase = order_blocks[0][0]
-    year = order_blocks[0][1]
-    
-    for block in order_blocks[1:]:
+    for block in order_blocks:
         nation = block[0].lower()
         
         for line in block[1:]:
+            # print(line)
             words = line.split(" ")
-
             if words[0].lower() == "build":
                 command = "build"
             else:
                 command = words[1].lower()
                 origin = find_territory_by_name(words[0])
-            
         
             if command == "hold":
                 order = Hold(nation, origin)
+            if command == "destroy":
+                order = Destroy(nation, origin)
             if command == "convoy":
                 order = Convoy(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
             if command == "move":
@@ -62,6 +60,7 @@ def get_orders_from_txt(file):
                 order = Support(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
             
             if command != "build":
+                # print(order)
                 piece = piece_exists_in_territory_and_belongs_to_user(find_territory_by_name(words[0]))
                 if piece:
                     piece.order = order

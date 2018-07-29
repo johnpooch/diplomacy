@@ -34,7 +34,6 @@ def resolve_challenges():
 # Process Orders ==================================================================================
 
 def process_orders(turn):
-    
     write_to_log("\n")
     get_orders_from_txt(turn)
     
@@ -59,6 +58,11 @@ def process_orders(turn):
         for piece in Piece.all_pieces:
             if piece.retreat and not piece.can_retreat():
                 piece.destroy()
+                
+    # remove all supports
+    for piece in Piece.all_pieces:
+        setattr(piece, "support", {})
+    
         
     # change phase
     game_properties.end_phase()
@@ -88,3 +92,5 @@ end_turn("game_histories/game_1/01_spring_1901.txt")
 end_turn("game_histories/game_1/02_fall_1901.txt")
 end_turn("game_histories/game_1/03_fall_build_1901.txt")
 end_turn("game_histories/game_1/04_spring_1902.txt")
+end_turn("game_histories/game_1/05_spring_retreat_1902.txt")
+end_turn("game_histories/game_1/06_fall_1902.txt")

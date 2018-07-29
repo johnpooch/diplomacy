@@ -1,0 +1,43 @@
+ENGLAND
+North Sea HOLD -> resolved
+Norway HOLD -> resolved
+London HOLD -> resolved
+Liverpool HOLD -> resolved
+
+FRANCE
+English Channel CONVOY Belgium to Wales -> resolved
+Brest MOVE Picardy -> resolved
+Spain MOVE Portugal -> resolved
+Belgium MOVE Wales -> resolved
+Mid-Atlantic Ocean SUPPORT English Channel to hold -> resolved
+
+ITALY
+Naples MOVE Tyrrhenian Sea -> resolved
+Venice MOVE Trieste -> Bounced
+Tunis HOLD -> resolved
+Ionian Sea MOVE Adriatic Sea -> Bounced
+
+GERMANY
+Holland HOLD -> resolved
+Kiel MOVE Denmark -> resolved
+Sweden SUPPORT Kiel to Denmark -> resolved
+Silesia SUPPORT Prussia to Warsaw -> resolved
+Prussia MOVE Warsaw -> resolved
+
+AUSTRIA
+Galicia SUPPORT Rumania to Budapest -> Supported order does not correspond
+Adriatic Sea MOVE Trieste -> Bounced
+Rumania HOLD -> Dislodged by A Bulgaria - Rumania
+Greece MOVE Bulgaria (South Coast) -> Bounced
+Budapest SUPPORT Rumania to hold -> Supported unit has failed
+
+TURKEY
+Smyrna MOVE Eastern Mediterranean -> resolved
+Bulgaria MOVE Rumania -> resolved
+Sevastopol SUPPORT Bulgaria to Rumania -> resolved
+Constantinople MOVE Bulgaria -> Bounced
+Black Sea SUPPORT Bulgaria to Rumania -> resolved
+
+RUSSIA
+Gulf of Bothnia HOLD -> resolved
+Ukraine HOLD -> resolved

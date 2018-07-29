@@ -1,12 +1,16 @@
 stp_reps = {
     'St. Petersburg (South Coast)': 'stp_sc',
     'St. Petersburg (North Coast)': 'stp_nc',
+    'Bulgaria (South Coast)': 'bul_sc',
+    'Bulgaria (North Coast)': 'bul_nc',
+    'Spain (South Coast)': 'spa_sc',
+    'Spain (North Coast)': 'spa_nc',
 }
 
 reps = {
     'Western Mediterranean': 'wes',
     'Edinburgh': 'edi',
-    'Eastern Mediterranean Sea': 'eas',
+    'Eastern Mediterranean': 'eas',
     'Venice': 'ven',
     'North Sea': 'nth',
     'Clyde': 'cly',
@@ -29,7 +33,7 @@ reps = {
     'Gascony': 'gas',
     'North Atlantic': 'nat',
     'Adriatic Sea': 'adr',
-    'Tyrhennian Sea': 'tyn',
+    'Tyrrhenian Sea': 'tyn',
     'Galicia': 'gal',
     'Spain': 'spa',
     'Black Sea': 'bla',

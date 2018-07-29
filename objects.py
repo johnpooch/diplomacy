@@ -242,17 +242,6 @@ class Piece:
                 return piece
         
     def can_retreat(self):
-        for neighbour in self.territory.neighbours:
-            if (not neighbour.occupied()):
-                print("neighbour of {} at {}, {} is not occupied".format(self.piece_type, self.territory.name, neighbour.name))
-            if (neighbour.accessible_by_piece_type(self)):
-                print("neighbour of {} at {}, {} is accessible".format(self.piece_type, self.territory.name, neighbour.name))
-            if (neighbour == self.find_other_piece_in_territory().previous_territory):
-                print("neighbour of {} at {}, {} is where the attacker came from".format(self.piece_type, self.territory.name, neighbour.name))
-                
-            # find previous territory of piece that is in piece's territory
-            
-                
         return any([neighbour for neighbour in self.territory.neighbours if (not neighbour.occupied()) and neighbour.accessible_by_piece_type(self) and neighbour != self.find_other_piece_in_territory().previous_territory])
         
     def must_retreat(self):
@@ -265,9 +254,10 @@ class Piece:
         Piece.all_pieces.remove(self)
         if self in Army.all_armies:
             Army.all_armies.remove(self)
+            write_to_log("\n{} at {} has been destroyed".format(self.piece_type, self.territory.name))
         if self in Fleet.all_fleets:
             Fleet.all_fleets.remove(self)
-            write_to_log("\npiece at {} has been destroyed".format(self.territory.name))
+            write_to_log("\n{} at {} has been destroyed".format(self.piece_type, self.territory.name))
         
 # Army --------------------------------------------------------------------------------------------
         
@@ -459,6 +449,8 @@ class Support(Order):
                 object_piece.support[self.target] +=1
             else:
                 object_piece.support[self.target] = 1
+        write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.name))
+        write_to_log("{} at {} support: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.support))
         
     def __repr__(self):
         return "{}, {}: Support({}, {}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.supported_territory.name, self.target.name)
@@ -479,6 +471,21 @@ class Retreat(Order):
         
     def __str__(self):
         return "{}, {}: piece at {}, belonging to {}, retreat to {}.".format(self.year, self.phase, self.territory.name, self.player, self.target.name)
+        
+# Destroy -----------------------------------------------------------------------------------------
+
+class Destroy(Order):
+    def __init__(self, player, territory):
+        Order.__init__(self, player, territory)
+        
+    def process_order(self):
+        self.piece.destroy()
+        
+    def __repr__(self):
+        return "{}, {}: Hold({}, {})".format(self.year, self.phase, self.player, self.territory)
+        
+    def __str__(self):
+        return "{}, {}: piece at {}, belonging to {}, hold.".format(self.year, self.phase, self.territory.name, self.player)
         
 # Build -------------------------------------------------------------------------------------------
         
