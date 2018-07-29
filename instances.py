@@ -29,7 +29,7 @@ mid = Water("mid", "mid_atlantic ocean", [])
 nat = Water("nat", "north atlantic", [])
 nrg = Water("nrg", "norwegian sea", [])
 nth = Water("nth", "north sea", [])
-ska = Water("ska", "skagerrak", [])
+ska = Water("ska", "skagerrack", [])
 tyn = Water("tyn", "tyrrhenian sea", [])
 wes = Water("tyn", "western mediterranean", [])
 
@@ -73,7 +73,7 @@ tun = Coastal("tun", "tunis", [], [], neutral)
 tus = Coastal("tus", "tuscany", [], [], False)
 ven = Coastal("ven", "venice", [], [], italy)
 wal = Coastal("wal", "wales", [], [], False)
-yor = Coastal("yor", "york", [], [], False)
+yor = Coastal("yor", "yorkshire", [], [], False)
 
 # Inland Territories -----------------------------------------------------------------------------
 
@@ -101,7 +101,7 @@ stp = Special_Inland("stp", "st. petersburg", [], russia, ["stp_nc", "stp_sc"])
 # Special Coastal Territories --------------------------------------------------------------------
 
 bul_nc = Special_Coastal("bul_nc", "bulgaria (north coast)", [], "bul")
-bul_sc = Special_Coastal("bul_sc", "bulgaria (north coast)", [], "bul")
+bul_sc = Special_Coastal("bul_sc", "bulgaria (south coast)", [], "bul")
 spa_nc = Special_Coastal("spa_nc", "spain (north coast)", [], "spa")
 spa_sc = Special_Coastal("spa_sc", "spain (north coast)", [], "spa")
 stp_sc = Special_Coastal("stp_sc", "st. petersburg (south coast)", [], "stp")
@@ -127,7 +127,7 @@ setattr(nrg, 'neighbours', [bar, cly, edi, nat, nwy, nth])
 setattr(nth, 'neighbours', [bel, den, edi, eng, hel, hol, lon, nrg, nwy, ska, yor])
 setattr(ska, 'neighbours', [bal, den, nth, nwy, swe])
 setattr(tyn, 'neighbours', [gol, ion, nap, rom, tun, tus, wes])
-setattr(tyn, 'neighbours', [gol, mid, naf, spa, spa_sc, tun, tyn])
+# setattr(tyn, 'neighbours', [gol, mid, naf, spa, spa_sc, tun, tyn])
 
 setattr(alb, 'neighbours', [adr, gre, ion, ser, tri])
 setattr(ank, 'neighbours', [arm, bla, con, smy])

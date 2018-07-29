@@ -1,4 +1,4 @@
-from write_to_log import write_to_log
+from write_to_log import write_to_log, special_log
 
 # IterRegistry ====================================================================================
 
@@ -234,17 +234,30 @@ class Piece:
         if self.order:
             self.order.piece = self
         
-    def create_challenge(self):
-        self.order.resolve_challenge()
+    # def create_challenge(self):
+    #     print("hi")
+    #     self.order.resolve_challenge()
         
     def has_most_support(self, challenging_pieces):
         for challenging_piece in challenging_pieces:
-            # zero support
-            if not self.challenging in challenging_piece.support:
-                challenging_piece.support[self.challenging] = 0
-            if not self.challenging in self.support:
-                self.support[self.challenging] = 0
-        return all(self.support[self.challenging] > challenging_piece.support[self.challenging] for challenging_piece in challenging_pieces)
+            
+            if isinstance(self.challenging, Special_Coastal):
+                # zero support
+                if not self.challenging.parent_territory in challenging_piece.support:
+                    challenging_piece.support[self.challenging.parent_territory] = 0
+                if not self.challenging.parent_territory in self.support:
+                    self.support[self.challenging.parent_territory] = 0
+                    
+                return all(self.support[self.challenging.parent_territory] > challenging_piece.support[self.challenging.parent_territory] for challenging_piece in challenging_pieces)
+                    
+            else:
+                # zero support
+                if not self.challenging in challenging_piece.support:
+                    challenging_piece.support[self.challenging] = 0
+                if not self.challenging in self.support:
+                    self.support[self.challenging] = 0
+                
+            return all(self.support[self.challenging] > challenging_piece.support[self.challenging] for challenging_piece in challenging_pieces)
         
     def change_territory(self):
         self.previous_territory = self.territory
@@ -310,23 +323,29 @@ class Order():
         self.report = ""
         self.bounced = False
         
-    def resolve_challenge(self):
-        challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
+    # def resolve_challenge(self):
+    #     print("AAGGGGHHHH")
+    #     challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
                 
-        if self.piece.has_most_support(challenging_pieces):
-            for challenging_piece in challenging_pieces: 
-                challenging_piece.challenging = challenging_piece.territory
+    #     if self.piece.has_most_support(challenging_pieces):
+    #         for challenging_piece in challenging_pieces: 
+    #             challenging_piece.challenging = challenging_piece.territory
+             
+    #     print("hello")
+    #     if self.piece.territory == gre:
+    #         print("hello")
+    #         special_log("challenging pieces: {}".format(challenging_pieces))
                 
-        if challenging_pieces and not self.piece.has_most_support(challenging_pieces):
-            self.piece.bounced = True
-            write_to_log("piece at {0} challenging {1} has bounced".format(self.piece.territory.name, self.piece.challenging.name))
-            self.piece.challenging = self.piece.territory
-            write_to_log("bounced piece at {0} is now challenging its own territory".format(self.piece.territory.name))
+    #     if challenging_pieces and not self.piece.has_most_support(challenging_pieces):
+    #         self.piece.bounced = True
+    #         write_to_log("piece at {0} challenging {1} has bounced".format(self.piece.territory.name, self.piece.challenging.name))
+    #         self.piece.challenging = self.piece.territory
+    #         write_to_log("bounced piece at {0} is now challenging its own territory".format(self.piece.territory.name))
                     
-        if self.piece.challenging.find_other_pieces_challenging_territory(self.piece) != []:
-            write_to_log("recursing the function because piece at {} is challenging {} the same territory as {}".format(piece["territory"], piece["challenging"], other_piece["territory"]))
-            self.resolve_challenge()
-        return True
+    #     if self.piece.challenging.find_other_pieces_challenging_territory(self.piece) != []:
+    #         write_to_log("recursing the function because piece at {} is challenging {} the same territory as {}".format(piece["territory"], piece["challenging"], other_piece["territory"]))
+    #         self.resolve_challenge()
+    #     return True
         
     # Refactor?
     def identify_retreats(self):
@@ -408,7 +427,8 @@ class Move(Order):
     def create_bounces(self):
         challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
         if not self.piece.has_most_support(challenging_pieces) and challenging_pieces:
-            write_to_log("piece at {0} challenging {1} has bounced".format(self.piece.territory.name, self.piece.challenging.name))
+            if self.piece.territory.name == "gre":
+                print("hello")
             self.bounced = True
     
     def target_accessible_by_convoy(self, territory):
@@ -451,18 +471,43 @@ class Support(Order):
         self.supported_territory = supported_territory
     
     def support_is_valid(self):
-        return self.territory_is_neighbour(self.target) and self.target.accessible_by_piece_type(self.piece)
+        
+        if isinstance(self.target, Special_Coastal):
+            return (self.territory_is_neighbour(self.target) and self.target.accessible_by_piece_type(self.piece)) or (self.territory_is_neighbour(self.target.parent_territory) and self.target.parent_territory.accessible_by_piece_type(self.piece))
+            
+        if isinstance(self.target, Special_Inland):
+            for coast in self.target.coasts:
+                if (self.territory_is_neighbour(self.target) and self.target.accessible_by_piece_type(self.piece)) or (self.territory_is_neighbour(self.target.coast) and self.target.coast.accessible_by_piece_type(self.piece)):
+                    return True
+            return False
+        
+        return self.territory_is_neighbour(self.target) and (self.target.accessible_by_piece_type(self.piece) or self.target.coasts_accessible_by_piece_type(self.piece) or self.target.parent_accessible_by_piece_type(self.piece))
 
     def process_order(self):
         if self.support_is_valid():
             object_piece = self.get_object_by_territory(self.supported_territory)
             
-            if self.target in object_piece.support:
-                object_piece.support[self.target] +=1
+            if isinstance(self.target, Special_Coastal):
+                if self.target in object_piece.support:
+                    object_piece.support[self.target.parent_territory] +=1
+                else:
+                    object_piece.support[self.target.parent_territory] = 1
+                write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.parent_territory.name))
+                write_to_log("{} at {} support: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.support))    
+                
+            
             else:
-                object_piece.support[self.target] = 1
-        write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.name))
-        write_to_log("{} at {} support: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.support))
+                if self.target in object_piece.support:
+                    object_piece.support[self.target] +=1
+                else:
+                    object_piece.support[self.target] = 1
+                
+                write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.name))
+                write_to_log("{} at {} support: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.support))
+            
+
+        else:
+            write_to_log("support order: {} invalid".format(self))
         
     def __repr__(self):
         return "{}, {}: Support({}, {}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.supported_territory.name, self.target.name)
