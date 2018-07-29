@@ -285,10 +285,14 @@ piece at rum must now retreat
 
 piece at ven challenging tri has bounced
 piece at adr challenging tri has bounced
+piece at gre challenging bul_sc has bounced
+piece at con challenging bul has bounced
 
 
 bounced piece at ven is now challenging its own territory
 bounced piece at adr is now challenging its own territory
+bounced piece at gre is now challenging its own territory
+bounced piece at con is now challenging its own territory
 
 
 recursing the function because piece at ion is challenging adr the same territory as adr
@@ -326,12 +330,12 @@ army at pru has moved to war
 army at gal has moved to gal
 fleet at adr has moved to adr
 army at rum has moved to rum
-fleet at gre has moved to bul_sc
+fleet at gre has moved to gre
 army at bud has moved to bud
 fleet at smy has moved to eas
 army at bul has moved to rum
 fleet at sev has moved to sev
-army at con has moved to bul
+army at con has moved to con
 fleet at bla has moved to bla
 fleet at bot has moved to bot
 army at ukr has moved to ukr
@@ -344,3 +348,17 @@ supply center at rum, which belonged to austria, now belongs to turkey
 supply center at war, which belonged to russia, now belongs to germany
 
 new phase: fall retreat phase.
+
+
+army at rum has retreated to ser
+
+new phase: fall build phase.
+
+
+fleet built at bre
+army built at mun
+army built at ber
+army built at smy
+
+new phase: spring order phase.
+new year: 1903.

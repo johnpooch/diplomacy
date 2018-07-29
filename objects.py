@@ -146,6 +146,9 @@ class Territory():
         if isinstance(piece, Fleet):
             # Refactor?
             return isinstance(self, Water) or (isinstance(self, Coastal) and self.shares_coast_with_piece(piece)) or (isinstance(self, Coastal) and isinstance(piece.territory, Water))
+            
+    def find_other_pieces_challenging_territory(self, piece):
+        return [other_piece for other_piece in Piece.all_pieces if other_piece.challenging == self and id(piece) != id(other_piece)]
 
     def __repr__(self):
         return "{}, {}".format(self.name, self.display_name)
@@ -188,6 +191,16 @@ class Special_Inland(Inland):
     def occupied(self):
         return any([piece.territory == self or self.coasts for piece in Piece.all_pieces])
         
+    def find_other_pieces_challenging_territory(self, piece):
+        other_piece_list = []
+        for other_piece in Piece.all_pieces:
+            if other_piece.challenging == self and id(piece) != id(other_piece):
+                other_piece_list.append(other_piece)
+            for coast in self.coasts:
+                if other_piece.challenging == coast and id(piece) != id(other_piece):
+                    other_piece_list.append(other_piece)
+        return other_piece_list
+        
 # Special Coastal ---------------------------------------------------------------------------------
         
 class Special_Coastal(Water):
@@ -197,6 +210,9 @@ class Special_Coastal(Water):
         
     def occupied(self):
         return any([piece.territory == self or self.parent_territory for piece in Piece.all_pieces])
+        
+    def find_other_pieces_challenging_territory(self, piece):
+        return [other_piece for other_piece in Piece.all_pieces if other_piece.challenging == self or other_piece.challenging == self.parent_territory and id(piece) != id(other_piece)]
 
 
 # Piece ===========================================================================================
@@ -293,13 +309,9 @@ class Order():
         self.success = True
         self.report = ""
         self.bounced = False
-    
-        
-    def find_other_pieces_challenging_territory(self):
-        return [piece for piece in Piece.all_pieces if piece.challenging == self.piece.challenging and id(self.piece) != id(piece)]
         
     def resolve_challenge(self):
-        challenging_pieces = self.find_other_pieces_challenging_territory()
+        challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
                 
         if self.piece.has_most_support(challenging_pieces):
             for challenging_piece in challenging_pieces: 
@@ -311,14 +323,14 @@ class Order():
             self.piece.challenging = self.piece.territory
             write_to_log("bounced piece at {0} is now challenging its own territory".format(self.piece.territory.name))
                     
-        if self.find_other_pieces_challenging_territory() != []:
+        if self.piece.challenging.find_other_pieces_challenging_territory(self.piece) != []:
             write_to_log("recursing the function because piece at {} is challenging {} the same territory as {}".format(piece["territory"], piece["challenging"], other_piece["territory"]))
             self.resolve_challenge()
         return True
         
     # Refactor?
     def identify_retreats(self):
-        challenging_pieces = self.find_other_pieces_challenging_territory()
+        challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
         if self.piece.has_most_support(challenging_pieces):
             for challenging_piece in challenging_pieces:
                 if challenging_piece.territory == challenging_piece.challenging:
@@ -394,7 +406,7 @@ class Move(Order):
             self.bounced = False
         
     def create_bounces(self):
-        challenging_pieces = self.find_other_pieces_challenging_territory()
+        challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
         if not self.piece.has_most_support(challenging_pieces) and challenging_pieces:
             write_to_log("piece at {0} challenging {1} has bounced".format(self.piece.territory.name, self.piece.challenging.name))
             self.bounced = True
@@ -465,6 +477,25 @@ class Retreat(Order):
     def __init__(self, player, territory, target):
         Order.__init__(self, player, territory)
         self.target = target
+        
+    def retreat_is_valid(self):
+        if not (self.territory_is_neighbour(self.target)):
+            write_to_log("retreat failed: {} is not a neighbour of {}".format(self.target.name, self.territory.name))
+            return False
+        if not (self.target.accessible_by_piece_type(self.piece)):
+            write_to_log("retreat failed: {} is not accessible by {} at {}".format(self.target.name, self.piece.piece_type, self.territory.name))
+            return False
+        if self.target == self.piece.find_other_piece_in_territory().previous_territory:
+            write_to_log("retreat failed: {} at {} cannot retreat to the territory that the attacker came from.".format(self.piece.piece_type, self.territory.name))
+            return False
+        return  True
+        
+    def process_order(self):
+        if self.retreat_is_valid():
+            write_to_log("{} at {} has retreated to {}".format(self.piece.piece_type, self.territory.name, self.target.name))
+            self.piece.territory = self.target
+        else:
+            self.piece.destroy()
         
     def __repr__(self):
         return "{}, {}: Retreat({}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.target.name)

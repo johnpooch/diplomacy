@@ -1,0 +1,9 @@
+FRANCE
+BUILD fleet Brest -> resolved
+
+GERMANY
+BUILD army Munich -> resolved
+BUILD army Berlin -> resolved
+
+TURKEY
+BUILD army Smyrna -> resolved

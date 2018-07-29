@@ -48,8 +48,6 @@ def get_orders_from_txt(file):
         
             if command == "hold":
                 order = Hold(nation, origin)
-            if command == "destroy":
-                order = Destroy(nation, origin)
             if command == "convoy":
                 order = Convoy(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
             if command == "move":
@@ -58,6 +56,10 @@ def get_orders_from_txt(file):
                 if words[4] == "hold":
                     words[4] = words[2]
                 order = Support(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
+            if command == "retreat":
+                order = Retreat(nation, origin, find_territory_by_name(words[2]))
+            if command == "destroy":
+                order = Destroy(nation, origin)
             
             if command != "build":
                 # print(order)
