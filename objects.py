@@ -205,6 +205,17 @@ class Piece:
     def create_challenge(self):
         self.order.resolve_challenge()
         
+    def has_most_support(self, challenging_pieces):
+        for challenging_piece in challenging_pieces:
+            # zero support
+            if not self.challenging in challenging_piece.support:
+                challenging_piece.support[self.challenging] = 0
+            if not self.challenging in self.support:
+                self.support[self.challenging] = 0
+                
+                
+        return all(self.support[self.challenging] > challenging_piece.support[self.challenging] for challenging_piece in challenging_pieces)
+        
     def change_territory(self):
         self.previous_territory = self.territory
         self.challenging = self.challenging
@@ -260,25 +271,14 @@ class Order():
     def find_other_pieces_challenging_territory(self):
         return [piece for piece in Piece.all_pieces if piece.challenging == self.piece.challenging and id(self.piece) != id(piece)]
         
-    def piece_has_most_support(self, challenging_pieces):
-        for challenging_piece in challenging_pieces:
-            # zero support
-            if not self.piece.challenging in challenging_piece.support:
-                challenging_piece.support[self.piece.challenging] = 0
-            if not self.piece.challenging in self.piece.support:
-                self.piece.support[self.piece.challenging] = 0
-                
-                
-        return all(self.piece.support[self.piece.challenging] > challenging_piece.support[self.piece.challenging] for challenging_piece in challenging_pieces)
-        
     def resolve_challenge(self):
         challenging_pieces = self.find_other_pieces_challenging_territory()
                 
-        if self.piece_has_most_support(challenging_pieces):
+        if self.piece.has_most_support(challenging_pieces):
             for challenging_piece in challenging_pieces: 
                 challenging_piece.challenging = challenging_piece.territory
                 
-        if challenging_pieces and not self.piece_has_most_support(challenging_pieces):
+        if challenging_pieces and not self.piece.has_most_support(challenging_pieces):
             self.piece.bounced = True
             write_to_log("piece at {0} challenging {1} has bounced".format(self.piece.territory.name, self.piece.challenging.name))
             self.piece.challenging = self.piece.territory
@@ -288,6 +288,14 @@ class Order():
             write_to_log("recursing the function because piece at {} is challenging {} the same territory as {}".format(piece["territory"], piece["challenging"], other_piece["territory"]))
             self.resolve_challenge()
         return True
+        
+    def identify_retreats(self):
+        challenging_pieces = self.find_other_pieces_challenging_territory()
+        if self.piece.has_most_support(challenging_pieces):
+            for challenging_piece in challenging_pieces:
+                if challenging_piece.territory == challenging_piece.challenging:
+                    write_to_log("piece at {0} must now retreat".format(challenging_piece.territory.name))
+                    challenging_piece.must_retreat()
     
     def get_object_by_territory(self, territory):
         return [piece for piece in Piece.all_pieces if piece.territory.name == territory.name][0]
@@ -369,7 +377,7 @@ class Move(Order):
         
     def create_bounces(self):
         challenging_pieces = self.find_other_pieces_challenging_territory()
-        if not self.piece_has_most_support(challenging_pieces) and challenging_pieces:
+        if not self.piece.has_most_support(challenging_pieces) and challenging_pieces:
             write_to_log("piece at {0} challenging {1} has bounced".format(self.piece.territory.name, self.piece.challenging.name))
             self.bounced = True
     
