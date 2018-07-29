@@ -55,6 +55,10 @@ def process_orders(turn):
         
         for move in Move.all_orders:
             move.piece.change_territory()
+    
+        for piece in Piece.all_pieces:
+            if piece.retreat and not piece.can_retreat():
+                piece.destroy()
         
     # change phase
     game_properties.end_phase()

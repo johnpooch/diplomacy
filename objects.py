@@ -139,6 +139,13 @@ class Territory():
         
     def has_supply_center_which_belongs_to_player(self):
         return True
+        
+    def accessible_by_piece_type(self, piece):
+        if isinstance(piece, Army):
+            return not isinstance(self, (Water, Special_Coastal))
+        if isinstance(piece, Fleet):
+            # Refactor?
+            return isinstance(self, Water) or (isinstance(self, Coastal) and self.shares_coast_with_piece(piece)) or (isinstance(self, Coastal) and isinstance(piece.territory, Water))
 
     def __repr__(self):
         return "{}, {}".format(self.name, self.display_name)
@@ -161,6 +168,9 @@ class Coastal(Territory):
         self.shared_coasts = shared_coasts
         self.supply_center = supply_center
         
+    def shares_coast_with_piece(self, piece):
+        return piece.territory in self.shared_coasts
+        
 # Inland ------------------------------------------------------------------------------------------
         
 class Inland(Territory):
@@ -175,12 +185,18 @@ class Special_Inland(Inland):
         Inland.__init__(self, name, display_name, neighbours, supply_center)
         self.coasts = coasts
         
+    def occupied(self):
+        return any([piece.territory == self or self.coasts for piece in Piece.all_pieces])
+        
 # Special Coastal ---------------------------------------------------------------------------------
         
 class Special_Coastal(Water):
     def __init__(self, name, display_name, neighbours, parent_territory):
         Water.__init__(self, name, display_name, neighbours)
         self.parent_territory = parent_territory
+        
+    def occupied(self):
+        return any([piece.territory == self or self.parent_territory for piece in Piece.all_pieces])
 
 
 # Piece ===========================================================================================
@@ -212,8 +228,6 @@ class Piece:
                 challenging_piece.support[self.challenging] = 0
             if not self.challenging in self.support:
                 self.support[self.challenging] = 0
-                
-                
         return all(self.support[self.challenging] > challenging_piece.support[self.challenging] for challenging_piece in challenging_pieces)
         
     def change_territory(self):
@@ -222,15 +236,38 @@ class Piece:
         self.territory = self.challenging
         write_to_log("{} at {} has moved to {}".format(self.piece_type, self.previous_territory.name, self.territory.name))
         
+    def find_other_piece_in_territory(self):
+        for piece in Piece.all_pieces:
+            if self.territory == piece.territory and id(self) != id(piece):
+                return piece
+        
+    def can_retreat(self):
+        for neighbour in self.territory.neighbours:
+            if (not neighbour.occupied()):
+                print("neighbour of {} at {}, {} is not occupied".format(self.piece_type, self.territory.name, neighbour.name))
+            if (neighbour.accessible_by_piece_type(self)):
+                print("neighbour of {} at {}, {} is accessible".format(self.piece_type, self.territory.name, neighbour.name))
+            if (neighbour == self.find_other_piece_in_territory().previous_territory):
+                print("neighbour of {} at {}, {} is where the attacker came from".format(self.piece_type, self.territory.name, neighbour.name))
+                
+            # find previous territory of piece that is in piece's territory
+            
+                
+        return any([neighbour for neighbour in self.territory.neighbours if (not neighbour.occupied()) and neighbour.accessible_by_piece_type(self) and neighbour != self.find_other_piece_in_territory().previous_territory])
+        
     def must_retreat(self):
-        # check if there is an unoccupied neighbouring territroy that the piece can access 
         self.retreat = True
         
     def retreat_resolved(self):
         self.retreat = False
-        
-    def must_destroy(self):
-        self.destroy = True
+    
+    def destroy(self):
+        Piece.all_pieces.remove(self)
+        if self in Army.all_armies:
+            Army.all_armies.remove(self)
+        if self in Fleet.all_fleets:
+            Fleet.all_fleets.remove(self)
+            write_to_log("\npiece at {} has been destroyed".format(self.territory.name))
         
 # Army --------------------------------------------------------------------------------------------
         
@@ -289,6 +326,7 @@ class Order():
             self.resolve_challenge()
         return True
         
+    # Refactor?
     def identify_retreats(self):
         challenging_pieces = self.find_other_pieces_challenging_territory()
         if self.piece.has_most_support(challenging_pieces):
@@ -299,16 +337,6 @@ class Order():
     
     def get_object_by_territory(self, territory):
         return [piece for piece in Piece.all_pieces if piece.territory.name == territory.name][0]
-        
-    def territory_shares_coast_with_piece(self, territory):
-        if hasattr(territory, "shared_coasts"):
-            return self.territory in territory.shared_coasts
-        
-    def territory_is_accessible_by_piece_type(self, territory):
-        if isinstance(self.piece, Army):
-            return not isinstance(territory, (Water, Special_Coastal))
-        if isinstance(self.piece, Fleet):
-            return isinstance(territory, Water) or (isinstance(territory, Coastal) and self.territory_shares_coast_with_piece(territory)) or (isinstance(territory, Coastal) and isinstance(self.piece.territory, Water))
 
     def territory_is_neighbour(self, territory):
         neighbours = self.territory.neighbours
@@ -394,7 +422,7 @@ class Move(Order):
         if not (self.target_accessible_by_convoy(self.territory) or self.territory_is_neighbour(self.target)):
             self.fail("move failed: {} is not a neighbour of {} and is not accessible by convoy".format(self.target.name, self.territory.name))
             return False
-        if not (self.territory_is_accessible_by_piece_type(self.target)):
+        if not (self.target.accessible_by_piece_type(self.piece)):
             self.fail("move failed: {} is not accessible by piece type at {}".format(self.target.name, self.territory.name))
             return False
         return  True
@@ -421,7 +449,7 @@ class Support(Order):
         self.supported_territory = supported_territory
     
     def support_is_valid(self):
-        return self.territory_is_neighbour(self.target) and self.territory_is_accessible_by_piece_type(self.target)
+        return self.territory_is_neighbour(self.target) and self.target.accessible_by_piece_type(self.piece)
 
     def process_order(self):
         if self.support_is_valid():

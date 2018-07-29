@@ -220,4 +220,6 @@ army at gal has moved to gal
 fleet at bot has moved to bot
 army at ukr has moved to ukr
 
+piece at rum has been destroyed
+
 new phase: spring retreat phase.
