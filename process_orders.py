@@ -9,6 +9,11 @@ from territories import territories
 # Resolve Challenges ==================================================================================
 
 def resolve_challenges():
+    
+    write_to_log("\n")
+    for move in Move.all_moves:
+        move.identify_retreats()
+    
     write_to_log("\n")
     for move in Move.all_moves:
         move.create_bounces()
@@ -18,9 +23,10 @@ def resolve_challenges():
         move.resolve_bounce()
                 
     write_to_log("\n")
+    # REFACTOR
     for piece in Piece.all_pieces:
         for other_piece in Piece.all_pieces:
-            if piece.challenging == other_piece.challenging and id(piece) != id(other_piece):
+            if piece.challenging == other_piece.challenging and (not other_piece.retreat) and (not piece.retreat) and id(piece) != id(other_piece):
                 write_to_log("recursing the function because piece at {} is challenging {} the same territory as {}".format(piece.territory.name, piece.challenging.name, other_piece.territory.name))
                 resolve_challenges()
     return True
@@ -77,3 +83,4 @@ clear_log()
 end_turn("game_histories/game_1/01_spring_1901.txt")
 end_turn("game_histories/game_1/02_fall_1901.txt")
 end_turn("game_histories/game_1/03_fall_build_1901.txt")
+end_turn("game_histories/game_1/04_spring_1902.txt")

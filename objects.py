@@ -212,6 +212,7 @@ class Piece:
         write_to_log("{} at {} has moved to {}".format(self.piece_type, self.previous_territory.name, self.territory.name))
         
     def must_retreat(self):
+        # check if there is an unoccupied neighbouring territroy that the piece can access 
         self.retreat = True
         
     def retreat_resolved(self):

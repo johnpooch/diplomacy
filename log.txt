@@ -141,3 +141,7977 @@ fleet built at ank
 
 new phase: spring order phase.
 new year: 1902.
+
+
+army at par is now challenging bre
+fleet at bre is now challenging eng
+fleet at nap is now challenging ion
+army at apu is now challenging ven
+fleet at ion is now challenging aeg
+army at ruh is now challenging kie
+army at mun is now challenging sil
+army at ber is now challenging pru
+army at vie is now challenging gal
+fleet at tri is now challenging adr
+army at ser is now challenging rum
+fleet at smy is now challenging aeg
+fleet at ank is now challenging bla
+
+
+piece at ion challenging aeg has bounced
+piece at smy challenging aeg has bounced
+
+
+bounced piece at ion is now challenging its own territory
+bounced piece at smy is now challenging its own territory
+
+
+piece at rum must now retreat
+recursing the function because piece at ion is challenging ion the same territory as nap
+
+
+piece at nap challenging ion has bounced
+piece at ion challenging ion has bounced
+
+
+bounced piece at nap is now challenging its own territory
+bounced piece at ion is now challenging its own territory
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat
+recursing the function because piece at gal is challenging gal the same territory as vie
+
+
+
+
+
+
+piece at rum must now retreat

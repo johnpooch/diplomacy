@@ -57,6 +57,9 @@ def get_orders_from_txt(file):
             if command == "move":
                 order = Move(nation, origin, find_territory_by_name(words[2]))
             if command == "support":
+                print(words[4])
+                if words[4] == "hold":
+                    words[4] = words[2]
                 order = Support(nation, origin, find_territory_by_name(words[2]), find_territory_by_name(words[4]))
             
             if command != "build":
