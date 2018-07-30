@@ -113,7 +113,7 @@ class Move(Order):
             self.fail("move failed: {} is not a neighbour of {} and is not accessible by convoy".format(self.target.name, self.territory.name))
             return False
         if not (self.target.accessible_by_piece_type(self.piece)):
-            self.fail("move failed: {} is not accessible by piece type at {}".format(self.target.name, self.territory.name))
+            self.fail("move failed: {} is not accessible by {} at {}".format(self.target.name, self.piece.piece_type, self.piece.territory.name))
             return False
         return  True
 
