@@ -1,6 +1,11 @@
 # from dependencies import *
-from objects import *
-from instances import *
+from nation import *
+from phase import *
+from game_properties import *
+from piece import *
+from territory import *
+from order import *
+from initial_game_state import *
 from order_text_processor import get_orders_from_txt
 from write_to_log import clear_log, clear_special
 
@@ -97,4 +102,4 @@ end_turn("game_histories/game_1/05_spring_retreat_1902.txt")
 end_turn("game_histories/game_1/06_fall_1902.txt")
 end_turn("game_histories/game_1/07_fall_retreat_1902.txt")
 end_turn("game_histories/game_1/08_fall_build_1902.txt")
-end_turn("game_histories/game_1/09_spring_1903.txt")
+# end_turn("game_histories/game_1/09_spring_1903.txt")

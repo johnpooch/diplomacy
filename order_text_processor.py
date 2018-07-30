@@ -1,6 +1,8 @@
 from reps import reps, stp_reps
-from objects import *
-from instances import *
+from nation import *
+from order import *
+from territory import *
+from piece import *
 from pprint import pprint
 
 def piece_exists_in_territory_and_belongs_to_user(territory):
