@@ -50,7 +50,7 @@ class Test_Army_Move(unittest.TestCase):
         
         
         
-""" FLEET MOVEMENT: A fleet can be ordered to move to ana adjacent water province or coastal province. Fleets cannot be ordered to move to an inland province. """
+""" FLEET MOVEMENT: A fleet can be ordered to move to an adjacent water province or coastal province. Fleets cannot be ordered to move to an inland province. """
 
 class Test_Fleet_Move(unittest.TestCase):
     
@@ -71,6 +71,15 @@ class Test_Fleet_Move(unittest.TestCase):
         
         self.assertEqual(self.move_1.piece.challenging, lon)
         self.assertEqual(self.move_1.report, "")
+        
+    def test_move_to_inland(self):
+        self.test_piece = Fleet(gas, france)
+        self.move_1 = Move(france, gas, spa)
+        setattr(self.move_1, "piece", self.test_piece)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, gas)
+        self.assertEqual(self.move_1.report, "move failed: spa is not accessible by fleet at gas")
         
     def test_move_to_not_adjacent(self):
         setattr(self.move_1, "target", hol)
@@ -153,8 +162,255 @@ class Test_Fleet_Move_Kie(unittest.TestCase):
         
 """ SWEDEN AND DENMARK: An army or fleet in Sweden can move to Denmark in one turn and vice versa. Baltic Sea cannot move directly into Skaggerak and vice versa."""
 
+class Test_Fleet_Move_Swe(unittest.TestCase):
 
+    def test_move_from_den_to_swe(self):
+        self.move_1 = Move(germany, den, swe)
+        setattr(self.move_1, "piece", Fleet(den, germany))
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, swe)
+        self.assertEqual(self.move_1.report, "")
 
+    def test_move_from_bal_to_ska(self):
+        self.move_1 = Move(germany, bal, ska)
+        setattr(self.move_1, "piece", Fleet(bal, germany))
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, bal)
+        self.assertEqual(self.move_1.report, "move failed: ska is not a neighbour of bal and is not accessible by convoy")
+
+""" BLUGARIA, SPAIN, STP: A fleet entering one of these territories can move to a coast that is adjacent to that coast only. A fleet at Spain's North Coast cannot be ordered to the Western Mediterranean of the Gulf of Lyon or to Marseilles. """
+
+class Test_Fleet_Move_Spa_Nc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet(spa_nc, france)
+        self.move_1 = Move(france, spa_nc, mar)
+        setattr(self.move_1, "piece", self.test_piece)
+
+    def test_move_from_spa_nc_to_mar(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, spa_nc)
+        self.assertEqual(self.move_1.report, "move failed: mar is not a neighbour of spa_nc and is not accessible by convoy")
+        
+    def test_move_from_spa_nc_to_wes(self):
+        setattr(self.move_1, "target", wes)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, spa_nc)
+        self.assertEqual(self.move_1.report, "move failed: wes is not a neighbour of spa_nc and is not accessible by convoy")
+        
+    def test_move_from_spa_nc_to_gol(self):
+        setattr(self.move_1, "target", gol)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, spa_nc)
+        self.assertEqual(self.move_1.report, "move failed: gol is not a neighbour of spa_nc and is not accessible by convoy")
+        
+    def test_move_from_spa_nc_to_por(self):
+        setattr(self.move_1, "target", por)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, por)
+        self.assertEqual(self.move_1.report, "")
+        
+class Test_Fleet_Move_Spa_Sc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet(spa_sc, france)
+        self.move_1 = Move(france, spa_sc, mar)
+        setattr(self.move_1, "piece", self.test_piece)
+
+    def test_move_from_spa_sc_to_mar(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, mar)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_spa_sc_to_wes(self):
+        setattr(self.move_1, "target", wes)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, wes)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_spa_sc_to_gol(self):
+        setattr(self.move_1, "target", gas)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, spa_sc)
+        self.assertEqual(self.move_1.report, "move failed: gas is not a neighbour of spa_sc and is not accessible by convoy")
+        
+    def test_move_from_spa_sc_to_spa(self):
+        setattr(self.move_1, "target", spa)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, spa_sc)
+        self.assertEqual(self.move_1.report, "move failed: spa is not a neighbour of spa_sc and is not accessible by convoy")
+        
+class Test_Fleet_Move_Bul_Sc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet(bul_sc, france)
+        self.move_1 = Move(france, bul_sc, con)
+        setattr(self.move_1, "piece", self.test_piece)
+
+    def test_move_from_bul_sc_to_con(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, con)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_bul_sc_to_aeg(self):
+        setattr(self.move_1, "target", aeg)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, aeg)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_bul_sc_to_gre(self):
+        setattr(self.move_1, "target", gre)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, gre)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_bul_sc_to_bla(self):
+        setattr(self.move_1, "target", bla)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, bul_sc)
+        self.assertEqual(self.move_1.report, "move failed: bla is not a neighbour of bul_sc and is not accessible by convoy")
+        
+    def test_move_from_bul_sc_to_rum(self):
+        setattr(self.move_1, "target", rum)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, bul_sc)
+        self.assertEqual(self.move_1.report, "move failed: rum is not a neighbour of bul_sc and is not accessible by convoy")
+        
+class Test_Fleet_Move_bul_ec(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet(bul_ec, france)
+        self.move_1 = Move(france, bul_ec, con)
+        setattr(self.move_1, "piece", self.test_piece)
+
+    def test_move_from_bul_ec_to_con(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, con)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_bul_ec_to_aeg(self):
+        setattr(self.move_1, "target", aeg)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, bul_ec)
+        self.assertEqual(self.move_1.report, "move failed: aeg is not a neighbour of bul_ec and is not accessible by convoy")
+        
+    def test_move_from_bul_ec_to_gre(self):
+        setattr(self.move_1, "target", gre)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, bul_ec)
+        self.assertEqual(self.move_1.report, "move failed: gre is not a neighbour of bul_ec and is not accessible by convoy")
+        
+    def test_move_from_bul_ec_to_bla(self):
+        setattr(self.move_1, "target", bla)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, bla)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_bul_ec_to_rum(self):
+        setattr(self.move_1, "target", rum)
+        self.move_1.process_order()
+        
+        self.assertEqual(self.move_1.piece.challenging, rum)
+        self.assertEqual(self.move_1.report, "")
+        
+class Test_Fleet_Move_stp_sc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet(stp_sc, france)
+        self.move_1 = Move(france, stp_sc, lvn)
+        setattr(self.move_1, "piece", self.test_piece)
+
+    def test_move_from_stp_sc_to_lvn(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, lvn)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_stp_sc_to_fin(self):
+        setattr(self.move_1, "target", fin)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, fin)
+        self.assertEqual(self.move_1.report, "")
+            
+    def test_move_from_stp_sc_to_bot(self):
+        setattr(self.move_1, "target", bot)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, bot)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_stp_sc_to_bar(self):
+        setattr(self.move_1, "target", bar)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_sc)
+        self.assertEqual(self.move_1.report, "move failed: bar is not a neighbour of stp_sc and is not accessible by convoy")
+        
+    def test_move_from_stp_sc_to_nwy(self):
+        setattr(self.move_1, "target", nwy)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_sc)
+        self.assertEqual(self.move_1.report, "move failed: nwy is not a neighbour of stp_sc and is not accessible by convoy")
+        
+    def test_move_from_stp_sc_to_stp_nc(self):
+        setattr(self.move_1, "target", stp_nc)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_sc)
+        self.assertEqual(self.move_1.report, "move failed: stp_nc is not a neighbour of stp_sc and is not accessible by convoy")
+
+class Test_Fleet_Move_stp_nc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet(stp_nc, france)
+        self.move_1 = Move(france, stp_nc, lvn)
+        setattr(self.move_1, "piece", self.test_piece)
+
+    def test_move_from_stp_nc_to_lvn(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_nc)
+        self.assertEqual(self.move_1.report, "move failed: lvn is not a neighbour of stp_nc and is not accessible by convoy")
+        
+    def test_move_from_stp_nc_to_fin(self):
+        setattr(self.move_1, "target", fin)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_nc)
+        self.assertEqual(self.move_1.report, "move failed: fin is not a neighbour of stp_nc and is not accessible by convoy")
+            
+    def test_move_from_stp_nc_to_bot(self):
+        setattr(self.move_1, "target", bot)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_nc)
+        self.assertEqual(self.move_1.report, "move failed: bot is not a neighbour of stp_nc and is not accessible by convoy")
+        
+    def test_move_from_stp_nc_to_bar(self):
+        setattr(self.move_1, "target", bar)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, bar)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_stp_nc_to_nwy(self):
+        setattr(self.move_1, "target", nwy)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, nwy)
+        self.assertEqual(self.move_1.report, "")
+        
+    def test_move_from_stp_nc_to_stp_sc(self):
+        setattr(self.move_1, "target", stp_sc)
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, stp_nc)
+        self.assertEqual(self.move_1.report, "move failed: stp_sc is not a neighbour of stp_nc and is not accessible by convoy")
 
 if __name__ == '__main__':
     unittest.main()

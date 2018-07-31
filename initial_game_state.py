@@ -36,7 +36,7 @@ nrg = Water("nrg", "norwegian sea", [])
 nth = Water("nth", "north sea", [])
 ska = Water("ska", "skagerrack", [])
 tyn = Water("tyn", "tyrrhenian sea", [])
-wes = Water("tyn", "western mediterranean", [])
+wes = Water("wes", "western mediterranean", [])
 
 # Coastal Territories ----------------------------------------------------------------------------
 
@@ -99,13 +99,13 @@ war = Inland("war", "warsaw", [], russia)
 
 # Special Inland Territories ---------------------------------------------------------------------
 
-bul = Special_Inland("bul", "bulgaria", [], neutral, ["bul_nc", "bul_sc"])
+bul = Special_Inland("bul", "bulgaria", [], neutral, ["bul_ec", "bul_sc"])
 spa = Special_Inland("spa", "spain", [], neutral, ["spa_nc", "spa_sc"])
 stp = Special_Inland("stp", "st. petersburg", [], russia, ["stp_nc", "stp_sc"])
 
 # Special Coastal Territories --------------------------------------------------------------------
 
-bul_nc = Special_Coastal("bul_nc", "bulgaria (north coast)", [], "bul")
+bul_ec = Special_Coastal("bul_ec", "bulgaria (north coast)", [], "bul")
 bul_sc = Special_Coastal("bul_sc", "bulgaria (south coast)", [], "bul")
 spa_nc = Special_Coastal("spa_nc", "spain (north coast)", [], "spa")
 spa_sc = Special_Coastal("spa_sc", "spain (north coast)", [], "spa")
@@ -116,9 +116,9 @@ stp_nc = Special_Coastal("stp_nc", "st. petersburg (north coast)", [], "stp")
 
 setattr(adr, 'neighbours', [alb, apu, ion, tri, ven])
 setattr(aeg, 'neighbours', [bla, bul, bul_sc, con, eas, gre, ion, smy])
-setattr(bal, 'neighbours', [ber, bot, den, kie, pru, ska, swe])
+setattr(bal, 'neighbours', [ber, bot, den, kie, pru, swe])
 setattr(bar, 'neighbours', [nrg, nwy, stp, stp_sc])
-setattr(bla, 'neighbours', [ank, arm, bul, bul_nc, con, rum, sev])
+setattr(bla, 'neighbours', [ank, arm, bul, bul_ec, con, rum, sev])
 setattr(bot, 'neighbours', [bal, fin, lvn, swe, stp, stp])
 setattr(eas, 'neighbours', [aeg, smy, syr])
 setattr(eng, 'neighbours', [bel, bre, iri, lon, mid, nth, pic, wal])
@@ -130,9 +130,9 @@ setattr(mid, 'neighbours', [bre, eng, gas, iri, naf, nat, spa, spa_nc, spa_sc, p
 setattr(nat, 'neighbours', [cly, iri, lvp, mid, nrg])
 setattr(nrg, 'neighbours', [bar, cly, edi, nat, nwy, nth])
 setattr(nth, 'neighbours', [bel, den, edi, eng, hel, hol, lon, nrg, nwy, ska, yor])
-setattr(ska, 'neighbours', [bal, den, nth, nwy, swe])
+setattr(ska, 'neighbours', [den, nth, nwy, swe])
 setattr(tyn, 'neighbours', [gol, ion, nap, rom, tun, tus, wes])
-# setattr(tyn, 'neighbours', [gol, mid, naf, spa, spa_sc, tun, tyn])
+setattr(wes, 'neighbours', [gol, mid, naf, spa, spa_sc, tun, tyn])
 
 setattr(alb, 'neighbours', [adr, gre, ion, ser, tri])
 setattr(ank, 'neighbours', [arm, bla, con, smy])
@@ -142,7 +142,7 @@ setattr(ber, 'neighbours', [bal, kie, mun, pru, sil])
 setattr(bel, 'neighbours', [bur, eng, hol, pic, ruh])
 setattr(bre, 'neighbours', [eng, gas, mid, par, pic])
 setattr(cly, 'neighbours', [edi, lvp, iri, nat, nrg])
-setattr(con, 'neighbours', [aeg, ank, bla, bul, bul_sc, bul_nc, smy])
+setattr(con, 'neighbours', [aeg, ank, bla, bul, bul_sc, bul_ec, smy])
 setattr(den, 'neighbours', [bal, hel, kie, nth, ska, swe])
 setattr(edi, 'neighbours', [cly, lvp, nat, nrg, nth, yor])
 setattr(fin, 'neighbours', [bot, nwy, stp, stp_sc, swe])
@@ -161,7 +161,7 @@ setattr(pic, 'neighbours', [bre, bel, bur, eng, par])
 setattr(pie, 'neighbours', [gol, mar, tus, tyr, ven])
 setattr(por, 'neighbours', [mid, spa, spa_nc, spa_sc])
 setattr(rom, 'neighbours', [apu, nap, tus, tyn, ven])
-setattr(rum, 'neighbours', [bla, bud, bul, bul_nc, gal, ser, sev, ukr])
+setattr(rum, 'neighbours', [bla, bud, bul, bul_ec, gal, ser, sev, ukr])
 setattr(pru, 'neighbours', [bal, ber, lvn, sil, war])
 setattr(sev, 'neighbours', [arm, bla, mos, rum, ukr])
 setattr(smy, 'neighbours', [aeg, arm, ank, con, eas, syr])
@@ -193,8 +193,10 @@ setattr(war, 'neighbours', [gal, lvn, mos, sil, pru, ukr])
 setattr(bul, 'neighbours', [aeg, bla, con, gre, rum, ser])
 setattr(spa, 'neighbours', [gas, mar, por])
 setattr(stp, 'neighbours', [fin, lvn, mos, nwy])
-setattr(bul_nc, 'neighbours', [bal, fin, lvn, swe, stp, stp])
+setattr(bul_ec, 'neighbours', [bla, con, rum])
 setattr(bul_sc, 'neighbours', [aeg, con, gre])
+setattr(spa_sc, 'neighbours', [gol, mar, mid, por, wes])
+setattr(spa_nc, 'neighbours', [gas, mid, por])
 setattr(stp_sc, 'neighbours', [bot, fin, lvn])
 setattr(stp_nc, 'neighbours', [bar, nwy])
         
@@ -242,13 +244,13 @@ setattr(yor, 'shared_coasts', [edi, lon])
             
 # Assign special coasts to territories ------------------------------------------------------------
             
-setattr(bul, 'coasts', [bul_nc, bul_sc])
+setattr(bul, 'coasts', [bul_ec, bul_sc])
 setattr(spa, 'coasts', [spa_nc, spa_sc])
 setattr(stp, 'coasts', [stp_nc, stp_sc])            
   
 # Assign parent territory to territories ----------------------------------------------------------
 
-setattr(bul_nc, 'parent_territory', bul)
+setattr(bul_ec, 'parent_territory', bul)
 setattr(bul_sc, 'parent_territory', bul)
 setattr(spa_sc, 'parent_territory', spa)
 setattr(spa_nc, 'parent_territory', spa)

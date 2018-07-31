@@ -2,7 +2,7 @@ stp_reps = {
     'St. Petersburg (South Coast)': 'stp_sc',
     'St. Petersburg (North Coast)': 'stp_nc',
     'Bulgaria (South Coast)': 'bul_sc',
-    'Bulgaria (North Coast)': 'bul_nc',
+    'Bulgaria (East Coast)': 'bul_ec',
     'Spain (South Coast)': 'spa_sc',
     'Spain (North Coast)': 'spa_nc',
 }
