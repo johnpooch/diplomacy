@@ -20,7 +20,7 @@ class Order():
     # Refactor?
     def identify_retreats(self):
         challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
-        if self.piece.has_most_support(challenging_pieces):
+        if self.piece.has_most_strength(challenging_pieces):
             for challenging_piece in challenging_pieces:
                 if challenging_piece.territory == challenging_piece.challenging:
                     write_to_log("piece at {0} must now retreat".format(challenging_piece.territory.name))
@@ -36,6 +36,7 @@ class Order():
     def fail(self, report_string):
         self.report = report_string
         self.success = False
+        
 
 # Hold --------------------------------------------------------------------------------------------
 
@@ -96,7 +97,7 @@ class Move(Order):
         
     def create_bounces(self):
         challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
-        if not self.piece.has_most_support(challenging_pieces) and challenging_pieces:
+        if not self.piece.has_most_strength(challenging_pieces) and challenging_pieces:
             self.bounced = True
     
     def target_accessible_by_convoy(self, territory):
@@ -149,33 +150,33 @@ class Support(Order):
                     return True
             return False
         
-        return self.territory_is_neighbour(self.target) and (self.target.accessible_by_piece_type(self.piece) or self.target.coasts_accessible_by_piece_type(self.piece) or self.target.parent_accessible_by_piece_type(self.piece))
+        return self.territory_is_neighbour(self.target) and self.target.accessible_by_piece_type(self.piece)
 
     def process_order(self):
         if self.support_is_valid():
             object_piece = self.get_object_by_territory(self.supported_territory)
             
             if isinstance(self.target, Special_Coastal):
-                if self.target in object_piece.support:
-                    object_piece.support[self.target.parent_territory] +=1
+                if self.target in object_piece.strength:
+                    object_piece.strength[self.target.parent_territory] +=1
                 else:
-                    object_piece.support[self.target.parent_territory] = 1
+                    object_piece.strength[self.target.parent_territory] = 1
                 write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.parent_territory.name))
-                write_to_log("{} at {} support: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.support))    
+                write_to_log("{} at {} strength: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.strength))    
                 
             
             else:
-                if self.target in object_piece.support:
-                    object_piece.support[self.target] +=1
+                if self.target in object_piece.strength:
+                    object_piece.strength[self.target] +=1
                 else:
-                    object_piece.support[self.target] = 1
+                    object_piece.strength[self.target] = 1
                 
                 write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.name))
-                write_to_log("{} at {} support: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.support))
+                write_to_log("{} at {} strength: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.strength))
             
 
         else:
-            write_to_log("support order: {} invalid".format(self))
+            self.fail("support failed: {} at {} cannot support {} to {}".format(self.piece.piece_type, self.territory.name, self.supported_territory.name, self.target.name))
         
     def __repr__(self):
         return "{}, {}: Support({}, {}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.supported_territory.name, self.target.name)

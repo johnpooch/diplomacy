@@ -1,11 +1,9 @@
 import unittest
+from process_orders import process_orders
 from order import *
 from piece import *
 from nation import *
 from initial_game_state import *
-
-
-# DO I NEED TO TEST ORDERING PIECES BELONGING TO ANOTHER COUNTRY?
 
 """ ARMY MOVEMENT: An army can be ordered to move into an adjacent inland or coastal provence. An Army cannot be ordered to move into a water province. """
 
@@ -411,6 +409,32 @@ class Test_Fleet_Move_stp_nc(unittest.TestCase):
         self.move_1.process_order()
         self.assertEqual(self.move_1.piece.challenging, stp_nc)
         self.assertEqual(self.move_1.report, "move failed: stp_sc is not a neighbour of stp_nc and is not accessible by convoy")
+        
+""" SUPPORT: The province to which a unit is providing support must be one to which the supportihng unit could have legally moved during that turn. """
+
+class Test_Support(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece_1 = Army(bre, france)
+        self.test_piece_2 = Fleet(lon, france)
+        self.order_1 = Support(france, bre, lon, eng)
+        self.order_2 = Move(france, lon, eng)
+        setattr(self.order_1, "piece", self.test_piece_1)
+        setattr(self.order_2, "piece", self.test_piece_2)
+
+    def test_army_bre_support_lon_eng(self):
+        self.order_1.process_order()
+        self.order_2.process_order()
+        self.assertEqual(self.order_2.piece.strength, {})
+        self.assertEqual(self.order_1.report, "support failed: army at bre cannot support lon to eng")
+    
+    def test_fleet_bre_support_lon_eng(self):
+        setattr(self.order_1, "piece", Fleet(bre, france)) 
+        self.order_1.process_order()
+        self.order_2.process_order()
+        self.assertEqual(self.order_2.piece.strength, {})
+        self.assertEqual(self.order_1.report, "")
+        print()
 
 if __name__ == '__main__':
     unittest.main()

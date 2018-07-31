@@ -12,7 +12,7 @@ class Piece:
         self.challenging = territory
         self.previous_territory = territory
         self.convoyed_by = []
-        self.support = {}
+        self.strength = {}
         self.retreat = False
         self.piece_type = ""
         
@@ -20,26 +20,26 @@ class Piece:
         if self.order:
             self.order.piece = self
         
-    def has_most_support(self, challenging_pieces):
+    def has_most_strength(self, challenging_pieces):
         for challenging_piece in challenging_pieces:
             
             # if isinstance(self.challenging, Special_Coastal):
-            #     # zero support
-            #     if not self.challenging.parent_territory in challenging_piece.support:
-            #         challenging_piece.support[self.challenging.parent_territory] = 0
-            #     if not self.challenging.parent_territory in self.support:
-            #         self.support[self.challenging.parent_territory] = 0
+            #     # zero strength
+            #     if not self.challenging.parent_territory in challenging_piece.strength:
+            #         challenging_piece.strength[self.challenging.parent_territory] = 0
+            #     if not self.challenging.parent_territory in self.strength:
+            #         self.strength[self.challenging.parent_territory] = 0
                     
-            #     return all(self.support[self.challenging.parent_territory] > challenging_piece.support[self.challenging.parent_territory] for challenging_piece in challenging_pieces)
+            #     return all(self.strength[self.challenging.parent_territory] > challenging_piece.strength[self.challenging.parent_territory] for challenging_piece in challenging_pieces)
                     
             
-            # zero support
-            if not self.challenging in challenging_piece.support:
-                challenging_piece.support[self.challenging] = 0
-            if not self.challenging in self.support:
-                self.support[self.challenging] = 0
+            # zero strength
+            if not self.challenging in challenging_piece.strength:
+                challenging_piece.strength[self.challenging] = 0
+            if not self.challenging in self.strength:
+                self.strength[self.challenging] = 0
             
-        return all(self.support[self.challenging] > challenging_piece.support[self.challenging] for challenging_piece in challenging_pieces)
+        return all(self.strength[self.challenging] > challenging_piece.strength[self.challenging] for challenging_piece in challenging_pieces)
         
     def change_territory(self):
         self.previous_territory = self.territory
