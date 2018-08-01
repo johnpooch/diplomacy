@@ -10,7 +10,6 @@ from wtforms.validators import DataRequired
 from forms import RegistrationForm, LoginForm
 
 from datetime import datetime
-import bcrypt
 import random
 
 

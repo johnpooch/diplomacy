@@ -1,6 +1,5 @@
 from dependencies import *
 from process_orders import end_turn
-from objects import *
 from get_game_state import get_game_state
 
 # ROUTES ==========================================================================================

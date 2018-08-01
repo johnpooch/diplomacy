@@ -22,17 +22,6 @@ class Piece:
         
     def has_most_strength(self, challenging_pieces):
         for challenging_piece in challenging_pieces:
-            
-            # if isinstance(self.challenging, Special_Coastal):
-            #     # zero strength
-            #     if not self.challenging.parent_territory in challenging_piece.strength:
-            #         challenging_piece.strength[self.challenging.parent_territory] = 0
-            #     if not self.challenging.parent_territory in self.strength:
-            #         self.strength[self.challenging.parent_territory] = 0
-                    
-            #     return all(self.strength[self.challenging.parent_territory] > challenging_piece.strength[self.challenging.parent_territory] for challenging_piece in challenging_pieces)
-                    
-            
             # zero strength
             if not self.challenging in challenging_piece.strength:
                 challenging_piece.strength[self.challenging] = 0
@@ -40,6 +29,14 @@ class Piece:
                 self.strength[self.challenging] = 0
             
         return all(self.strength[self.challenging] > challenging_piece.strength[self.challenging] for challenging_piece in challenging_pieces)
+        
+    def identify_retreats(self):
+        challenging_pieces = self.challenging.find_other_pieces_challenging_territory(self)
+        if self.has_most_strength(challenging_pieces):
+            for challenging_piece in challenging_pieces:
+                if challenging_piece.territory == challenging_piece.challenging:
+                    write_to_log("piece at {0} must now retreat".format(challenging_piece.territory.name))
+                    challenging_piece.must_retreat()
         
     def change_territory(self):
         self.previous_territory = self.territory

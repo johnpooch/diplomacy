@@ -16,15 +16,6 @@ class Order():
         self.report = ""
         self.bounced = False
         self.piece = None
-        
-    # Refactor?
-    def identify_retreats(self):
-        challenging_pieces = self.piece.challenging.find_other_pieces_challenging_territory(self.piece)
-        if self.piece.has_most_strength(challenging_pieces):
-            for challenging_piece in challenging_pieces:
-                if challenging_piece.territory == challenging_piece.challenging:
-                    write_to_log("piece at {0} must now retreat".format(challenging_piece.territory.name))
-                    challenging_piece.must_retreat()
     
     def get_object_by_territory(self, territory):
         return [piece for piece in Piece.all_pieces if piece.territory.name == territory.name][0]

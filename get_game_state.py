@@ -1,5 +1,6 @@
 from dependencies import *
-from objects import *
+from piece import *
+from game_properties import *
 
 # GET GAME STATE ===================================================================================
 
