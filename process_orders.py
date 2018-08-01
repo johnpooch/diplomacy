@@ -7,9 +7,7 @@ from territory import *
 from order import *
 from initial_game_state import *
 from order_text_processor import get_orders_from_txt
-from write_to_log import clear_log, clear_special
-
-from territories import territories
+from write_to_log import clear_log
 
 # Resolve Challenges ==================================================================================
 

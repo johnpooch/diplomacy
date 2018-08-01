@@ -1,6 +1,23 @@
 from dependencies import *
 from process_orders import end_turn
+from player import player
 from get_game_state import get_game_state
+
+# Create player -----------------------------------------------------------------------------------
+    
+def create_player(request):
+    
+    mongo.db.users.insert(
+        {
+        "username": request.form["username"],
+        "email": request.form["email"],
+        "password": bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt()),
+        "nation": assign_player_to_nation(request.form["username"]),
+        "orders_finalised": False
+        }
+    )
+    flash('Account created for {}!'.format(request.form.username.data), 'success')
+    return request.form["username"]
 
 # ROUTES ==========================================================================================
 
@@ -50,10 +67,12 @@ def logout():
     
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
+    if not "username" in session:
+        print('yo')
+        return redirect(url_for('register'))
+    
     game_state = get_game_state()
     username = session["username"]
-    if mongo.db.users.find_one({"username": username })["orders_finalised"]:
-        return redirect(url_for("finalised"))
     
     pieces = filter_pieces_by_user(username)
         

@@ -12,8 +12,6 @@ from forms import RegistrationForm, LoginForm
 from datetime import datetime
 import random
 
-
-from territories import territories
 from initial_game_state import *
 
 from order_text_processor import get_orders_from_txt

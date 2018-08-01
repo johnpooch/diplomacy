@@ -74,21 +74,6 @@ def fill_out_orders(file_name):
 #     update_nation_availability(player_nation)
 #     return player_nation
     
-# Create player -----------------------------------------------------------------------------------
-    
-def create_player(request):
-    mongo.db.users.insert(
-        {
-        "username": request.form["username"],
-        "email": request.form["email"],
-        "password": bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt()),
-        "nation": assign_player_to_nation(request.form["username"]),
-        "orders_finalised": False
-        }
-    )
-    flash('Account created for {}!'.format(request.form.username.data), 'success')
-    return request.form["username"]
-    
     
 # Attempt login -----------------------------------------------------------------------------------
 
