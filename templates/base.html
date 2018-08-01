@@ -22,13 +22,184 @@
 </head>
 
 <body>
-    
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
+          
+          
           {% block contents %}
           {% endblock %}
-          <div id="draggable" class="ui-widget-content floating-button">
+          
+            <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#intefaceModal">
+  Menu
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="intefaceModal" tabindex="-1" role="dialog" aria-labelledby="intefaceModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div id="draggable" class="modal-content">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div role="tabpanel">
+          
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <!-- Tab Buttons -->
+            <li role="presentation" class="active nav-tab-button-style">
+              <a href="#uploadTab" aria-controls="uploadTab" role="tab" data-toggle="tab">
+                <h5 class="modal-title" id="intefaceModalLabel">Register</h5>
+              </a>
+            </li>
+            <span> | </span>
+            <li role="presentation" class ="nav-tab-button-style">
+              <a href="#browseTab" aria-controls="browseTab" role="tab" data-toggle="tab">
+                <h5 class="modal-title" id="intefaceModalLabel">Login</h5>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        
+          <!-- Modal Body -->
+          <div class="modal-body">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="uploadTab">
+                  
+                  <!--Registration Form-->
+                  <form method="POST" action="">
+                    {{ registration_form.hidden_tag() }}
+                    <fieldset class="form-group">
+                      <div class="form-group">
+                        <i class="fa fa-user"></i> {{ registration_form.username.label(class="form-control-label") }}
+                        {% if registration_form.username.errors %}
+                        {{ registration_form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                          {% for error in registration_form.username.errors %}
+                          <span>{{ error }}</span>
+                          {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ registration_form.username(class="form-control form-control-lg") }}
+                        {% endif %}
+                          
+                      </div>
+                      <div class="form-group">
+                        <i class="fa fa-envelope prefix grey-text"></i> {{ registration_form.email.label(class="form-control-label") }}
+                        {% if registration_form.email.errors %}
+                            {{ registration_form.email(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in registration_form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ registration_form.email(class="form-control form-control-lg") }}
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <i class="fa fa-lock prefix grey-text"></i> {{ registration_form.password.label(class="form-control-label") }}
+                        {% if registration_form.password.errors %}
+                            {{ registration_form.password(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in registration_form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ registration_form.password(class="form-control form-control-lg") }}
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                          {{ registration_form.confirm_password.label(class="form-control-label") }}
+                          {% if registration_form.confirm_password.errors %}
+                              {{ registration_form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                              <div class="invalid-feedback">
+                                  {% for error in registration_form.username.errors %}
+                                      <span>{{ error }}</span>
+                                  {% endfor %}
+                              </div>
+                          {% else %}
+                              {{ registration_form.confirm_password(class="form-control form-control-lg") }}
+                          {% endif %}
+                      </div>
+                                  
+                                </fieldset>
+                                <div class="form-group">
+                                {{ registration_form.submit(class="btn btn-outline-info") }}
+                                </div>
+                              </form>
+                              
+                              <div class="border-top pt-3"></div>
+                              <small class="text-muted">
+                                  Already Have An Account? <a class="ml-2" href="{{ url_for('login') }}">Sign In</a>
+                              </small>
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="browseTab">
+                              <form method="POST" action="">
+                                {{ login_form.hidden_tag() }}
+                                <fieldset class="form-group">
+                                    
+                                    <div class="form-group">
+                                        <i class="fa fa-envelope prefix grey-text"></i> {{ login_form.email.label(class="form-control-label") }}
+                                        {% if login_form.email.errors %}
+                                            {{ login_form.email(class="form-control form-control-lg is-invalid") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in login_form.email.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ login_form.email(class="form-control form-control-lg") }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="fa fa-lock prefix grey-text"></i> {{ login_form.password.label(class="form-control-label") }}
+                                        {% if login_form.password.errors %}
+                                            {{ login_form.password(class="form-control form-control-lg is-invalid") }}
+                                            <div class="invalid-feedback">
+                                                {% for error in login_form.password.errors %}
+                                                    <span>{{ error }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ login_form.password(class="form-control form-control-lg") }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-check">
+                                        {{ login_form.remember(class="form-check-input") }}
+                                        {{ login_form.remember.label(class="form-check-label") }}
+                                    </div>
+                                </fieldset>
+                                <div class="form-group">
+                                        {{ login_form.submit(class="btn btn-outline-info") }}
+                                </div>
+                            </form>
+                            <small class="text-muted">
+                                <a class="ml-2" href="#">Forgot Password?</a>
+                            </small>
+                            <div class="border-top pt-3"></div>
+                              <small class="text-muted">
+                                  Need An Account? <a class="ml-2" href="{{ url_for('register') }}">Sign Up</a>
+                              </small>
+                            </div>
+                        </div>
+                        
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+
+                      </div>
+            </div>
+    </div>
+  </div>
+
             
           </div>
         </div>
@@ -53,6 +224,14 @@
     $( function() {
       $( "#draggable" ).draggable();
     } );
+    </script>
+    
+    <script>
+    $('#myModal').on('shown.bs.modal', function () {
+      $('#myInput').trigger('focus')
+    })
+    
+    
     </script>
     
 </body>

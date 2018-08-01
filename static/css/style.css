@@ -8,7 +8,36 @@ h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
 
-#draggable { padding: 0.5em; border-radius: 10%; }
+#draggable {
+  padding: 0.5em; 
+}
+.modal-backdrop {
+  background: none; 
+}
+
+.modal-open {
+    overflow: auto;
+}
+
+.modal-dialog {
+    margin-left: 2%;
+    margin-top: 15vh;
+}
+
+.nav-tabs {
+  border-bottom: 0px;
+}
+
+.nav-tab-button-style {
+  padding-right: .5rem;
+  padding-left: .5rem;
+}
+
+.btn-primary {
+  z-index: auto;
+  position: relative;
+  margin-left: 2%;
+}
 
 
 .bg-steel {

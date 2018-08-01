@@ -11,6 +11,15 @@ class Nation():
         self.num_supply_centres = num_supply_centres
         self.orders_submitted = False
         self.surrendered = False
+        self.available = True
+        self.player = None
+        
+    # Assign nation -------------------------------------------------------------------------
+
+    def assign_player(self, username):
+        if self.available:
+            self.available = False
+            self.player = username
         
 class Neutral():
     def __init__(self):

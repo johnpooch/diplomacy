@@ -60,19 +60,7 @@ def fill_out_orders(file_name):
 #     nation_to_update = mongo.db.nations.find_one({'name': player_nation})
 #     update_doc={"available": False}
 #     mongo.db.nations.update_one(nation_to_update, {'$set': update_doc})
-    
-# Assign player to nation -------------------------------------------------------------------------
 
-# def assign_player_to_nation(username):
-#     nations = mongo.db.nations.find()
-#     for nation in nations:
-#         if nation["available"]:
-#             player_nation = nation["name"]
-#             break
-#     if not player_nation:
-#         abort(Response('Something has gone wrong. Nation not assigned.'))
-#     update_nation_availability(player_nation)
-#     return player_nation
     
     
 # Attempt login -----------------------------------------------------------------------------------

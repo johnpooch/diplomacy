@@ -1,22 +1,27 @@
 from dependencies import *
 from process_orders import end_turn
-from player import player
+from nation import Nation
 from get_game_state import get_game_state
 
 # Create player -----------------------------------------------------------------------------------
     
 def create_player(request):
     
+    for nation in Nation.all_nations:
+        if nation.available:
+            nation.assign_player(request.form["username"])
+            player_nation = nation.name
+    
     mongo.db.users.insert(
         {
         "username": request.form["username"],
         "email": request.form["email"],
-        "password": bcrypt.hashpw(request.form["password"].encode('utf-8'), bcrypt.gensalt()),
-        "nation": assign_player_to_nation(request.form["username"]),
+        "password": request.form["password"],
+        "nation": player_nation,
         "orders_finalised": False
         }
     )
-    flash('Account created for {}!'.format(request.form.username.data), 'success')
+    flash('Account created for {}!'.format(request.form["username"]), 'success')
     return request.form["username"]
 
 # ROUTES ==========================================================================================
@@ -25,7 +30,16 @@ def create_player(request):
 
 @app.route("/")
 def board():
-    return render_template("board.html", armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session)
+    
+    registration_form = RegistrationForm()
+    login_form = LoginForm()
+    if registration_form.validate_on_submit():
+        users = mongo.db.users
+        session["username"] = create_player(request) # returns username
+        return redirect(url_for('board'))
+            # flash('That username already exists', 'danger')
+    
+    return render_template("board.html", armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form)
 
 # register --------------------------------------
     
@@ -34,12 +48,10 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         users = mongo.db.users
-        if not users.find_one({"username": request.form["username"]}):
-            session["username"] = create_player(request) # returns username
-            return redirect(url_for('board'))
-        else:
-            flash('That username already exists', 'danger')
-    return render_template("register.html", form = form, game_state = get_game_state())
+        session["username"] = create_player(request) # returns username
+        return redirect(url_for('board'))
+            # flash('That username already exists', 'danger')
+    return render_template("register.html", registration_form = registration_form, game_state = get_game_state())
     
 # login -----------------------------------------
     
