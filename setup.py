@@ -63,19 +63,7 @@ def fill_out_orders(file_name):
 
     
     
-# Attempt login -----------------------------------------------------------------------------------
 
-def attempt_login(request):
-
-    user_to_compare = mongo.db.users.find_one({"email": request.form["email"]})
-    if user_to_compare:
-        if bcrypt.hashpw(request.form["password"].encode("utf-8"), user_to_compare["password"]) == user_to_compare["password"]:
-            session["username"] = user_to_compare["username"]
-            flash('You have been logged in!', 'success')
-            return True
-
-    flash('Login unsuccessful. Invalid username/password combinationB.', 'danger')
-    return False
     
 # Start game --------------------------------------------------------------------------------------
     

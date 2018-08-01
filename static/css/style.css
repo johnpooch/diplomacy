@@ -11,6 +11,11 @@ h1, h2, h3, h4, h5, h6 {
 #draggable {
   padding: 0.5em; 
 }
+
+.order-input {
+  width: 100%;
+}
+
 .modal-backdrop {
   background: none; 
 }
@@ -39,6 +44,15 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 2%;
 }
 
+.alert {
+  position: absolute;
+  z-index: 1;
+  right: 0%;
+}
+
+.piece-name-form {
+  display: inline-block;
+}
 
 .bg-steel {
   background-color: #5f788a;

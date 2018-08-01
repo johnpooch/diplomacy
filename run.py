@@ -11,6 +11,7 @@ def create_player(request):
         if nation.available:
             nation.assign_player(request.form["username"])
             player_nation = nation.name
+            break
     
     mongo.db.users.insert(
         {
@@ -23,6 +24,20 @@ def create_player(request):
     )
     flash('Account created for {}!'.format(request.form["username"]), 'success')
     return request.form["username"]
+    
+# Attempt login -----------------------------------------------------------------------------------
+
+def attempt_login(request):
+
+    user = mongo.db.users.find_one({"email": request.form["email"]})
+    if user:
+        if request.form["password"] == user["password"]:
+            session["username"] = user["username"]
+            flash('You have been logged in!', 'success')
+            return True
+
+    flash('Login unsuccessful. Invalid username/password combination.', 'danger')
+    return False
 
 # ROUTES ==========================================================================================
 
@@ -39,33 +54,30 @@ def board():
         return redirect(url_for('board'))
             # flash('That username already exists', 'danger')
     
-    return render_template("board.html", armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form)
+    user = mongo.db.users.find_one({"username": session["username"] })
+    pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
+    
+    return render_template("board.html", pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form)
 
 # register --------------------------------------
     
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        users = mongo.db.users
+    if request.method == "POST":
         session["username"] = create_player(request) # returns username
         return redirect(url_for('board'))
             # flash('That username already exists', 'danger')
-    return render_template("register.html", registration_form = registration_form, game_state = get_game_state())
+    return redirect(url_for('board'))
     
 # login -----------------------------------------
     
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        
-        if attempt_login(request):
-            return redirect(url_for('board'))
-        else:
-            flash('Login unsuccessful. Invalid username/password combination.', 'danger')
-            
-    return render_template("login.html", form = form, game_state = get_game_state())
+    if request.method == "POST":
+        attempt_login(request)
+    else:
+        flash('Form Invalid.', 'danger')
+    return redirect(url_for('board'))
     
 # logout -----------------------------------------
     

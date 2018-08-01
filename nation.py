@@ -18,8 +18,8 @@ class Nation():
 
     def assign_player(self, username):
         if self.available:
-            self.available = False
-            self.player = username
+            setattr(self, "available", False)
+            setattr(self, "player", username)
         
 class Neutral():
     def __init__(self):

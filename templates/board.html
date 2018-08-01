@@ -2,13 +2,6 @@
 
 {% block contents %}
 
-    <div class="container board-image">
-        {% for army in armies %}
-        <div id='{{army.territory.name}}' class="piece {{army.nation.name}}-piece">A</div>
-        {% endfor %}
-        {% for fleet in fleets %}
-        <div id='{{fleet.territory.name}}' class="piece {{fleet.nation.name}}-piece">F</div>
-        {% endfor %}
-    </div>
+
     
 {% endblock %}
