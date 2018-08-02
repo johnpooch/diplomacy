@@ -60,12 +60,13 @@
                   
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs" role="tablist">
-                    <!-- Tab Buttons -->
+                    <div class="row">
+                      <!-- Tab Buttons -->
                     
                     
                     
                     <!-- if logged in -->
-                    {% if not session["username"] %}
+                    {% if not user %}
                     <!--registration tab -->
             
                     
@@ -85,13 +86,24 @@
                     
                     {% else %}
                     
+                    {% if not user['orders_finalised'] %}
                     <!-- orders tab -->
-                    <li role="presentation" class="{% if session['username'] %}active {% endif %} nav-tab-button-style">
+                    <li role="presentation" class="{% if session['username'] %} active {% endif %} nav-tab-button-style">
                       <a href="#ordersTab" aria-controls="ordersTab" role="tab" data-toggle="tab">
                         <h5 class="modal-title" id="intefaceModalLabel">Orders</h5>
                       </a>
                     </li>
                     <span> | </span>
+                    
+                    {% else %}
+                    <!-- edit orders tab -->
+                    <li role="presentation" class="{% if session['username'] %} active {% endif %} nav-tab-button-style">
+                      <a href="#editOrdersTab" aria-controls="editOrdersTab" role="tab" data-toggle="tab">
+                        <h5 class="modal-title" id="intefaceModalLabel">Edit Orders</h5>
+                      </a>
+                    </li>
+                    <span> | </span>
+                    {% endif %}
                     
                     <!-- messages tab -->
                     <li role="presentation" class ="nav-tab-button-style">
@@ -109,6 +121,7 @@
                     </li>
                     
                     {% endif %}
+                    </div>
                   </ul>
                 <!-- close modal button -->
                 </div>
@@ -123,7 +136,7 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                   
-                  {% if not session["username"] %}
+                  {% if not user %}
                   
                   <!--Registration Form-->
                   <div role="tabpanel" class="tab-pane active" id="registrationTab">
@@ -265,12 +278,14 @@
                   
                   
                   {% else %}
+                  
+                  {% if not user['orders_finalised'] %}
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
                     <form method="POST" action="/orders">
-                      {% for piece in pieces %}
+                      {% for piece in user_pieces %}
                       <span>{{ piece.piece_type|capitalize }} {{ piece.territory.name }}</span>
-                      <input class="order-input" type="text" name="{{nation}} {{piece.territory.name}}"/>
+                      <input class="order-input" type="text" name="{{user['nation']}} {{piece.territory.name}}"/>
                       <br>
                       
                       {% endfor %}
@@ -282,17 +297,57 @@
                     </form>
                   </div>
                   
+                  {% else %}
+                  <div role="tabpanel" class="tab-pane" id="editOrdersTab">
+                    <form method="POST" action="/edit_orders">
+                      {% for order in user['orders'] %}
+                      <input class="order-input" type="text" name="{{user['nation']}} {{order["territory"]}}" value = "{{order['territory']}} {{order['command']}} {% if order['command'] in ['support', 'convoy'] %}{{order['object']}}{% endif %} {{order['target']}}"/>
+                      <br>
+                      
+                      {% endfor %}
+                      <div id="success"></div>
+                      <br>
+                      <div class="form-group">
+                          <button type="submit" class="btn btn-primary" id="sendMessageButton">Edit orders</button>
+                      </div>
+                    </form>
+                  </div>
+                  {% endif %}
+                  
                   <!-- messages -->
                   <div role="tabpanel" class="tab-pane active" id="messagesTab">
-                    <h2>Messages</h2>
-                    <span>Hi {{ username }}</span>
+                    
+                    <h5>Public Announcements</h5>
+                    {% for announncement in announcements %}
+                    <div>{{ announncement }} <br></div>
+                    {% endfor %}
+                    
+                    <h5>Private Messages</h5>
+                    {% for message in messsages %}
+                    <div>{{ message }} <br></div>
+                    {% endfor %}
+                  </div>
+                  
+                  <!-- Add Announcements -->
+                  <div role="tabpanel" class="tab-pane" id="addAnnouncementTab">
+                    <form method="POST" action="/add_announcement">
+                      <input type="text" name="announcement" />
+                      <br>
+                      <div class="form-group">
+                          <button type="submit" class="btn btn-primary" id="sendMessageButton">Add Announcement</button>
+                      </div>
+                    </form>
                   </div>
                   
                   
                   {% endif %}
                 </div>
               </div>
-            <div class="modal-footer"></div>
+            <div class="modal-footer">
+              {% for player in players %}
+                <span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{player['nation']}}.png"></img>  {{player['username']}}</span>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>

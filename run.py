@@ -3,6 +3,42 @@ from process_orders import end_turn
 from nation import Nation
 from get_game_state import get_game_state
 
+# ANNOUNCEMENTS ===================================================================================
+
+# Write to file -----------------------------------------------------------------------------------
+
+def write_to_file(filename, data):
+    with open(filename, "a") as file:
+        file.writelines(data)
+
+# add announcements -------------------------------------------------------------------------------
+
+def add_announcements(username, announcement):
+    announcement = "({}) {}: {}\n".format(datetime.now().strftime("%H:%M:%S"), username, announcement)
+    write_to_file("data/announcements.txt", announcement)
+
+# get announcements -------------------------------------------------------------------------------
+    
+def get_announcements():
+    announcements_list = []
+    with open("data/announcements.txt", "r") as announcements: 
+        announcements_list = announcements.readlines()
+    return announcements_list
+    
+# add messages -------------------------------------------------------------------------------
+
+def add_messages(username, message):
+    message = "({}) {}: {}\n".format(datetime.now().strftime("%H:%M:%S"), username, message)
+    write_to_file("data/messages.txt", message)
+    
+# get messages -------------------------------------------------------------------------------
+    
+def get_messages():
+    messages_list = []
+    with open("data/messages.txt", "r") as announcements: 
+        messages_list = messages.readlines()
+    return messages_list
+
 # Create order dict -----------------------------------------------------------------------------------
 
 def create_order_dicts(request):
@@ -25,16 +61,13 @@ def create_order_dicts(request):
         mongo.db.orders.insert(order)
     mongo.db.users.update_one({"username": session["username"]}, { "$set": { "orders_finalised" : True }})
 
-
 # Create player -----------------------------------------------------------------------------------
     
 def create_player(request):
     
-    for nation in Nation.all_nations:
-        if nation.available:
-            nation.assign_player(request.form["username"])
-            player_nation = nation.name
-            break
+    nation = random.choice([nation for nation in mongo.db.nations.find({"available": True})])
+    mongo.db.nations.update_one({'_id': nation['_id']}, { '$set': {'available': False}})
+    player_nation = nation['name']
     
     mongo.db.users.insert(
         {
@@ -68,22 +101,24 @@ def attempt_login(request):
 
 @app.route("/")
 def board():
-    
+
     pieces = []
+    user = None
     
+    # Forms
     registration_form = RegistrationForm()
     login_form = LoginForm()
-    if registration_form.validate_on_submit():
-        users = mongo.db.users
-        session["username"] = create_player(request) # returns username
-        return redirect(url_for('board'))
-            # flash('That username already exists', 'danger')
     
-    user = mongo.db.users.find_one({"username": session["username"] })
+    players = mongo.db.users.find({})
+        
+    if 'username' in session:     
+        user = mongo.db.users.find_one({"username": session["username"]})
+        
     if user:
+        user['orders'] = mongo.db.orders.find({"nation": user["nation"]})
         pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
     
-    return render_template("board.html", pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, username = session["username"], nation = user["nation"])
+    return render_template("board.html", user_pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, announcements = get_announcements())
 
 # register --------------------------------------
     
@@ -92,7 +127,6 @@ def register():
     if request.method == "POST":
         session["username"] = create_player(request) # returns username
         return redirect(url_for('board'))
-            # flash('That username already exists', 'danger')
     return redirect(url_for('board'))
     
 # login -----------------------------------------
@@ -122,29 +156,16 @@ def orders():
         create_order_dicts(request)
     return redirect(url_for('board'))
 
-# finalised -------------------------------------
-    
-@app.route("/finalised",)
-def finalised():
-    game_state = get_game_state()
-    return render_template("finalised.html", game_state = game_state)
-
 # edit orders -----------------------------------
     
 @app.route("/edit_orders", methods=["GET", "POST"])
 def edit_orders():
-    username = session["username"]
-    
-    if not mongo.db.users.find_one({"username": username })["orders_finalised"]:
-        return "you have not submitted your orders"
-    game_state = get_game_state()
-    pieces = filter_pieces_by_user(username)
         
     if request.method == "POST":
         # edit_order(request, pieces, game_state, username)
         return redirect(url_for('board'))
             
-    return render_template("edit_orders.html", pieces = pieces, territories = territories, game_state = game_state)
+    return redirect(url_for('board'))
 
 # announcements ---------------------------------
     
@@ -156,11 +177,11 @@ def announcements():
 # -----------------------------------------------
     
     
-# add announcements ----------------------------- 
+# add announcement ----------------------------- 
 
-@app.route("/announcements/<username>/<announcement>")
+@app.route("/add_announcement")
 def post_announcement(username, announcement):
-    add_announcements(username, announcement)
+    add_announcement(username, announcement)
     return redirect("announcements")
 
 # populate --------------------------------------
@@ -174,8 +195,8 @@ def populate():
 
 @app.route("/initialise")
 def initialise():
-    initialise_game_db()
-    populate_users()
+    for nation in mongo.db.nations.find({}):
+        mongo.db.nations.update_one(nation, {'$set': {'available': True }})
     return redirect(url_for('board'))
     
 # test_1 ------------------------------------
@@ -201,7 +222,9 @@ def test_all():
     
     return redirect(url_for('board'))
 
+
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'), 
             port=int(os.getenv('PORT', 8080)), 
             debug=True)
+     

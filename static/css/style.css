@@ -29,6 +29,10 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 15vh;
 }
 
+.modal-footer {
+  display: inline-block;
+}
+
 .nav-tabs {
   border-bottom: 0px;
 }
@@ -51,6 +55,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .piece-name-form {
+  display: inline-block;
+}
+
+.flag {
+  height: 1rem;
+  margin-right: .5rem;
+}
+
+.player-flag {
   display: inline-block;
 }
 
