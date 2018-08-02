@@ -21,7 +21,9 @@ def create_order_dicts(request):
         if command in ["support", "convoy"]:
             order["object"] = value_words[1]
             order["target"] = value_words[2]
+        
         mongo.db.orders.insert(order)
+    mongo.db.users.update_one({"username": session["username"]}, { "$set": { "orders_finalised" : True }})
 
 
 # Create player -----------------------------------------------------------------------------------
