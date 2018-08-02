@@ -25,16 +25,13 @@
   <main role="main" class="container">
     <div class="row">
       <div class="col-md-8">
-        
         <div class="container board-image">
-          {% for army in armies %}
-          <div id='{{army.territory.name}}' class="piece {{army.nation.name}}-piece">A</div>
-          {% endfor %}
-          {% for fleet in fleets %}
-          <div id='{{fleet.territory.name}}' class="piece {{fleet.nation.name}}-piece">F</div>
-          {% endfor %}
+          
+          <!-- Board -->
+          {% block board %}
+          {% endblock %}
         
-          <!-- Messages -->
+          <!-- Flash Messages -->
           {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
           {% for category, message in messages %}
@@ -44,6 +41,7 @@
           {% endfor %}
           {% endif %}
           {% endwith %}
+          
         </div>
         
         <!-- Button trigger modal -->
@@ -64,9 +62,13 @@
                   <ul class="nav nav-tabs" role="tablist">
                     <!-- Tab Buttons -->
                     
+                    
+                    
                     <!-- if logged in -->
                     {% if not session["username"] %}
                     <!--registration tab -->
+            
+                    
                     <li role="presentation" class="{% if not session['username'] %} active {% endif %} nav-tab-button-style">
                       <a href="#registrationTab" aria-controls="registrationTab" role="tab" data-toggle="tab">
                         <h5 class="modal-title" id="intefaceModalLabel">Register</h5>
@@ -93,7 +95,7 @@
                     
                     <!-- messages tab -->
                     <li role="presentation" class ="nav-tab-button-style">
-                      <a href="#loginTab" aria-controls="loginTab" role="tab" data-toggle="tab">
+                      <a href="#messagesTab" aria-controls="messagesTab" role="tab" data-toggle="tab">
                         <h5 class="modal-title" id="intefaceModalLabel">Messages</h5>
                       </a>
                     </li>
@@ -121,8 +123,9 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                   
-                  <!--Registration Form-->
                   {% if not session["username"] %}
+                  
+                  <!--Registration Form-->
                   <div role="tabpanel" class="tab-pane active" id="registrationTab">
                     <form method="POST" action="/register">
                       {{ registration_form.hidden_tag() }}
@@ -202,6 +205,7 @@
                     </small>
                   </div>
                   
+                  
                   <!-- Login Form -->
                   <div role="tabpanel" class="tab-pane" id="loginTab">
                     <form method="POST" action="/login">
@@ -259,21 +263,32 @@
                     </small>
                   </div>
                   
+                  
                   {% else %}
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
-                    <form method="POST" action="">
+                    <form method="POST" action="/orders">
                       {% for piece in pieces %}
-                      <input class="order-input" type="text" name="order"/>
+                      <span>{{ piece.piece_type|capitalize }} {{ piece.territory.name }}</span>
+                      <input class="order-input" type="text" name="{{nation}} {{piece.territory.name}}"/>
                       <br>
                       
                       {% endfor %}
                       <div id="success"></div>
+                      <br>
                       <div class="form-group">
                           <button type="submit" class="btn btn-primary" id="sendMessageButton">Finalise orders</button>
                       </div>
                     </form>
                   </div>
+                  
+                  <!-- messages -->
+                  <div role="tabpanel" class="tab-pane active" id="messagesTab">
+                    <h2>Messages</h2>
+                    <span>Hi {{ username }}</span>
+                  </div>
+                  
+                  
                   {% endif %}
                 </div>
               </div>

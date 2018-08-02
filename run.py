@@ -3,6 +3,27 @@ from process_orders import end_turn
 from nation import Nation
 from get_game_state import get_game_state
 
+# Create order dict -----------------------------------------------------------------------------------
+
+def create_order_dicts(request):
+    for key in request.form.keys():
+        key_words = key.split()
+        value_words = request.form[key].split()
+        command = value_words[0]
+        order = {
+            "nation": key_words[0],
+            "territory": key_words[1],
+            "command": value_words[0],
+        }
+        if command in ["move", "retreat"]:
+            order["target"] = value_words[1]
+            
+        if command in ["support", "convoy"]:
+            order["object"] = value_words[1]
+            order["target"] = value_words[2]
+        mongo.db.orders.insert(order)
+
+
 # Create player -----------------------------------------------------------------------------------
     
 def create_player(request):
@@ -46,6 +67,8 @@ def attempt_login(request):
 @app.route("/")
 def board():
     
+    pieces = []
+    
     registration_form = RegistrationForm()
     login_form = LoginForm()
     if registration_form.validate_on_submit():
@@ -55,9 +78,10 @@ def board():
             # flash('That username already exists', 'danger')
     
     user = mongo.db.users.find_one({"username": session["username"] })
-    pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
+    if user:
+        pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
     
-    return render_template("board.html", pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form)
+    return render_template("board.html", pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, username = session["username"], nation = user["nation"])
 
 # register --------------------------------------
     
@@ -91,20 +115,10 @@ def logout():
     
 @app.route("/orders", methods=["GET", "POST"])
 def orders():
-    if not "username" in session:
-        print('yo')
-        return redirect(url_for('register'))
     
-    game_state = get_game_state()
-    username = session["username"]
-    
-    pieces = filter_pieces_by_user(username)
-        
     if request.method == "POST":
-        upload_order_to_db(request, pieces, game_state, username)
-        return redirect(url_for('board'))
-            
-    return render_template("orders.html", pieces = pieces, territories = territories, game_state = game_state)
+        create_order_dicts(request)
+    return redirect(url_for('board'))
 
 # finalised -------------------------------------
     

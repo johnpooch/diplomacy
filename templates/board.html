@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 
-{% block contents %}
+{% block board %}
 
+  {% for army in armies %}
+  <div id='{{army.territory.name}}' class="piece {{army.nation.name}}-piece">A</div>
+  {% endfor %}
+  {% for fleet in fleets %}
+  <div id='{{fleet.territory.name}}' class="piece {{fleet.nation.name}}-piece">F</div>
+  {% endfor %}
 
-    
 {% endblock %}
