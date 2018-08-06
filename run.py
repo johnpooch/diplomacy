@@ -1,7 +1,21 @@
 from dependencies import *
+from flask_socketio import SocketIO, send
 from process_orders import end_turn
 from nation import Nation
 from get_game_state import get_game_state
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+socketio = SocketIO(app)
+
+# Mongo -----------------------------------------
+
+app.config["MONGO_DBNAME"] = "diplomacydb"
+app.config["MONGO_URI"] = os.getenv("MONGO_URI")
+
+mongo = PyMongo(app)
+
+# -----------------------------------------------
 
 # ANNOUNCEMENTS ===================================================================================
 
@@ -110,6 +124,8 @@ def board():
     login_form = LoginForm()
     
     players = mongo.db.users.find({})
+    messages = mongo.db.messages.find({})
+    territories = [territory.name for territory in Territory.all_territories]
         
     if 'username' in session:     
         user = mongo.db.users.find_one({"username": session["username"]})
@@ -118,7 +134,22 @@ def board():
         user['orders'] = mongo.db.orders.find({"nation": user["nation"]})
         pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
     
-    return render_template("board.html", user_pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, announcements = get_announcements())
+    return render_template("board.html", user_pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
+    
+# messages --------------------------------------
+
+@socketio.on('message')
+def handle_message(msg):
+    
+    print(msg)
+    split_message = msg.split(' - ', 1)
+    message_dict = {
+        'sender': split_message[0],
+        'message': split_message[1]
+    }
+    
+    mongo.db.messages.insert(message_dict)
+    send(message_dict["message"], broadcast=True)
 
 # register --------------------------------------
     
@@ -176,6 +207,12 @@ def announcements():
     
 # -----------------------------------------------
     
+# clear announcements --------------------------------------
+
+@app.route("/clear_messages")
+def clear_messages():
+    mongo.db.messages.remove({})
+    return redirect(url_for('board'))
     
 # add announcement ----------------------------- 
 
@@ -224,7 +261,6 @@ def test_all():
 
 
 if __name__ == '__main__':
-    app.run(host=os.getenv('IP', '0.0.0.0'), 
-            port=int(os.getenv('PORT', 8080)), 
-            debug=True)
+    socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug=True)
+
      

@@ -8,6 +8,12 @@
     
     <!--bootstrap-->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    
+    <!-- socket js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+    
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -108,7 +114,7 @@
                     <!-- messages tab -->
                     <li role="presentation" class ="nav-tab-button-style">
                       <a href="#messagesTab" aria-controls="messagesTab" role="tab" data-toggle="tab">
-                        <h5 class="modal-title" id="intefaceModalLabel">Messages</h5>
+                        <h5 class="modal-title" id="intefaceModalLabel">Announcements</h5>
                       </a>
                     </li>
                     <span> | </span>
@@ -283,12 +289,17 @@
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
                     <form method="POST" action="/orders">
-                      {% for piece in user_pieces %}
-                      <span>{{ piece.piece_type|capitalize }} {{ piece.territory.name }}</span>
-                      <input class="order-input" type="text" name="{{user['nation']}} {{piece.territory.name}}"/>
-                      <br>
                       
-                      {% endfor %}
+                      <input type="text" id="order-input"></input>
+                      
+                      <!--{% for piece in user_pieces %}-->
+                      <!--<span>{{ piece.piece_type|capitalize }} {{ piece.territory.name }}</span>-->
+                      <!---->
+                      
+                      <!--<input class="order-input" type="text" name="{{user['nation']}} {{piece.territory.name}}"/>-->
+                      <!--<br>-->
+                      
+                      <!--{% endfor %}-->
                       <div id="success"></div>
                       <br>
                       <div class="form-group">
@@ -314,31 +325,24 @@
                   </div>
                   {% endif %}
                   
-                  <!-- messages -->
+                  
+                  <!-- Announcements -->
                   <div role="tabpanel" class="tab-pane active" id="messagesTab">
                     
-                    <h5>Public Announcements</h5>
-                    {% for announncement in announcements %}
-                    <div>{{ announncement }} <br></div>
-                    {% endfor %}
-                    
-                    <h5>Private Messages</h5>
-                    {% for message in messsages %}
-                    <div>{{ message }} <br></div>
-                    {% endfor %}
-                  </div>
-                  
-                  <!-- Add Announcements -->
-                  <div role="tabpanel" class="tab-pane" id="addAnnouncementTab">
-                    <form method="POST" action="/add_announcement">
-                      <input type="text" name="announcement" />
-                      <br>
-                      <div class="form-group">
-                          <button type="submit" class="btn btn-primary" id="sendMessageButton">Add Announcement</button>
-                      </div>
-                    </form>
-                  </div>
-                  
+                    <h5>Announcements</h5>
+                    <div class="row messages-row">
+                      <ul id="messages" class="messages-list">
+                        {% for message in messages | reverse %}
+                        <li>
+                          <div class="row"><strong>{{ message['sender']|capitalize }}</strong></div>
+                          <div class="row">{{message['message']}}</div>
+                        </li>
+                        <hr>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                    <input type="text" id="myMessage" name=""/>
+                    <button id="sendButton">Post</button>
                   
                   {% endif %}
                 </div>
@@ -353,6 +357,156 @@
       </div>
     </div>
   </main>
+  
+  
+    <script type="text/javascript">
+      $(document).ready(function() {
+        
+        var socket = io.connect('http://diplomacy-johnpooch.c9users.io:8080/');
+        
+        socket.on('message', function(message) {
+          $("#messages li:eq(0)").before("<li><div class='row'>"+ message + "</div></li><hr>");
+          $("#messages li:eq(0)").before("<li><div class='row'><strong>{{user['nation']|capitalize}}<strong></div></li>");
+        })
+        
+        $('#sendButton').on('click', function() {
+          socket.send("{{ user['nation'] }} - " + $('#myMessage').val());
+          $('#myMessage').val('');
+        })
+        
+      });
+    </script>
+    
+    <script type="text/javascript">
+    
+    var example = "Example orders: 'army bre move eng', 'fleet mid support eng to bre'";
+    var numberPresent = "Orders should not include numbers.";
+    var notPieceType = "Orders must begin with the type of the piece you wish to order (i.e. army, fleet).";
+    var notTerritory = "You must enter a valid territory abbreviation: "
+    var notCommand = "You must give a valid command ('hold', 'move', 'support', 'convoy')"
+    
+    var tooManyHoldWords = "'Hold' order has too many words (ex. 'army ven hold')"
+    var tooManyMoveWords = "'Move' order has too many words (ex. 'army tri move vie')"
+    
+    var validOrder = "Order is valid"
+    
+    var pieceTypes = ["army", "fleet"];
+    var commands = ["hold", "move", "support", "convoy"];
+    var territories = '{{ territories }}'
+    
+    function hasNumber(myString) {
+      return /\d/.test(myString);
+    }
+    
+    function wordInPieceTypes(word) {
+      return (pieceTypes.indexOf(word) > -1);
+    }
+    function wordInCommands(word) {
+      return (commands.indexOf(word) > -1);
+    }
+    function wordInTerritories(word) {
+      console.log(word)
+      return (territories.indexOf(word) > -1);
+    }
+    
+    $('#order-input').after('<span id="feedback" class="feedback">' + example + '</span>')
+    
+    $('#order-input').on('input', function (evt) {
+      var value = evt.target.value.toLowerCase()
+      var words = value.split(" ")
+      
+      // remove 'to'
+      for (var i=words.length-1; i>=0; i--) {
+          if (words[i] === "to") {
+              words.splice(i, 1);
+          }
+      }
+      console.log(words)
+      
+      // this appears unless any other condition is met
+      $('#feedback').text(example)
+      evt.target.className = ''
+    
+      // if number present
+      if (hasNumber(value)) {
+        $('#feedback').text(numberPresent);
+        evt.target.className = 'invalid';
+      }
+      
+      // hold
+      if (words[2] == 'hold') {
+        if(words.length > 3) {
+          console.log('command is hold but too many words given')
+          $('#feedback').text(tooManyHoldWords);
+          evt.target.className = 'invalid';
+        }
+        else if (words.length == 3) {
+          console.log('valid hold command')
+          $('#feedback').text(validOrder);
+          evt.target.className = 'valid';
+        }
+      }
+      
+      // move
+      if (words[2] == 'move') {
+        if(words.length > 4) {
+          console.log('command is move but too many words given')
+          $('#feedback').text(tooManyMoveWords);
+          evt.target.className = 'invalid';
+        }
+        else if (words.length == 4 && words[3] != "") {
+          console.log('valid move command')
+          $('#feedback').text(validOrder);
+          evt.target.className = 'valid';
+        }
+      }
+      
+      // check first word
+      if (words.length > 1) {
+        if (!wordInPieceTypes(words[0])) {
+          console.log('first word is not a piece type')
+          $('#feedback').text(notPieceType);
+          evt.target.className = 'invalid';
+        }
+      }
+        
+      // check second word
+      if (words.length > 2) {
+        if (!wordInTerritories(words[1])) {
+          console.log('second word is not a valid territory')
+          $('#feedback').text(notTerritory);
+          evt.target.className = 'invalid';
+        }
+      }
+      
+      // check third word
+      if (words.length > 3) {
+        if (!wordInCommands(words[2])) {
+          console.log('third word is not a valid command')
+          $('#feedback').text(notCommand);
+          evt.target.className = 'invalid';
+        }
+      }
+      
+      // check fourth word
+      if (words.length > 4) {
+        if (!wordInTerritories(words[3])) {
+          console.log('fourth word is not a valid territory')
+          $('#feedback').text(notTerritory);
+          evt.target.className = 'invalid';
+        }
+      }
+      
+      // check fifth word
+      if (words.length > 5) {
+        if (!wordInTerritories(words[4])) {
+          console.log('fifth word is not a valid territory')
+          $('#feedback').text(notTerritory);
+          evt.target.className = 'invalid';
+        }
+      }
+    });
+    </script>
     
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

@@ -1,6 +1,7 @@
 Flask==1.0.2
 Flask-Bcrypt==0.7.1
 Flask-PyMongo==2.0.0
+Flask-SocketIO==3.0.1
 Flask-WTF==0.14.2
 Jinja2==2.10
 MarkupSafe==1.0
@@ -12,8 +13,15 @@ argh==0.26.2
 bcrypt==3.1.4
 cffi==1.11.5
 click==6.7
+dnspython==1.15.0
+eventlet==0.24.0
+greenlet==0.4.14
 itsdangerous==0.24
+monotonic==1.5
 pathtools==0.1.2
 pycparser==2.18
 pymongo==3.7.0
+python-engineio==2.2.0
+python-socketio==2.0.0
+six==1.11.0
 watchdog==0.8.3

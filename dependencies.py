@@ -16,14 +16,3 @@ from initial_game_state import *
 
 from order_text_processor import get_orders_from_txt
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = "^b$#s3uwbysorx2f3uowzzlxucw8j3stqu7!^452*&i-&ab3g%"
-
-# Mongo -----------------------------------------
-
-app.config["MONGO_DBNAME"] = "diplomacydb"
-app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-
-mongo = PyMongo(app)
-
-# -----------------------------------------------
