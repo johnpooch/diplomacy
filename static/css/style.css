@@ -12,28 +12,29 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0.5em; 
 }
 
-input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  outline: none;
-  border: 1px solid black;
-}
-
 input.valid {
-  border: 1px solid green;
+
 }
 
 input.invalid {
-  border: 1px solid red;
+
 }
 
-input.invalid + .feedback {
+#order-input:focus {
+    outline: none;
 }
+
+#order-input {
+  width: 60%;
+  display: inline-block;
+}
+
 
 .feedback {
-  display: inline;
+  display: block;
+  color: transparent;
   font-size: 1rem;
+  padding-bottom: 1rem;
 }
 
 .game-rules-a {
@@ -41,9 +42,15 @@ input.invalid + .feedback {
   color: #0085a1;
 }
 
-#order-input {
-  display: block;
-  width: 100%;
+
+
+.order-submit {
+  width: 20%;
+  font-size: .8rem;
+}
+
+#successAlert, #errorAlert{
+  position: inherit;
 }
 
 .modal-backdrop {

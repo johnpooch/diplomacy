@@ -92,7 +92,6 @@
                     
                     {% else %}
                     
-                    {% if not user['orders_finalised'] %}
                     <!-- orders tab -->
                     <li role="presentation" class="{% if session['username'] %} active {% endif %} nav-tab-button-style">
                       <a href="#ordersTab" aria-controls="ordersTab" role="tab" data-toggle="tab">
@@ -100,16 +99,6 @@
                       </a>
                     </li>
                     <span> | </span>
-                    
-                    {% else %}
-                    <!-- edit orders tab -->
-                    <li role="presentation" class="{% if session['username'] %} active {% endif %} nav-tab-button-style">
-                      <a href="#editOrdersTab" aria-controls="editOrdersTab" role="tab" data-toggle="tab">
-                        <h5 class="modal-title" id="intefaceModalLabel">Edit Orders</h5>
-                      </a>
-                    </li>
-                    <span> | </span>
-                    {% endif %}
                     
                     <!-- messages tab -->
                     <li role="presentation" class ="nav-tab-button-style">
@@ -285,45 +274,55 @@
                   
                   {% else %}
                   
-                  {% if not user['orders_finalised'] %}
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
-                    <form method="POST" action="/orders">
-                      
-                      <input type="text" id="order-input"></input>
-                      
-                      <!--{% for piece in user_pieces %}-->
-                      <!--<span>{{ piece.piece_type|capitalize }} {{ piece.territory.name }}</span>-->
-                      <!---->
-                      
-                      <!--<input class="order-input" type="text" name="{{user['nation']}} {{piece.territory.name}}"/>-->
-                      <!--<br>-->
-                      
-                      <!--{% endfor %}-->
-                      <div id="success"></div>
-                      <br>
+                    <form id='order-form'>
                       <div class="form-group">
-                          <button type="submit" class="btn btn-primary" id="sendMessageButton">Finalise orders</button>
+                        
+                        <input type="text" name="order" class="form-control order-input" id="order-input">
+                        <button type="submit" class="btn btn-default order-submit">Submit</button>
+                        
+                        <div id='current-orders'>You have not submitted any orders</div>
+                        
                       </div>
+                      <br>
+                      
+                      
                     </form>
                   </div>
                   
-                  {% else %}
-                  <div role="tabpanel" class="tab-pane" id="editOrdersTab">
-                    <form method="POST" action="/edit_orders">
-                      {% for order in user['orders'] %}
-                      <input class="order-input" type="text" name="{{user['nation']}} {{order["territory"]}}" value = "{{order['territory']}} {{order['command']}} {% if order['command'] in ['support', 'convoy'] %}{{order['object']}}{% endif %} {{order['target']}}"/>
-                      <br>
+                  <script type="text/javascript">
+                    $(document).ready(function() {
+                      $('#order-form').on('submit', function(event) {
+
+                          $.ajax({
+                              data : {
+                                  order : $('#order-input').val()
+                              },
+                              type : 'POST',
+                              url : '/process'
+                              
+                          })
+                          .done(function(data) {
+                            
+                            if (data.command == "hold") {
+                              $('#current-orders').append(data.piece_type + " at " + data.territory + " will " + data.command).show();
+                            }
+                            if (data.command == "move") {
+                              $('#current-orders').append(data.piece_type + " at " + data.territory + " will " + data.command + " to " + data.target).show();
+                            }
+                            if (data.command == "support" || data.command == "convoy") {
+                              $('#current-orders').append(data.piece_type + " at " + data.territory + " will " + data.command + data.object + " to " + data.target).show();
+                            }
+                            $('#errorAlert').hide();
+                          })
+
+                          event.preventDefault();
+                      });
                       
-                      {% endfor %}
-                      <div id="success"></div>
-                      <br>
-                      <div class="form-group">
-                          <button type="submit" class="btn btn-primary" id="sendMessageButton">Edit orders</button>
-                      </div>
-                    </form>
-                  </div>
-                  {% endif %}
+                    });
+                  </script>
+                  
                   
                   
                   <!-- Announcements -->
@@ -359,6 +358,7 @@
   </main>
   
   
+  
     <script type="text/javascript">
       $(document).ready(function() {
         
@@ -379,20 +379,21 @@
     
     <script type="text/javascript">
     
-    var example = "Example orders: 'army bre move eng', 'fleet mid support eng to bre'";
-    var numberPresent = "Orders should not include numbers.";
-    var notPieceType = "Orders must begin with the type of the piece you wish to order (i.e. army, fleet).";
-    var notTerritory = "You must enter a valid territory abbreviation: "
-    var notCommand = "You must give a valid command ('hold', 'move', 'support', 'convoy')"
+    var example = "example orders: 'army bre move eng', 'fleet mid support eng to bre'";
+    var numberPresent = "orders should not include numbers.";
+    var notPieceType = "orders must begin with the type of the piece you wish to order (i.e. army, fleet).";
+    var notTerritory = "you must enter a valid territory abbreviation."
+    var notCommand = "you must give a valid command ('hold', 'move', 'support', 'convoy')"
     
-    var tooManyHoldWords = "'Hold' order has too many words (ex. 'army ven hold')"
-    var tooManyMoveWords = "'Move' order has too many words (ex. 'army tri move vie')"
+    var tooManyHoldWords = "hold order has too many words (ex. 'army ven hold')"
+    var tooManyMoveWords = "move order has too many words (ex. 'army tri move vie')"
+    var tooManySupportWords = "support order has too many words (ex. 'army tri support vie ven')"
     
     var validOrder = "Order is valid"
     
     var pieceTypes = ["army", "fleet"];
     var commands = ["hold", "move", "support", "convoy"];
-    var territories = '{{ territories }}'
+    var territories = ['adr','aeg','bal','bar','bla','bot','eas','eng','gol','hel','ion','iri','mid','nat','nrg','nth','ska','tyn','wes','alb','ank','apu','arm','ber','bel','bre','cly','con','den','edi','fin','gas','gre','hol','kie','lon','lvn','lvp','mar','naf','nap','nwy','pic','pie','por','rom','rum','pru','sev','smy','swe','syr','tri','tun','tus','ven','wal','yor','boh','bud','bur','gal','mos','mun','par','ruh','ser','sil','tyr','ukr','vie','war','bul','spa','stp','bul_ec','bul_sc','spa_nc','spa_sc','stp_sc','stp_nc'];
     
     function hasNumber(myString) {
       return /\d/.test(myString);
@@ -405,13 +406,19 @@
       return (commands.indexOf(word) > -1);
     }
     function wordInTerritories(word) {
-      console.log(word)
       return (territories.indexOf(word) > -1);
     }
     
-    $('#order-input').after('<span id="feedback" class="feedback">' + example + '</span>')
+    $('button.order-submit').after('<div id="feedback" class="feedback">' + example + '</div>')
     
-    $('#order-input').on('input', function (evt) {
+    $( ".order-input" ).focus(function() {
+      $(this).next().next().css("color", "black");
+    });
+    $( ".order-input" ).blur(function() {
+      $(this).next().next().css("color", "transparent");
+    });
+    
+    $('input.order-input').on('input', function (evt) {
       var value = evt.target.value.toLowerCase()
       var words = value.split(" ")
       
@@ -426,40 +433,6 @@
       // this appears unless any other condition is met
       $('#feedback').text(example)
       evt.target.className = ''
-    
-      // if number present
-      if (hasNumber(value)) {
-        $('#feedback').text(numberPresent);
-        evt.target.className = 'invalid';
-      }
-      
-      // hold
-      if (words[2] == 'hold') {
-        if(words.length > 3) {
-          console.log('command is hold but too many words given')
-          $('#feedback').text(tooManyHoldWords);
-          evt.target.className = 'invalid';
-        }
-        else if (words.length == 3) {
-          console.log('valid hold command')
-          $('#feedback').text(validOrder);
-          evt.target.className = 'valid';
-        }
-      }
-      
-      // move
-      if (words[2] == 'move') {
-        if(words.length > 4) {
-          console.log('command is move but too many words given')
-          $('#feedback').text(tooManyMoveWords);
-          evt.target.className = 'invalid';
-        }
-        else if (words.length == 4 && words[3] != "") {
-          console.log('valid move command')
-          $('#feedback').text(validOrder);
-          evt.target.className = 'valid';
-        }
-      }
       
       // check first word
       if (words.length > 1) {
@@ -505,7 +478,127 @@
           evt.target.className = 'invalid';
         }
       }
+      
+      // if number present
+      if (hasNumber(value)) {
+        $('#feedback').text(numberPresent);
+        evt.target.className = 'invalid';
+      }
+      
+      // hold
+      if (words[2] == 'hold') {
+        if(words.length > 3) {
+          console.log('command is hold but too many words given')
+          $('#feedback').text(tooManyHoldWords);
+          evt.target.className = 'invalid';
+        }
+        else if (words.length == 3) {
+          console.log('valid hold command')
+          $('#feedback').text("");
+          evt.target.className = 'valid';
+        }
+      }
+      
+      // move
+      if (words[2] == 'move') {
+        if(words.length > 4) {
+          console.log('command is move but too many words given')
+          $('#feedback').text(tooManyMoveWords);
+          evt.target.className = 'invalid';
+        }
+        else if (words.length == 4 && wordInTerritories(words[3])) {
+          console.log('valid move command')
+          $('#feedback').text("");
+          evt.target.className = 'valid';
+        }
+      }
+      // support
+      if (words[2] == 'support') {
+        if(words.length > 5) {
+          console.log('command is support but too many words given')
+          $('#feedback').text(tooManySupportWords);
+          evt.target.className = 'invalid';
+        }
+        else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
+          console.log('valid move command')
+          $('#feedback').text("");
+          evt.target.className = 'valid';
+        }
+      }
+      
+      // convoy
+      if (words[2] == 'convoy') {
+        if(words.length > 5) {
+          console.log('command is convoy but too many words given')
+          $('#feedback').text(tooManySupportWords);
+          evt.target.className = 'invalid';
+        }
+        else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
+          console.log('valid move command')
+          $('#feedback').text("");
+          evt.target.className = 'valid';
+        }
+      }
+
     });
+    </script>
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <script type="text/javascript">
+    function updateElementIndex(el, prefix, ndx) {
+        var id_regex = new RegExp('(' + prefix + '-\\d+)');
+        var replacement = prefix + '-' + ndx;
+        if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
+        if (el.id) el.id = el.id.replace(id_regex, replacement);
+        if (el.name) el.name = el.name.replace(id_regex, replacement);
+    }
+    function cloneMore(selector, prefix) {
+        var newElement = $(selector).clone(true);
+        var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
+        newElement.find(':input').each(function() {
+            var name = $(this).attr('name')
+            if(name) {
+                name = name.replace('-' + (total-1) + '-', '-' + total + '-');
+                var id = 'id_' + name;
+                $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
+            }
+        });
+        total++;
+        $('#id_' + prefix + '-TOTAL_FORMS').val(total);
+        $(selector).after(newElement);
+        var conditionRow = $('.form-row:not(:last)');
+        conditionRow.find('.btn.add-form-row')
+        .removeClass('btn-success').addClass('btn-danger')
+        .removeClass('add-form-row').addClass('remove-form-row')
+        .html('-');
+        return false;
+    }
+    function deleteForm(prefix, btn) {
+        var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+        if (total > 1){
+            btn.closest('.form-row').remove();
+            var forms = $('.form-row');
+            $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
+            for (var i=0, formCount=forms.length; i<formCount; i++) {
+                $(forms.get(i)).find(':input').each(function() {
+                    updateElementIndex(this, prefix, i);
+                });
+            }
+        }
+        return false;
+    }
+    $(document).on('click', '.add-form-row', function(e){
+        e.preventDefault();
+        cloneMore('.form-row:last', 'form');
+        return false;
+    });
+    $(document).on('click', '.remove-form-row', function(e){
+        e.preventDefault();
+        deleteForm('form', $(this));
+        return false;
+    });
+    
     </script>
     
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>

@@ -1,4 +1,5 @@
 from dependencies import *
+from flask import jsonify
 from flask_socketio import SocketIO, send
 from process_orders import end_turn
 from nation import Nation
@@ -134,7 +135,43 @@ def board():
         user['orders'] = mongo.db.orders.find({"nation": user["nation"]})
         pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
     
-    return render_template("board.html", user_pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
+    return render_template("board.html", pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
+    
+# process ---------------------------------------
+
+@app.route("/process", methods=["POST"])
+def process():
+    order_string = request.form["order"]
+    user = mongo.db.users.find_one({"username": session["username"]})
+    orders = mongo.db.orders
+    
+    if order_string:
+        order_words = order_string.split(" ")
+        order = {
+            "nation" : user["nation"],
+            "piece_type" : order_words[0],
+            "territory" : order_words[1],
+            "command" : order_words[2],
+        }
+        if order["command"] == 'move':
+            order["target"] = order_words[3]
+            
+        if order["command"] in ['support', 'convoy']:
+            order["object"] = order_words[3]
+            order["target"] = order_words[4]
+            
+        if orders.find_one({"territory": order["territory"]}):
+            print("order for piece at {} already in db".format( order["territory"]))
+            orders.update_one({"territory": order["territory"]}, {"$set": order})
+        else:
+            print("order for piece at {} not in db".format( order["territory"]))
+            orders.insert(order)
+        
+        orders = orders.find({"nation" : user["nation"]})
+        
+        return jsonify(order)
+        
+    return jsonify({'error': 'missing data'})
     
 # messages --------------------------------------
 

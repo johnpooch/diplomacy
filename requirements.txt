@@ -9,10 +9,13 @@ PyYAML==3.13
 WTForms==2.2.1
 WTForms-Dynamic-Fields==0.1a3
 Werkzeug==0.14.1
+ajax==3.0.0
 argh==0.26.2
 bcrypt==3.1.4
 cffi==1.11.5
 click==6.7
+decorator==4.3.0
+django-appconf==1.0.2
 dnspython==1.15.0
 eventlet==0.24.0
 greenlet==0.4.14
