@@ -282,7 +282,8 @@
                         <input type="text" name="order" class="form-control order-input" id="order-input">
                         <button type="submit" class="btn btn-default order-submit">Submit</button>
                         
-                        <div id='current-orders'>You have not submitted any orders</div>
+                        <div class="row">Current Orders:</div>
+                        <div id='current-orders'></div>
                         
                       </div>
                       <br>
@@ -292,12 +293,14 @@
                   </div>
                   
                   <script type="text/javascript">
+                  
+                  
                     $(document).ready(function() {
+                      
                       $('#order-form').on('submit', function(event) {
-
                           $.ajax({
                               data : {
-                                  order : $('#order-input').val()
+                                order : $('#order-input').val()
                               },
                               type : 'POST',
                               url : '/process'
@@ -305,21 +308,36 @@
                           })
                           .done(function(data) {
                             
-                            if (data.command == "hold") {
-                              $('#current-orders').append(data.piece_type + " at " + data.territory + " will " + data.command).show();
+                            if(data) {
+                              console.log(data)
+                              $('#current-orders').text("").show();
+                              
+                              $('#current-orders').append('<div id="num_orders" class="row">Orders Given: ' + data[0]["num_orders"] + '/' + data[0]["num_pieces"] + '</div>')
+                              
+                              for (var i = 1; i < data.length; i++) {
+                                
+                                // hold or disband
+                                if (data[i].command == "hold" || data[i].command == "disband") {
+                                  $('#current-orders').append('<div class="row">' + data[i].piece_type + " at " + data[i].territory + " will " + data[i].command + '</div>').show();
+                                }
+                                
+                                // move or retreat
+                                if (data[i].command == "move" || data[i].command == "retreat") {
+                                  $('#current-orders').append('<div class="row">' + data[i].piece_type + " at " + data[i].territory + " will " + data[i].command + " to " + data[i].target + '</div>').show();
+                                }
+                                // support or convoy
+                                if (data[i].command == "support" || data[i].command == "convoy") {
+                                  $('#current-orders').append(data[i].piece_type + " at " + data[i].territory + " will " + data[i].command + data[i].object + " to " + data[i].target).show();
+                                }
+                              }
                             }
-                            if (data.command == "move") {
-                              $('#current-orders').append(data.piece_type + " at " + data.territory + " will " + data.command + " to " + data.target).show();
+                            else {
+                              $('#current-orders').text("you have not submitted any orders").show();
                             }
-                            if (data.command == "support" || data.command == "convoy") {
-                              $('#current-orders').append(data.piece_type + " at " + data.territory + " will " + data.command + data.object + " to " + data.target).show();
-                            }
-                            $('#errorAlert').hide();
-                          })
-
+                          });
                           event.preventDefault();
                       });
-                      
+                      $('#order-form').submit();
                     });
                   </script>
                   

@@ -82,7 +82,12 @@ def create_player(request):
     
     nation = random.choice([nation for nation in mongo.db.nations.find({"available": True})])
     mongo.db.nations.update_one({'_id': nation['_id']}, { '$set': {'available': False}})
+    
     player_nation = nation['name']
+    if player_nation == "russia":
+        num_pieces = 4
+    else:
+        num_pieces = 3
     
     mongo.db.users.insert(
         {
@@ -90,6 +95,8 @@ def create_player(request):
         "email": request.form["email"],
         "password": request.form["password"],
         "nation": player_nation,
+        "num_pieces": num_pieces,
+        "num_orders": 0,
         "orders_finalised": False
         }
     )
@@ -145,6 +152,7 @@ def process():
     user = mongo.db.users.find_one({"username": session["username"]})
     orders = mongo.db.orders
     
+    # UPLOAD ORDER
     if order_string:
         order_words = order_string.split(" ")
         order = {
@@ -166,12 +174,30 @@ def process():
         else:
             print("order for piece at {} not in db".format( order["territory"]))
             orders.insert(order)
+            mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": 1,}})
         
-        orders = orders.find({"nation" : user["nation"]})
+    # DOWNLOAD ORDERS
+    orders = orders.find({"nation" : user["nation"]})
+    user = mongo.db.users.find_one({"username": session["username"]})
+    return_orders = []
+    return_orders.append({"num_orders": user["num_orders"], "num_pieces": user["num_pieces"]})
+    for order in orders:
         
-        return jsonify(order)
+        order_for_js = {
+            "piece_type" : order["piece_type"],
+            "territory" : order["territory"],
+            "command" : order["command"],
+        }
+        if "target" in order:
+            order_for_js["target"] = order["target"]
+            
+        if "object" in order:
+            order_for_js["object"] = order["object"]
+    
+        return_orders.append(order_for_js)
         
-    return jsonify({'error': 'missing data'})
+    return jsonify(return_orders)
+
     
 # messages --------------------------------------
 
