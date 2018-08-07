@@ -20,6 +20,10 @@ input.invalid {
 
 }
 
+#orders-given {
+  float: right;
+}
+
 #order-input:focus {
     outline: none;
 }

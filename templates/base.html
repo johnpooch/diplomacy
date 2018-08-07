@@ -2,29 +2,29 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <!--bootstrap-->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    
-    <!-- socket js -->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
-    
-    <!-- jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+  <!--bootstrap-->
+  <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
+  
+  <!--jquery ui-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  
+  <!--font awesome-->
+  <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css')}}" type="text/css" />
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}"  type="text/css" />
-    <link rel="stylesheet" href="{{url_for('static', filename='css/clean-blog.min.css')}}"  type="text/css" />
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css" />
-    <link rel="stylesheet" href="{{url_for('static', filename='css/land_positions.css')}}" type="text/css"/>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/sea_positions.css')}}" type="text/css"/>
+  <!--clean blog-->
+  <link rel="stylesheet" href="{{url_for('static', filename='css/clean-blog.min.css')}}"  type="text/css" />
+  
+  <!--custom css-->
+  <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css" />
+  <link rel="stylesheet" href="{{url_for('static', filename='css/land_positions.css')}}" type="text/css"/>
+  <link rel="stylesheet" href="{{url_for('static', filename='css/sea_positions.css')}}" type="text/css"/>
 
 
-    <title>Diplomacy</title>
+  <title>Diplomacy</title>
 </head>
 
 <body>
@@ -276,72 +276,32 @@
                   
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
+                    
+                    <table class="table" id="makeEditable">
+                      <thead>
+                        <tr>
+                          <th>Current Orders<span id ="orders-given"></span></th>
+                          
+                        </tr>
+                      </thead>
+                      <tbody id="table-body"></tbody>
+                      <tfoot>
+                        <tr>
+                          <td><span><button id="create-order">Create New Order</button></span></td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                    
                     <form id='order-form'>
                       <div class="form-group">
                         
                         <input type="text" name="order" class="form-control order-input" id="order-input">
                         <button type="submit" class="btn btn-default order-submit">Submit</button>
                         
-                        <div class="row">Current Orders:</div>
-                        <div id='current-orders'></div>
-                        
                       </div>
                       <br>
-                      
-                      
                     </form>
                   </div>
-                  
-                  <script type="text/javascript">
-                  
-                  
-                    $(document).ready(function() {
-                      
-                      $('#order-form').on('submit', function(event) {
-                          $.ajax({
-                              data : {
-                                order : $('#order-input').val()
-                              },
-                              type : 'POST',
-                              url : '/process'
-                              
-                          })
-                          .done(function(data) {
-                            
-                            if(data) {
-                              console.log(data)
-                              $('#current-orders').text("").show();
-                              
-                              $('#current-orders').append('<div id="num_orders" class="row">Orders Given: ' + data[0]["num_orders"] + '/' + data[0]["num_pieces"] + '</div>')
-                              
-                              for (var i = 1; i < data.length; i++) {
-                                
-                                // hold or disband
-                                if (data[i].command == "hold" || data[i].command == "disband") {
-                                  $('#current-orders').append('<div class="row">' + data[i].piece_type + " at " + data[i].territory + " will " + data[i].command + '</div>').show();
-                                }
-                                
-                                // move or retreat
-                                if (data[i].command == "move" || data[i].command == "retreat") {
-                                  $('#current-orders').append('<div class="row">' + data[i].piece_type + " at " + data[i].territory + " will " + data[i].command + " to " + data[i].target + '</div>').show();
-                                }
-                                // support or convoy
-                                if (data[i].command == "support" || data[i].command == "convoy") {
-                                  $('#current-orders').append(data[i].piece_type + " at " + data[i].territory + " will " + data[i].command + data[i].object + " to " + data[i].target).show();
-                                }
-                              }
-                            }
-                            else {
-                              $('#current-orders').text("you have not submitted any orders").show();
-                            }
-                          });
-                          event.preventDefault();
-                      });
-                      $('#order-form').submit();
-                    });
-                  </script>
-                  
-                  
                   
                   <!-- Announcements -->
                   <div role="tabpanel" class="tab-pane active" id="messagesTab">
@@ -375,277 +335,24 @@
     </div>
   </main>
   
+  <!-- socket js -->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/socketio.js') }}"></script>
   
+  <!-- jquery -->
+  <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   
-    <script type="text/javascript">
-      $(document).ready(function() {
-        
-        var socket = io.connect('http://diplomacy-johnpooch.c9users.io:8080/');
-        
-        socket.on('message', function(message) {
-          $("#messages li:eq(0)").before("<li><div class='row'>"+ message + "</div></li><hr>");
-          $("#messages li:eq(0)").before("<li><div class='row'><strong>{{user['nation']|capitalize}}<strong></div></li>");
-        })
-        
-        $('#sendButton').on('click', function() {
-          socket.send("{{ user['nation'] }} - " + $('#myMessage').val());
-          $('#myMessage').val('');
-        })
-        
-      });
-    </script>
-    
-    <script type="text/javascript">
-    
-    var example = "example orders: 'army bre move eng', 'fleet mid support eng to bre'";
-    var numberPresent = "orders should not include numbers.";
-    var notPieceType = "orders must begin with the type of the piece you wish to order (i.e. army, fleet).";
-    var notTerritory = "you must enter a valid territory abbreviation."
-    var notCommand = "you must give a valid command ('hold', 'move', 'support', 'convoy')"
-    
-    var tooManyHoldWords = "hold order has too many words (ex. 'army ven hold')"
-    var tooManyMoveWords = "move order has too many words (ex. 'army tri move vie')"
-    var tooManySupportWords = "support order has too many words (ex. 'army tri support vie ven')"
-    
-    var validOrder = "Order is valid"
-    
-    var pieceTypes = ["army", "fleet"];
-    var commands = ["hold", "move", "support", "convoy"];
-    var territories = ['adr','aeg','bal','bar','bla','bot','eas','eng','gol','hel','ion','iri','mid','nat','nrg','nth','ska','tyn','wes','alb','ank','apu','arm','ber','bel','bre','cly','con','den','edi','fin','gas','gre','hol','kie','lon','lvn','lvp','mar','naf','nap','nwy','pic','pie','por','rom','rum','pru','sev','smy','swe','syr','tri','tun','tus','ven','wal','yor','boh','bud','bur','gal','mos','mun','par','ruh','ser','sil','tyr','ukr','vie','war','bul','spa','stp','bul_ec','bul_sc','spa_nc','spa_sc','stp_sc','stp_nc'];
-    
-    function hasNumber(myString) {
-      return /\d/.test(myString);
-    }
-    
-    function wordInPieceTypes(word) {
-      return (pieceTypes.indexOf(word) > -1);
-    }
-    function wordInCommands(word) {
-      return (commands.indexOf(word) > -1);
-    }
-    function wordInTerritories(word) {
-      return (territories.indexOf(word) > -1);
-    }
-    
-    $('button.order-submit').after('<div id="feedback" class="feedback">' + example + '</div>')
-    
-    $( ".order-input" ).focus(function() {
-      $(this).next().next().css("color", "black");
-    });
-    $( ".order-input" ).blur(function() {
-      $(this).next().next().css("color", "transparent");
-    });
-    
-    $('input.order-input').on('input', function (evt) {
-      var value = evt.target.value.toLowerCase()
-      var words = value.split(" ")
-      
-      // remove 'to'
-      for (var i=words.length-1; i>=0; i--) {
-          if (words[i] === "to") {
-              words.splice(i, 1);
-          }
-      }
-      console.log(words)
-      
-      // this appears unless any other condition is met
-      $('#feedback').text(example)
-      evt.target.className = ''
-      
-      // check first word
-      if (words.length > 1) {
-        if (!wordInPieceTypes(words[0])) {
-          console.log('first word is not a piece type')
-          $('#feedback').text(notPieceType);
-          evt.target.className = 'invalid';
-        }
-      }
-        
-      // check second word
-      if (words.length > 2) {
-        if (!wordInTerritories(words[1])) {
-          console.log('second word is not a valid territory')
-          $('#feedback').text(notTerritory);
-          evt.target.className = 'invalid';
-        }
-      }
-      
-      // check third word
-      if (words.length > 3) {
-        if (!wordInCommands(words[2])) {
-          console.log('third word is not a valid command')
-          $('#feedback').text(notCommand);
-          evt.target.className = 'invalid';
-        }
-      }
-      
-      // check fourth word
-      if (words.length > 4) {
-        if (!wordInTerritories(words[3])) {
-          console.log('fourth word is not a valid territory')
-          $('#feedback').text(notTerritory);
-          evt.target.className = 'invalid';
-        }
-      }
-      
-      // check fifth word
-      if (words.length > 5) {
-        if (!wordInTerritories(words[4])) {
-          console.log('fifth word is not a valid territory')
-          $('#feedback').text(notTerritory);
-          evt.target.className = 'invalid';
-        }
-      }
-      
-      // if number present
-      if (hasNumber(value)) {
-        $('#feedback').text(numberPresent);
-        evt.target.className = 'invalid';
-      }
-      
-      // hold
-      if (words[2] == 'hold') {
-        if(words.length > 3) {
-          console.log('command is hold but too many words given')
-          $('#feedback').text(tooManyHoldWords);
-          evt.target.className = 'invalid';
-        }
-        else if (words.length == 3) {
-          console.log('valid hold command')
-          $('#feedback').text("");
-          evt.target.className = 'valid';
-        }
-      }
-      
-      // move
-      if (words[2] == 'move') {
-        if(words.length > 4) {
-          console.log('command is move but too many words given')
-          $('#feedback').text(tooManyMoveWords);
-          evt.target.className = 'invalid';
-        }
-        else if (words.length == 4 && wordInTerritories(words[3])) {
-          console.log('valid move command')
-          $('#feedback').text("");
-          evt.target.className = 'valid';
-        }
-      }
-      // support
-      if (words[2] == 'support') {
-        if(words.length > 5) {
-          console.log('command is support but too many words given')
-          $('#feedback').text(tooManySupportWords);
-          evt.target.className = 'invalid';
-        }
-        else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
-          console.log('valid move command')
-          $('#feedback').text("");
-          evt.target.className = 'valid';
-        }
-      }
-      
-      // convoy
-      if (words[2] == 'convoy') {
-        if(words.length > 5) {
-          console.log('command is convoy but too many words given')
-          $('#feedback').text(tooManySupportWords);
-          evt.target.className = 'invalid';
-        }
-        else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
-          console.log('valid move command')
-          $('#feedback').text("");
-          evt.target.className = 'valid';
-        }
-      }
+  <!--Custom JS-->
+  <script type="text/javascript" src="{{ url_for('static', filename='js/handleOrders.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/displayInput.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/messages.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/feedback.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/modal.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/draggable.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-    });
-    </script>
-    
-    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
-    
-    <script type="text/javascript">
-    function updateElementIndex(el, prefix, ndx) {
-        var id_regex = new RegExp('(' + prefix + '-\\d+)');
-        var replacement = prefix + '-' + ndx;
-        if ($(el).attr("for")) $(el).attr("for", $(el).attr("for").replace(id_regex, replacement));
-        if (el.id) el.id = el.id.replace(id_regex, replacement);
-        if (el.name) el.name = el.name.replace(id_regex, replacement);
-    }
-    function cloneMore(selector, prefix) {
-        var newElement = $(selector).clone(true);
-        var total = $('#id_' + prefix + '-TOTAL_FORMS').val();
-        newElement.find(':input').each(function() {
-            var name = $(this).attr('name')
-            if(name) {
-                name = name.replace('-' + (total-1) + '-', '-' + total + '-');
-                var id = 'id_' + name;
-                $(this).attr({'name': name, 'id': id}).val('').removeAttr('checked');
-            }
-        });
-        total++;
-        $('#id_' + prefix + '-TOTAL_FORMS').val(total);
-        $(selector).after(newElement);
-        var conditionRow = $('.form-row:not(:last)');
-        conditionRow.find('.btn.add-form-row')
-        .removeClass('btn-success').addClass('btn-danger')
-        .removeClass('add-form-row').addClass('remove-form-row')
-        .html('-');
-        return false;
-    }
-    function deleteForm(prefix, btn) {
-        var total = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
-        if (total > 1){
-            btn.closest('.form-row').remove();
-            var forms = $('.form-row');
-            $('#id_' + prefix + '-TOTAL_FORMS').val(forms.length);
-            for (var i=0, formCount=forms.length; i<formCount; i++) {
-                $(forms.get(i)).find(':input').each(function() {
-                    updateElementIndex(this, prefix, i);
-                });
-            }
-        }
-        return false;
-    }
-    $(document).on('click', '.add-form-row', function(e){
-        e.preventDefault();
-        cloneMore('.form-row:last', 'form');
-        return false;
-    });
-    $(document).on('click', '.remove-form-row', function(e){
-        e.preventDefault();
-        deleteForm('form', $(this));
-        return false;
-    });
-    
-    </script>
-    
-    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Custom scripts for this template -->
-    <script src="{{ url_for('static', filename='vendor/js/clean-blog.min.js') }}"></script>
-    
-    <!-- Order Form JavaScript -->
-    <script src="{{ url_for('static', filename='js/jqBootstrapValidation.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/contact_me.js') }}"></script>
-    
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <script>
-    $( function() {
-      $( "#draggable" ).draggable();
-    } );
-    </script>
-    
-    <script>
-    $('#myModal').on('shown.bs.modal', function () {
-      $('#myInput').trigger('focus')
-    })
-    
-    
-    </script>
     
 </body>
 
