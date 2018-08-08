@@ -26,13 +26,13 @@ function wordInTerritories(word) {
   return (territories.indexOf(word) > -1);
 }
 
-$('button.order-submit').after('<div id="feedback" class="feedback">' + example + '</div>')
+$('.order-input').after('<div id="feedback" class="feedback">' + example + '</div>')
 
 $( ".order-input" ).focus(function() {
-  $(this).next().next().css("color", "black");
+  $(this).next().css("color", "black");
 });
 $( ".order-input" ).blur(function() {
-  $(this).next().next().css("color", "transparent");
+  $(this).next().css("color", "transparent");
 });
 
 $('input.order-input').on('input', function (evt) {

@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   
+  <!--Font-->
+  <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
+  
   <!--bootstrap-->
   <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.css')}}">
   
@@ -13,15 +16,14 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   
   <!--font awesome-->
-  <link rel="stylesheet" href="{{url_for('static', filename='css/font-awesome.css')}}" type="text/css" />
-
-  <!--clean blog-->
-  <link rel="stylesheet" href="{{url_for('static', filename='css/clean-blog.min.css')}}"  type="text/css" />
+  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   
   <!--custom css-->
   <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}" type="text/css" />
   <link rel="stylesheet" href="{{url_for('static', filename='css/land_positions.css')}}" type="text/css"/>
   <link rel="stylesheet" href="{{url_for('static', filename='css/sea_positions.css')}}" type="text/css"/>
+  
+
 
 
   <title>Diplomacy</title>
@@ -57,8 +59,11 @@
 
         <!-- Modal -->
         <div class="modal fade" id="intefaceModal" tabindex="-1" role="dialog" aria-labelledby="intefaceModalLabel" aria-hidden="true">
+          
           <div class="modal-dialog" role="document">
-            <div id="draggable" class="modal-content">
+            <div id="draggable" class="modal-content page box">
+            
+              
               
               <!-- Modal Header -->
               <div class="modal-header">
@@ -277,30 +282,18 @@
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
                     
-                    <table class="table" id="makeEditable">
-                      <thead>
-                        <tr>
-                          <th>Current Orders<span id ="orders-given"></span></th>
-                          
-                        </tr>
-                      </thead>
-                      <tbody id="table-body"></tbody>
-                      <tfoot>
-                        <tr>
-                          <td><span><button id="create-order">Create New Order</button></span></td>
-                        </tr>
-                      </tfoot>
-                    </table>
+                    <div id="tbl_orders"></div>
+                    
+                    <span><button id="create-order" class="btn btn-default">Create New Order</button></span>
+                    <span id="orders-issued">All orders have been issued</span>
                     
                     <form id='order-form'>
                       <div class="form-group">
-                        
                         <input type="text" name="order" class="form-control order-input" id="order-input">
-                        <button type="submit" class="btn btn-default order-submit">Submit</button>
-                        
                       </div>
-                      <br>
-                    </form>
+                    </table>
+                    
+
                   </div>
                   
                   <!-- Announcements -->
@@ -330,6 +323,7 @@
               {% endfor %}
             </div>
           </div>
+          <div id="overlay"></div>
         </div>
       </div>
     </div>
@@ -344,6 +338,7 @@
   <!--Custom JS-->
   <script type="text/javascript" src="{{ url_for('static', filename='js/handleOrders.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/displayInput.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/editOrder.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/messages.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/feedback.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/modal.js') }}"></script>

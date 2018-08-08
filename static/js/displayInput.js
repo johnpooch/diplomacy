@@ -1,8 +1,6 @@
-
 $(document).ready(function() {
-  console.log("hello");
   $('#create-order').click(function(event) {
-    alert("SNARG");
-    $('#order-form').css({"color": "red"});
+    $('#create-order').css({"display": "none"});
+    $('#order-form').css({"display": "block"});
   });
 });

@@ -2,6 +2,7 @@ body {
   background: #fafafa;
   color: #333333;
   margin-top: 0px;
+  font-family: 'Rokkitt', serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -20,6 +21,31 @@ input.invalid {
 
 }
 
+#draggable {
+  width: 400px;
+}
+
+#table {
+  width: 100%;
+}
+
+#create-order {
+  display: block;
+  background-color: #f9f1ea;
+  border: solid rgba(0, 0, 0, .23) .5px;
+  color: rgba(0, 0, 0, 0.69);;
+  font-size: .9rem;
+  margin-top: .6rem;
+}
+
+#orders-issued {
+  display: none;
+}
+
+#order-form {
+  display: none;
+}
+
 #orders-given {
   float: right;
 }
@@ -29,24 +55,44 @@ input.invalid {
 }
 
 #order-input {
-  width: 60%;
+  width: 100%;
   display: inline-block;
+  background-color: #f9f1ea;
 }
 
+#myMessage {
+  background-color: #f9f1ea;
+}
+
+
+.btn {
+  font-family: 'Rokkitt', serif;
+}
+
+.btn-primary {
+  background-color: grey;
+  border-color: dimgray;
+}
+
+.btn-link {
+  color: black;
+}
+
+.btn-primary:hover {
+  background-color: grey;
+  border-color: dimgray;
+}
 
 .feedback {
   display: block;
   color: transparent;
-  font-size: 1rem;
-  padding-bottom: 1rem;
+  font-size: .8rem;
 }
 
 .game-rules-a {
   font-size: 1rem;
   color: #0085a1;
 }
-
-
 
 .order-submit {
   width: 20%;
@@ -72,6 +118,10 @@ input.invalid {
 
 .modal-footer {
   display: inline-block;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .nav-tabs {
@@ -119,6 +169,24 @@ input.invalid {
   overflow: overlay;
 }
 
+#overlay {
+  pointer-events: none;
+  background-image: url("../images/frosted-glass-noise.png");
+  width: inherit;
+  opacity: .5;
+  height: -webkit-fill-available;
+  position: absolute;
+}
+
+.page {
+  background-color: #fffef6;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.12), rgba(200, 160, 0, 0.1)65%, rgba(0,0,0,0) 35%, rgba(200, 160, 0, 0.1) 65%);
+  box-shadow: inset 0 0 75px #ffc10754, inset 0 0 20px rgba(22, 53, 86, 0), inset 0 0 30px rgba(16, 10, 80, 0.8);
+  width: calc(8.5in - 15em);
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+  padding: 5em 10em 15em 5em;
+}
 
 .bg-steel {
   background-color: #5f788a;
