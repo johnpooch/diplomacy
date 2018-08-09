@@ -56,8 +56,6 @@ $('.order-input').on('input', function (evt) {
   }
   sanitizeOrder(words);
 
-  console.log(words);
-  
   // this appears unless any other condition is met
   $('#feedback').text(example)
   preventEnter(event);

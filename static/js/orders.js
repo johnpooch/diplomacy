@@ -20,7 +20,7 @@ function parseOrderString(string) {
 // Input Not Draggable ============================================================================
 
 function inputNotDraggable() {
-    var row = $(document).find('.row_data');
+    var row = $(document).find('.row-data');
     row.mouseenter(function () {
         $('#draggable').draggable({
           disabled: true
@@ -39,11 +39,11 @@ function inputNotDraggable() {
 // Rows Editable ==================================================================================
 
 function rowsEditable() {
-    $(document).on('click', '.btn_edit', function(event) {
+    $(document).on('click', '.btn-edit', function(event) {
         $('#create-order').css({"display": "none"});
         $('#order-form').css({"display": "block"}).focus();
         
-        $('#order-input').val($(this).closest('tr').find('.row_data').text());
+        $('#order-input').val($(this).closest('tr').find('.row-data').text());
     });
 }
 
@@ -63,7 +63,6 @@ function resetOrderForm(data) {
     // hide create order button if player has reached number of orders
     if (data[0]["num_orders"] == data[0]["num_pieces"]) {
         $('#create-order').css({"display": "none"});
-        $('#orders-issued').css({"display": "block"});
     }
     else {
         $('#create-order').css({"display": "block"});
@@ -110,7 +109,7 @@ function getOrderString(val) {
 // Create Table ===================================================================================
 
 function createTable(data) {
-    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th></th></tr></thead>';
+    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["num_orders"] + '/' + data[0]["num_pieces"] + '</th></tr></thead>';
     
     var tableBody = '<tbody>'
     
@@ -120,8 +119,8 @@ function createTable(data) {
         var row_id = createRandomId();
             
         tableBody += '<tr row_id="' + row_id + '">';
-        tableBody += '<td><div class="row_data" edit_type="click" col_name="order" draggable="false")>' + orderString + '</div></td>';
-        tableBody += '<td><span class="btn_edit"><a href="#" class="btn btn-link" row_id="' + row_id + '"><i class="fa fa-edit"></i></a></span></td></tr>';
+        tableBody += '<td><div class="row-data" edit_type="click" col_name="order" draggable="false")>' + orderString + '</div></td>';
+        tableBody += '<td><span class="btn-edit"><a href="#" class="btn btn-link" row_id="' + row_id + '"><i class="fa fa-edit"></i></a></span></td></tr>';
     });
     tableBody += '</tbody>'
     tableBody += '</table>'
@@ -165,3 +164,5 @@ $(document).ready(function() {
     });
     $('#order-form').submit();
 });
+
+// ================================================================================================

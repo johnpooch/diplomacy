@@ -38,6 +38,11 @@ input.invalid {
   margin-top: .6rem;
 }
 
+#num-orders {
+  text-align: right;
+  padding-right: .5rem;
+}
+
 #orders-issued {
   display: none;
 }
@@ -73,6 +78,10 @@ input.invalid {
 
 .btn {
   font-family: 'Rokkitt', serif;
+}
+
+.btn-edit a {
+  padding-right: 0px;
 }
 
 .btn-primary {
@@ -192,6 +201,10 @@ input.invalid {
   letter-spacing: 0.05em;
   line-height: 1.8;
   padding: 5em 10em 15em 5em;
+}
+
+.row-data {
+  padding-left: 1rem
 }
 
 .bg-steel {
