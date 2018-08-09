@@ -1,4 +1,5 @@
-var example = "example orders: 'army bre move eng', 'fleet mid support eng to bre'";
+
+var example = "example orders: 'army at bre move to eng', 'fleet at mid support eng to bre'";
 var numberPresent = "orders should not include numbers.";
 var notPieceType = "orders must begin with the type of the piece you wish to order (i.e. army, fleet).";
 var notTerritory = "you must enter a valid territory abbreviation.";
@@ -26,6 +27,12 @@ function wordInTerritories(word) {
   return (territories.indexOf(word) > -1);
 }
 
+function preventEnter(event){
+  if (event.which == '13') {
+    event.preventDefault();
+  }
+}
+
 $('.order-input').after('<div id="feedback" class="feedback">' + example + '</div>')
 
 $( ".order-input" ).focus(function() {
@@ -35,20 +42,22 @@ $( ".order-input" ).blur(function() {
   $(this).next().css("color", "transparent");
 });
 
-$('input.order-input').on('input', function (evt) {
+$('.order-input').on('input', function (evt) {
   var value = evt.target.value.toLowerCase()
   var words = value.split(" ")
   
-  // remove 'to'
+  // remove 'to', 'at', 'will', 'from'
   for (var i=words.length-1; i>=0; i--) {
-      if (words[i] === "to") {
+      if (["to", "at", "will", "from"].indexOf(words[i]) > -1) {
           words.splice(i, 1);
       }
   }
+
   console.log(words)
   
   // this appears unless any other condition is met
   $('#feedback').text(example)
+  preventEnter(event);
   evt.target.className = ''
   
   // check first word
@@ -56,6 +65,7 @@ $('input.order-input').on('input', function (evt) {
     if (!wordInPieceTypes(words[0])) {
       console.log('first word is not a piece type')
       $('#feedback').text(notPieceType);
+      preventEnter(event); 
       evt.target.className = 'invalid';
     }
   }
@@ -65,6 +75,7 @@ $('input.order-input').on('input', function (evt) {
     if (!wordInTerritories(words[1])) {
       console.log('second word is not a valid territory')
       $('#feedback').text(notTerritory);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
   }
@@ -74,6 +85,7 @@ $('input.order-input').on('input', function (evt) {
     if (!wordInCommands(words[2])) {
       console.log('third word is not a valid command')
       $('#feedback').text(notCommand);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
   }
@@ -83,6 +95,7 @@ $('input.order-input').on('input', function (evt) {
     if (!wordInTerritories(words[3])) {
       console.log('fourth word is not a valid territory')
       $('#feedback').text(notTerritory);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
   }
@@ -92,6 +105,7 @@ $('input.order-input').on('input', function (evt) {
     if (!wordInTerritories(words[4])) {
       console.log('fifth word is not a valid territory')
       $('#feedback').text(notTerritory);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
   }
@@ -99,6 +113,7 @@ $('input.order-input').on('input', function (evt) {
   // if number present
   if (hasNumber(value)) {
     $('#feedback').text(numberPresent);
+    preventEnter(event);
     evt.target.className = 'invalid';
   }
   
@@ -107,11 +122,12 @@ $('input.order-input').on('input', function (evt) {
     if(words.length > 3) {
       console.log('command is hold but too many words given')
       $('#feedback').text(tooManyHoldWords);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
     else if (words.length == 3) {
       console.log('valid hold command')
-      $('#feedback').text("");
+      $('#feedback').text("convoy order is valid");
       evt.target.className = 'valid';
     }
   }
@@ -121,11 +137,12 @@ $('input.order-input').on('input', function (evt) {
     if(words.length > 4) {
       console.log('command is move but too many words given')
       $('#feedback').text(tooManyMoveWords);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
     else if (words.length == 4 && wordInTerritories(words[3])) {
       console.log('valid move command')
-      $('#feedback').text("");
+      $('#feedback').text("convoy order is valid");
       evt.target.className = 'valid';
     }
   }
@@ -134,11 +151,12 @@ $('input.order-input').on('input', function (evt) {
     if(words.length > 5) {
       console.log('command is support but too many words given')
       $('#feedback').text(tooManySupportWords);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
     else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
       console.log('valid move command')
-      $('#feedback').text("");
+      $('#feedback').text("convoy order is valid");
       evt.target.className = 'valid';
     }
   }
@@ -148,11 +166,12 @@ $('input.order-input').on('input', function (evt) {
     if(words.length > 5) {
       console.log('command is convoy but too many words given')
       $('#feedback').text(tooManySupportWords);
+      preventEnter(event);
       evt.target.className = 'invalid';
     }
     else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
       console.log('valid move command')
-      $('#feedback').text("");
+      $('#feedback').text("convy order is valid");
       evt.target.className = 'valid';
     }
   }

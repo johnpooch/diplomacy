@@ -60,6 +60,16 @@ input.invalid {
   background-color: #f9f1ea;
 }
 
+#order-input.valid {
+  color: green;
+  border-color: lightgreen;
+}
+
+#order-input.invalid {
+  color: red;
+  border-color: red;
+}
+
 #myMessage {
   background-color: #f9f1ea;
 }
