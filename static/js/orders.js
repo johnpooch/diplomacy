@@ -75,18 +75,6 @@ function resetOrderForm(data) {
 
 
 
-// Create Random Id ===============================================================================
-
-function createRandomId() {
-    var id_num = Math.random().toString(9).substr(2,3);
-    var id_str = Math.random().toString(36).substr(2);
-    return id_num + id_str;
-}
-
-// ================================================================================================
-
-
-
 // Get Order String ===============================================================================
 
 function getOrderString(val) {
@@ -109,18 +97,18 @@ function getOrderString(val) {
 // Create Table ===================================================================================
 
 function createTable(data) {
-    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["num_orders"] + '/' + data[0]["num_pieces"] + '</th></tr></thead>';
     
+    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["num_orders"] + '/' + data[0]["num_pieces"] + '</th></tr></thead>';
     var tableBody = '<tbody>'
     
     $.each(data.slice(1), function(index, val) {
         
         orderString = getOrderString(val);
-        var row_id = createRandomId();
+        var row_id = val["id"];
             
-        tableBody += '<tr row_id="' + row_id + '">';
+        tableBody += '<tr row_id="' + row_id + '" class = order-row>';
         tableBody += '<td><div class="row-data" edit_type="click" col_name="order" draggable="false")>' + orderString + '</div></td>';
-        tableBody += '<td><span class="btn-edit"><a href="#" class="btn btn-link" row_id="' + row_id + '"><i class="fa fa-edit"></i></a></span></td></tr>';
+        tableBody += '<td><span class="btn-delete"><a href="#" class="btn btn-link delete" row_id="' + row_id + '"><i class="fa fa-minus"></i></a></span></td></tr>';
     });
     tableBody += '</tbody>'
     tableBody += '</table>'
@@ -139,7 +127,7 @@ $(document).ready(function() {
     $('#order-form').on('submit', function(event) { 
         $.ajax({
             data : {
-                order : parseOrderString($('#order-input').val())
+                order : parseOrderString($('#order-input').val()), 
             },
             type : 'POST',
             url : '/process'
@@ -163,6 +151,41 @@ $(document).ready(function() {
         event.preventDefault();
     });
     $('#order-form').submit();
+});
+
+// ================================================================================================
+
+
+
+// Delete Order ===================================================================================
+
+$(document).ready(function() {
+    
+    // send order to run.py -----------------------------------------------------------------------
+    
+    $(document).on('click', '.delete', function(event) {
+        
+        $.ajax({
+            data : {
+                id : $(this).closest('.order-row').attr("row_id")
+            },
+            type : 'POST',
+            url : '/process'
+        })
+        
+        // receive data from run.py ---------------------------------------------------------------
+        .done(function(data) {
+            if(data) {
+                resetOrderForm(data)
+                
+                $(document).find('#tbl_orders').html(createTable(data));
+                
+                inputNotDraggable();
+                rowsEditable();
+            }
+        });
+        event.preventDefault();
+    });
 });
 
 // ================================================================================================

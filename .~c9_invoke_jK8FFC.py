@@ -1,7 +1,7 @@
 from dependencies import *
 from flask import jsonify
 from flask_socketio import SocketIO, send
-from process_orders import *
+from process_orders import end_turn
 from nation import Nation
 from get_game_state import get_game_state
 from bson.objectid import ObjectId
@@ -118,24 +118,12 @@ def attempt_login(request):
     flash('Login unsuccessful. Invalid username/password combination.', 'danger')
     return False
     
+    
 # Check if all orders submitted -------------------------------------------------------------------
 
 def checkAllOrdersSubmitted():
-    
-    if(mongo.db.orders.count() == mongo.db.pieces.count()):
-        
-        print("processing orders")
-        
-        orders = mongo.db.orders.find({})
-        pieces = mongo.db.pieces.find({})
-        
-        updated_pieces = process_orders(orders, pieces)
-        
-        print(updated_pieces)
-        
-        mongo.db.orders.remove({})
-        mongo.db.users.update({}, {"$set": {"num_orders": 0} })
-        
+    if(mongo.db.orders.count() == len(Piece.all_pieces)):
+        process_orders()
         return True
     else:
         print("not all orders have been given")
@@ -189,6 +177,7 @@ def process():
         # UPLOAD ORDER
         if order_string:
             order_words = order_string.split(" ")
+            print("order words: {}".format(order_words))
             order = {
                 "nation" : user["nation"],
                 "piece_type" : order_words[0],
@@ -211,7 +200,7 @@ def process():
                 mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": 1,}})
                 
     if checkAllOrdersSubmitted():
-        return redirect(url_for('board'))
+        return []
           
     else:
         # DOWNLOAD ORDERS
@@ -243,6 +232,7 @@ def process():
 @socketio.on('message')
 def handle_message(msg):
     
+    print(msg)
     split_message = msg.split(' - ', 1)
     message_dict = {
         'sender': split_message[0],
@@ -359,8 +349,6 @@ def test_all():
     end_turn("game_histories/game_1/03_fall_build_1901.txt")
     
     return redirect(url_for('board'))
-    
-checkAllOrdersSubmitted()
 
 if __name__ == '__main__':
     socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug=True)

@@ -9,6 +9,21 @@ from initial_game_state import *
 from order_text_processor import get_orders_from_txt
 from write_to_log import clear_log
 
+def find_territory_by_name(name):
+    for territory in Territory.all_territories:
+        if territory.name == name:
+            return territory
+            
+def find_nation_by_name(name):
+    for nation in Nation.all_nations:
+        if nation.name == name:
+            return nation
+
+def piece_exists_in_territory_and_belongs_to_user(territory):
+    for piece in Piece.all_pieces:
+        if piece.territory == territory:
+            return piece
+
 # Resolve Challenges ==================================================================================
 
 def resolve_challenges():
@@ -36,13 +51,64 @@ def resolve_challenges():
 
 # Process Orders ==================================================================================
 
-def process_orders(turn):
+def process_orders(mongo_orders, mongo_pieces):
     
     write_to_log("\n")
-    get_orders_from_txt(turn)
+
+    # create piece object from mongo db piece
+    for piece in mongo_pieces:
+        nation = find_nation_by_name(piece["nation"])
+        territory = find_territory_by_name(piece["territory"])
+        
+        if piece["piece_type"] == "army":
+            setattr(nation, "pieces", [Army(piece["_id"], territory, nation)])
+            
+        if piece["piece_type"] == "fleet":
+            setattr(nation, "pieces", [Fleet(piece["_id"], territory, nation)])
+            
+        for piece in Piece.all_pieces:
+            print (piece.territory.name)
+            
+            
+    print(mongo_orders)
+            
+    # assign order to piece
+    for order in mongo_orders:
+        print("order: {}".format(order))
+        
+        nation = order["nation"]  
+        command = order["command"]
+        origin = find_territory_by_name(order["territory"])
+        
+        if command == "hold":
+            order = Hold(nation, origin)
+        if command == "convoy":
+            order = Convoy(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
+        if command == "move":
+            order = Move(nation, origin, find_territory_by_name(order["target"]))
+        if command == "support":
+            # need to account for army ven support nap to hold!
+            order = Support(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
+        if command == "retreat":
+            order = Retreat(nation, origin, find_territory_by_name(order["target"]))
+        if command == "destroy":
+            order = Destroy(nation, origin)
+        
+        if command != "build":
+            piece = piece_exists_in_territory_and_belongs_to_user(origin)
+            if piece:
+                print("piece exists")
+                piece.order = order
+        else:
+            Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
+        
+            
+            
+            
     
     for piece in Piece.all_pieces:
         piece.assign_piece_to_order()
+        print("piece order: {}".format(piece.order))
     
     for order in Order.all_orders:
     # convoy orders have to be carried out before other orders
@@ -50,6 +116,7 @@ def process_orders(turn):
             order.process_order()
             
     for order in Order.all_orders:
+        print(order.piece.territory)
         if not isinstance(order, Convoy):
             order.process_order()
         
@@ -62,22 +129,28 @@ def process_orders(turn):
         for piece in Piece.all_pieces:
             if piece.retreat and not piece.can_retreat():
                 piece.destroy()
-                
+    
+    for piece in Piece.all_pieces:
+        print("piece is now in {}".format(piece.territory.name))
+    
     # remove all supports
     for piece in Piece.all_pieces:
         setattr(piece, "support", {})
-    
         
     # change phase
     game_properties.end_phase()
         
     Move.all_moves =[]
     Order.all_orders =[]
-
-
-# END TURN ========================================================================================
-
-def end_turn(turn):
-    process_orders(turn)
-
-clear_log()
+    
+    piece_list = []
+    for piece in Piece.all_pieces:
+        print (piece.territory)
+        piece_list.append({
+            "territory": piece.territory.name, 
+            "nation": piece.nation.name, 
+            "piece_type": piece.piece_type, 
+            "previous_territory": piece.previous_territory.name,
+            "retreat": piece.retreat
+        })
+    return piece_list

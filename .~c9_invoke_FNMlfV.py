@@ -1,10 +1,9 @@
 from dependencies import *
 from flask import jsonify
 from flask_socketio import SocketIO, send
-from process_orders import *
+from process_orders import end_turn
 from nation import Nation
 from get_game_state import get_game_state
-from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
@@ -117,30 +116,6 @@ def attempt_login(request):
 
     flash('Login unsuccessful. Invalid username/password combination.', 'danger')
     return False
-    
-# Check if all orders submitted -------------------------------------------------------------------
-
-def checkAllOrdersSubmitted():
-    
-    if(mongo.db.orders.count() == mongo.db.pieces.count()):
-        
-        print("processing orders")
-        
-        orders = mongo.db.orders.find({})
-        pieces = mongo.db.pieces.find({})
-        
-        updated_pieces = process_orders(orders, pieces)
-        
-        print(updated_pieces)
-        
-        mongo.db.orders.remove({})
-        mongo.db.users.update({}, {"$set": {"num_orders": 0} })
-        
-        return True
-    else:
-        print("not all orders have been given")
-        return False
-
 
 # ROUTES ==========================================================================================
 
@@ -173,67 +148,57 @@ def board():
 
 @app.route("/process", methods=["POST"])
 def process():
-    
-    orders = mongo.db.orders
+    order_string = request.form["order"]
     user = mongo.db.users.find_one({"username": session["username"]})
+    orders = mongo.db.orders
     
-    # if delete
-    if "id" in request.form:
-        orders.delete_one({"_id": ObjectId(request.form["id"])})
-        mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": -1}})
+    print(order_string)
+    
+    # UPLOAD ORDER
+    if order_string:
+        order_words = order_string.split(" ")
+        print("order words: {}".format(order_words))
+        order = {
+            "nation" : user["nation"],
+            "piece_type" : order_words[0],
+            "territory" : order_words[1],
+            "command" : order_words[2],
+        }
+        if order["command"] == 'move':
+            order["target"] = order_words[3]
+            
+        if order["command"] in ['support', 'convoy']:
+            order["object"] = order_words[3]
+            order["target"] = order_words[4]
+            
+        if orders.find_one({"territory": order["territory"]}):
+            print("order for piece at {} already in db".format( order["territory"]))
+            orders.update_one({"territory": order["territory"]}, {"$set": order})
+        else:
+            print("order for piece at {} not in db".format( order["territory"]))
+            orders.insert(order)
+            mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": 1,}})
         
-    # if create
-    else:
-        order_string = request.form["order"]
+    # DOWNLOAD ORDERS
+    orders = orders.find({"nation" : user["nation"]})
+    user = mongo.db.users.find_one({"username": session["username"]})
+    return_orders = []
+    return_orders.append({"num_orders": user["num_orders"], "num_pieces": user["num_pieces"]})
+    for order in orders:
         
-        # UPLOAD ORDER
-        if order_string:
-            order_words = order_string.split(" ")
-            order = {
-                "nation" : user["nation"],
-                "piece_type" : order_words[0],
-                "territory" : order_words[1],
-                "command" : order_words[2],
-            }
-            if order["command"] == 'move':
-                order["target"] = order_words[3]
-                
-            if order["command"] in ['support', 'convoy']:
-                order["object"] = order_words[3]
-                order["target"] = order_words[4]
-                
-            if orders.find_one({"territory": order["territory"]}):
-                print("order for piece at {} already in db".format( order["territory"]))
-                orders.update_one({"territory": order["territory"]}, {"$set": order})
-            else:
-                print("order for piece at {} not in db".format( order["territory"]))
-                orders.insert(order)
-                mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": 1,}})
-                
-    if checkAllOrdersSubmitted():
-        return redirect(url_for('board'))
-          
-    else:
-        # DOWNLOAD ORDERS
-        orders = orders.find({"nation" : user["nation"]})
-        user = mongo.db.users.find_one({"username": session["username"]})
-        return_orders = []
-        return_orders.append({"num_orders": user["num_orders"], "num_pieces": user["num_pieces"]})
-        
-        for order in orders:
-            order_for_js = {
-                "id" : str(order["_id"]),
-                "piece_type" : order["piece_type"],
-                "territory" : order["territory"],
-                "command" : order["command"],
-            }
-            if "target" in order:
-                order_for_js["target"] = order["target"]
-                
-            if "object" in order:
-                order_for_js["object"] = order["object"]
-        
-            return_orders.append(order_for_js)
+        order_for_js = {
+            
+            "piece_type" : order["piece_type"],
+            "territory" : order["territory"],
+            "command" : order["command"],
+        }
+        if "target" in order:
+            order_for_js["target"] = order["target"]
+            
+        if "object" in order:
+            order_for_js["object"] = order["object"]
+    
+        return_orders.append(order_for_js)
         
     return jsonify(return_orders)
 
@@ -243,6 +208,7 @@ def process():
 @socketio.on('message')
 def handle_message(msg):
     
+    print(msg)
     split_message = msg.split(' - ', 1)
     message_dict = {
         'sender': split_message[0],
@@ -359,8 +325,7 @@ def test_all():
     end_turn("game_histories/game_1/03_fall_build_1901.txt")
     
     return redirect(url_for('board'))
-    
-checkAllOrdersSubmitted()
+
 
 if __name__ == '__main__':
     socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug=True)

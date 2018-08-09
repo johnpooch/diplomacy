@@ -259,10 +259,10 @@ setattr(stp_sc, 'parent_territory', stp)
 
 # Create intial pieces ----------------------------------------------------------------------------
 
-setattr(england, "pieces", [Army(lvp, england), Fleet(lon, england), Fleet(edi, england)])
-setattr(france, "pieces", [Army(par, france), Fleet(bre, france), Army(mar, france)])
-setattr(germany, "pieces", [Army(mun, germany), Fleet(kie, germany), Army(ber, germany)])
-setattr(austria, "pieces", [Army(bud, austria), Fleet(tri, austria), Army(vie, austria)])
-setattr(italy, "pieces", [Army(rom, italy), Fleet(nap, italy), Army(ven, italy)])
-setattr(russia, "pieces", [Army(mos, russia), Army(war, russia), Fleet(stp_sc, russia), Fleet(sev, russia)])
-setattr(turkey, "pieces", [Army(con, turkey), Army(smy, turkey), Fleet(ank, turkey)])
+# setattr(england, "pieces", [Army(lvp, england)])
+# setattr(france, "pieces", [Army(par, france), Fleet(bre, france), Army(mar, france)])
+# setattr(germany, "pieces", [Army(mun, germany), Fleet(kie, germany), Army(ber, germany)])
+# setattr(austria, "pieces", [Army(bud, austria), Fleet(tri, austria), Army(vie, austria)])
+# setattr(italy, "pieces", [Army(rom, italy), Fleet(nap, italy), Army(ven, italy)])
+# setattr(russia, "pieces", [Army(mos, russia), Army(war, russia), Fleet(stp_sc, russia), Fleet(sev, russia)])
+# setattr(turkey, "pieces", [Army(con, turkey), Army(smy, turkey), Fleet(ank, turkey)])

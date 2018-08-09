@@ -48,7 +48,7 @@ input.invalid {
 }
 
 #order-form {
-  display: none;
+  display: block;
 }
 
 #orders-given {
@@ -78,6 +78,14 @@ input.invalid {
 
 .btn {
   font-family: 'Rokkitt', serif;
+}
+
+.btn-delete a {
+  vertical-align: text-top;
+}
+
+.btn-delete a i {
+  opacity: .6;
 }
 
 .btn-edit a {

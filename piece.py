@@ -4,8 +4,9 @@ from write_to_log import write_to_log
 
 class Piece:
     all_pieces = []
-    def __init__(self, territory, nation):
+    def __init__(self, mongo_id, territory, nation):
         Piece.all_pieces.append(self)
+        self.mongo_id = mongo_id
         self.territory = territory
         self.nation = nation
         self.order = None
@@ -71,9 +72,9 @@ class Piece:
         
 class Army(Piece):
     all_armies = []
-    def __init__(self, territory, owner):
+    def __init__(self, mongo_id, territory, nation):
         Army.all_armies.append(self)
-        Piece.__init__(self, territory, owner)
+        Piece.__init__(self, mongo_id, territory, nation)
         self.piece_type = "army"
         
 
@@ -81,8 +82,8 @@ class Army(Piece):
 
 class Fleet(Piece):
     all_fleets = []
-    def __init__(self, territory, owner):
+    def __init__(self, mongo_id, territory, nation):
         Fleet.all_fleets.append(self)
-        Piece.__init__(self, territory, owner)
+        Piece.__init__(self, mongo_id, territory, nation)
         self.piece_type = "fleet"
 
