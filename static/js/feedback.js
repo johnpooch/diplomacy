@@ -46,14 +46,17 @@ $('.order-input').on('input', function (evt) {
   var value = evt.target.value.toLowerCase()
   var words = value.split(" ")
   
-  // remove 'to', 'at', 'will', 'from'
-  for (var i=words.length-1; i>=0; i--) {
+  function sanitizeOrder(words) {
+    // remove 'to', 'at', 'will', 'from'
+    for (var i=words.length-1; i>=0; i--) {
       if (["to", "at", "will", "from"].indexOf(words[i]) > -1) {
           words.splice(i, 1);
       }
+    }
   }
+  sanitizeOrder(words);
 
-  console.log(words)
+  console.log(words);
   
   // this appears unless any other condition is met
   $('#feedback').text(example)
@@ -127,7 +130,7 @@ $('.order-input').on('input', function (evt) {
     }
     else if (words.length == 3) {
       console.log('valid hold command')
-      $('#feedback').text("convoy order is valid");
+      $('#feedback').text("hold order is valid - press enter to issue order");
       evt.target.className = 'valid';
     }
   }
@@ -142,7 +145,7 @@ $('.order-input').on('input', function (evt) {
     }
     else if (words.length == 4 && wordInTerritories(words[3])) {
       console.log('valid move command')
-      $('#feedback').text("convoy order is valid");
+      $('#feedback').text("move order is valid - press enter to issue order");
       evt.target.className = 'valid';
     }
   }
@@ -156,7 +159,7 @@ $('.order-input').on('input', function (evt) {
     }
     else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
       console.log('valid move command')
-      $('#feedback').text("convoy order is valid");
+      $('#feedback').text("support order is valid - press enter to issue order");
       evt.target.className = 'valid';
     }
   }
@@ -171,7 +174,7 @@ $('.order-input').on('input', function (evt) {
     }
     else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
       console.log('valid move command')
-      $('#feedback').text("convy order is valid");
+      $('#feedback').text("convy order is valid - press enter to issue order");
       evt.target.className = 'valid';
     }
   }

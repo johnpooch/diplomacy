@@ -1,8 +1,24 @@
+function sanitizeOrder(string) {
+    var words = string.split(' ');
+    console.log('AGGGH');
+    // remove 'to', 'at', 'will', 'from'
+    for (var i=words.length-1; i>=0; i--) {
+        if (["to", "at", "will", "from"].indexOf(words[i]) > -1) {
+            words.splice(i, 1);
+        }
+    }
+    var cleanString = words.join(' ');
+    return cleanString
+}
+
 $(document).ready(function() {
     $('#order-form').on('submit', function(event) {
+        
+        var orderSanitized = sanitizeOrder($('#order-input').val())
+        
         $.ajax({
             data : {
-                order : $('#order-input').val()
+                order : orderSanitized
             },
             type : 'POST',
             url : '/process'
@@ -17,7 +33,7 @@ $(document).ready(function() {
                 $('#table-body').text("").show();
                 $('#orders-given').text('Orders: ' + data[0]["num_orders"] + '/' + data[0]["num_pieces"])
                 
-                console.log(data[0])
+                console.log(data)
                 
                 if (data[0]["num_orders"] == data[0]["num_pieces"]) {
                     $('#create-order').css({"display": "none"});
@@ -63,13 +79,11 @@ $(document).ready(function() {
                         tbl += '<tr row_id="' + row_id + '">';
                         
                             // orders column
-                            tbl += '<td><div class="row_data" edit_type="click" col_name="order" contenteditable="true" draggable="false")>' + orderString + '</div></td>';
+                            tbl += '<td><div class="row_data" edit_type="click" col_name="order" draggable="false")>' + orderString + '</div></td>';
                             
                             // options column
                             tbl += '<td>';
                                 tbl += '<span class="btn_edit"><a href="#" class="btn btn-link" row_id="' + row_id + '"><i class="fa fa-edit"></i></a></span>';
-                                tbl += '<span class="btn_save"><a href="#" class="btn btn-link" row_id="' + row_id + '">Save</a></span>';
-                                tbl += '<span class="btn_cancel"><a href="#" class="btn btn-link" row_id="' + row_id + '">Cancel</a></span>';
                             tbl += '</td>';
                         tbl += '</tr>';
                     });
@@ -78,10 +92,6 @@ $(document).ready(function() {
                   
                 // output data
                 $(document).find('#tbl_orders').html(tbl);
-                
-                // hide options
-                $(document).find('.btn_save').hide();
-                $(document).find('.btn_cancel').hide();
                 
                 // make inputs not draggable
                 $(document).find('.row_data').mouseenter(function () {
@@ -98,15 +108,11 @@ $(document).ready(function() {
                 //--->button > edit > start	
                 $(document).on('click', '.btn_edit', function(event) 
                 {
-                	event.preventDefault();
-                	var tbl_row = $(this).closest('tr');
+                    $('#create-order').css({"display": "none"});
+                    $('#order-form').css({"display": "block"}).focus();
+                    
+                    $('#order-input').val($(this).closest('tr').find('.row_data').text())
                 
-                	var row_id = tbl_row.attr('row_id');
-                
-                	tbl_row.find('.row_data')
-                	.css('padding', '5px')
-                    .focus();
-
                 	//--->add the original entry > end
                 
                 });

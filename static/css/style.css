@@ -50,10 +50,6 @@ input.invalid {
   float: right;
 }
 
-#order-input:focus {
-    outline: none;
-}
-
 #order-input {
   width: 100%;
   display: inline-block;

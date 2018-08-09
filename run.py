@@ -152,9 +152,12 @@ def process():
     user = mongo.db.users.find_one({"username": session["username"]})
     orders = mongo.db.orders
     
+    print(order_string)
+    
     # UPLOAD ORDER
     if order_string:
         order_words = order_string.split(" ")
+        print("order words: {}".format(order_words))
         order = {
             "nation" : user["nation"],
             "piece_type" : order_words[0],
