@@ -1529,3 +1529,157 @@ new phase: fall order phase.
 
 
 new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+
+
+
+
+
+
+army at lvp is now challenging wal
+
+
+
+
+
+
+
+
+army at lvp has moved to wal
+
+new phase: fall order phase.
+
+
+army at wal is now challenging lon
+
+
+
+
+
+
+
+
+army at wal has moved to lon
+
+new phase: fall order phase.
+
+
+army at lon is now challenging wal
+
+
+
+
+
+
+
+
+army at lon has moved to wal
+
+
+
+new phase: fall build phase.
+
+
+army at lon is now challenging yor
+
+new phase: spring order phase.
+new year: 1902.

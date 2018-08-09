@@ -2,11 +2,8 @@
 
 {% block board %}
 
-  {% for army in armies %}
-  <div id='{{army.territory.name}}' class="piece {{army.nation.name}}-piece">A</div>
-  {% endfor %}
-  {% for fleet in fleets %}
-  <div id='{{fleet.territory.name}}' class="piece {{fleet.nation.name}}-piece">F</div>
+  {% for piece in pieces %}
+  <div id='{{piece.territory}}' class='{{piece.nation}}-piece piece'>A</div>
   {% endfor %}
 
 {% endblock %}

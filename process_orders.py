@@ -66,15 +66,8 @@ def process_orders(mongo_orders, mongo_pieces):
         if piece["piece_type"] == "fleet":
             setattr(nation, "pieces", [Fleet(piece["_id"], territory, nation)])
             
-        for piece in Piece.all_pieces:
-            print (piece.territory.name)
-            
-            
-    print(mongo_orders)
-            
     # assign order to piece
     for order in mongo_orders:
-        print("order: {}".format(order))
         
         nation = order["nation"]  
         command = order["command"]
@@ -97,7 +90,6 @@ def process_orders(mongo_orders, mongo_pieces):
         if command != "build":
             piece = piece_exists_in_territory_and_belongs_to_user(origin)
             if piece:
-                print("piece exists")
                 piece.order = order
         else:
             Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
@@ -108,7 +100,6 @@ def process_orders(mongo_orders, mongo_pieces):
     
     for piece in Piece.all_pieces:
         piece.assign_piece_to_order()
-        print("piece order: {}".format(piece.order))
     
     for order in Order.all_orders:
     # convoy orders have to be carried out before other orders
@@ -116,7 +107,6 @@ def process_orders(mongo_orders, mongo_pieces):
             order.process_order()
             
     for order in Order.all_orders:
-        print(order.piece.territory)
         if not isinstance(order, Convoy):
             order.process_order()
         
@@ -130,9 +120,6 @@ def process_orders(mongo_orders, mongo_pieces):
             if piece.retreat and not piece.can_retreat():
                 piece.destroy()
     
-    for piece in Piece.all_pieces:
-        print("piece is now in {}".format(piece.territory.name))
-    
     # remove all supports
     for piece in Piece.all_pieces:
         setattr(piece, "support", {})
@@ -145,12 +132,13 @@ def process_orders(mongo_orders, mongo_pieces):
     
     piece_list = []
     for piece in Piece.all_pieces:
-        print (piece.territory)
         piece_list.append({
             "territory": piece.territory.name, 
             "nation": piece.nation.name, 
             "piece_type": piece.piece_type, 
             "previous_territory": piece.previous_territory.name,
-            "retreat": piece.retreat
+            "retreat": piece.retreat,
+            "_id": piece.mongo_id
+            
         })
     return piece_list

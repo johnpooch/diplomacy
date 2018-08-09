@@ -122,6 +122,9 @@ def attempt_login(request):
 
 def checkAllOrdersSubmitted():
     
+    print(mongo.db.orders.count())
+    print(mongo.db.pieces.count())
+    
     if(mongo.db.orders.count() == mongo.db.pieces.count()):
         
         print("processing orders")
@@ -132,6 +135,15 @@ def checkAllOrdersSubmitted():
         updated_pieces = process_orders(orders, pieces)
         
         print(updated_pieces)
+        
+        for piece in updated_pieces:
+            mongo.db.pieces.update({"_id": piece["_id"]}, {
+                "nation": piece["nation"], 
+                "piece_type": piece["piece_type"],
+                "territory": piece["territory"], 
+                "previous_territory": piece["previous_territory"], 
+                "retreat": piece["retreat"], 
+            })
         
         mongo.db.orders.remove({})
         mongo.db.users.update({}, {"$set": {"num_orders": 0} })
@@ -159,15 +171,20 @@ def board():
     players = mongo.db.users.find({})
     messages = mongo.db.messages.find({})
     territories = [territory.name for territory in Territory.all_territories]
+    
+    pieces = [piece for piece in mongo.db.pieces.find({})]
         
     if 'username' in session:     
         user = mongo.db.users.find_one({"username": session["username"]})
         
     if user:
         user['orders'] = mongo.db.orders.find({"nation": user["nation"]})
-        pieces = [piece for piece in Piece.all_pieces if piece.nation.name == user["nation"]]
+        user_pieces = [piece for piece in mongo.db.pieces.find({"nation": user["nation"]})]
+        
+    for piece in pieces:
+        print("piece {}".format(piece))
     
-    return render_template("board.html", pieces = pieces, armies = Army.all_armies, fleets = Fleet.all_fleets, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
+    return render_template("board.html", user_pieces = user_pieces, pieces = pieces, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
     
 # process ---------------------------------------
 
