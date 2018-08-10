@@ -19,63 +19,7 @@ mongo = PyMongo(app)
 
 # -----------------------------------------------
 
-# ANNOUNCEMENTS ===================================================================================
-
-# Write to file -----------------------------------------------------------------------------------
-
-def write_to_file(filename, data):
-    with open(filename, "a") as file:
-        file.writelines(data)
-
-# add announcements -------------------------------------------------------------------------------
-
-def add_announcements(username, announcement):
-    announcement = "({}) {}: {}\n".format(datetime.now().strftime("%H:%M:%S"), username, announcement)
-    write_to_file("data/announcements.txt", announcement)
-
-# get announcements -------------------------------------------------------------------------------
-    
-def get_announcements():
-    announcements_list = []
-    with open("data/announcements.txt", "r") as announcements: 
-        announcements_list = announcements.readlines()
-    return announcements_list
-    
-# add messages -------------------------------------------------------------------------------
-
-def add_messages(username, message):
-    message = "({}) {}: {}\n".format(datetime.now().strftime("%H:%M:%S"), username, message)
-    write_to_file("data/messages.txt", message)
-    
-# get messages -------------------------------------------------------------------------------
-    
-def get_messages():
-    messages_list = []
-    with open("data/messages.txt", "r") as announcements: 
-        messages_list = messages.readlines()
-    return messages_list
-
-# Create order dict -----------------------------------------------------------------------------------
-
-def create_order_dicts(request):
-    for key in request.form.keys():
-        key_words = key.split()
-        value_words = request.form[key].split()
-        command = value_words[0]
-        order = {
-            "nation": key_words[0],
-            "territory": key_words[1],
-            "command": value_words[0],
-        }
-        if command in ["move", "retreat"]:
-            order["target"] = value_words[1]
-            
-        if command in ["support", "convoy"]:
-            order["object"] = value_words[1]
-            order["target"] = value_words[2]
-        
-        mongo.db.orders.insert(order)
-    mongo.db.users.update_one({"username": session["username"]}, { "$set": { "orders_finalised" : True }})
+# RUN FUNCTIONS ===================================================================================
 
 # Create player -----------------------------------------------------------------------------------
     
@@ -96,8 +40,8 @@ def create_player(request):
         "email": request.form["email"],
         "password": request.form["password"],
         "nation": player_nation,
+        "orders_submitted": orders_submitted,
         "num_pieces": num_pieces,
-        "num_orders": 0,
         "orders_finalised": False
         }
     )
@@ -118,41 +62,59 @@ def attempt_login(request):
     flash('Login unsuccessful. Invalid username/password combination.', 'danger')
     return False
     
+# Update pieces db --------------------------------------------------------------------------------
+
+def update_pieces_db(updated_pieces):
+    for piece in updated_pieces:
+        print(piece["_id"])
+        mongo.db.pieces.update({"_id": piece["_id"]}, 
+        {
+            "nation": piece["nation"], 
+            "piece_type": piece["piece_type"],
+            "territory": piece["territory"], 
+            "previous_territory": piece["previous_territory"], 
+            "retreat": piece["retreat"], 
+        })
+    return True
+    
+# Clear db for next turn --------------------------------------------------------------------------
+
+def clear_db_for_next_turn():
+    mongo.db.orders.remove({})
+    mongo.db.users.update({}, {"$set" : { "orders_submitted" : 0 }})
+    
+# End turn ----------------------------------------------------------------------------------------
+
+def end_turn(orders, pieces):
+    
+    orders_to_be_processed = []
+    
+    for order in orders:
+        orders_to_be_processed.append(order)
+    
+    updated_pieces = process_orders(orders_to_be_processed, pieces)
+    print(updated_pieces)
+    update_pieces_db(updated_pieces)
+    
+    clear_db_for_next_turn()
+    
+    
 # Check if all orders submitted -------------------------------------------------------------------
 
 def checkAllOrdersSubmitted():
     
-    print(mongo.db.orders.count())
-    print(mongo.db.pieces.count())
-    
     if(mongo.db.orders.count() == mongo.db.pieces.count()):
-        
-        print("processing orders")
         
         orders = mongo.db.orders.find({})
         pieces = mongo.db.pieces.find({})
         
-        updated_pieces = process_orders(orders, pieces)
-        
-        print(updated_pieces)
-        
-        for piece in updated_pieces:
-            mongo.db.pieces.update({"_id": piece["_id"]}, {
-                "nation": piece["nation"], 
-                "piece_type": piece["piece_type"],
-                "territory": piece["territory"], 
-                "previous_territory": piece["previous_territory"], 
-                "retreat": piece["retreat"], 
-            })
-        
-        mongo.db.orders.remove({})
-        mongo.db.users.update({}, {"$set": {"num_orders": 0} })
+        end_turn(orders, pieces)
         
         return True
-    else:
-        print("not all orders have been given")
-        return False
-
+    return False
+    
+    
+    
 
 # ROUTES ==========================================================================================
 
@@ -197,7 +159,7 @@ def process():
     # if delete
     if "id" in request.form:
         orders.delete_one({"_id": ObjectId(request.form["id"])})
-        mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": -1}})
+        mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "orders_submitted": -1 }})
         
     # if create
     else:
@@ -225,7 +187,7 @@ def process():
             else:
                 print("order for piece at {} not in db".format( order["territory"]))
                 orders.insert(order)
-                mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "num_orders": 1,}})
+                mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "orders_submitted": 1 }})
                 
     if checkAllOrdersSubmitted():
         return redirect(url_for('board'))
@@ -235,7 +197,7 @@ def process():
         orders = orders.find({"nation" : user["nation"]})
         user = mongo.db.users.find_one({"username": session["username"]})
         return_orders = []
-        return_orders.append({"num_orders": user["num_orders"], "num_pieces": user["num_pieces"]})
+        return_orders.append({"orders_submitted": user["orders_submitted"], "num_pieces": user["num_pieces"]})
         
         for order in orders:
             order_for_js = {

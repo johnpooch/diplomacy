@@ -10,7 +10,7 @@ from wtforms.validators import DataRequired
 from forms import RegistrationForm, LoginForm
 
 from datetime import datetime
-import random
+
 
 from initial_game_state import *
 

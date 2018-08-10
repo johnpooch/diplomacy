@@ -61,14 +61,14 @@ function resetOrderForm(data) {
     $('#order-form').css({"display": "none"});
     
     // hide create order button if player has reached number of orders
-    if (data[0]["num_orders"] == data[0]["num_pieces"]) {
+    if (data[0]["orders_submitted"] == data[0]["num_pieces"]) {
         $('#create-order').css({"display": "none"});
     }
     else {
         $('#create-order').css({"display": "block"});
     }
     // show num orders given and num orders to give
-    $('#orders-given').text('Orders: ' + data[0]["num_orders"] + '/' + data[0]["num_pieces"])
+    $('#orders-given').text('Orders: ' + data[0]["orders_submitted"] + '/' + data[0]["num_pieces"])
 }
 
 // ================================================================================================
@@ -98,7 +98,7 @@ function getOrderString(val) {
 
 function createTable(data) {
     
-    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["num_orders"] + '/' + data[0]["num_pieces"] + '</th></tr></thead>';
+    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["orders_submitted"] + '/' + data[0]["num_pieces"] + '</th></tr></thead>';
     var tableBody = '<tbody>'
     
     $.each(data.slice(1), function(index, val) {

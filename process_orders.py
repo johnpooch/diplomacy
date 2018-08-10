@@ -23,6 +23,48 @@ def piece_exists_in_territory_and_belongs_to_user(territory):
     for piece in Piece.all_pieces:
         if piece.territory == territory:
             return piece
+            
+def create_piece_objects(mongo_pieces):
+    for piece in mongo_pieces:
+        nation = find_nation_by_name(piece["nation"])
+        territory = find_territory_by_name(piece["territory"])
+        
+        if piece["piece_type"] == "army":
+            setattr(nation, "pieces", [Army(piece["_id"], territory, nation)])
+            
+        if piece["piece_type"] == "fleet":
+            setattr(nation, "pieces", [Fleet(piece["_id"], territory, nation)])
+            
+def assign_orders_to_pieces(mongo_orders):
+    print("ARRGGYHHHH")
+    for order in mongo_orders:
+        nation = order["nation"]  
+        command = order["command"]
+        origin = find_territory_by_name(order["territory"])
+        
+        if command == "hold":
+            order = Hold(nation, origin)
+        if command == "convoy":
+            order = Convoy(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
+        if command == "move":
+            order = Move(nation, origin, find_territory_by_name(order["target"]))
+        if command == "support":
+            # need to account for army ven support nap to hold!
+            order = Support(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
+        if command == "retreat":
+            order = Retreat(nation, origin, find_territory_by_name(order["target"]))
+        if command == "destroy":
+            order = Destroy(nation, origin)
+        
+        if command != "build":
+            write_to_log("hello?")
+            piece = piece_exists_in_territory_and_belongs_to_user(origin)
+            if piece:
+                print("ARRGGYHHHH")
+                piece.order = order
+                write_to_log("order: {} had been assigned to piece at {}".format(order, piece.territory))
+        else:
+            Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
 
 # Resolve Challenges ==================================================================================
 
@@ -53,52 +95,22 @@ def resolve_challenges():
 
 def process_orders(mongo_orders, mongo_pieces):
     
+    clear_log()
+    
+    for order in mongo_orders:
+        print("this is the order inside process_orders: {}".format(order))
+    print(mongo_orders)
+    
     write_to_log("\n")
 
     # create piece object from mongo db piece
-    for piece in mongo_pieces:
-        nation = find_nation_by_name(piece["nation"])
-        territory = find_territory_by_name(piece["territory"])
-        
-        if piece["piece_type"] == "army":
-            setattr(nation, "pieces", [Army(piece["_id"], territory, nation)])
-            
-        if piece["piece_type"] == "fleet":
-            setattr(nation, "pieces", [Fleet(piece["_id"], territory, nation)])
+    create_piece_objects(mongo_pieces)
             
     # assign order to piece
-    for order in mongo_orders:
-        
-        nation = order["nation"]  
-        command = order["command"]
-        origin = find_territory_by_name(order["territory"])
-        
-        if command == "hold":
-            order = Hold(nation, origin)
-        if command == "convoy":
-            order = Convoy(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
-        if command == "move":
-            order = Move(nation, origin, find_territory_by_name(order["target"]))
-        if command == "support":
-            # need to account for army ven support nap to hold!
-            order = Support(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
-        if command == "retreat":
-            order = Retreat(nation, origin, find_territory_by_name(order["target"]))
-        if command == "destroy":
-            order = Destroy(nation, origin)
-        
-        if command != "build":
-            piece = piece_exists_in_territory_and_belongs_to_user(origin)
-            if piece:
-                piece.order = order
-        else:
-            Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
-        
-            
-            
-            
+    assign_orders_to_pieces(mongo_orders)
     
     for piece in Piece.all_pieces:
+        print("this is how many piece objects exist: {}".format(piece.territory.name))
         piece.assign_piece_to_order()
     
     for order in Order.all_orders:
@@ -127,8 +139,8 @@ def process_orders(mongo_orders, mongo_pieces):
     # change phase
     game_properties.end_phase()
         
-    Move.all_moves =[]
-    Order.all_orders =[]
+    Move.all_moves = []
+    Order.all_orders = []
     
     piece_list = []
     for piece in Piece.all_pieces:
@@ -139,6 +151,11 @@ def process_orders(mongo_orders, mongo_pieces):
             "previous_territory": piece.previous_territory.name,
             "retreat": piece.retreat,
             "_id": piece.mongo_id
-            
         })
+        
+    Piece.all_pieces = []
+    Army.all_armies = []
+    Fleet.all_fleets = []
+        
+    print("\n\n\n{}\n\n\n".format(piece_list))
     return piece_list
