@@ -3,6 +3,7 @@ from flask import jsonify
 from flask_socketio import SocketIO, send
 from process_orders import *
 from nation import Nation
+from initial_game_state import initial_pieces, initial_game_properties, initial_ownership, dummy_players
 from get_game_state import get_game_state
 from bson.objectid import ObjectId
 
@@ -20,6 +21,46 @@ mongo = PyMongo(app)
 # -----------------------------------------------
 
 # RUN FUNCTIONS ===================================================================================
+
+# fill out orders --------------------------------------------------------------------------------- 
+
+def fill_out_orders(file_name):
+    mongo.db.orders.remove({})
+    orders = mongo.db.orders
+    for order in first_orders:
+        orders.insert(order)
+        
+# Populate Users ----------------------------------------------------------------------------------
+
+""" creates seven dummy users """
+
+def populate_users():
+    mongo.db.users.remove({})
+    users = mongo.db.users
+    for player in dummy_players:
+        users.insert(player)
+    session["username"] = dummy_players[0]["username"]
+
+# clear db ----------------------------------------------------------------------------------------
+
+def clear_db():
+    # NEED TO CLEAR ORDER HISTORY
+    mongo.db.pieces.remove({})
+    mongo.db.users.remove({})
+    mongo.db.ownership.remove({})
+    mongo.db.orders.remove({})
+    mongo.db.game_properties.remove({})
+
+# initialise game db ------------------------------------------------------------------------------
+
+def initialise_game_db():
+    clear_db()
+    pieces = mongo.db.pieces
+    for piece in initial_pieces:
+        pieces.insert(piece)
+    mongo.db.ownership.insert(initial_ownership)
+    mongo.db.game_properties.insert(initial_game_properties)
+    flash('Game initialised!', 'success')
 
 # Create player -----------------------------------------------------------------------------------
     
@@ -80,6 +121,10 @@ def update_pieces_db(updated_pieces):
 # Clear db for next turn --------------------------------------------------------------------------
 
 def clear_db_for_next_turn():
+    
+    for order in mongo.db.orders.find({}):
+        mongo.db.order_history.insert(order)
+    
     mongo.db.orders.remove({})
     mongo.db.users.update({}, {"$set" : { "orders_submitted" : 0 }})
     
@@ -112,9 +157,7 @@ def checkAllOrdersSubmitted():
         
         return True
     return False
-    
-    
-    
+
 
 # ROUTES ==========================================================================================
 
@@ -135,6 +178,7 @@ def board():
     territories = [territory.name for territory in Territory.all_territories]
     
     pieces = [piece for piece in mongo.db.pieces.find({})]
+    user_pieces = []
         
     if 'username' in session:     
         user = mongo.db.users.find_one({"username": session["username"]})
@@ -312,8 +356,7 @@ def populate():
 
 @app.route("/initialise")
 def initialise():
-    for nation in mongo.db.nations.find({}):
-        mongo.db.nations.update_one(nation, {'$set': {'available': True }})
+    initialise_game_db()
     return redirect(url_for('board'))
     
 # test_1 ------------------------------------

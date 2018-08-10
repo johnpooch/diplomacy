@@ -1,18 +1,58 @@
 
 
-hello?
-order: 1901, <phase.Fall_Order_Phase object at 0x7f0e5c3546d8>: piece at edi, belonging to england, move to cly. had been assigned to piece at Name: edi, Display Name: edinburgh
-army at edi is now challenging cly
+army at par is now challenging bur
+fleet at bre is now challenging mid
+army at mar is now challenging spa
+fleet at kie is now challenging hol
+army at ber is now challenging kie
+army at mun is now challenging ruh
+army at ven is now challenging pie
+fleet at nap is now challenging ion
+army at rom is now challenging nap
+army at lvp is now challenging edi
+fleet at edi is now challenging nth
+fleet at lon is now challenging eng
+army at vie is now challenging bud
+fleet at tri is now challenging alb
+army at bud is now challenging rum
+army at mos is now challenging ukr
+army at war is now challenging gal
+fleet at sev is now challenging bla
+fleet at stp_sc is now challenging bot
+fleet at ank is now challenging bla
+army at con is now challenging bul
+army at smy is now challenging con
 
 
 
 
 
 
+bounced piece at sev is now challenging its own territory
+bounced piece at ank is now challenging its own territory
 
 
-army at edi has moved to cly
+army at par has moved to bur
+fleet at bre has moved to mid
+army at mar has moved to spa
+fleet at kie has moved to hol
+army at ber has moved to kie
+army at mun has moved to ruh
+army at ven has moved to pie
+fleet at nap has moved to ion
+army at rom has moved to nap
+army at lvp has moved to edi
+fleet at edi has moved to nth
+fleet at lon has moved to eng
+army at vie has moved to bud
+fleet at tri has moved to alb
+army at bud has moved to rum
+army at mos has moved to ukr
+army at war has moved to gal
+fleet at sev has moved to sev
+fleet at stp_sc has moved to bot
+fleet at ank has moved to ank
+army at con has moved to bul
+army at smy has moved to con
 
-
-
-new phase: fall build phase.
+new phase: fall order phase.

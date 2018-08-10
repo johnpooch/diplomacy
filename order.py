@@ -7,6 +7,7 @@ class Order():
     all_orders = []
     
     def __init__(self, player, territory):
+        print("haw haw haw")
         Order.all_orders.append(self)
         self.player = player
         self.territory = territory
@@ -16,6 +17,7 @@ class Order():
         self.report = ""
         self.bounced = False
         self.piece = None
+        print(Order.all_orders)
     
     def get_object_by_territory(self, territory):
         return [piece for piece in Piece.all_pieces if piece.territory.name == territory.name][0]
@@ -92,6 +94,8 @@ class Move(Order):
             self.bounced = True
     
     def target_accessible_by_convoy(self, territory):
+        print(self)
+        print(territory)
         for piece in [piece for piece in Piece.all_pieces if piece.territory in territory.neighbours]:
             if piece in self.piece.convoyed_by and self.piece.convoyed_by[piece] == self.target:
                 if self.territory_is_neighbour(piece.territory):
@@ -101,6 +105,7 @@ class Move(Order):
         return False
 
     def move_is_valid(self):
+        print(self)
         if not (self.target_accessible_by_convoy(self.territory) or self.territory_is_neighbour(self.target)):
             self.fail("move failed: {} is not a neighbour of {} and is not accessible by convoy".format(self.target.name, self.territory.name))
             return False
@@ -117,10 +122,10 @@ class Move(Order):
             print(self.report)
         
     def __repr__(self):
-        return "{}, {}: Move({}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.target.name)
+        return "{}, {}: Move({}, {})".format(self.year, self.phase, self.player, self.territory.name)
         
     def __str__(self):
-        return "{}, {}: piece at {}, belonging to {}, move to {}.".format(self.year, self.phase, self.territory.name, self.player, self.target.name)
+        return "{}, {}: piece at {}, belonging to {}, move to .".format(self.year, self.phase, self.territory.name, self.player)
     
 # Support -----------------------------------------------------------------------------------------
         

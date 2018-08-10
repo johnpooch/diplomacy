@@ -266,3 +266,286 @@ setattr(stp_sc, 'parent_territory', stp)
 # setattr(italy, "pieces", [Army(rom, italy), Fleet(nap, italy), Army(ven, italy)])
 # setattr(russia, "pieces", [Army(mos, russia), Army(war, russia), Fleet(stp_sc, russia), Fleet(sev, russia)])
 # setattr(turkey, "pieces", [Army(con, turkey), Army(smy, turkey), Fleet(ank, turkey)])
+
+initial_ownership = {
+    "ank": "turkey",
+    "arm": "turkey",
+    "bel": "neutral",
+    "bre": "france",
+    "bud": "austria",
+    "bul": "neutral",
+    "con": "turkey",
+    "den": "neutral",
+    "edi": "england",
+    "gas": "france",
+    "gre": "neutral",
+    "hol": "neutral",
+    "kie": "germany",
+    "lon": "england",
+    "lvp": "england",
+    "mar": "france",
+    "mun": "germany",
+    "mos": "russia",
+    "nap": "italy",
+    "par": "france",
+    "por": "neutral",
+    "rom": "italy",
+    "ruh": "germany",
+    "rum": "neutral",
+    "ser": "neutral",
+    "sev": "russia",
+    "smy": "turkey",
+    "spa": "neutral",
+    "swe": "neutral",
+    "tri": "austria",
+    "tun": "neutral",
+    "ven": "italy",
+    "vie": "austria",
+    "war": "russia"
+}
+
+initial_pieces = [
+    {
+        "territory": "vie",
+        "previous_territory": "vie",
+        "nation": "austria",
+        "piece_type": "army",
+		"retreat": False
+    },
+    {
+        "territory": "bud",
+        "previous_territory": "bud",
+        "nation": "austria",
+        "piece_type": "army",
+		"retreat": False
+    },
+    {
+        "territory": "tri",
+        "previous_territory": "tri",
+        "nation": "austria",
+        "piece_type": "fleet",
+		"retreat": False
+    },
+    {
+        "territory": "lon",
+        "previous_territory": "lon",
+        "nation": "england",
+        "piece_type": "fleet",
+		"retreat": False
+    },
+    {
+        "territory": "edi",
+        "previous_territory": "edi",
+        "nation": "england",
+        "piece_type": "fleet",
+		"retreat": False
+    },
+    {
+        # TESTING
+        "territory": "lvp",
+        "previous_territory": "lvp",
+        "nation": "england",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "par",
+        "previous_territory": "par",
+        "nation": "france",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "mar",
+        "previous_territory": "mar",
+        "nation": "france",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "bre",
+        "previous_territory": "bre",
+        "nation": "france",
+        "piece_type": "fleet",
+		"retreat": False
+        
+    },
+    {
+        "territory": "ber",
+        "previous_territory": "ber",
+        "nation": "germany",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "mun",
+        "previous_territory": "mun",
+        "nation": "germany",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "kie",
+        "previous_territory": "kie",
+        "nation": "germany",
+        "piece_type": "fleet",
+		"retreat": False
+        
+    },
+    {
+        "territory": "rom",
+        "previous_territory": "rom",
+        "nation": "italy",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "ven",
+        "previous_territory": "ven",
+        "nation": "italy",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "nap",
+        "previous_territory": "nap",
+        "nation": "italy",
+        "piece_type": "fleet",
+		"retreat": False
+        
+    },
+    {
+        "territory": "mos",
+        "previous_territory": "mos",
+        "nation": "russia",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "war",
+        "previous_territory": "war",
+        "nation": "russia",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "sev",
+        "previous_territory": "sev",
+        "nation": "russia",
+        "piece_type": "fleet",
+		"retreat": False
+        
+    },
+    {
+        "territory": "stp_sc",
+        "previous_territory": "stp_sc",
+        "nation": "russia",
+        "piece_type": "fleet",
+		"retreat": False,
+		"coast": "sc"
+    },
+    {
+        "territory": "con",
+        "previous_territory": "con",
+        "nation": "turkey",
+        "piece_type": "army",
+		"retreat": False
+        
+    },
+    {
+        "territory": "ank",
+        "previous_territory": "ank",
+        "nation": "turkey",
+        "piece_type": "fleet",
+		"retreat": False
+        
+    },
+    {
+        "territory": "smy",
+        "previous_territory": "smy",
+        "nation": "turkey",
+        "piece_type": "army",
+		"retreat": False
+        
+    }
+]
+
+initial_game_properties = {
+    "game_started": False,
+    "phase": 0,
+    "year": 1901,
+}
+
+first_orders = [
+    {
+        
+    }
+    ]
+    
+dummy_players = [
+    {
+        "username": "john",
+        "email": "john@john.com",
+        "password": "abc",
+        "nation": "france",
+        "orders_submitted" : 0, 
+        "num_pieces": 3
+    },
+    {
+        "username": "ross",
+        "email": "ross@ross.com",
+        "password": "abc", 
+        "nation": "germany",
+        "orders_submitted" : 0, 
+        "num_pieces": 3
+    },
+    {
+        "username": "hugh",
+        "email": "hugh@hugh.com",
+        "password": "abc", 
+        "nation": "italy",
+        "orders_submitted" : 0, 
+        "num_pieces": 3
+    },
+    {
+        "username": "alex",
+        "email": "alex@alex.com",
+        "password": "abc",
+        "nation": "england",
+        "orders_submitted" : 0, 
+        "num_pieces": 3
+    },
+    {
+        "username": "pearse",
+        "email": "pearse@pearse.com",
+        "password": "abc",
+        "nation": "austria",
+        "orders_submitted" : 0, 
+        "num_pieces": 3
+    },
+    {
+        "username": "ollie",
+        "email": "ollie@ollie.com",
+        "password": "abc",
+        "nation": "russia",
+        "orders_submitted" : 0, 
+        "num_pieces": 4
+    },
+    {
+        "username": "niall",
+        "email": "niall@niall.com",
+        "password": "abc",
+        "nation": "turkey",
+        "orders_submitted" : 0, 
+        "num_pieces": 3
+    },
+]

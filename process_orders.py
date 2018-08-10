@@ -36,18 +36,22 @@ def create_piece_objects(mongo_pieces):
             setattr(nation, "pieces", [Fleet(piece["_id"], territory, nation)])
             
 def assign_orders_to_pieces(mongo_orders):
-    print("ARRGGYHHHH")
     for order in mongo_orders:
+        print("ARRGGYHHHH")
         nation = order["nation"]  
         command = order["command"]
         origin = find_territory_by_name(order["territory"])
+        print(origin)
         
         if command == "hold":
             order = Hold(nation, origin)
         if command == "convoy":
             order = Convoy(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
+            
         if command == "move":
             order = Move(nation, origin, find_territory_by_name(order["target"]))
+            print("teehee")
+            
         if command == "support":
             # need to account for army ven support nap to hold!
             order = Support(nation, origin, find_territory_by_name(order["object"]), find_territory_by_name(order["target"]))
@@ -57,12 +61,10 @@ def assign_orders_to_pieces(mongo_orders):
             order = Destroy(nation, origin)
         
         if command != "build":
-            write_to_log("hello?")
             piece = piece_exists_in_territory_and_belongs_to_user(origin)
             if piece:
-                print("ARRGGYHHHH")
-                piece.order = order
-                write_to_log("order: {} had been assigned to piece at {}".format(order, piece.territory))
+                setattr(piece, "order", order)
+                print(piece.order)
         else:
             Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
 
@@ -96,11 +98,6 @@ def resolve_challenges():
 def process_orders(mongo_orders, mongo_pieces):
     
     clear_log()
-    
-    for order in mongo_orders:
-        print("this is the order inside process_orders: {}".format(order))
-    print(mongo_orders)
-    
     write_to_log("\n")
 
     # create piece object from mongo db piece
@@ -119,6 +116,7 @@ def process_orders(mongo_orders, mongo_pieces):
             order.process_order()
             
     for order in Order.all_orders:
+        print("order: ".format(order))
         if not isinstance(order, Convoy):
             order.process_order()
         

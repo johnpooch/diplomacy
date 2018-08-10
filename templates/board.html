@@ -3,7 +3,7 @@
 {% block board %}
 
   {% for piece in pieces %}
-  <div id='{{piece.territory}}' class='{{piece.nation}}-piece piece'>A</div>
+  <div id='{{piece.territory}}' class='{{piece.nation}}-piece piece'>{{ piece.piece_type.0|capitalize }}</div>
   {% endfor %}
 
 {% endblock %}
