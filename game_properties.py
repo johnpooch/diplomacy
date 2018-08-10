@@ -5,7 +5,7 @@ from phase import *
 
 class Game_Properties():
     def __init__(self):
-        self.game_started = False
+
         self.phase = Spring_Order_Phase()
         self.year = 1901
         
@@ -18,9 +18,9 @@ class Game_Properties():
         
     def __repr__(self):
         
-        return "{}, {}, {}".format(self.game_started, self.phase.name, self.year) 
+        return "{}, {}".format(self.phase.name, self.year) 
         
     def __str__(self):
-        return "Game Started: {}, Phase: {}, Year: {}".format(self.game_started, self.phase.name, self.year)
+        return "Game Started: Phase: {}, Year: {}".format(self.phase.name, self.year)
         
 game_properties = Game_Properties()

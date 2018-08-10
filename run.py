@@ -103,11 +103,21 @@ def attempt_login(request):
     flash('Login unsuccessful. Invalid username/password combination.', 'danger')
     return False
     
+    
+# Update ownership db --------------------------------------------------------------------------------
+
+def update_ownership_db(updated_ownership_list):
+    print("yo")
+    for updated_ownership in updated_ownership_list:
+        for nation in updated_ownership:
+            mongo.db.ownership.update({}, {"$set" : { nation : updated_ownership[nation] }})
+    return True
+    
+    
 # Update pieces db --------------------------------------------------------------------------------
 
 def update_pieces_db(updated_pieces):
     for piece in updated_pieces:
-        print(piece["_id"])
         mongo.db.pieces.update({"_id": piece["_id"]}, 
         {
             "nation": piece["nation"], 
@@ -126,7 +136,7 @@ def clear_db_for_next_turn():
         mongo.db.order_history.insert(order)
     
     mongo.db.orders.remove({})
-    mongo.db.users.update({}, {"$set" : { "orders_submitted" : 0 }})
+    mongo.db.users.update_many({}, {"$set" : { "orders_submitted" : 0 }})
     
 # End turn ----------------------------------------------------------------------------------------
 
@@ -137,9 +147,12 @@ def end_turn(orders, pieces):
     for order in orders:
         orders_to_be_processed.append(order)
     
-    updated_pieces = process_orders(orders_to_be_processed, pieces)
-    print(updated_pieces)
+    updated_pieces, game_properties, updated_ownership = process_orders(orders_to_be_processed, pieces)
     update_pieces_db(updated_pieces)
+    update_ownership_db(updated_ownership)
+    
+    mongo.db.game_properties.update({}, game_properties)
+    
     
     clear_db_for_next_turn()
     
@@ -148,7 +161,8 @@ def end_turn(orders, pieces):
 
 def checkAllOrdersSubmitted():
     
-    if(mongo.db.orders.count() == mongo.db.pieces.count()):
+    # if(mongo.db.orders.count() == mongo.db.pieces.count()):
+    if(mongo.db.orders.count() == 1):
         
         orders = mongo.db.orders.find({})
         pieces = mongo.db.pieces.find({})
@@ -186,9 +200,6 @@ def board():
     if user:
         user['orders'] = mongo.db.orders.find({"nation": user["nation"]})
         user_pieces = [piece for piece in mongo.db.pieces.find({"nation": user["nation"]})]
-        
-    for piece in pieces:
-        print("piece {}".format(piece))
     
     return render_template("board.html", user_pieces = user_pieces, pieces = pieces, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
     

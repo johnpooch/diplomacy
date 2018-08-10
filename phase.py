@@ -11,7 +11,7 @@ class Phase():
 
 class Fall_Build_Phase(Phase):
     def __init__(self):
-        self.name = "fall build phase"
+        self.name = "fall_build_phase"
     
     def end_phase(self):
         return Spring_Order_Phase()
@@ -26,7 +26,7 @@ class Retreat_Phase(Phase):
     
 class Fall_Retreat_Phase(Retreat_Phase):
     def __init__(self):
-        self.name = "fall retreat phase"
+        self.name = "fall_retreat_phase"
     
     def end_phase(self):
         return Fall_Build_Phase()
@@ -35,7 +35,7 @@ class Fall_Retreat_Phase(Retreat_Phase):
     
 class Spring_Retreat_Phase(Retreat_Phase):
     def __init__(self):
-        self.name = "spring retreat phase"
+        self.name = "spring_retreat_phase"
     
     def end_phase(self):
         return Fall_Order_Phase()
@@ -50,16 +50,9 @@ class Order_Phase(Phase):
     
 class Fall_Order_Phase(Order_Phase):
     def __init__(self):
-        self.name = "fall order phase"
+        self.name = "fall_order_phase"
     
     def end_phase(self):
-
-        # update ownership of territories
-        write_to_log("\n")
-        for piece in Piece.all_pieces:
-            if piece.territory.supply_center and  piece.territory.supply_center != piece.nation:
-                write_to_log("supply center at {}, which belonged to {}, now belongs to {}".format(piece.territory.name, piece.territory.supply_center.name, piece.nation.name))
-                setattr(piece.territory, "supply_center", piece.nation)
                 
         if any([piece.retreat for piece in Piece.all_pieces]):
             return Fall_Retreat_Phase()
@@ -70,7 +63,7 @@ class Fall_Order_Phase(Order_Phase):
     
 class Spring_Order_Phase(Order_Phase):
     def __init__(self):
-        self.name = "spring order phase"
+        self.name = "spring_order_phase"
     
     def end_phase(self):
         if any([piece.retreat for piece in Piece.all_pieces]):

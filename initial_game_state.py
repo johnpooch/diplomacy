@@ -480,16 +480,10 @@ initial_pieces = [
 ]
 
 initial_game_properties = {
-    "game_started": False,
-    "phase": 0,
+    "phase": "spring_order_phase",
     "year": 1901,
 }
 
-first_orders = [
-    {
-        
-    }
-    ]
     
 dummy_players = [
     {

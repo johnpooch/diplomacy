@@ -37,11 +37,9 @@ def create_piece_objects(mongo_pieces):
             
 def assign_orders_to_pieces(mongo_orders):
     for order in mongo_orders:
-        print("ARRGGYHHHH")
         nation = order["nation"]  
         command = order["command"]
         origin = find_territory_by_name(order["territory"])
-        print(origin)
         
         if command == "hold":
             order = Hold(nation, origin)
@@ -50,7 +48,6 @@ def assign_orders_to_pieces(mongo_orders):
             
         if command == "move":
             order = Move(nation, origin, find_territory_by_name(order["target"]))
-            print("teehee")
             
         if command == "support":
             # need to account for army ven support nap to hold!
@@ -64,7 +61,7 @@ def assign_orders_to_pieces(mongo_orders):
             piece = piece_exists_in_territory_and_belongs_to_user(origin)
             if piece:
                 setattr(piece, "order", order)
-                print(piece.order)
+                
         else:
             Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
 
@@ -107,7 +104,6 @@ def process_orders(mongo_orders, mongo_pieces):
     assign_orders_to_pieces(mongo_orders)
     
     for piece in Piece.all_pieces:
-        print("this is how many piece objects exist: {}".format(piece.territory.name))
         piece.assign_piece_to_order()
     
     for order in Order.all_orders:
@@ -116,7 +112,6 @@ def process_orders(mongo_orders, mongo_pieces):
             order.process_order()
             
     for order in Order.all_orders:
-        print("order: ".format(order))
         if not isinstance(order, Convoy):
             order.process_order()
         
@@ -151,9 +146,30 @@ def process_orders(mongo_orders, mongo_pieces):
             "_id": piece.mongo_id
         })
         
+    print(game_properties.phase)
+        
+    # update ownership of territories
+    updated_ownership = []
+    for piece in Piece.all_pieces:
+        print(piece.territory.name)
+        if piece.territory.supply_center and  piece.territory.supply_center != piece.nation:
+            write_to_log("supply center at {}, which belonged to {}, now belongs to {}".format(piece.territory.name, piece.territory.supply_center.name, piece.nation.name))
+            updated_ownership.append({piece.territory.name: piece.nation.name})
+            print("eek")
+        
     Piece.all_pieces = []
+    
+    # check if this is necessary
     Army.all_armies = []
     Fleet.all_fleets = []
+    
+    
+    
+
         
-    print("\n\n\n{}\n\n\n".format(piece_list))
-    return piece_list
+    return_game_properties = {
+        "phase": game_properties.phase.name, 
+        "year": game_properties.year,
+    }
+        
+    return piece_list, return_game_properties, updated_ownership
