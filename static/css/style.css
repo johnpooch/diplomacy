@@ -223,6 +223,11 @@ input.invalid {
   padding-left: 1rem
 }
 
+.separate-tabs {
+  padding-right: .5rem;
+  padding-left: .5rem;
+}
+
 .bg-steel {
   background-color: #5f788a;
 }

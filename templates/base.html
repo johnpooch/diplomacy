@@ -70,58 +70,37 @@
                 <div role="tabpanel">
                   
                   <!-- Nav tabs -->
-                  <ul class="nav nav-tabs" role="tablist">
-                    <div class="row">
+                  <ul class="nav nav-tabs" id=tabContent>
+
                       <!-- Tab Buttons -->
                     
                     
                     
-                    <!-- if logged in -->
+                    <!-- if  not logged in -->
                     {% if not user %}
-                    <!--registration tab -->
-            
                     
-                    <li role="presentation" class="{% if not session['username'] %} active {% endif %} nav-tab-button-style">
-                      <a href="#registrationTab" aria-controls="registrationTab" role="tab" data-toggle="tab">
-                        <h5 class="modal-title" id="intefaceModalLabel">Register</h5>
-                      </a>
-                    </li>
-                    <span> | </span>
+                    <!--registration tab -->
+                    <li><a href="#registrationTab" data-toggle="tab"><h5>Register</h5></a></li>
+                    <span class="separate-tabs"> | </span>
                     
                     <!--log in tab -->
-                    <li role="presentation" class ="nav-tab-button-style">
-                      <a href="#loginTab" aria-controls="loginTab" role="tab" data-toggle="tab">
-                        <h5 class="modal-title" id="intefaceModalLabel">Login</h5>
-                      </a>
-                    </li>
+                    <li><a href="#loginTab" data-toggle="tab"><h5>Login</h5></a></li>
                     
                     {% else %}
                     
                     <!-- orders tab -->
-                    <li role="presentation" class="{% if session['username'] %} active {% endif %} nav-tab-button-style">
-                      <a href="#ordersTab" aria-controls="ordersTab" role="tab" data-toggle="tab">
-                        <h5 class="modal-title" id="intefaceModalLabel">Orders</h5>
-                      </a>
-                    </li>
-                    <span> | </span>
+                    <li class="active"><a href="#ordersTab" data-toggle="tab"><h5>Orders</h5></a></li>
+                    <span class="separate-tabs"> | </span>
                     
                     <!-- messages tab -->
-                    <li role="presentation" class ="nav-tab-button-style">
-                      <a href="#messagesTab" aria-controls="messagesTab" role="tab" data-toggle="tab">
-                        <h5 class="modal-title" id="intefaceModalLabel">Announcements</h5>
-                      </a>
-                    </li>
-                    <span> | </span>
+                    <li><a href="#messagesTab" data-toggle="tab"><h5>Announcements</h5></a></li>
+                    <span class="separate-tabs"> | </span>
                     
                     <!-- log out tab -->
-                    <li role="presentation" class="active nav-tab-button-style">
-                      <a href="{{ url_for('logout') }}">
-                        <h5 class="modal-title" id="intefaceModalLabel">Log Out</h5>
-                      </a>
-                    </li>
+                    <li><a href="{{ url_for('logout') }}"><h5>Log Out</h5></a></li>
                     
                     {% endif %}
-                    </div>
+
                   </ul>
                 <!-- close modal button -->
                 </div>
@@ -318,10 +297,15 @@
                   
                   {% endif %}
                 </div>
-              </div>  
-            <div class="modal-footer">
-              <div class="row"><span>You are logged in as {{user['username']}} <img class="flag" src="{{url_for('static', filename='images/')}}{{user['nation']}}.png"></img></span></div>
-              <hr>
+              </div> 
+            
+              <div class="modal-footer">
+                
+              {% if user %}
+                <div class="row"><span>You are logged in as {{user['username']}} <img class="flag" src="{{url_for('static', filename='images/')}}{{user['nation']}}.png"></img></span></div>
+                <hr>
+              {% endif %}
+                
               {% for player in players %}
                 <span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{player['nation']}}.png"></img>  {{player['username']}}</span>
               {% endfor %}
@@ -362,6 +346,7 @@
   <script type="text/javascript" src="{{ url_for('static', filename='js/modal.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/draggable.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.3/angular.min.js"></script>
   
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
