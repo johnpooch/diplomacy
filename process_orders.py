@@ -38,16 +38,15 @@ def create_piece_objects(mongo_pieces):
 def get_phase_by_string(string):
     # definitely bad code
     
-    if string == "fall_build_phase":
+    if string == "fall build phase":
         return Fall_Build_Phase()
-    if string == "fall_retreat_phase":
+    if string == "fall retreat phase":
         return Fall_Retreat_Phase()
-    if string == "spring_retreat_phase":
+    if string == "spring retreat phase":
         return Spring_Retreat_Phase()
-    if string == "fall_order_phase":
-        print("ay ay ay")
+    if string == "fall order phase":
         return Fall_Order_Phase()
-    if string == "spring_order_phase":
+    if string == "spring order phase":
         return Spring_Order_Phase()
             
 def assign_orders_to_pieces(mongo_orders):

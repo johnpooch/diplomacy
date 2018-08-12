@@ -26,7 +26,7 @@ class Retreat_Phase(Phase):
     
 class Fall_Retreat_Phase(Retreat_Phase):
     def __init__(self):
-        self.name = "fall_retreat_phase"
+        self.name = "fall retreat phase"
     
     def end_phase(self):
         return Fall_Build_Phase()
@@ -35,7 +35,7 @@ class Fall_Retreat_Phase(Retreat_Phase):
     
 class Spring_Retreat_Phase(Retreat_Phase):
     def __init__(self):
-        self.name = "spring_retreat_phase"
+        self.name = "spring retreat phase"
     
     def end_phase(self):
         return Fall_Order_Phase()
@@ -50,7 +50,7 @@ class Order_Phase(Phase):
     
 class Fall_Order_Phase(Order_Phase):
     def __init__(self):
-        self.name = "fall_order_phase"
+        self.name = "fall order phase"
     
     def end_phase(self):
                 
@@ -63,7 +63,7 @@ class Fall_Order_Phase(Order_Phase):
     
 class Spring_Order_Phase(Order_Phase):
     def __init__(self):
-        self.name = "spring_order_phase"
+        self.name = "spring order phase"
     
     def end_phase(self):
         if any([piece.retreat for piece in Piece.all_pieces]):

@@ -480,7 +480,7 @@ initial_pieces = [
 ]
 
 initial_game_properties = {
-    "phase": "spring_order_phase",
+    "phase": "spring order phase",
     "year": 1901,
 }
 
