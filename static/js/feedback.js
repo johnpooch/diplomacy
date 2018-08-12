@@ -10,7 +10,7 @@ var tooManySupportWords = "support order has too many words (ex. 'army tri suppo
 var validOrder = "Order is valid";
 
 var pieceTypes = ["army", "fleet"];
-var commands = ["hold", "move", "support", "convoy"];
+var commands = ["hold", "move", "support", "convoy", "retreat", "disband"];
 var territories = ['adr','aeg','bal','bar','bla','bot','eas','eng','gol','hel','ion','iri','mid','nat','nrg','nth','ska','tyn','wes','alb','ank','apu','arm','ber','bel','bre','cly','con','den','edi','fin','gas','gre','hol','kie','lon','lvn','lvp','mar','naf','nap','nwy','pic','pie','por','rom','rum','pru','sev','smy','swe','syr','tri','tun','tus','ven','wal','yor','boh','bud','bur','gal','mos','mun','par','ruh','ser','sil','tyr','ukr','vie','war','bul','spa','stp','bul_ec','bul_sc','spa_nc','spa_sc','stp_sc','stp_nc'];
 
 function hasNumber(myString) {
@@ -47,9 +47,9 @@ $('.order-input').on('input', function (evt) {
   var words = value.split(" ")
   
   function sanitizeOrder(words) {
-    // remove 'to', 'at', 'will', 'from'
+    // remove 'to', 'at', 'will', 'from', 'in'
     for (var i=words.length-1; i>=0; i--) {
-      if (["to", "at", "will", "from"].indexOf(words[i]) > -1) {
+      if (["to", "at", "will", "from", "in"].indexOf(words[i]) > -1) {
           words.splice(i, 1);
       }
     }
@@ -61,120 +61,153 @@ $('.order-input').on('input', function (evt) {
   preventEnter(event);
   evt.target.className = ''
   
-  // check first word
-  if (words.length > 1) {
-    if (!wordInPieceTypes(words[0])) {
-      console.log('first word is not a piece type')
-      $('#feedback').text(notPieceType);
-      preventEnter(event); 
-      evt.target.className = 'invalid';
-    }
-  }
+  if (words[0] == "build") {
     
-  // check second word
-  if (words.length > 2) {
-    if (!wordInTerritories(words[1])) {
-      console.log('second word is not a valid territory')
-      $('#feedback').text(notTerritory);
-      preventEnter(event);
-      evt.target.className = 'invalid';
+    // check second word
+    if (words.length > 2) {
+      if (!wordInPieceTypes(words[1])) {
+        $('#feedback').text("you must specify what piece type to build (army, fleet)");
+        preventEnter(event); 
+        evt.target.className = 'invalid';
+      }
     }
-  }
-  
-  // check third word
-  if (words.length > 3) {
-    if (!wordInCommands(words[2])) {
-      console.log('third word is not a valid command')
-      $('#feedback').text(notCommand);
-      preventEnter(event);
-      evt.target.className = 'invalid';
+    // check third word
+    if (words.length > 3) {
+      if (!wordInTerritories(words[2])) {
+        $('#feedback').text(notTerritory);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
     }
-  }
-  
-  // check fourth word
-  if (words.length > 4) {
-    if (!wordInTerritories(words[3])) {
-      console.log('fourth word is not a valid territory')
-      $('#feedback').text(notTerritory);
-      preventEnter(event);
-      evt.target.className = 'invalid';
-    }
-  }
-  
-  // check fifth word
-  if (words.length > 5) {
-    if (!wordInTerritories(words[4])) {
-      console.log('fifth word is not a valid territory')
-      $('#feedback').text(notTerritory);
-      preventEnter(event);
-      evt.target.className = 'invalid';
-    }
-  }
-  
-  // if number present
-  if (hasNumber(value)) {
-    $('#feedback').text(numberPresent);
-    preventEnter(event);
-    evt.target.className = 'invalid';
-  }
-  
-  // hold
-  if (words[2] == 'hold') {
     if(words.length > 3) {
-      console.log('command is hold but too many words given')
-      $('#feedback').text(tooManyHoldWords);
+      console.log('command is build but too many words given')
+      $('#feedback').text("build order has too many words (ex. 'build army lon')");
       preventEnter(event);
       evt.target.className = 'invalid';
     }
-    else if (words.length == 3) {
-      console.log('valid hold command')
-      $('#feedback').text("hold order is valid - press enter to issue order");
+    else if (words.length == 3 && wordInTerritories(words[2])) {
+      $('#feedback').text("build order is valid - press enter to issue order");
       evt.target.className = 'valid';
     }
+    
   }
-  
-  // move
-  if (words[2] == 'move') {
-    if(words.length > 4) {
-      console.log('command is move but too many words given')
-      $('#feedback').text(tooManyMoveWords);
+  else {
+    
+    // check first word
+    if (words.length > 1) {
+      if (!wordInPieceTypes(words[0]) || words[0] != "build") {
+        console.log('first word is not a piece type')
+        $('#feedback').text(notPieceType);
+        preventEnter(event); 
+        evt.target.className = 'invalid';
+      }
+    }
+    // check second word
+    if (words.length > 2) {
+      if (!wordInTerritories(words[1])) {
+        console.log('second word is not a valid territory')
+        $('#feedback').text(notTerritory);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+    }
+    
+    // check third word
+    if (words.length > 3) {
+      if (!wordInCommands(words[2])) {
+        console.log('third word is not a valid command')
+        $('#feedback').text(notCommand);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+    }
+    
+    // check fourth word
+    if (words.length > 4) {
+      if (!wordInTerritories(words[3])) {
+        console.log('fourth word is not a valid territory')
+        $('#feedback').text(notTerritory);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+    }
+    
+    // check fifth word
+    if (words.length > 5) {
+      if (!wordInTerritories(words[4])) {
+        console.log('fifth word is not a valid territory')
+        $('#feedback').text(notTerritory);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+    }
+    
+    // if number present
+    if (hasNumber(value)) {
+      $('#feedback').text(numberPresent);
       preventEnter(event);
       evt.target.className = 'invalid';
     }
-    else if (words.length == 4 && wordInTerritories(words[3])) {
-      console.log('valid move command')
-      $('#feedback').text("move order is valid - press enter to issue order");
-      evt.target.className = 'valid';
+    
+    // hold
+    if (words[2] == 'hold') {
+      if(words.length > 3) {
+        console.log('command is hold but too many words given')
+        $('#feedback').text(tooManyHoldWords);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+      else if (words.length == 3) {
+        console.log('valid hold command')
+        $('#feedback').text("hold order is valid - press enter to issue order");
+        evt.target.className = 'valid';
+      }
     }
-  }
-  // support
-  if (words[2] == 'support') {
-    if(words.length > 5) {
-      console.log('command is support but too many words given')
-      $('#feedback').text(tooManySupportWords);
-      preventEnter(event);
-      evt.target.className = 'invalid';
+    
+    // move
+    if (words[2] == 'move') {
+      if(words.length > 4) {
+        console.log('command is move but too many words given')
+        $('#feedback').text(tooManyMoveWords);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+      else if (words.length == 4 && wordInTerritories(words[3])) {
+        console.log('valid move command')
+        $('#feedback').text("move order is valid - press enter to issue order");
+        evt.target.className = 'valid';
+      }
     }
-    else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
-      console.log('valid move command')
-      $('#feedback').text("support order is valid - press enter to issue order");
-      evt.target.className = 'valid';
+    // support
+    if (words[2] == 'support') {
+      if(words.length > 5) {
+        console.log('command is support but too many words given')
+        $('#feedback').text(tooManySupportWords);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+      else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
+        console.log('valid move command')
+        $('#feedback').text("support order is valid - press enter to issue order");
+        evt.target.className = 'valid';
+      }
     }
-  }
-  
-  // convoy
-  if (words[2] == 'convoy') {
-    if(words.length > 5) {
-      console.log('command is convoy but too many words given')
-      $('#feedback').text(tooManySupportWords);
-      preventEnter(event);
-      evt.target.className = 'invalid';
+    
+    // convoy
+    if (words[2] == 'convoy') {
+      if(words.length > 5) {
+        console.log('command is convoy but too many words given')
+        $('#feedback').text(tooManySupportWords);
+        preventEnter(event);
+        evt.target.className = 'invalid';
+      }
+      else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
+        console.log('valid move command')
+        $('#feedback').text("convoy order is valid - press enter to issue order");
+        evt.target.className = 'valid';
+      }
     }
-    else if (words.length == 5 && wordInTerritories(words[3]) && wordInTerritories(words[4])) {
-      console.log('valid move command')
-      $('#feedback').text("convy order is valid - press enter to issue order");
-      evt.target.className = 'valid';
-    }
+    
   }
 
 });

@@ -35,6 +35,21 @@ def create_piece_objects(mongo_pieces):
         if piece["piece_type"] == "fleet":
             setattr(nation, "pieces", [Fleet(piece["_id"], territory, nation)])
             
+def get_phase_by_string(string):
+    # definitely bad code
+    
+    if string == "fall_build_phase":
+        return Fall_Build_Phase()
+    if string == "fall_retreat_phase":
+        return Fall_Retreat_Phase()
+    if string == "spring_retreat_phase":
+        return Spring_Retreat_Phase()
+    if string == "fall_order_phase":
+        print("ay ay ay")
+        return Fall_Order_Phase()
+    if string == "spring_order_phase":
+        return Spring_Order_Phase()
+            
 def assign_orders_to_pieces(mongo_orders):
     for order in mongo_orders:
         nation = order["nation"]  
@@ -92,8 +107,12 @@ def resolve_challenges():
 
 # Process Orders ==================================================================================
 
-def process_orders(mongo_orders, mongo_pieces):
+def process_orders(mongo_orders, mongo_pieces, mongo_game_properties):
     
+    print(mongo_game_properties)
+
+    game_properties = Game_Properties(mongo_game_properties["year"], get_phase_by_string(mongo_game_properties["phase"]))
+    print(game_properties)
     clear_log()
     write_to_log("\n")
 
@@ -146,16 +165,12 @@ def process_orders(mongo_orders, mongo_pieces):
             "_id": piece.mongo_id
         })
         
-    print(game_properties.phase)
-        
     # update ownership of territories
     updated_ownership = []
     for piece in Piece.all_pieces:
-        print(piece.territory.name)
         if piece.territory.supply_center and  piece.territory.supply_center != piece.nation:
             write_to_log("supply center at {}, which belonged to {}, now belongs to {}".format(piece.territory.name, piece.territory.supply_center.name, piece.nation.name))
             updated_ownership.append({piece.territory.name: piece.nation.name})
-            print("eek")
         
     Piece.all_pieces = []
     

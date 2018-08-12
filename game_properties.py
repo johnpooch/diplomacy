@@ -4,10 +4,11 @@ from phase import *
 # Game Properties =================================================================================
 
 class Game_Properties():
-    def __init__(self):
-
-        self.phase = Spring_Order_Phase()
-        self.year = 1901
+    game_properties = ""
+    def __init__(self, year, phase):
+        Game_Properties.game_properties = self
+        self.phase = phase
+        self.year = year
         
     def end_phase(self):
         self.phase = self.phase.end_phase()
@@ -23,4 +24,3 @@ class Game_Properties():
     def __str__(self):
         return "Game Started: Phase: {}, Year: {}".format(self.phase.name, self.year)
         
-game_properties = Game_Properties()

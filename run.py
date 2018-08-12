@@ -140,14 +140,14 @@ def clear_db_for_next_turn():
     
 # End turn ----------------------------------------------------------------------------------------
 
-def end_turn(orders, pieces):
+def end_turn(orders, pieces, game_properties):
     
     orders_to_be_processed = []
     
     for order in orders:
         orders_to_be_processed.append(order)
     
-    updated_pieces, game_properties, updated_ownership = process_orders(orders_to_be_processed, pieces)
+    updated_pieces, game_properties, updated_ownership = process_orders(orders_to_be_processed, pieces, game_properties)
     update_pieces_db(updated_pieces)
     update_ownership_db(updated_ownership)
     
@@ -166,8 +166,9 @@ def checkAllOrdersSubmitted():
         
         orders = mongo.db.orders.find({})
         pieces = mongo.db.pieces.find({})
+        game_properties = mongo.db.game_properties.find_one({})
         
-        end_turn(orders, pieces)
+        end_turn(orders, pieces, game_properties)
         
         return True
     return False
@@ -190,6 +191,8 @@ def board():
     players = mongo.db.users.find({})
     messages = mongo.db.messages.find({})
     territories = [territory.name for territory in Territory.all_territories]
+    
+    game_properties = mongo.db.game_properties.find_one({})
     
     pieces = [piece for piece in mongo.db.pieces.find({})]
     user_pieces = []
@@ -278,12 +281,14 @@ def process():
 def handle_message(msg):
     
     split_message = msg.split(' - ', 1)
-    message_dict = {
-        'sender': split_message[0],
-        'message': split_message[1]
-    }
-    
-    mongo.db.messages.insert(message_dict)
+    print(split_message)
+    if split_message[1] != "":
+        
+        message_dict = {
+            'sender': split_message[0],
+            'message': split_message[1]
+        }
+        mongo.db.messages.insert(message_dict)
     send(message_dict["message"], broadcast=True)
 
 # register --------------------------------------

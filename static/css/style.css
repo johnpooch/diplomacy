@@ -38,6 +38,14 @@ input.invalid {
   margin-top: .6rem;
 }
 
+.year {
+  padding-right: 1rem;
+}
+
+.game-properties {
+  float: right;
+}
+
 #num-orders {
   text-align: right;
   padding-right: .5rem;

@@ -282,6 +282,8 @@
                   <!-- Orders -->
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
                     
+                    <span class="game-properties phase">{{ game_properties.phase }}</span><span class="game-properties year">{{ game_properties.year }}</span>
+                    
                     <div id="tbl_orders"></div>
                     
                     <span><button id="create-order" class="btn btn-default">Create New Order</button></span>
@@ -303,7 +305,7 @@
                       <ul id="messages" class="messages-list">
                         {% for message in messages | reverse %}
                         <li>
-                          <div class="row"><strong>{{ message['sender']|capitalize }}</strong></div>
+                          <div class="row"><span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{message['sender']}}.png"></img><strong>{{ message['sender']|capitalize }}</strong></div>
                           <div class="row">{{message['message']}}</div>
                         </li>
                         <hr>
@@ -334,10 +336,25 @@
   <!-- jquery -->
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var socket = io.connect('http://diplomacy-johnpooch.c9users.io:8080/');
+      socket.on('message', function(message) {
+        $("#messages li:eq(0)").before("<li><div class='row'>"+ message + "</div></li><hr>");
+        $("#messages li:eq(0)").before('<li><div class="row"><span class="player-flag"><img class="flag" src="' + '{{url_for("static", filename="images/")}}' + '{{user.nation}}.png"></img><strong>{{user.nation|capitalize}}<strong></div></li>');
+        
+        
+      })
+      $('#sendButton').on('click', function() {
+        socket.send("{{ user.nation }} - " + $('#myMessage').val());
+        $('#myMessage').val('');
+      })
+    });
+  </script>
+  
   <!--Custom JS-->
   <script type="text/javascript" src="{{ url_for('static', filename='js/orders.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/displayInput.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/messages.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/feedback.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/modal.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/draggable.js') }}"></script>

@@ -1,6 +1,5 @@
 
 
-fleet at mid is now challenging por
 
 
 
@@ -9,7 +8,6 @@ fleet at mid is now challenging por
 
 
 
-fleet at mid has moved to por
+army at smy has moved to smy
 
 new phase: fall_build_phase.
-supply center at por, which belonged to neutral, now belongs to france

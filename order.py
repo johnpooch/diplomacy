@@ -7,12 +7,11 @@ class Order():
     all_orders = []
     
     def __init__(self, player, territory):
-        print("haw haw haw")
         Order.all_orders.append(self)
         self.player = player
         self.territory = territory
-        self.year = game_properties.year
-        self.phase = game_properties.phase
+        self.year = Game_Properties.game_properties.year
+        self.phase = Game_Properties.game_properties.phase
         self.success = True
         self.report = ""
         self.bounced = False
