@@ -196,7 +196,7 @@ input.invalid {
 }
 
 .messages-row {
-  height: 50vh;
+  height: 30vh;
   overflow: overlay;
 }
 

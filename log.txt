@@ -1,5 +1,6 @@
 
 
+fleet at bre is now challenging eng
 
 
 
@@ -8,6 +9,6 @@
 
 
 
-army at smy has moved to smy
+fleet at bre has moved to eng
 
-new phase: fall_build_phase.
+new phase: fall_order_phase.

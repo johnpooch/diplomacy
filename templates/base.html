@@ -317,8 +317,10 @@
                   
                   {% endif %}
                 </div>
-              </div>
+              </div>  
             <div class="modal-footer">
+              <div class="row"><span>You are logged in as {{user['username']}} <img class="flag" src="{{url_for('static', filename='images/')}}{{user['nation']}}.png"></img></span></div>
+              <hr>
               {% for player in players %}
                 <span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{player['nation']}}.png"></img>  {{player['username']}}</span>
               {% endfor %}
