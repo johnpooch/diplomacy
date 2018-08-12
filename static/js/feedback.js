@@ -95,7 +95,7 @@ $('.order-input').on('input', function (evt) {
     
     // check first word
     if (words.length > 1) {
-      if (!wordInPieceTypes(words[0]) || words[0] != "build") {
+      if (!wordInPieceTypes(words[0])) {
         console.log('first word is not a piece type')
         $('#feedback').text(notPieceType);
         preventEnter(event); 

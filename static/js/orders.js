@@ -6,9 +6,11 @@ var orderString = "";
 function parseOrderString(string) {
     var words = string.split(' ');
     for (var i=words.length-1; i>=0; i--) { 
+        console.log("hi")
         if (["to", "at", "will", "from", "in"].indexOf(words[i]) > -1) {
             words.splice(i, 1);
         }
+        console.log("hiya")
     }
     return words.join(' ');
 }

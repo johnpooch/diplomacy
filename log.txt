@@ -1,6 +1,6 @@
 
 
-fleet at bre is now challenging eng
+fleet at mid is now challenging por
 
 
 
@@ -9,6 +9,7 @@ fleet at bre is now challenging eng
 
 
 
-fleet at bre has moved to eng
+fleet at mid has moved to por
 
-new phase: fall_order_phase.
+new phase: fall_build_phase.
+supply center at por, which belonged to neutral, now belongs to france
