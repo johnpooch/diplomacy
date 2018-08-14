@@ -271,7 +271,7 @@
                       <div class="form-group">
                         <input type="text" name="order" class="form-control order-input" id="order-input">
                       </div>
-                    </table>
+                    </form>
                     
 
                   </div>
@@ -281,12 +281,15 @@
                     
                     <span class="game-properties phase">{{ game_properties.phase.split().0|capitalize }} {{ game_properties.year }}: {{ game_properties.phase.split().1|capitalize }} {{ game_properties.phase.split().2|capitalize }} </span>
                     <br>
+                    
                     <div class="row messages-row">
+                      <div id="announcements-label">Announcements</div>
                       <ul id="messages" class="messages-list">
+                        <li></li>
                         {% for message in messages | reverse %}
                         <li>
-                          <div class="row"><span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{message['sender']}}.png"></img><strong>{{ message['sender']|capitalize }}</strong></div>
-                          <div class="row">{{message['message']}}</div>
+                          <div class="row"><span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{message['sender_nation']}}.png"></img><strong>{{ message['sender_name'] }}</strong></div>
+                          <div class="row">{{message['text']}}</div>
                         </li>
                         <hr>
                         {% endfor %}
@@ -294,6 +297,7 @@
                     </div>
                     <input type="text" id="myMessage" name=""/>
                     <button id="sendButton">Post</button>
+                    
                   
                   {% endif %}
                 </div>
@@ -324,20 +328,25 @@
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   
   <script type="text/javascript">
-    $(document).ready(function() {
-      var socket = io.connect('http://diplomacy-johnpooch.c9users.io:8080/');
-      socket.on('message', function(message) {
-        $("#messages li:eq(0)").before("<li><div class='row'>"+ message + "</div></li><hr>");
-        $("#messages li:eq(0)").before('<li><div class="row"><span class="player-flag"><img class="flag" src="' + '{{url_for("static", filename="images/")}}' + '{{user.nation}}.png"></img><strong>{{user.nation|capitalize}}<strong></div></li>');
-        
-        
-      })
-      $('#sendButton').on('click', function() {
-        socket.send("{{ user.nation }} - " + $('#myMessage').val());
-        $('#myMessage').val('');
-      })
+  $(document).ready(function() {
+    var socket = io.connect('http://diplomacy-johnpooch.c9users.io:8080/');
+    
+    // when message received
+    socket.on('message', function(json) {
+      $("#messages li:eq(0)").before("<li><div class='row'>"+ json["text"] + "</div></li><hr>");
+      $("#messages li:eq(0)").before('<li><div class="row"><span class="player-flag"><img class="flag" src="' + '{{url_for("static", filename="images/")}}' + json["sender_nation"] + '.png"></img><strong>' + json["sender_name"] + '<strong></div></li>');
     });
-  </script>
+
+    // send message to run.py
+    $('#sendButton').on('click', function() {
+      var message = {"sender_name": "{{ user.username }}", "sender_nation": "{{ user.nation }}", "text": $('#myMessage').val()};
+      socket.send(message);
+      
+      // empty message
+      $('#myMessage').val('');
+    })
+  });
+</script>
   
   <!--Custom JS-->
   <script type="text/javascript" src="{{ url_for('static', filename='js/orders.js') }}"></script>

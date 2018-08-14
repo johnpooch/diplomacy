@@ -6,11 +6,9 @@ var orderString = "";
 function parseOrderString(string) {
     var words = string.split(' ');
     for (var i=words.length-1; i>=0; i--) { 
-        console.log("hi")
         if (["to", "at", "will", "from", "in"].indexOf(words[i]) > -1) {
             words.splice(i, 1);
         }
-        console.log("hiya")
     }
     return words.join(' ');
 }
@@ -63,14 +61,14 @@ function resetOrderForm(data) {
     $('#order-form').css({"display": "none"});
     
     // hide create order button if player has reached number of orders
-    if (data[0]["orders_submitted"] == data[0]["num_pieces"]) {
+    if (data[0]["orders_submitted"] == data[0]["num_orders"]) {
         $('#create-order').css({"display": "none"});
     }
     else {
         $('#create-order').css({"display": "block"});
     }
     // show num orders given and num orders to give
-    $('#orders-given').text('Orders: ' + data[0]["orders_submitted"] + '/' + data[0]["num_pieces"])
+    $('#orders-given').text('Orders: ' + data[0]["orders_submitted"] + '/' + data[0]["num_orders"])
 }
 
 // ================================================================================================
@@ -100,8 +98,8 @@ function getOrderString(val) {
 
 function createTable(data) {
     
-    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["orders_submitted"] + '/' + data[0]["num_pieces"] + '</th></tr></thead>';
-    var tableBody = '<tbody>'
+    var tableHeader = '<table id="table"><thead><tr><th>Orders</th><th id="num-orders">' + data[0]["orders_submitted"] + '/' + data[0]["num_orders"] + '</th></tr></thead>';
+    var tableBody = '<tbody>';
     
     $.each(data.slice(1), function(index, val) {
         
@@ -112,9 +110,9 @@ function createTable(data) {
         tableBody += '<td><div class="row-data" edit_type="click" col_name="order" draggable="false")>' + orderString + '</div></td>';
         tableBody += '<td><span class="btn-delete"><a href="#" class="btn btn-link delete" row_id="' + row_id + '"><i class="fa fa-minus"></i></a></span></td></tr>';
     });
-    tableBody += '</tbody>'
-    tableBody += '</table>'
-    return tableHeader + tableBody
+    tableBody += '</tbody>';
+    tableBody += '</table>';
+    return tableHeader + tableBody;
 }
 // ================================================================================================
 

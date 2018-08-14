@@ -237,16 +237,16 @@ class Build(Order):
     def process_order(self):
         if (not self.territory.occupied()) and self.territory.has_supply_center_which_belongs_to_player():
             if self.piece_type == "army":
-                self.player.pieces.append(Army(self.territory, self.player))
+                self.player.pieces.append(Army("", self.territory, self.player))
                 write_to_log("army built at {}".format(self.territory.name))
             if self.piece_type == "fleet" and isinstance(self.territory, Coastal):
-                self.player.pieces.append(Fleet(self.territory, self.player))
+                self.player.pieces.append(Fleet("", self.territory, self.player))
                 write_to_log("fleet built at {}".format(self.territory.name))
               
     def __repr__(self):
-        return "{}, {}: Build({}, {}, {})".format(self.year, self.phase, self.player, self.piece_type, self.territory)
+        return "{}, {}: Build({}, {})".format(self.year, self.phase.name, self.player.name, self.territory.name)
         
     def __str__(self):
-        return "{}, {}: {} build {} at {}.".format(self.year, self.phase, self.player, self.piece_type, self.territory)
+        return "{}, {}: {} build at {}.".format(self.year, self.phase.name, self.player.name, self.territory.name)
         
 from piece import *

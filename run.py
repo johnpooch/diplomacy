@@ -1,6 +1,8 @@
 from dependencies import *
 from flask import jsonify
 from flask_socketio import SocketIO, send
+from end_turn import end_turn
+from create_player import create_player
 from process_orders import *
 from nation import Nation
 from initial_game_state import initial_pieces, initial_game_properties, initial_ownership, dummy_players
@@ -21,14 +23,6 @@ mongo = PyMongo(app)
 # -----------------------------------------------
 
 # RUN FUNCTIONS ===================================================================================
-
-# fill out orders --------------------------------------------------------------------------------- 
-
-def fill_out_orders(file_name):
-    mongo.db.orders.remove({})
-    orders = mongo.db.orders
-    for order in first_orders:
-        orders.insert(order)
         
 # Populate Users ----------------------------------------------------------------------------------
 
@@ -50,6 +44,8 @@ def clear_db():
     mongo.db.ownership.remove({})
     mongo.db.orders.remove({})
     mongo.db.game_properties.remove({})
+    mongo.db.messages.remove({})
+    mongo.db.order_history.remove({})
 
 # initialise game db ------------------------------------------------------------------------------
 
@@ -62,32 +58,6 @@ def initialise_game_db():
     mongo.db.game_properties.insert(initial_game_properties)
     flash('Game initialised!', 'success')
 
-# Create player -----------------------------------------------------------------------------------
-    
-def create_player(request):
-    
-    nation = random.choice([nation for nation in mongo.db.nations.find({"available": True})])
-    mongo.db.nations.update_one({'_id': nation['_id']}, { '$set': {'available': False}})
-    
-    player_nation = nation['name']
-    if player_nation == "russia":
-        num_pieces = 4
-    else:
-        num_pieces = 3
-    
-    mongo.db.users.insert(
-        {
-        "username": request.form["username"],
-        "email": request.form["email"],
-        "password": request.form["password"],
-        "nation": player_nation,
-        "orders_submitted": orders_submitted,
-        "num_pieces": num_pieces,
-        "orders_finalised": False
-        }
-    )
-    flash('Account created for {}!'.format(request.form["username"]), 'success')
-    return request.form["username"]
     
 # Attempt login -----------------------------------------------------------------------------------
 
@@ -103,75 +73,27 @@ def attempt_login(request):
     flash('Login unsuccessful. Invalid username/password combination.', 'danger')
     return False
     
-    
-# Update ownership db --------------------------------------------------------------------------------
-
-def update_ownership_db(updated_ownership_list):
-    print("yo")
-    for updated_ownership in updated_ownership_list:
-        for nation in updated_ownership:
-            mongo.db.ownership.update({}, {"$set" : { nation : updated_ownership[nation] }})
-    return True
-    
-    
-# Update pieces db --------------------------------------------------------------------------------
-
-def update_pieces_db(updated_pieces):
-    for piece in updated_pieces:
-        mongo.db.pieces.update({"_id": piece["_id"]}, 
-        {
-            "nation": piece["nation"], 
-            "piece_type": piece["piece_type"],
-            "territory": piece["territory"], 
-            "previous_territory": piece["previous_territory"], 
-            "retreat": piece["retreat"], 
-        })
-    return True
-    
-# Clear db for next turn --------------------------------------------------------------------------
-
-def clear_db_for_next_turn():
-    
-    for order in mongo.db.orders.find({}):
-        mongo.db.order_history.insert(order)
-    
-    mongo.db.orders.remove({})
-    mongo.db.users.update_many({}, {"$set" : { "orders_submitted" : 0 }})
-    
-# End turn ----------------------------------------------------------------------------------------
-
-def end_turn(orders, pieces, game_properties):
-    
-    orders_to_be_processed = []
-    
-    for order in orders:
-        orders_to_be_processed.append(order)
-    
-    updated_pieces, game_properties, updated_ownership = process_orders(orders_to_be_processed, pieces, game_properties)
-    update_pieces_db(updated_pieces)
-    update_ownership_db(updated_ownership)
-    
-    mongo.db.game_properties.update({}, game_properties)
-    
-    
-    clear_db_for_next_turn()
-    
-    
 # Check if all orders submitted -------------------------------------------------------------------
 
 def checkAllOrdersSubmitted():
     
-    # if(mongo.db.orders.count() == mongo.db.pieces.count()):
+    total_orders = 0
+
+    for user in mongo.db.users.find({}):
+        total_orders += user["num_orders"]
+
+    print(total_orders)
+    
     if(mongo.db.orders.count() == 1):
         
         orders = mongo.db.orders.find({})
         pieces = mongo.db.pieces.find({})
         game_properties = mongo.db.game_properties.find_one({})
         
-        end_turn(orders, pieces, game_properties)
+        end_turn(mongo)
         
-        return True
-    return False
+        return redirect(url_for('board'))
+        
 
 
 # ROUTES ==========================================================================================
@@ -183,7 +105,7 @@ def board():
 
     pieces = []
     user = None
-    
+        
     # Forms
     registration_form = RegistrationForm()
     login_form = LoginForm()
@@ -226,12 +148,22 @@ def process():
         # UPLOAD ORDER
         if order_string:
             order_words = order_string.split(" ")
-            order = {
-                "nation" : user["nation"],
-                "piece_type" : order_words[0],
-                "territory" : order_words[1],
-                "command" : order_words[2],
-            }
+            
+            if order_words[0] == "build":
+                order = {
+                    "nation" : user["nation"],
+                    "command" : order_words[0],
+                    "piece_type" : order_words[1],
+                    "territory" : order_words[2],
+                }
+            else: 
+                order = {
+                    "nation" : user["nation"],
+                    "piece_type" : order_words[0],
+                    "territory" : order_words[1],
+                    "command" : order_words[2],
+                }
+                
             if order["command"] == 'move':
                 order["target"] = order_words[3]
                 
@@ -240,37 +172,33 @@ def process():
                 order["target"] = order_words[4]
                 
             if orders.find_one({"territory": order["territory"]}):
-                print("order for piece at {} already in db".format( order["territory"]))
                 orders.update_one({"territory": order["territory"]}, {"$set": order})
             else:
-                print("order for piece at {} not in db".format( order["territory"]))
                 orders.insert(order)
                 mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "orders_submitted": 1 }})
-                
-    if checkAllOrdersSubmitted():
-        return redirect(url_for('board'))
-          
-    else:
-        # DOWNLOAD ORDERS
-        orders = orders.find({"nation" : user["nation"]})
-        user = mongo.db.users.find_one({"username": session["username"]})
-        return_orders = []
-        return_orders.append({"orders_submitted": user["orders_submitted"], "num_pieces": user["num_pieces"]})
-        
-        for order in orders:
-            order_for_js = {
-                "id" : str(order["_id"]),
-                "piece_type" : order["piece_type"],
-                "territory" : order["territory"],
-                "command" : order["command"],
-            }
-            if "target" in order:
-                order_for_js["target"] = order["target"]
-                
-            if "object" in order:
-                order_for_js["object"] = order["object"]
-        
-            return_orders.append(order_for_js)
+               
+    checkAllOrdersSubmitted()
+    
+    # DOWNLOAD ORDERS
+    orders = orders.find({"nation" : user["nation"]})
+    user = mongo.db.users.find_one({"username": session["username"]})
+    return_orders = []
+    return_orders.append({"orders_submitted": user["orders_submitted"], "num_orders": user["num_orders"]})
+    
+    for order in orders:
+        order_for_js = {
+            "id" : str(order["_id"]),
+            "piece_type" : order["piece_type"],
+            "territory" : order["territory"],
+            "command" : order["command"],
+        }
+        if "target" in order:
+            order_for_js["target"] = order["target"]
+            
+        if "object" in order:
+            order_for_js["object"] = order["object"]
+    
+        return_orders.append(order_for_js)
         
     return jsonify(return_orders)
 
@@ -278,25 +206,24 @@ def process():
 # messages --------------------------------------
 
 @socketio.on('message')
-def handle_message(msg):
+def handle_json(json):
+    print('received json: ' + str(json))
     
-    split_message = msg.split(' - ', 1)
-    print(split_message)
-    if split_message[1] != "":
-        
-        message_dict = {
-            'sender': split_message[0],
-            'message': split_message[1]
-        }
-        mongo.db.messages.insert(message_dict)
-    send(message_dict["message"], broadcast=True)
+    message_dict = {
+        'sender_name': json["sender_name"],
+        'sender_nation': json["sender_nation"],
+        'text': json["text"]
+    }
+    mongo.db.messages.insert(message_dict)
+    
+    send(json, broadcast=True)
 
 # register --------------------------------------
     
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        session["username"] = create_player(request) # returns username
+        session["username"] = create_player(mongo, request) # returns username
         return redirect(url_for('board'))
     return redirect(url_for('board'))
     
@@ -317,49 +244,6 @@ def logout():
     session["username"] = None
     flash('You have been logged out.', 'success')
     return redirect(url_for('board'))
-    
-# orders ----------------------------------------
-    
-@app.route("/orders", methods=["GET", "POST"])
-def orders():
-    
-    if request.method == "POST":
-        create_order_dicts(request)
-    return redirect(url_for('board'))
-
-# edit orders -----------------------------------
-    
-@app.route("/edit_orders", methods=["GET", "POST"])
-def edit_orders():
-        
-    if request.method == "POST":
-        # edit_order(request, pieces, game_state, username)
-        return redirect(url_for('board'))
-            
-    return redirect(url_for('board'))
-
-# announcements ---------------------------------
-    
-@app.route("/announcements/")
-def announcements():
-    announcements = get_announcements()
-    return render_template("announcements.html", announcements = announcements)
-    
-# -----------------------------------------------
-    
-# clear announcements --------------------------------------
-
-@app.route("/clear_messages")
-def clear_messages():
-    mongo.db.messages.remove({})
-    return redirect(url_for('board'))
-    
-# add announcement ----------------------------- 
-
-@app.route("/add_announcement")
-def post_announcement(username, announcement):
-    add_announcement(username, announcement)
-    return redirect("announcements")
 
 # populate --------------------------------------
 
@@ -397,8 +281,6 @@ def test_all():
     end_turn("game_histories/game_1/03_fall_build_1901.txt")
     
     return redirect(url_for('board'))
-    
-checkAllOrdersSubmitted()
 
 if __name__ == '__main__':
     socketio.run(app, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug=True)

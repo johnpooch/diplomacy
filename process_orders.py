@@ -10,6 +10,7 @@ from order_text_processor import get_orders_from_txt
 from write_to_log import clear_log
 
 def find_territory_by_name(name):
+    print(Territory.all_territories)
     for territory in Territory.all_territories:
         if territory.name == name:
             return territory
@@ -52,6 +53,8 @@ def get_phase_by_string(string):
 def assign_orders_to_pieces(mongo_orders):
     for order in mongo_orders:
         nation = order["nation"]  
+        piece_type = order["piece_type"]
+        print("PIECE TYPE: {}".format(piece_type))
         command = order["command"]
         origin = find_territory_by_name(order["territory"])
         
@@ -77,7 +80,11 @@ def assign_orders_to_pieces(mongo_orders):
                 setattr(piece, "order", order)
                 
         else:
-            Build(find_nation_by_name(nation), order["origin"], find_territory_by_name(order["target"]))
+            print("YO")
+            print(piece_type)
+            Build(find_nation_by_name(nation), piece_type, find_territory_by_name(order["territory"]))
+            for order in Order.all_orders:
+                print(order)
 
 # Resolve Challenges ==================================================================================
 

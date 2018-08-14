@@ -108,7 +108,7 @@ stp = Special_Inland("stp", "st. petersburg", [], russia, ["stp_nc", "stp_sc"])
 bul_ec = Special_Coastal("bul_ec", "bulgaria (north coast)", [], "bul")
 bul_sc = Special_Coastal("bul_sc", "bulgaria (south coast)", [], "bul")
 spa_nc = Special_Coastal("spa_nc", "spain (north coast)", [], "spa")
-spa_sc = Special_Coastal("spa_sc", "spain (north coast)", [], "spa")
+spa_sc = Special_Coastal("spa_sc", "spain (south coast)", [], "spa")
 stp_sc = Special_Coastal("stp_sc", "st. petersburg (south coast)", [], "stp")
 stp_nc = Special_Coastal("stp_nc", "st. petersburg (north coast)", [], "stp")
 
@@ -269,7 +269,6 @@ setattr(stp_sc, 'parent_territory', stp)
 
 initial_ownership = {
     "ank": "turkey",
-    "arm": "turkey",
     "bel": "neutral",
     "bre": "france",
     "bud": "austria",
@@ -277,7 +276,6 @@ initial_ownership = {
     "con": "turkey",
     "den": "neutral",
     "edi": "england",
-    "gas": "france",
     "gre": "neutral",
     "hol": "neutral",
     "kie": "germany",
@@ -297,6 +295,7 @@ initial_ownership = {
     "smy": "turkey",
     "spa": "neutral",
     "swe": "neutral",
+    "stp": "russia",
     "tri": "austria",
     "tun": "neutral",
     "ven": "italy",
@@ -492,7 +491,9 @@ dummy_players = [
         "password": "abc",
         "nation": "france",
         "orders_submitted" : 0, 
-        "num_pieces": 3
+        "num_orders": 3, 
+        "num_supply": 3, 
+        "num_pieces": 3, 
     },
     {
         "username": "ross",
@@ -500,7 +501,9 @@ dummy_players = [
         "password": "abc", 
         "nation": "germany",
         "orders_submitted" : 0, 
-        "num_pieces": 3
+        "num_orders": 3, 
+        "num_supply": 3, 
+        "num_pieces": 3, 
     },
     {
         "username": "hugh",
@@ -508,7 +511,9 @@ dummy_players = [
         "password": "abc", 
         "nation": "italy",
         "orders_submitted" : 0, 
-        "num_pieces": 3
+        "num_orders": 3, 
+        "num_supply": 3,
+        "num_pieces": 3, 
     },
     {
         "username": "alex",
@@ -516,7 +521,9 @@ dummy_players = [
         "password": "abc",
         "nation": "england",
         "orders_submitted" : 0, 
-        "num_pieces": 3
+        "num_orders": 3, 
+        "num_supply": 3,
+        "num_pieces": 3, 
     },
     {
         "username": "pearse",
@@ -524,7 +531,9 @@ dummy_players = [
         "password": "abc",
         "nation": "austria",
         "orders_submitted" : 0, 
-        "num_pieces": 3
+        "num_orders": 3, 
+        "num_supply": 3,
+        "num_pieces": 3, 
     },
     {
         "username": "ollie",
@@ -532,7 +541,9 @@ dummy_players = [
         "password": "abc",
         "nation": "russia",
         "orders_submitted" : 0, 
-        "num_pieces": 4
+        "num_orders": 4, 
+        "num_supply": 4,
+        "num_pieces": 4, 
     },
     {
         "username": "niall",
@@ -540,6 +551,8 @@ dummy_players = [
         "password": "abc",
         "nation": "turkey",
         "orders_submitted" : 0, 
-        "num_pieces": 3
+        "num_orders": 3, 
+        "num_supply": 3, 
+        "num_pieces": 3, 
     },
 ]

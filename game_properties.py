@@ -14,7 +14,7 @@ class Game_Properties():
         self.phase = self.phase.end_phase()
         write_to_log("\nnew phase: {}.".format(self.phase.name))
         if isinstance(self.phase, Spring_Order_Phase):
-            setattr(game_properties, "year", self.year + 1)
+            setattr(self, "year", self.year + 1)
             write_to_log("new year: {}.".format(self.year))
         
     def __repr__(self):

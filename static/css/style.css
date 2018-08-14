@@ -83,6 +83,10 @@ input.invalid {
   background-color: #f9f1ea;
 }
 
+#announcements-label {
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+}
 
 .btn {
   font-family: 'Rokkitt', serif;
@@ -196,7 +200,7 @@ input.invalid {
 }
 
 .messages-row {
-  height: 30vh;
+  max-height: 30vh;
   overflow: overlay;
 }
 

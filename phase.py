@@ -11,7 +11,7 @@ class Phase():
 
 class Fall_Build_Phase(Phase):
     def __init__(self):
-        self.name = "fall_build_phase"
+        self.name = "fall build phase"
     
     def end_phase(self):
         return Spring_Order_Phase()
