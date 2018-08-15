@@ -1,5 +1,6 @@
 import random
 from flask import request, flash
+from werkzeug.security import generate_password_hash
 
 # Create player -----------------------------------------------------------------------------------
     
@@ -18,7 +19,7 @@ def create_player(mongo, request):
         {
         "username": request.form["username"],
         "email": request.form["email"],
-        "password": request.form["password"],
+        "password": generate_password_hash(request.form["password"]),
         "nation": player_nation,
         "orders_submitted": 0,
         "num_supply": num_supply,

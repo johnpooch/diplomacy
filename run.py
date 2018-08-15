@@ -8,6 +8,7 @@ from nation import Nation
 from initial_game_state import initial_pieces, initial_game_properties, initial_ownership, dummy_players
 from get_game_state import get_game_state
 from bson.objectid import ObjectId
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
@@ -56,6 +57,7 @@ def initialise_game_db():
         pieces.insert(piece)
     mongo.db.ownership.insert(initial_ownership)
     mongo.db.game_properties.insert(initial_game_properties)
+    mongo.db.nations.update_many({}, {"$set" : { "available": True } })
     flash('Game initialised!', 'success')
 
     
@@ -65,7 +67,7 @@ def attempt_login(request):
 
     user = mongo.db.users.find_one({"email": request.form["email"]})
     if user:
-        if request.form["password"] == user["password"]:
+        if check_password_hash(user["password"], request.form["password"]):
             session["username"] = user["username"]
             flash('You have been logged in!', 'success')
             return True
