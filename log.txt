@@ -1,17 +1,11 @@
 
 
-fleet at lon is now challenging eng
-fleet at edi is now challenging nrg
+army at bur is now challenging ruh
+fleet at mid is now challenging por
+army at bur has moved to ruh
+fleet at mid has moved to por
+army at spa has moved to spa
 
-
-
-
-
-
-
-
-fleet at lon has moved to eng
-fleet at edi has moved to nrg
-army at lvp has moved to lvp
-
-new phase: fall order phase.
+new phase: fall build phase.
+supply center at spa, which belonged to neutral, now belongs to france
+supply center at por, which belonged to neutral, now belongs to france

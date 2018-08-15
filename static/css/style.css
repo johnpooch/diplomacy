@@ -13,14 +13,6 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0.5em; 
 }
 
-input.valid {
-
-}
-
-input.invalid {
-
-}
-
 #draggable {
   width: 400px;
 }
@@ -46,6 +38,9 @@ input.invalid {
   float: right;
 }
 
+#history-table {
+  width: 100%;
+}
 
 #message-input {
   width: 100%;
@@ -56,6 +51,19 @@ input.invalid {
 #num-orders {
   text-align: right;
   padding-right: .5rem;
+}
+
+#order-history-tab {
+  display: none;
+}
+
+#order-history-div {
+    max-height: 20vh;
+    overflow: scroll;
+}
+
+#order-history-header {
+    padding-top: 1rem;
 }
 
 #orders-issued {
@@ -86,13 +94,16 @@ input.invalid {
   border-color: red;
 }
 
+#phase-header {
+  float: right;
+}
+
 #myMessage {
   background-color: #f9f1ea;
 }
 
 #announcements-label {
   padding-left: 1rem;
-  padding-bottom: 1rem;
 }
 
 .btn {
@@ -203,6 +214,17 @@ input.invalid {
 
 .player-flag {
   display: inline-block;
+}
+
+.sub-tabs {
+  padding-left: 1rem;
+}
+
+.sub-tab-button {
+  background: none;
+  border: none;
+  float: left;
+  padding-top: 1rem;
 }
 
 .messages-list {

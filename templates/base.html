@@ -104,6 +104,7 @@
                   </ul>
                 <!-- close modal button -->
                 </div>
+                
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -262,28 +263,96 @@
                   
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
                     
-                    {% if players|length == 7 %}
-                    
-                    <span class="game-properties phase">{{ game_properties.phase.split().0|capitalize }} {{ game_properties.year }}: {{ game_properties.phase.split().1|capitalize }} {{ game_properties.phase.split().2|capitalize }} </span>
-                    
-                    <div id="tbl_orders"></div>
-                    
-                    <span><button id="create-order" class="btn btn-default">Create New Order</button></span>
-                    
-                    <form id='order-form'>
-                      <div class="form-group">
-                        <input type="text" name="order" class="form-control order-input" id="order-input">
-                      </div>
-                    </form>
-                    
+                    <div id="create-order-tab">
+                      {% if players|length == 7 %}
+                      
+                      <span class="game-properties phase">{{ game_properties.phase.split().0|capitalize }} {{ game_properties.year }}: {{ game_properties.phase.split().1|capitalize }} {{ game_properties.phase.split().2|capitalize }} </span>
+                      
+                      <div id="tbl_orders"></div>
+                      
+                      <span><button id="create-order" class="btn btn-default">Create New Order</button></span>
+                      
+                      <form id='order-form'>
+                        <div class="form-group">
+                          <input type="text" name="order" class="form-control order-input" id="order-input">
+                        </div>
+                      </form>
+                      
+                      <a href="#" id="order-history-button" class="sub-tab-button">See order history</a>
+                      
                     {% else %} 
                     <div class="container">
                       <div class="row">You cannot issue orders until seven players have joined the game. </div>
                     </div>
                     
                     {% endif %}
+                    </div>
                     
-
+                    <div id="order-history-tab">
+                      <strong><h6 id="order-history-header">Order History</h6></strong>
+                      
+                      {% if order_history %}
+                      
+                      <div id="order-history-div" class="container">
+                        <table id = "history-table">
+                        
+                        {% for phases in order_history %}
+                        {% for phase, nations in phases.items() %}
+                        <thead>
+                          <tr>
+                            <th id="phase-header"><hr>{{ phase[0]|title }} - {{ phase[1] }}</th><th></th>
+                          </tr>
+                        </thead>
+                        
+                        <tbody>
+                          
+                          {% for nation in nations %}
+                          {% for nation, orders in nation.items() %}
+                          <tr>
+                            <th>
+                              {{ nation }}
+                            </th>
+                          </tr>
+                          
+                          {% for order in orders %}
+                          <tr>
+                            {% if order["command"] in ["hold", "disband"] %}
+                            <td>{{ order["piece_type"]|capitalize}} {{ order["territory"]|capitalize }} {{ order["command"] }} </td>
+                            
+                            {% elif order["command"] in ["move", "retreat"] %}
+                            <td>{{ order["piece_type"]|capitalize}} {{ order["territory"]|capitalize }} {{ order["command"] }} to {{ order["target"]|capitalize }} </td>
+                            
+                            {% elif order["command"] in ["support", "convoy"] %}
+                            <td>{{ order["piece_type"]|capitalize}} {{ order["territory"]|capitalize }} {{ order["command"] }} to {{ order["target"]|capitalize }} </td>
+                            
+                            {% elif order["command"] == "build" %}
+                            <td>{{ order["command"]|capitalize}} {{ order["piece_type"] }} {{ order["territory"] }} </td>
+                            
+                            {% endif %}
+                            
+                            <td>Success</td>
+                          </tr>
+                          {% endfor %}
+                          {% endfor %}
+                          {% endfor %}
+  
+                        </tbody>
+                        {% endfor %}
+                        {% endfor %}
+                        
+                      </table>
+                      
+                    </div>
+                    
+                    <a href="#" id="create-order-button" class="sub-tab-button">Create order</a>
+                    
+                    {% else %}
+                    
+                    <div class="container"><span>No orders have been given.</span></div>
+                    
+                    {% endif %}
+                    </div>
+  
                   </div>
                   
                   <!-- Announcements -->
@@ -293,7 +362,7 @@
                     <br>
                     
                     <div class="row messages-row">
-                      <div id="announcements-label">Announcements</div>
+                      <div id="announcements-label"><strong>Announcements</strong></div>
                       <ul id="messages" class="messages-list">
                         <li></li>
                         {% for message in messages | reverse %}
@@ -341,6 +410,21 @@
   
   <!-- jquery -->
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+  
+  <script type="text/javascript">
+    $("#order-history-button").on("click", function() {
+      $("#create-order-tab").hide();
+      $("#order-history-tab").show();
+    });
+    
+    $("#create-order-button").on("click", function() {
+      $("#create-order-tab").show();
+      $("#order-history-tab").hide();
+    });
+  </script>
+  
+  
+  
   
   <script type="text/javascript">
   $(document).ready(function() {

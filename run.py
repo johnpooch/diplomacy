@@ -117,6 +117,20 @@ def board():
     game_properties = mongo.db.game_properties.find_one({})
     
     pieces = [piece for piece in mongo.db.pieces.find({})]
+    
+    order_history = []
+    for phase in set([(order["phase"], order["year"]) for order in mongo.db.order_history.find({})]):
+        phase_orders = []
+        for user in mongo.db.users.find({}):
+            phase_orders.append({user["nation"].capitalize(): [order for order in mongo.db.order_history.find({"nation": user["nation"], "year": phase[1], "phase": phase[0]})]})
+        order_history.append({phase :phase_orders})
+            
+    print(order_history)
+    
+    
+    # for phase in set([(order["phase"], order["year"]) for order in mongo.db.order_history.find({})]):
+    #     order_history.append({"{}, {}".format(phase[1], phase[0].title()): [nation["name"]  [order for order in mongo.db.order_history.find({"phase": phase[0], "year": phase[1]})]})
+    
     user_pieces = []
         
     if 'username' in session:     
@@ -126,7 +140,7 @@ def board():
         user['orders'] = mongo.db.orders.find({"nation": user["nation"]})
         user_pieces = [piece for piece in mongo.db.pieces.find({"nation": user["nation"]})]
     
-    return render_template("board.html", user_pieces = user_pieces, pieces = pieces, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories)
+    return render_template("board.html", user_pieces = user_pieces, pieces = pieces, game_properties = game_properties, session = session, registration_form = registration_form, login_form = login_form, user = user, players = players, messages = messages, territories = territories, order_history = order_history)
     
 # process ---------------------------------------
 
@@ -155,6 +169,8 @@ def process():
                     "command" : order_words[0],
                     "piece_type" : order_words[1],
                     "territory" : order_words[2],
+                    "year" : mongo.db.game_properties.find_one({})["year"],
+                    "phase" : mongo.db.game_properties.find_one({})["phase"],
                 }
             else: 
                 order = {
@@ -162,6 +178,8 @@ def process():
                     "piece_type" : order_words[0],
                     "territory" : order_words[1],
                     "command" : order_words[2],
+                    "year" : mongo.db.game_properties.find_one({})["year"],
+                    "phase" : mongo.db.game_properties.find_one({})["phase"],
                 }
                 
             if order["command"] == 'move':
