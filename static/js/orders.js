@@ -139,7 +139,12 @@ $(document).ready(function() {
         // receive data from run.py ---------------------------------------------------------------
         
         .done(function(data) {
-            if(data) {
+            console.log(data)
+            if (data == "all orders submitted") {
+                window.location.href = "/"
+                console.log("should referesh?")
+            }
+            else if(data) {
                 resetOrderForm(data)
                 
                 $(document).find('#tbl_orders').html(createTable(data));

@@ -84,7 +84,7 @@ def checkAllOrdersSubmitted():
 
     print(total_orders)
     
-    if(mongo.db.orders.count() == 1):
+    if(mongo.db.orders.count() == 3):
         
         orders = mongo.db.orders.find({})
         pieces = mongo.db.pieces.find({})
@@ -92,8 +92,8 @@ def checkAllOrdersSubmitted():
         
         end_turn(mongo)
         
-        return redirect(url_for('board'))
-        
+        return True
+    return False
 
 
 # ROUTES ==========================================================================================
@@ -110,7 +110,7 @@ def board():
     registration_form = RegistrationForm()
     login_form = LoginForm()
     
-    players = mongo.db.users.find({})
+    players = [player for player in mongo.db.users.find({})]
     messages = mongo.db.messages.find({})
     territories = [territory.name for territory in Territory.all_territories]
     
@@ -177,30 +177,33 @@ def process():
                 orders.insert(order)
                 mongo.db.users.update_one({"username": session["username"]}, { "$inc": { "orders_submitted": 1 }})
                
-    checkAllOrdersSubmitted()
+    if checkAllOrdersSubmitted():
+        return "all orders submitted"
     
-    # DOWNLOAD ORDERS
-    orders = orders.find({"nation" : user["nation"]})
-    user = mongo.db.users.find_one({"username": session["username"]})
-    return_orders = []
-    return_orders.append({"orders_submitted": user["orders_submitted"], "num_orders": user["num_orders"]})
+    else:
     
-    for order in orders:
-        order_for_js = {
-            "id" : str(order["_id"]),
-            "piece_type" : order["piece_type"],
-            "territory" : order["territory"],
-            "command" : order["command"],
-        }
-        if "target" in order:
-            order_for_js["target"] = order["target"]
-            
-        if "object" in order:
-            order_for_js["object"] = order["object"]
-    
-        return_orders.append(order_for_js)
+        # DOWNLOAD ORDERS
+        orders = orders.find({"nation" : user["nation"]})
+        user = mongo.db.users.find_one({"username": session["username"]})
+        return_orders = []
+        return_orders.append({"orders_submitted": user["orders_submitted"], "num_orders": user["num_orders"]})
         
-    return jsonify(return_orders)
+        for order in orders:
+            order_for_js = {
+                "id" : str(order["_id"]),
+                "piece_type" : order["piece_type"],
+                "territory" : order["territory"],
+                "command" : order["command"],
+            }
+            if "target" in order:
+                order_for_js["target"] = order["target"]
+                
+            if "object" in order:
+                order_for_js["object"] = order["object"]
+        
+            return_orders.append(order_for_js)
+            
+        return jsonify(return_orders)
 
     
 # messages --------------------------------------

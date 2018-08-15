@@ -53,7 +53,7 @@
         </div>
         
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#intefaceModal">
+        <button type="button" id="menu-button" class="btn btn-primary" data-toggle="modal" data-target="#intefaceModal">
           Menu
         </button>
 
@@ -119,6 +119,12 @@
                   
                   <!--Registration Form-->
                   <div role="tabpanel" class="tab-pane active" id="registrationTab">
+                    
+                    <div class="container">
+                      <div class="row">Seven players have already joined the game. </div>
+                    </div>
+                    
+                    {% if not players|count == 7 %}
                     <form method="POST" action="/register">
                       {{ registration_form.hidden_tag() }}
                       <fieldset class="form-group">
@@ -190,11 +196,8 @@
                       </div>
                     </form>
                     
-                    <!-- other options -->
-                    <div class="border-top pt-3"></div>
-                    <small class="text-muted">
-                      Already Have An Account? <a href="#registrationTab" aria-controls="registrationTab" role="tab" data-toggle="tab">Log In</a>
-                    </small>
+                    {% endif %}
+                    
                   </div>
                   
                   
@@ -250,16 +253,16 @@
                       <a class="ml-2" href="#">Forgot Password?</a>
                     </small>
                     <div class="border-top pt-3"></div>
-                    <small class="text-muted">
-                      Need An Account? <a href="#registrationTab" aria-controls="registrationTab" role="tab" data-toggle="tab">Sign Up</a>
-                    </small>
                   </div>
                   
                   
                   {% else %}
                   
                   <!-- Orders -->
+                  
                   <div role="tabpanel" class="tab-pane" id="ordersTab">
+                    
+                    {% if players|length == 7 %}
                     
                     <span class="game-properties phase">{{ game_properties.phase.split().0|capitalize }} {{ game_properties.year }}: {{ game_properties.phase.split().1|capitalize }} {{ game_properties.phase.split().2|capitalize }} </span>
                     
@@ -272,6 +275,13 @@
                         <input type="text" name="order" class="form-control order-input" id="order-input">
                       </div>
                     </form>
+                    
+                    {% else %} 
+                    <div class="container">
+                      <div class="row">You cannot issue orders until seven players have joined the game. </div>
+                    </div>
+                    
+                    {% endif %}
                     
 
                   </div>
@@ -295,8 +305,13 @@
                         {% endfor %}
                       </ul>
                     </div>
-                    <input type="text" id="myMessage" name=""/>
-                    <button id="sendButton">Post</button>
+                    <form id="message-form">
+                      <!--inline styiling used here because using classes and ids in the style.css script wasn't working.-->
+                      <input type="text" id="message-input" style="width: 100%; display: inline-block; background-color: #f9f1ea;" name=""/>
+                      <input type="hidden" value="Submit"/>
+                    </form>
+                    
+                    
                     
                   
                   {% endif %}
@@ -338,12 +353,12 @@
     });
 
     // send message to run.py
-    $('#sendButton').on('click', function() {
-      var message = {"sender_name": "{{ user.username }}", "sender_nation": "{{ user.nation }}", "text": $('#myMessage').val()};
+    $('#message-form').submit(function(event) {
+      event.preventDefault();
+      var message = {"sender_name": "{{ user.username }}", "sender_nation": "{{ user.nation }}", "text": $('#message-input').val()};
       socket.send(message);
-      
       // empty message
-      $('#myMessage').val('');
+      $('#message-input').val('');
     })
   });
 </script>

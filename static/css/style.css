@@ -46,6 +46,13 @@ input.invalid {
   float: right;
 }
 
+
+#message-input {
+  width: 100%;
+  display: inline-block;
+  background-color: #f9f1ea;
+}
+
 #num-orders {
   text-align: right;
   padding-right: .5rem;
@@ -136,6 +143,11 @@ input.invalid {
 
 #successAlert, #errorAlert{
   position: inherit;
+}
+
+#menu-button {
+  position: fixed;
+  margin-top: 2rem;
 }
 
 .modal-backdrop {

@@ -1,6 +1,7 @@
 
 
-fleet at bre is now challenging mid
+fleet at lon is now challenging eng
+fleet at edi is now challenging nrg
 
 
 
@@ -9,6 +10,8 @@ fleet at bre is now challenging mid
 
 
 
-fleet at bre has moved to mid
+fleet at lon has moved to eng
+fleet at edi has moved to nrg
+army at lvp has moved to lvp
 
 new phase: fall order phase.
