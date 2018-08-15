@@ -367,7 +367,8 @@
                         <li></li>
                         {% for message in messages | reverse %}
                         <li>
-                          <div class="row"><span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{message['sender_nation']}}.png"></img><strong>{{ message['sender_name'] }}</strong></div>
+                          <div class="row"><span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{message['sender_nation']}}.png" alt="flag of {{message['sender_nation']}}"></img><strong>{{ message['sender_name'] }}</strong></div>
+                          
                           <div class="row">{{message['text']}}</div>
                         </li>
                         <hr>
@@ -395,7 +396,7 @@
               {% endif %}
                 
               {% for player in players %}
-                <span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{player['nation']}}.png"></img>  {{player['username']}}</span>
+                <span class="player-flag"><img class="flag" src="{{url_for('static', filename='images/')}}{{player['nation']}}.png" alt="flag of {{ player['nation'] }}"></img>  {{player['username']}}</span>
               {% endfor %}
             </div>
           </div>
@@ -433,7 +434,7 @@
     // when message received
     socket.on('message', function(json) {
       $("#messages li:eq(0)").before("<li><div class='row'>"+ json["text"] + "</div></li><hr>");
-      $("#messages li:eq(0)").before('<li><div class="row"><span class="player-flag"><img class="flag" src="' + '{{url_for("static", filename="images/")}}' + json["sender_nation"] + '.png"></img><strong>' + json["sender_name"] + '<strong></div></li>');
+      $("#messages li:eq(0)").before('<li><div class="row"><span class="player-flag"><img class="flag" src="' + '{{url_for("static", filename="images/")}}' + json["sender_nation"] + '.png" alt="flag of '+ json["sender_nation"] +'"></img><strong>' + json["sender_name"] + '<strong></div></li>');
     });
 
     // send message to run.py
