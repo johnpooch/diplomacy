@@ -56,6 +56,18 @@ At present, the project only features automated tests which test the logic behin
 $ python3 test_order.py
 ```
 
+### General Comments / What I've Learned From This Project So Far
+
+xxx
+
+### Current Issues
+
+The project has a large number of issues which need to be resolved before the project is ready for play-testing.
+
+### Future Development Plans
+
+xxx
+
 ## Built With
 
 * [Flask](http://flask.pocoo.org/) - The flask web framework
@@ -63,18 +75,7 @@ $ python3 test_order.py
 * [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/) - Used for real-time communication between players
 
 
-## Author
-
-* **John McDowell** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Corey Schafer's video series on working with Flask: https://www.youtube.com/watch?v=MwZwr5Tvyxo&list=PL-osiE80TeTs4UjLw5MM6OjgkjFeUxCYH
+* Pretty Printed's video series on working with SocketIO in Flask: https://www.youtube.com/watch?v=RdSrkkrj3l4&t=6s
