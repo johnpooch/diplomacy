@@ -1,8 +1,10 @@
 # Diplomacy
 
-Diplomacy is a popular strategy board game which was released in 1959. The game is known for it's emphasis on negotiation, alliance, and betrayal. Unlike many other strategy board games, 
+Diplomacy is a popular strategy board game released in 1959 by Allan B. Calhamer. The game is set in early 1900s Europe. The game is known for it's emphasis on negotiation, alliance, and betrayal. Unlike many other strategy board games, 
 Diplomacy does not rely on dice rolling or other random elements. All players write down their orders and at the end of each negotiation phase, all of the orders are processed simultaneously. 
 Typically the game is played by seven players, each controlling one country. Variations of the game allow for fewer people. Variations of the game board also exist. 
+
+Yo
 
 ## Getting Started
 
