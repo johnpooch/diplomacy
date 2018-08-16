@@ -1,41 +1,42 @@
 # Diplomacy
 
-Diplomacy is a popular strategy board game released in 1959 by Allan B. Calhamer. The game is set in early 1900s Europe. The game is known for it's emphasis on negotiation, alliance, and betrayal. Unlike many other strategy board games, Diplomacy does not rely on dice rolling or other random elements. All players write down their orders and at the end of each negotiation phase, all of the orders are processed simultaneously. Typically the game is played by seven players, each controlling one country. Variations of the game allow for fewer people. Variations of the game board also exist. 
+Diplomacy is a popular strategy board game released in 1959 by Allan B. Calhamer. The game is set in early 1900s Europe. Diplomacy is known for it's emphasis on negotiation, alliance, and betrayal. Unlike many other strategy board games, Diplomacy does not rely on dice rolling or other random elements. All players write down their orders and at the end of each negotiation phase, all of the orders are processed simultaneously. Typically the game is played by seven players, each controlling one country. Variations of the game allow for fewer players. Variations of the game board also exist. 
 
 This project is designed to be an easy-to-use used browser-based version of Diplomacy which features real-time communication between players and a minimalist user interface which allows players to comfortably study the board while engaging in communications or issuing orders.
 
-The project is built on HTML5, CSS, JavaScript (AJAX and jQuery), Python, Flask, and Mongo DB (PyMongo). The code is tested using unit testing. The logic behind the order processing is done using object oriented programming principles. Real time communication between players is achieved using the SocketIO library.
+This project is built using HTML5, CSS, JavaScript (AJAX and jQuery), Python3, Flask, and Mongo DB (PyMongo). The code is tested using the Python unittest framework. The logic behind the order processing is done using object oriented programming principles. Real time communication between players is achieved using the flask_socketio library.
 
 The project is in a unfinished state. The project is not ready for real-world play-testing and some core functionality is incomplete. 
 
 Live version of the game: http://johnpooch-diplomacy.herokuapp.com/
 
+Game Rules: https://www.wizards.com/avalonhill/rules/diplomacy.pdf
+
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Follow these instructions to run the game locally. 
 
-### Prerequisites
+### Installation
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+Clone this workspace and install the required software:
 
 ```
-Give the example
+pip3 install -r requirements.txt
 ```
 
-And repeat
+or if you're using Cloud9:
 
 ```
-until finished
+sudo pip3 install -r requirements.txt
+```
+
+The code relies on a Mongo database. To create a Mongo database consult the mLab documentation: https://docs.mlab.com/
+
+Once you have created a Mongo database, create an environment variable for the Mongo URI. You will also need to create a secret key. You can generate a rondom secret key here: https://randomkeygen.com/
+
+```
+$ export MONGO_URI=<INSERT MONGO URI HERE>
+$ export SECRET_KEY="<INSERT KEY HERE>"
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
