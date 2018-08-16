@@ -22,7 +22,6 @@ class Order():
         self.report = ""
         self.bounced = False
         self.piece = None
-        print(Order.all_orders)
     
     def get_object_by_territory(self, territory):
         return [piece for piece in Piece.all_pieces if piece.territory.name == territory.name][0]
@@ -162,6 +161,7 @@ class Support(Order):
         Order.__init__(self, player, territory)
         self.target = target
         self.supported_territory = supported_territory
+        
     
     def support_is_valid(self):
         
@@ -194,12 +194,6 @@ class Support(Order):
         else:
             self.fail("support failed: {} at {} cannot support {} to {}".format(self.piece.piece_type, self.territory.name, self.supported_territory.name, self.target.name))
         
-    def __repr__(self):
-        return "{}, {}: Support({}, {}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.supported_territory.name, self.target.name)
-        
-    def __str__(self):
-        return "{}, {}: piece at {}, belonging to {}, support {} into {}.".format(self.year, self.phase, self.territory.name, self.player, self.supported_territory.name, self.target.name)
-
 
 # Retreat --------------------------------------------------------------------------------------------
         

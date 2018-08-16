@@ -9,8 +9,10 @@ from initial_game_state import *
 
 class Test_Army_Move(unittest.TestCase):
     
+    game_properties = Game_Properties(1901, Spring_Order_Phase)
+    
     def setUp(self):
-        self.test_piece = Army(bre, france)
+        self.test_piece = Army("", bre, france)
         self.move_1 = Move(france, bre, par)
         setattr(self.move_1, "piece", self.test_piece)
     
@@ -53,7 +55,7 @@ class Test_Army_Move(unittest.TestCase):
 class Test_Fleet_Move(unittest.TestCase):
     
     def setUp(self):
-        self.test_piece = Fleet(eng, france)
+        self.test_piece = Fleet("", eng, france)
         self.move_1 = Move(france, eng, mid)
         setattr(self.move_1, "piece", self.test_piece)
     
@@ -71,7 +73,7 @@ class Test_Fleet_Move(unittest.TestCase):
         self.assertEqual(self.move_1.report, "")
         
     def test_move_to_inland(self):
-        self.test_piece = Fleet(gas, france)
+        self.test_piece = Fleet("", gas, france)
         self.move_1 = Move(france, gas, spa)
         setattr(self.move_1, "piece", self.test_piece)
         self.move_1.process_order()
@@ -91,7 +93,7 @@ class Test_Fleet_Move(unittest.TestCase):
 class Test_Fleet_Move_Coastal(unittest.TestCase):
         
     def setUp(self):
-        self.test_piece = Fleet(rom, italy)
+        self.test_piece = Fleet("", rom, italy)
         self.move_1 = Move(italy, rom, nap)
         setattr(self.move_1, "piece", self.test_piece)
         
@@ -114,7 +116,7 @@ class Test_Fleet_Move_Coastal(unittest.TestCase):
 class Test_Fleet_Move_Con(unittest.TestCase):
         
     def setUp(self):
-        self.test_piece = Fleet(bla, turkey)
+        self.test_piece = Fleet("", bla, turkey)
         self.move_1 = Move(turkey, bla, con)
         setattr(self.move_1, "piece", self.test_piece)
         
@@ -132,7 +134,7 @@ class Test_Fleet_Move_Con(unittest.TestCase):
         self.assertEqual(self.move_1.report, "move failed: aeg is not a neighbour of bla and is not accessible by convoy")
 
     def test_move_from_con_to_aeg(self):
-        self.test_piece = Fleet(con, turkey)
+        self.test_piece = Fleet("", con, turkey)
         self.move_1 = Move(turkey, con, aeg)
         setattr(self.move_1, "piece", self.test_piece)
         self.move_1.process_order()
@@ -144,7 +146,7 @@ class Test_Fleet_Move_Kie(unittest.TestCase):
 
     def test_move_from_hol_to_kie(self):
         self.move_1 = Move(germany, hol, kie)
-        setattr(self.move_1, "piece", Fleet(hol, germany))
+        setattr(self.move_1, "piece", Fleet("", hol, germany))
         self.move_1.process_order()
         
         self.assertEqual(self.move_1.piece.challenging, kie)
@@ -152,7 +154,7 @@ class Test_Fleet_Move_Kie(unittest.TestCase):
 
     def test_move_from_kie_to_ber(self):
         self.move_1 = Move(germany, kie, ber)
-        setattr(self.move_1, "piece", Fleet(kie, ber))
+        setattr(self.move_1, "piece", Fleet("", kie, ber))
         self.move_1.process_order()
         
         self.assertEqual(self.move_1.piece.challenging, ber)
@@ -164,7 +166,7 @@ class Test_Fleet_Move_Swe(unittest.TestCase):
 
     def test_move_from_den_to_swe(self):
         self.move_1 = Move(germany, den, swe)
-        setattr(self.move_1, "piece", Fleet(den, germany))
+        setattr(self.move_1, "piece", Fleet("", den, germany))
         self.move_1.process_order()
         
         self.assertEqual(self.move_1.piece.challenging, swe)
@@ -172,7 +174,7 @@ class Test_Fleet_Move_Swe(unittest.TestCase):
 
     def test_move_from_bal_to_ska(self):
         self.move_1 = Move(germany, bal, ska)
-        setattr(self.move_1, "piece", Fleet(bal, germany))
+        setattr(self.move_1, "piece", Fleet("", bal, germany))
         self.move_1.process_order()
         
         self.assertEqual(self.move_1.piece.challenging, bal)
@@ -183,7 +185,7 @@ class Test_Fleet_Move_Swe(unittest.TestCase):
 class Test_Fleet_Move_Spa_Nc(unittest.TestCase):
 
     def setUp(self):
-        self.test_piece = Fleet(spa_nc, france)
+        self.test_piece = Fleet("", spa_nc, france)
         self.move_1 = Move(france, spa_nc, mar)
         setattr(self.move_1, "piece", self.test_piece)
 
@@ -216,7 +218,7 @@ class Test_Fleet_Move_Spa_Nc(unittest.TestCase):
 class Test_Fleet_Move_Spa_Sc(unittest.TestCase):
 
     def setUp(self):
-        self.test_piece = Fleet(spa_sc, france)
+        self.test_piece = Fleet("", spa_sc, france)
         self.move_1 = Move(france, spa_sc, mar)
         setattr(self.move_1, "piece", self.test_piece)
 
@@ -246,10 +248,34 @@ class Test_Fleet_Move_Spa_Sc(unittest.TestCase):
         self.assertEqual(self.move_1.piece.challenging, spa_sc)
         self.assertEqual(self.move_1.report, "move failed: spa is not a neighbour of spa_sc and is not accessible by convoy")
         
+class Test_Fleet_Move_Mid_To_Spa_Sc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet("", mid, france)
+        self.move_1 = Move(france, mid, spa_sc)
+        setattr(self.move_1, "piece", self.test_piece)
+        
+    def test_move_from_mid_to_spa_sc(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, spa_sc)
+        self.assertEqual(self.move_1.report, "")
+        
+class Test_Fleet_Move_Mid_To_Spa_Nc(unittest.TestCase):
+
+    def setUp(self):
+        self.test_piece = Fleet("", mid, france)
+        self.move_1 = Move(france, mid, spa_nc)
+        setattr(self.move_1, "piece", self.test_piece)
+        
+    def test_move_from_mid_to_spa_sc(self):
+        self.move_1.process_order()
+        self.assertEqual(self.move_1.piece.challenging, spa_nc)
+        self.assertEqual(self.move_1.report, "")
+        
 class Test_Fleet_Move_Bul_Sc(unittest.TestCase):
 
     def setUp(self):
-        self.test_piece = Fleet(bul_sc, france)
+        self.test_piece = Fleet("", bul_sc, france)
         self.move_1 = Move(france, bul_sc, con)
         setattr(self.move_1, "piece", self.test_piece)
 
@@ -289,7 +315,7 @@ class Test_Fleet_Move_Bul_Sc(unittest.TestCase):
 class Test_Fleet_Move_bul_ec(unittest.TestCase):
 
     def setUp(self):
-        self.test_piece = Fleet(bul_ec, france)
+        self.test_piece = Fleet("", bul_ec, france)
         self.move_1 = Move(france, bul_ec, con)
         setattr(self.move_1, "piece", self.test_piece)
 
@@ -329,7 +355,7 @@ class Test_Fleet_Move_bul_ec(unittest.TestCase):
 class Test_Fleet_Move_stp_sc(unittest.TestCase):
 
     def setUp(self):
-        self.test_piece = Fleet(stp_sc, france)
+        self.test_piece = Fleet("", stp_sc, france)
         self.move_1 = Move(france, stp_sc, lvn)
         setattr(self.move_1, "piece", self.test_piece)
 
@@ -371,7 +397,7 @@ class Test_Fleet_Move_stp_sc(unittest.TestCase):
 class Test_Fleet_Move_stp_nc(unittest.TestCase):
 
     def setUp(self):
-        self.test_piece = Fleet(stp_nc, france)
+        self.test_piece = Fleet("", stp_nc, france)
         self.move_1 = Move(france, stp_nc, lvn)
         setattr(self.move_1, "piece", self.test_piece)
 
@@ -410,29 +436,62 @@ class Test_Fleet_Move_stp_nc(unittest.TestCase):
         self.assertEqual(self.move_1.piece.challenging, stp_nc)
         self.assertEqual(self.move_1.report, "move failed: stp_sc is not a neighbour of stp_nc and is not accessible by convoy")
         
-""" SUPPORT: The province to which a unit is providing support must be one to which the supportihng unit could have legally moved during that turn. """
 
-class Test_Support(unittest.TestCase):
+""" SUPPORT: The province to which a unit is providing support must be one to which the supporting unit could have legally moved during that turn. """
 
-    def setUp(self):
-        self.test_piece_1 = Army(bre, france)
-        self.test_piece_2 = Fleet(lon, france)
-        self.order_1 = Support(france, bre, lon, eng)
-        self.order_2 = Move(france, lon, eng)
+class Test_Support_1(unittest.TestCase):
+
+    def test_army_par_support_bur_pic(self):
+        
+        self.test_piece_1 = Army("", par, france)
+        self.test_piece_2 = Army("", bur, france)
+        
+        self.order_1 = Support(france, par, bur, pic)
+        self.order_2 = Move(france, bur, pic)
+        
         setattr(self.order_1, "piece", self.test_piece_1)
         setattr(self.order_2, "piece", self.test_piece_2)
+        
+        self.order_1.process_order()
+        self.order_2.process_order()
+        
+        self.assertEqual(self.order_2.piece.strength, {pic: 1})
+        self.assertEqual(self.order_1.report, "") 
 
-    def test_army_bre_support_lon_eng(self):
+    # have to use separate territories because of this issue: https://github.com/HypothesisWorks/hypothesis/issues/59
+
+    def test_army_vie_support_bud_ser(self):
+        
+        self.test_piece_1 = Army("", vie, france)
+        self.test_piece_2 = Army("", bud, france)
+        
+        self.order_1 = Support(france, vie, bud, ser)
+        self.order_2 = Move(france, bud, ser)
+        
+        setattr(self.order_1, "piece", self.test_piece_1)
+        setattr(self.order_2, "piece", self.test_piece_2)
+        
         self.order_1.process_order()
         self.order_2.process_order()
+        
         self.assertEqual(self.order_2.piece.strength, {})
-        self.assertEqual(self.order_1.report, "support failed: army at bre cannot support lon to eng")
-    
+        self.assertEqual(self.order_1.report, "support failed: army at vie cannot support bud to ser")
+        
+
     def test_fleet_bre_support_lon_eng(self):
-        setattr(self.order_1, "piece", Fleet(bre, france)) 
+        self.test_piece_1 = Fleet("", bre, france)
+        self.test_piece_2 = Fleet("", lon, france)
+        
+        self.order_1 = Support(france, bre, lon, eng)
+        self.order_2 = Move(france, lon, eng)
+        
+        setattr(self.order_1, "piece", self.test_piece_1)
+        setattr(self.order_2, "piece", self.test_piece_2)
+        
         self.order_1.process_order()
         self.order_2.process_order()
-        self.assertEqual(self.order_2.piece.strength, {})
+        
+        self.assertEqual(self.order_2.piece.strength, {eng: 1})
         self.assertEqual(self.order_1.report, "")
         print()
 

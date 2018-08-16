@@ -73,6 +73,9 @@ function resetOrderForm(data) {
 // Orders could have an order string as a property which would mean that this logic could be handled on the back end.
 
 function getOrderString(val) {
+    if (val["command"] == "build") {
+        orderString = val["command"] + ' ' + val["piece_type"] + " at " + val["territory"];
+    }
     if (val["command"] == "hold" || val["command"] == "disband") {
         orderString = val["piece_type"] + " at " + val["territory"] + " will " + val["command"];
     }
