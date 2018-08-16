@@ -1,10 +1,14 @@
 # Diplomacy
 
-Diplomacy is a popular strategy board game released in 1959 by Allan B. Calhamer. The game is set in early 1900s Europe. The game is known for it's emphasis on negotiation, alliance, and betrayal. Unlike many other strategy board games, 
-Diplomacy does not rely on dice rolling or other random elements. All players write down their orders and at the end of each negotiation phase, all of the orders are processed simultaneously. 
-Typically the game is played by seven players, each controlling one country. Variations of the game allow for fewer people. Variations of the game board also exist. 
+Diplomacy is a popular strategy board game released in 1959 by Allan B. Calhamer. The game is set in early 1900s Europe. The game is known for it's emphasis on negotiation, alliance, and betrayal. Unlike many other strategy board games, Diplomacy does not rely on dice rolling or other random elements. All players write down their orders and at the end of each negotiation phase, all of the orders are processed simultaneously. Typically the game is played by seven players, each controlling one country. Variations of the game allow for fewer people. Variations of the game board also exist. 
 
-Yo
+This project is designed to be an easy-to-use used browser-based version of Diplomacy which features real-time communication between players and a minimalist user interface which allows players to comfortably study the board while engaging in communications or issuing orders.
+
+The project is built on HTML5, CSS, JavaScript (AJAX and jQuery), Python, Flask, and Mongo DB (PyMongo). The code is tested using unit testing. The logic behind the order processing is done using object oriented programming principles. Real time communication between players is achieved using the SocketIO library.
+
+The project is in a unfinished state. The project is not ready for real-world play-testing and some core functionality is incomplete. 
+
+Live version of the game: http://johnpooch-diplomacy.herokuapp.com/
 
 ## Getting Started
 
