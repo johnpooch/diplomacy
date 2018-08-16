@@ -32,18 +32,26 @@ sudo pip3 install -r requirements.txt
 
 The code relies on a Mongo database. To create a Mongo database consult the mLab documentation: https://docs.mlab.com/
 
-Once you have created a Mongo database, create an environment variable for the Mongo URI. You will also need to create a secret key. You can generate a rondom secret key here: https://randomkeygen.com/
+Once you have created a Mongo database, create an environment variable for the Mongo URI. You will also need to create a secret key. You can generate a random secret key here: https://randomkeygen.com/
 
 ```
 $ export MONGO_URI=<INSERT MONGO URI HERE>
 $ export SECRET_KEY="<INSERT KEY HERE>"
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+You should now be able to run the game locally:
+
+```
+$ python3 run.py
+```
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+At present, the project only features automated tests which test the logic behind processing orders. To carry out the automated tests, run the following:
+
+```
+$ python3 test_order.py
+```
 
 ### Break down into end to end tests
 
