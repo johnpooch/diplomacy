@@ -9,7 +9,8 @@ This project is built using HTML5, CSS, JavaScript (AJAX and jQuery), Python3, F
 The project is in a unfinished state. The project is not ready for real-world play-testing and some core functionality is incomplete. 
 
 Live version of the game: http://johnpooch-diplomacy.herokuapp.com/initialise
-Note -- to automatically sign in and populate the game with opponents enter the following link after initialising the game:
+
+Note -- to automatically sign in and populate the game with opponents, enter the following link after initialising the game:
 http://johnpooch-diplomacy.herokuapp.com/populate
 
 Game Rules: https://www.wizards.com/avalonhill/rules/diplomacy.pdf
@@ -55,43 +56,16 @@ At present, the project only features automated tests which test the logic behin
 $ python3 test_order.py
 ```
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Flask](http://flask.pocoo.org/) - The flask web framework
+* [PyMongo](https://api.mongodb.com/python/current/) - Used to work with Mongo data base
+* [Flask-SocketIO](https://flask-socketio.readthedocs.io/en/latest/) - Used for real-time communication between players
 
-## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+## Author
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **John McDowell** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
