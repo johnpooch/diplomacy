@@ -48,7 +48,7 @@ You should now be able to run the game locally:
 $ python3 run.py
 ```
 
-## Running the tests
+### Running the tests
 
 At present, the project only features automated tests which test the logic behind processing orders. To carry out the automated tests, run the following:
 
@@ -56,15 +56,15 @@ At present, the project only features automated tests which test the logic behin
 $ python3 test_order.py
 ```
 
-### General Comments / What I've Learned From This Project So Far
+## General Comments / What I've Learned From This Project So Far
 
 xxx
 
-### Current Issues
+## Current Issues
 
 The project has a large number of issues which need to be resolved before the project is ready for play-testing.
 
-### Future Development Plans
+## Future Development Plans
 
 xxx
 
