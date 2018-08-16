@@ -1,28 +1,24 @@
-from dependencies import *
+from flask import request
 from order import *
-
 
 # CREATE ORDER ====================================================================================
     
-# Filter pieces by user ---------------------------------------------------------------------------
-    
-def filter_pieces_by_user(username):
-    user = mongo.db.users.find_one({"username": username})
-    pieces = mongo.db.pieces.find()
-    return [piece for piece in pieces if piece["owner"] == user["nation"]]
-    
 # piece exists and belongs to user ---------------------------------------------------------------------------
+
+""" Find out if a piece belonging to the user exists in the 'territory' of an order. """
 
 def piece_exists_and_belongs_to_player(order, pieces):
     for piece in pieces:
         if order["origin"] == piece["territory"] and order["nation"] == piece["owner"]:
             return piece["_id"]
-    write_to_log("\tinvalid move. there is no piece at {} or it does not belong to the user.".format(order["origin"]))
     return False
     
 # Create Order ------------------------------------------------------------------------------------
     
-def create_order(request, piece, game_state, username):
+""" Instances of order objects are created and attached to the piece located at the order 'territory'. This code feels
+    repetitive and I think it could be refactored to look cleaner. """
+    
+def create_order(request, piece):
     
     territory = request.form[(piece["territory"] + "-origin")],
     command = request.form[(piece["territory"] + "-command")],
@@ -43,8 +39,6 @@ def create_order(request, piece, game_state, username):
             piece.order = Convoy(nation, territory, _object, target)
         if command == "retreat":
             piece.order = Retreat(nation, territory, target)
-        if command == "build":
-            piece.order = Retreat(nation, territory, piece_type)
         
     else:
         return False

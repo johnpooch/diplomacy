@@ -1,8 +1,11 @@
 import random
-from flask import request, flash
+from flask import request
 from werkzeug.security import generate_password_hash
 
 # Create player -----------------------------------------------------------------------------------
+    
+""" Creates player in mongo db upon registration. The player is randomly assigned a nation from
+    the available nations. """
     
 def create_player(mongo, request):
     
@@ -28,5 +31,4 @@ def create_player(mongo, request):
         "orders_finalised": False
         }
     )
-    flash('Account created for {}!'.format(request.form["username"]), 'success')
     return request.form["username"]

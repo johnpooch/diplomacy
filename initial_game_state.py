@@ -4,6 +4,7 @@ from game_properties import *
 from piece import *
 from territory import *
 from order import *
+from werkzeug.security import generate_password_hash
 
 # Nations -----------------------------------------------------------------------------------------
 
@@ -488,7 +489,7 @@ dummy_players = [
     {
         "username": "john",
         "email": "john@john.com",
-        "password": "abc",
+        "password": generate_password_hash("abc"),
         "nation": "france",
         "orders_submitted" : 0, 
         "num_orders": 3, 
@@ -498,7 +499,7 @@ dummy_players = [
     {
         "username": "ross",
         "email": "ross@ross.com",
-        "password": "abc", 
+        "password": generate_password_hash("abc"), 
         "nation": "germany",
         "orders_submitted" : 0, 
         "num_orders": 3, 
@@ -508,7 +509,7 @@ dummy_players = [
     {
         "username": "hugh",
         "email": "hugh@hugh.com",
-        "password": "abc", 
+        "password": generate_password_hash("abc"), 
         "nation": "italy",
         "orders_submitted" : 0, 
         "num_orders": 3, 
@@ -518,7 +519,7 @@ dummy_players = [
     {
         "username": "alex",
         "email": "alex@alex.com",
-        "password": "abc",
+        "password": generate_password_hash("abc"),
         "nation": "england",
         "orders_submitted" : 0, 
         "num_orders": 3, 
@@ -528,7 +529,7 @@ dummy_players = [
     {
         "username": "pearse",
         "email": "pearse@pearse.com",
-        "password": "abc",
+        "password": generate_password_hash("abc"),
         "nation": "austria",
         "orders_submitted" : 0, 
         "num_orders": 3, 
@@ -538,7 +539,7 @@ dummy_players = [
     {
         "username": "ollie",
         "email": "ollie@ollie.com",
-        "password": "abc",
+        "password": generate_password_hash("abc"),
         "nation": "russia",
         "orders_submitted" : 0, 
         "num_orders": 4, 
@@ -548,7 +549,7 @@ dummy_players = [
     {
         "username": "niall",
         "email": "niall@niall.com",
-        "password": "abc",
+        "password": generate_password_hash("abc"),
         "nation": "turkey",
         "orders_submitted" : 0, 
         "num_orders": 3, 

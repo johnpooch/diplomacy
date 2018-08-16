@@ -121,9 +121,11 @@
                   <!--Registration Form-->
                   <div role="tabpanel" class="tab-pane active" id="registrationTab">
                     
+                    {% if players|count == 7 %}
                     <div class="container">
                       <div class="row">Seven players have already joined the game. </div>
                     </div>
+                    {% endif %}
                     
                     {% if not players|count == 7 %}
                     <form method="POST" action="/register">
@@ -250,9 +252,6 @@
                       {{ login_form.submit(class="btn btn-outline-info") }}
                       </div>
                     </form>
-                    <small class="text-muted">
-                      <a class="ml-2" href="#">Forgot Password?</a>
-                    </small>
                     <div class="border-top pt-3"></div>
                   </div>
                   
@@ -325,7 +324,7 @@
                             {% elif order["command"] in ["support", "convoy"] %}
                             <td>{{ order["piece_type"]|capitalize}} {{ order["territory"]|capitalize }} {{ order["command"] }} to {{ order["target"]|capitalize }} </td>
                             
-                            {% elif order["command"] == "build" %}
+                            {% elif order["com mand"] == "build" %}
                             <td>{{ order["command"]|capitalize}} {{ order["piece_type"] }} {{ order["territory"] }} </td>
                             
                             {% endif %}
@@ -344,13 +343,14 @@
                       
                     </div>
                     
-                    <a href="#" id="create-order-button" class="sub-tab-button">Create order</a>
-                    
                     {% else %}
                     
                     <div class="container"><span>No orders have been given.</span></div>
                     
                     {% endif %}
+                    
+                    <a href="#" id="create-order-button" class="sub-tab-button">Create order</a>
+                    
                     </div>
   
                   </div>

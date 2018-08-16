@@ -1,5 +1,11 @@
-from dependencies import *
-from flask import jsonify
+# Dependencies -----------------------------------------
+
+import os
+from flask import Flask, redirect, render_template, request, flash, request, url_for, session, jsonify
+from flask_pymongo import PyMongo
+import pymongo
+from wtforms.validators import DataRequired
+from forms import RegistrationForm, LoginForm
 from flask_socketio import SocketIO, send
 from end_turn import end_turn
 from create_player import create_player

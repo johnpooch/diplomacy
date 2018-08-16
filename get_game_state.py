@@ -1,4 +1,3 @@
-from dependencies import *
 from piece import *
 from game_properties import *
 

@@ -3,6 +3,9 @@ var orderString = "";
 
 // Parse Order String =============================================================================
 
+/* The user's input is stripped of certain non-essential words. This means that and order like 'army ven
+    move to par' would be the same as 'army ven move par'. */
+
 function parseOrderString(string) {
     var words = string.split(' ');
     for (var i=words.length-1; i>=0; i--) { 
@@ -18,6 +21,9 @@ function parseOrderString(string) {
 
 
 // Input Not Draggable ============================================================================
+
+/* This function makes the ui modal non-draggable when the cursor is in the input field. This means 
+    user's can drag over text to edit orders without moving the ui modal accidentally. */
 
 function inputNotDraggable() {
     var row = $(document).find('.row-data');
@@ -36,28 +42,14 @@ function inputNotDraggable() {
 
 
 
-// Rows Editable ==================================================================================
-
-function rowsEditable() {
-    $(document).on('click', '.btn-edit', function(event) {
-        $('#create-order').css({"display": "none"});
-        $('#order-form').css({"display": "block"}).focus();
-        
-        $('#order-input').val($(this).closest('tr').find('.row-data').text());
-    });
-}
-
-// ================================================================================================
-
-
-
 // Reset Order Form ===============================================================================
 
+/* This function restores the order form to the appropriate state after an order is given. When the 
+    user has given all available orders the 'create order' button is hidden. */
+
 function resetOrderForm(data) {
-    // clear input field
-    $('#order-input').val('');
     
-    // hide input field
+    $('#order-input').val('');
     $('#order-form').css({"display": "none"});
     
     // hide create order button if player has reached number of orders
@@ -77,6 +69,9 @@ function resetOrderForm(data) {
 
 // Get Order String ===============================================================================
 
+/* When displaying the orders back to the user, a slightly different syntax is used depending on the command. */
+// Orders could have an order string as a property which would mean that this logic could be handled on the back end.
+
 function getOrderString(val) {
     if (val["command"] == "hold" || val["command"] == "disband") {
         orderString = val["piece_type"] + " at " + val["territory"] + " will " + val["command"];
@@ -95,6 +90,8 @@ function getOrderString(val) {
 
 
 // Create Table ===================================================================================
+
+/* Creates a table of the user's orders. The delete button is also created as part of the table. */
 
 function createTable(data) {
     
@@ -120,6 +117,9 @@ function createTable(data) {
 
 // Submit Order ===================================================================================
 
+/* Orders are submitted to the run.py script using ajax. The mongo db is then updated and all of the user's orders
+    are returned and displyed in a table. */
+
 $(document).ready(function() {
     
     // send order to run.py -----------------------------------------------------------------------
@@ -133,9 +133,6 @@ $(document).ready(function() {
             url : '/process'
         })
         
-        // ----------------------------------------------------------------------------------------
-        
-        
         // receive data from run.py ---------------------------------------------------------------
         
         .done(function(data) {
@@ -146,11 +143,8 @@ $(document).ready(function() {
             }
             else if(data) {
                 resetOrderForm(data)
-                
                 $(document).find('#tbl_orders').html(createTable(data));
-                
                 inputNotDraggable();
-                rowsEditable();
             }
         });
         event.preventDefault();
@@ -182,11 +176,8 @@ $(document).ready(function() {
         .done(function(data) {
             if(data) {
                 resetOrderForm(data)
-                
                 $(document).find('#tbl_orders').html(createTable(data));
-                
                 inputNotDraggable();
-                rowsEditable();
             }
         });
         event.preventDefault();

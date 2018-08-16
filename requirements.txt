@@ -19,6 +19,7 @@ django-appconf==1.0.2
 dnspython==1.15.0
 eventlet==0.24.0
 greenlet==0.4.14
+gunicorn==19.9.0
 itsdangerous==0.24
 monotonic==1.5
 pathtools==0.1.2
