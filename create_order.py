@@ -39,6 +39,8 @@ def create_order(request, piece):
             piece.order = Convoy(nation, territory, _object, target)
         if command == "retreat":
             piece.order = Retreat(nation, territory, target)
+        if command == "disband":
+            piece.order = Disband(nation, territory, target)
         
     else:
         return False

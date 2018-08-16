@@ -1,5 +1,9 @@
-from write_to_log import write_to_log
 from piece import *
+
+""" This script contains the Phase class and its subclasses. Each phase has an 'end_phase' method which
+    changes the phase to the next phase."""
+    
+# Misuse of parent class. Phase has no attributes or methods.
 
 # Phase ===========================================================================================
 

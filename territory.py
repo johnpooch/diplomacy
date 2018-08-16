@@ -1,4 +1,8 @@
-from write_to_log import write_to_log
+
+""" This script contains the territory class and subclasses. Special coastal and special inland territories represent the 
+    three territories which have two separate coasts. Special coasta inheritx from the Water class becasue they share
+    a lot of functionality. """
+# import is at the bottom of thew script. this feels hacky to me.
 
 # Territory =======================================================================================
 

@@ -12,7 +12,6 @@ from create_player import create_player
 from process_orders import *
 from nation import Nation
 from initial_game_state import initial_pieces, initial_game_properties, initial_ownership, dummy_players
-from get_game_state import get_game_state
 from bson.objectid import ObjectId
 from werkzeug.security import check_password_hash
 

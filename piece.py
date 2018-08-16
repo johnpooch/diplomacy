@@ -1,4 +1,5 @@
-from write_to_log import write_to_log
+
+""" This script contains the Piece class and its subclasses, 'Army' and 'Fleet'."""
 
 # Piece ===========================================================================================
 
@@ -23,6 +24,7 @@ class Piece:
         
     def has_most_strength(self, challenging_pieces):
         for challenging_piece in challenging_pieces:
+            
             # zero strength
             if not self.challenging in challenging_piece.strength:
                 challenging_piece.strength[self.challenging] = 0
@@ -36,14 +38,11 @@ class Piece:
         if self.has_most_strength(challenging_pieces):
             for challenging_piece in challenging_pieces:
                 if challenging_piece.territory == challenging_piece.challenging:
-                    write_to_log("piece at {0} must now retreat".format(challenging_piece.territory.name))
                     challenging_piece.must_retreat()
         
     def change_territory(self):
         self.previous_territory = self.territory
-        self.challenging = self.challenging
         self.territory = self.challenging
-        write_to_log("{} at {} has moved to {}".format(self.piece_type, self.previous_territory.name, self.territory.name))
         
     def find_other_piece_in_territory(self):
         for piece in Piece.all_pieces:
@@ -59,14 +58,13 @@ class Piece:
     def retreat_resolved(self):
         self.retreat = False
     
+    # this feels unneccessary.
     def destroy(self):
         Piece.all_pieces.remove(self)
         if self in Army.all_armies:
             Army.all_armies.remove(self)
-            write_to_log("\n{} at {} has been destroyed".format(self.piece_type, self.territory.name))
         if self in Fleet.all_fleets:
             Fleet.all_fleets.remove(self)
-            write_to_log("\n{} at {} has been destroyed".format(self.piece_type, self.territory.name))
         
 # Army --------------------------------------------------------------------------------------------
         

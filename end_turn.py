@@ -114,7 +114,7 @@ def update_pieces_db(mongo, updated_pieces):
 # Get valid orders --------------------------------------------------------------------------------
 
 """ Return only orders which are valid for the current phase. """
-# I think this code could be refactored if phases and orders were connected somehow
+# I think this code could be refactored if phases and orders were connected. 
 
 def get_valid_orders(mongo):
     valid_orders = []

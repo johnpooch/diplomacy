@@ -1,3 +1,5 @@
+""" order_text_processor.py relies on this to convert playdiplomacy.com terminology to this projects terminology.  """
+
 stp_reps = {
     'St. Petersburg (South Coast)': 'stp_sc',
     'St. Petersburg (North Coast)': 'stp_nc',

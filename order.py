@@ -1,7 +1,13 @@
 from territory import *
 from game_properties import *
 
+""" This script contains the order class and subclasses. """
+# The order report property is not used effectively. 'Self.fail()' should be used on any unsuccessful order. 
+# This could be displayed back to the user to show why an order did not succeed.
+
 # Order ===========================================================================================
+
+""" Parent class. All other orders inherit from this class. There are no instances of this class. """
 
 class Order():
     all_orders = []
@@ -32,6 +38,9 @@ class Order():
 
 # Hold --------------------------------------------------------------------------------------------
 
+""" Hold. This class has no fucntionality in its process order mothed. This is because nothing needs to be processed in a hold order. """
+
+
 class Hold(Order):
     def __init__(self, player, territory):
         Order.__init__(self, player, territory)
@@ -48,6 +57,11 @@ class Hold(Order):
         
 # Convoy ------------------------------------------------------------------------------------------
         
+""" Convoy. A convoy order expects object and target parameters. Object refers to the territory where the piece to be convoyed exists.
+    Target refers to the territory where the object piece will attempt to move. All that needs to be determined for a valid convoy 
+    move is that the piece is on water. The move associated with the convoy is what will fail if the convoy is ineffective. A valid 
+    convoy order will be represented in the object piece by a dictionary in the piece's "convoyed_by" attribute. """
+        
 class Convoy(Order):
     def __init__(self, player, territory, convoyed_territory, target):
         Order.__init__(self, player, territory)
@@ -60,10 +74,8 @@ class Convoy(Order):
     def process_order(self):
         if self.piece_is_on_water():
             object_piece = self.get_object_by_territory(self.convoyed_territory)
-            object_piece.convoyed_by = {self.piece: self.target}
-            write_to_log("{} at {} is now convoying {} to {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.name))
-        else: 
-            write_to_log("convoy failed: piece at {} must be on water to convoy".format(self.territory.name))
+            if object_piece:
+                object_piece.convoyed_by = {self.piece: self.target}
     
     def __repr__(self):
         return "{}, {}: Convoy({}, {}, {}, {})".format(self.year, self.phase, self.player, self.territory.name, self.convoyed_territory.name, self.target.name)
@@ -72,6 +84,12 @@ class Convoy(Order):
         return "{}, {}: piece at {}, belonging to {}, convoy {} to {}.".format(self.year, self.phase, self.territory.name, self.player, self.convoyed_territory.name, self.target.name)
         
 # Move --------------------------------------------------------------------------------------------
+
+""" Move. A move order expects a target parameter which refers to the territory to which the piece will attempt to move. 
+    A piece can successfully move to a territory if it is accessible by the piece type (i.e. army can't move to water territory)
+    and the territory is a neighbour of the pieces current territory. A piece can also reach a territory if it is convoyed by fleets.
+    
+    A successful move causes the piece to be 'challenging the target territory'. """
 
 class Move(Order):
     all_moves = []
@@ -84,7 +102,6 @@ class Move(Order):
     def resolve_bounce(self):
         if self.bounced:
             self.piece.challenging = self.piece.territory
-            write_to_log("bounced piece at {0} is now challenging its own territory".format(self.piece.territory.name))
             self.bounced = False
         
     def create_bounces(self):
@@ -92,9 +109,13 @@ class Move(Order):
         if not self.piece.has_most_strength(challenging_pieces) and challenging_pieces:
             self.bounced = True
     
+    
     def target_accessible_by_convoy(self, territory):
-        print(self)
-        print(territory)
+        
+        """ This function makes effective use of recursion. A chain of fleets can transport an army across multiple seas, ex. a chain of 
+            fleets can transport an army from Edinburgh to Spain if the chain of fleets connects the two land propeties and all fleets
+            are conoying the army to the target. This rule is represented in this recursive function. """
+        
         for piece in [piece for piece in Piece.all_pieces if piece.territory in territory.neighbours]:
             if piece in self.piece.convoyed_by and self.piece.convoyed_by[piece] == self.target:
                 if self.territory_is_neighbour(piece.territory):
@@ -104,21 +125,20 @@ class Move(Order):
         return False
 
     def move_is_valid(self):
-        print(self)
+        
         if not (self.target_accessible_by_convoy(self.territory) or self.territory_is_neighbour(self.target)):
             self.fail("move failed: {} is not a neighbour of {} and is not accessible by convoy".format(self.target.name, self.territory.name))
             return False
+            
         if not (self.target.accessible_by_piece_type(self.piece)):
             self.fail("move failed: {} is not accessible by {} at {}".format(self.target.name, self.piece.piece_type, self.piece.territory.name))
             return False
+            
         return  True
 
     def process_order(self):
         if self.move_is_valid():
             self.piece.challenging = self.target
-            write_to_log("{} at {} is now challenging {}".format(self.piece.piece_type, self.territory.name, self.piece.challenging.name))
-        else: 
-            print(self.report)
         
     def __repr__(self):
         return "{}, {}: Move({}, {})".format(self.year, self.phase, self.player, self.territory.name)
@@ -127,6 +147,15 @@ class Move(Order):
         return "{}, {}: piece at {}, belonging to {}, move to .".format(self.year, self.phase, self.territory.name, self.player)
     
 # Support -----------------------------------------------------------------------------------------
+        
+""" Support. A support order expects object and target parameters. Object refers to the territory where the piece to be supported exists.
+    Target refers to the territory where the object piece will attempt to move. 
+    
+    A valid convoy order will be represented in the object piece by a dictionary in the piece's "strength" attribute. 
+    
+    Different conditions have to be satisfied when dealing with supporting a piece into a special coastal or special inland territory. """
+        
+# I think more concise code could be written to handle the special coast edge case with supports.
         
 class Support(Order):
     def __init__(self, player, territory, supported_territory, target):
@@ -153,23 +182,15 @@ class Support(Order):
             
             if isinstance(self.target, Special_Coastal):
                 if self.target in object_piece.strength:
-                    object_piece.strength[self.target.parent_territory] +=1
+                    object_piece.strength[self.target.parent_territory] += 1
                 else:
                     object_piece.strength[self.target.parent_territory] = 1
-                write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.parent_territory.name))
-                write_to_log("{} at {} strength: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.strength))    
-                
             
             else:
                 if self.target in object_piece.strength:
                     object_piece.strength[self.target] +=1
                 else:
                     object_piece.strength[self.target] = 1
-                
-                write_to_log("{} at {} is now supporting {} into {}".format(self.piece.piece_type, self.territory.name, object_piece.territory.name, self.target.name))
-                write_to_log("{} at {} strength: {}".format(object_piece.piece_type, object_piece.territory.name, object_piece.strength))
-            
-
         else:
             self.fail("support failed: {} at {} cannot support {} to {}".format(self.piece.piece_type, self.territory.name, self.supported_territory.name, self.target.name))
         
@@ -178,9 +199,12 @@ class Support(Order):
         
     def __str__(self):
         return "{}, {}: piece at {}, belonging to {}, support {} into {}.".format(self.year, self.phase, self.territory.name, self.player, self.supported_territory.name, self.target.name)
-        
+
 
 # Retreat --------------------------------------------------------------------------------------------
+        
+""" Retreat. Retreat funcitons similarly to move except that a piece cannot retreat to the territory from which the attacker came. If the 
+    retreat fails, the piece is destroyed. """
         
 class Retreat(Order):
     def __init__(self, player, territory, target):
@@ -189,19 +213,18 @@ class Retreat(Order):
         
     def retreat_is_valid(self):
         if not (self.territory_is_neighbour(self.target)):
-            write_to_log("retreat failed: {} is not a neighbour of {}".format(self.target.name, self.territory.name))
+            self.fail("retreat failed: {} is not a neighbour of {}".format(self.target.name, self.territory.name))
             return False
         if not (self.target.accessible_by_piece_type(self.piece)):
-            write_to_log("retreat failed: {} is not accessible by {} at {}".format(self.target.name, self.piece.piece_type, self.territory.name))
+            self.fail("retreat failed: {} is not accessible by {} at {}".format(self.target.name, self.piece.piece_type, self.territory.name))
             return False
         if self.target == self.piece.find_other_piece_in_territory().previous_territory:
-            write_to_log("retreat failed: {} at {} cannot retreat to the territory that the attacker came from.".format(self.piece.piece_type, self.territory.name))
+            self.fail("retreat failed: {} at {} cannot retreat to the territory that the attacker came from.".format(self.piece.piece_type, self.territory.name))
             return False
         return  True
         
     def process_order(self):
         if self.retreat_is_valid():
-            write_to_log("{} at {} has retreated to {}".format(self.piece.piece_type, self.territory.name, self.target.name))
             self.piece.territory = self.target
         else:
             self.piece.destroy()
@@ -212,9 +235,11 @@ class Retreat(Order):
     def __str__(self):
         return "{}, {}: piece at {}, belonging to {}, retreat to {}.".format(self.year, self.phase, self.territory.name, self.player, self.target.name)
         
-# Destroy -----------------------------------------------------------------------------------------
+# Ddisband -----------------------------------------------------------------------------------------
 
-class Destroy(Order):
+""" Disband is an order that players can issue during retreat and build phases. It completely removes the piece. """
+
+class Disband(Order):
     def __init__(self, player, territory):
         Order.__init__(self, player, territory)
         
@@ -229,6 +254,11 @@ class Destroy(Order):
         
 # Build -------------------------------------------------------------------------------------------
         
+""" Build is an order that players can issue during build phases. It builds a new piece. Players must specify what type of piece
+    they want to build. The territory in which to build the  piece must be unoccupied. """
+    
+# The rule whereby a player can only build a piece in a home territory is not represented.
+        
 class Build(Order):
     def __init__(self, player, piece_type, territory):
         Order.__init__(self, player, territory)
@@ -238,10 +268,8 @@ class Build(Order):
         if (not self.territory.occupied()) and self.territory.has_supply_center_which_belongs_to_player():
             if self.piece_type == "army":
                 self.player.pieces.append(Army("", self.territory, self.player))
-                write_to_log("army built at {}".format(self.territory.name))
             if self.piece_type == "fleet" and isinstance(self.territory, Coastal):
                 self.player.pieces.append(Fleet("", self.territory, self.player))
-                write_to_log("fleet built at {}".format(self.territory.name))
               
     def __repr__(self):
         return "{}, {}: Build({}, {})".format(self.year, self.phase.name, self.player.name, self.territory.name)
