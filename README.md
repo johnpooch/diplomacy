@@ -8,7 +8,9 @@ This project is built using HTML5, CSS, JavaScript (AJAX and jQuery), Python3, F
 
 The project is in a unfinished state. The project is not ready for real-world play-testing and some core functionality is incomplete. 
 
-Live version of the game: http://johnpooch-diplomacy.herokuapp.com/
+Live version of the game: http://johnpooch-diplomacy.herokuapp.com/initialise
+Note -- to automatically sign in and populate the game with opponents enter the following link after initialising the game:
+http://johnpooch-diplomacy.herokuapp.com/populate
 
 Game Rules: https://www.wizards.com/avalonhill/rules/diplomacy.pdf
 
