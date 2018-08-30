@@ -110,7 +110,9 @@ Two elements have the same ID which throws an error in the console. The socketIO
 
 ## Future Development Plans
 
-xxx
+* I intend to iron out the many issues with the game in its current form.
+* I am considering making a mobile app for the game.
+* I am exploring the possibility of building browser versions of other classic boardgames like battle for Stalingrad.
 
 ## Built With
 
