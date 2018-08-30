@@ -62,11 +62,51 @@ $ python3 test_order.py
 
 ## General Comments / What I've Learned From This Project So Far
 
+* Orders are processed using object oriented programming. This process was originally written in a procedural coding style but it quickly became unsustainable. The advantages of OOP became very clear form this process.
+
+* The interfacing between MongoDB and the OOP sections of the code represented an interesting challenge. Data had to be pulled from the MongoDB, converted into instances of objects, processed, and then converted back to dictionaries and saved.
+
+* Orders represented an interesting opportunity to use inheritence. Order types ('hold', 'move', 'support', 'convoy', 'retreat', 'build') have some shared characteristics but each order has unique attributes and methods. The same is true of the two piece types, 'army' and 'fleet' which both inheit form the Piece class.
+
+* I think I should have used a test driven development approach with this project. As the code became increasingly complex it became more and more difficult to be sure that everything was working as expected. 
+
+* I should have been more clear about what data structures would be used from beginning. By diving head first into the code and not thinking enough about the data structures, I ended up wasting a lot of time and effort.
+
+* I believe there is great value in coding boardgames. Boardgames provide a defined set of often complicated rules and manny interpretations of how to represent data bpard game are possible.
+
+* Keeping functions short and focused on single purposes meant that code maintained its legibility even when the scripts became very long. 
 
 
 ## Current Issues
 
 The project has a large number of issues which need to be resolved before the project is ready for play-testing.
+
+##### Badly written code
+There are a number of areas in the source code which are repetitive or unnecessarily complex. Comments have been inserted to identify problematic areas. These will be addressed over time.
+
+##### Confused hierarchy
+The hierarchy of User, Piece, and Order classes is confused and this manifests in the form of unnecessarily complex code. 
+
+##### Feedback Bug
+There is a bug in the feedback.js code. The code catches most invalid strings. However, if the user ignores an invalid order warning and completes the order, the order will appear as valid. This issue could be fixed by refactoring the code. 
+This script could use AJAX. This would mean that the logic of identifying invalid and valid moves could be handled on the backend. I think this would make for more elegant code. 
+
+##### Game End
+There is no system in place to end the game. Diplomacy can be won by an individual or as part of a draw. This should be represented in the code.
+
+##### Missing rules
+Some rules of the game are not represented in the code. For example, the rule whereby a player can only build a piece in a home territory is not represented.
+
+##### Special Coast
+More concise code could be written to handle the special coast edge case with supports.
+
+##### List of abbreviations and rules
+Players should have access to a list of valid abbreviations for territories. The rules of the game should also be available.
+
+##### Console errors
+Two elements have the same ID which throws an error in the console. The socketIO messagin system also throws errors.
+
+
 
 ## Future Development Plans
 
