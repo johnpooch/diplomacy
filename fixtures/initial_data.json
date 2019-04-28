@@ -1,5 +1,82 @@
-[{"model": "service.nation", "pk": 1, "fields": {"name": "Germany"}},
-{"model": "service.territory", "pk": 1, "fields": {"abbreviation": "ber",
-    "display_name": "Berlin", "neighours": [2]}},
-{"model": "service.territory", "pk": 2, "fields": {"abbreviation": "mun",
-    "display_name": "Munich", "neighours": [1]}}]
+[
+{
+  "model": "service.nation",
+  "pk": 1,
+  "fields": {
+    "name": "Germany"
+  }
+},
+{
+  "model": "service.nation",
+  "pk": 3,
+  "fields": {
+    "name": "France"
+  }
+},
+{
+  "model": "service.piece",
+  "pk": 1,
+  "fields": {
+    "nation": 1,
+    "type": "A",
+    "territory": 1,
+    "active": true
+  }
+},
+{
+  "model": "service.piece",
+  "pk": 2,
+  "fields": {
+    "nation": 1,
+    "type": "A",
+    "territory": 2,
+    "active": true
+  }
+},
+{
+  "model": "service.supplycenter",
+  "pk": 1,
+  "fields": {
+    "owner": 1,
+    "territory": 1
+  }
+},
+{
+  "model": "service.supplycenter",
+  "pk": 2,
+  "fields": {
+    "owner": 1,
+    "territory": 2
+  }
+},
+{
+  "model": "service.territory",
+  "pk": 1,
+  "fields": {
+    "abbreviation": "mun",
+    "display_name": "Munich",
+    "nationity": 1,
+    "type": "L",
+    "coast": false,
+    "neighours": [
+      2
+    ],
+    "shared_coasts": []
+  }
+},
+{
+  "model": "service.territory",
+  "pk": 2,
+  "fields": {
+    "abbreviation": "ber",
+    "display_name": "Berlin",
+    "nationity": 1,
+    "type": "L",
+    "coast": true,
+    "neighours": [
+      1
+    ],
+    "shared_coasts": []
+  }
+}
+]
