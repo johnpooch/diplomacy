@@ -1,0 +1,5 @@
+[{"model": "service.nation", "pk": 1, "fields": {"name": "Germany"}},
+{"model": "service.territory", "pk": 1, "fields": {"abbreviation": "ber",
+    "display_name": "Berlin", "neighours": [2]}},
+{"model": "service.territory", "pk": 2, "fields": {"abbreviation": "mun",
+    "display_name": "Munich", "neighours": [1]}}]
