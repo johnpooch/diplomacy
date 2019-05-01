@@ -229,7 +229,7 @@ class Retreat(Order):
     def __str__(self):
         return "{}, {}: piece at {}, belonging to {}, retreat to {}.".format(self.year, self.phase, self.territory.name, self.player, self.target.name)
         
-# Ddisband -----------------------------------------------------------------------------------------
+# Disband -----------------------------------------------------------------------------------------
 
 """ Disband is an order that players can issue during retreat and build phases. It completely removes the piece. """
 

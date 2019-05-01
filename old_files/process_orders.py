@@ -8,24 +8,6 @@ from order import *
 from initial_game_state import *
 from order_text_processor import get_orders_from_txt
 
-# find territory by name ==========================================================================
-
-""" returns instance of territory object from string. """
-
-def find_territory_by_name(name):
-    for territory in Territory.all_territories:
-        if territory.name == name:
-            return territory
-            
-# find nation by name =============================================================================
-
-""" returns instance of nation object by given string  """
-            
-def find_nation_by_name(name):
-    for nation in Nation.all_nations:
-        if nation.name == name:
-            return nation
-            
 # get phase by string =============================================================================
             
 """ returns instance of phase object from string. """
