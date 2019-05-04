@@ -37,6 +37,10 @@ class Command(models.Model):
             related_name='commands', db_column="order_id", null=False)
     type = models.CharField(max_length=1, choices=COMMAND_TYPES, null=False)
 
+    def validate_command(self):
+        # check source territory contains piece belonging to player
+        pass
+        
 
 class Game(models.Model):
     """
@@ -57,7 +61,7 @@ class Message(models.Model):
 class Nation(models.Model):
     """
     """
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=15)
     active = models.BooleanField(default=True)
     
     def __str__(self):
@@ -136,7 +140,7 @@ class Territory(models.Model):
 
     abbreviation = models.CharField(max_length=6, null=False)
     display_name = models.CharField(max_length=50, null=False)
-    nationity = models.ForeignKey('Nation', on_delete=models.CASCADE,
+    nationality = models.ForeignKey('Nation', on_delete=models.CASCADE,
             db_column='nation_id', null=True)
     neighours = models.ManyToManyField('self', related_name='neighbours',
             blank=True)

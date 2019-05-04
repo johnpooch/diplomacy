@@ -4,7 +4,6 @@ from game_properties import *
 from piece import *
 from territory import *
 from order import *
-from werkzeug.security import generate_password_hash
 
 """ This script creates the object instances that exist at the start of the game. Dictionaries for pieces, ownership, 
     game properties are here. They are uploaded to the mongo db when the game is initialised. """
@@ -14,11 +13,26 @@ from werkzeug.security import generate_password_hash
 england = Nation("england", [], 3)
 france = Nation("france", [], 3)
 germany = Nation("germany", [], 3)
-austria = Nation("austria", [], 3)
+austria = Nation("austria-hungary", [], 3)
 italy = Nation("italy", [], 3)
 russia = Nation("russia", [], 4)
 turkey = Nation("turkey", [], 3)
-neutral = Neutral()
+
+neutral = ""
+
+
+def get_nations():
+    nations = Nation.all_nations
+    nation_dicts = []
+    for i in range(len(nations)):
+        nation_dicts.append({
+            "model": "service.nation",
+            "pk": i + 1,
+            "fields": {
+                "name": nations[i].name
+            }
+            })
+    return nation_dicts
 
 # Water Territories -------------------------------------------------------------------------------
 
@@ -205,46 +219,47 @@ setattr(stp_sc, 'neighbours', [bot, fin, lvn])
 setattr(stp_nc, 'neighbours', [bar, nwy])
         
 # Assign shared coasts to territories ----------------------------------------------------------------
-        
-setattr(alb, 'shared_coasts', [gre, tri])
-setattr(ank, 'shared_coasts', [arm, con])
-setattr(apu, 'shared_coasts', [nap, ven])
-setattr(arm, 'shared_coasts', [sev, ank])
-setattr(ber, 'shared_coasts', [kie, pru])
-setattr(bel, 'shared_coasts', [hol, pic])
-setattr(bre, 'shared_coasts', [gas, pic])
-setattr(cly, 'shared_coasts', [edi, lvp])
-setattr(con, 'shared_coasts', [ank, smy])
-setattr(den, 'shared_coasts', [kie, swe])
-setattr(edi, 'shared_coasts', [cly, yor])
-setattr(fin, 'shared_coasts', [swe])
-setattr(gas, 'shared_coasts', [bre])
-setattr(gre, 'shared_coasts', [alb, bul])
-setattr(hol, 'shared_coasts', [bel, kie])
-setattr(kie, 'shared_coasts', [ber, den, hol])
-setattr(lon, 'shared_coasts', [wal, yor])
-setattr(lvn, 'shared_coasts', [pru])
-setattr(lvp, 'shared_coasts', [cly, wal])
-setattr(mar, 'shared_coasts', [pie])
-setattr(naf, 'shared_coasts', [tun])
-setattr(nap, 'shared_coasts', [apu, rom])
-setattr(nwy, 'shared_coasts', [swe])
-setattr(pic, 'shared_coasts', [bre, bel])
-setattr(pie, 'shared_coasts', [mar, tus])
-setattr(por, 'shared_coasts', [])
-setattr(rom, 'shared_coasts', [nap, tus])
-setattr(rum, 'shared_coasts', [sev])
-setattr(pru, 'shared_coasts', [ber, lvn])
-setattr(sev, 'shared_coasts', [arm, rum])
-setattr(smy, 'shared_coasts', [con, syr])
-setattr(swe, 'shared_coasts', [den, fin, nwy])
-setattr(syr, 'shared_coasts', [smy])
-setattr(tri, 'shared_coasts', [alb, ven])
-setattr(tun, 'shared_coasts', [naf])
-setattr(tus, 'shared_coasts', [pie, rom])
-setattr(ven, 'shared_coasts', [apu, tri])
-setattr(wal, 'shared_coasts', [lon, lvp])
-setattr(yor, 'shared_coasts', [edi, lon])
+l = [ 
+    (alb, 'shared_coasts', [gre, tri]),
+    (ank, 'shared_coasts', [arm, con]),
+    (apu, 'shared_coasts', [nap, ven]),
+    (arm, 'shared_coasts', [sev, ank]),
+    (ber, 'shared_coasts', [kie, pru]),
+    (bel, 'shared_coasts', [hol, pic]),
+    (bre, 'shared_coasts', [gas, pic]),
+    (cly, 'shared_coasts', [edi, lvp]),
+    (con, 'shared_coasts', [ank, smy]),
+    (den, 'shared_coasts', [kie, swe]),
+    (edi, 'shared_coasts', [cly, yor]),
+    (fin, 'shared_coasts', [swe]),
+    (gas, 'shared_coasts', [bre]),
+    (gre, 'shared_coasts', [alb, bul]),
+    (hol, 'shared_coasts', [bel, kie]),
+    (kie, 'shared_coasts', [ber, den, hol]),
+    (lon, 'shared_coasts', [wal, yor]),
+    (lvn, 'shared_coasts', [pru]),
+    (lvp, 'shared_coasts', [cly, wal]),
+    (mar, 'shared_coasts', [pie]),
+    (naf, 'shared_coasts', [tun]),
+    (nap, 'shared_coasts', [apu, rom]),
+    (nwy, 'shared_coasts', [swe]),
+    (pic, 'shared_coasts', [bre, bel]),
+    (pie, 'shared_coasts', [mar, tus]),
+    (por, 'shared_coasts', []),
+    (rom, 'shared_coasts', [nap, tus]),
+    (rum, 'shared_coasts', [sev]),
+    (pru, 'shared_coasts', [ber, lvn]),
+    (sev, 'shared_coasts', [arm, rum]),
+    (smy, 'shared_coasts', [con, syr]),
+    (swe, 'shared_coasts', [den, fin, nwy]),
+    (syr, 'shared_coasts', [smy]),
+    (tri, 'shared_coasts', [alb, ven]),
+    (tun, 'shared_coasts', [naf]),
+    (tus, 'shared_coasts', [pie, rom]),
+    (ven, 'shared_coasts', [apu, tri]),
+    (wal, 'shared_coasts', [lon, lvp]),
+    (yor, 'shared_coasts', [edi, lon])
+]
             
 # Assign special coasts to territories ------------------------------------------------------------
             
@@ -260,6 +275,45 @@ setattr(spa_sc, 'parent_territory', spa)
 setattr(spa_nc, 'parent_territory', spa)
 setattr(stp_nc, 'parent_territory', stp)
 setattr(stp_sc, 'parent_territory', stp)
+
+
+def get_territories():
+    territories = Territory.all_territories
+    key_dict = {}
+    territories_dicts = []
+    for i in range(len(territories)):
+        t = territories[i]
+        territories_dicts.append({
+            "model": "service.territory",
+            "pk": i + 1,
+            "fields": {
+                "abbreviation": t.name,
+                "display_name": t.display_name,
+                "neighbours": [],
+                "shared_coasts": [],
+                }
+            })
+
+        if isinstance(t, Inland) or isinstance(t, Coastal):
+            territories_dicts[i]["fields"]["type"] = "L"
+
+        if isinstance(t, Water):
+            territories_dicts[i]["fields"]["type"] = "S"
+        
+        key_dict[t.name] = i + 1
+
+    for i in range(len(territories)):
+        t = territories[i]
+        for n in t.neighbours:
+            territories_dicts[i]["fields"]["neighbours"].append(key_dict[n.name])
+        for y in l:
+            if t.name == y[0].name:
+                for sc in y[2]:
+                    territories_dicts[i]["fields"]["shared_coasts"].append(key_dict[sc.name])
+
+    return territories_dicts
+
+
 
 
 initial_ownership = {
@@ -479,75 +533,3 @@ initial_game_properties = {
 }
 
     
-dummy_players = [
-    {
-        "username": "john",
-        "email": "john@john.com",
-        "password": generate_password_hash("abc"),
-        "nation": "france",
-        "orders_submitted" : 0, 
-        "num_orders": 3, 
-        "num_supply": 3, 
-        "num_pieces": 3, 
-    },
-    {
-        "username": "ross",
-        "email": "ross@ross.com",
-        "password": generate_password_hash("abc"), 
-        "nation": "germany",
-        "orders_submitted" : 0, 
-        "num_orders": 3, 
-        "num_supply": 3, 
-        "num_pieces": 3, 
-    },
-    {
-        "username": "hugh",
-        "email": "hugh@hugh.com",
-        "password": generate_password_hash("abc"), 
-        "nation": "italy",
-        "orders_submitted" : 0, 
-        "num_orders": 3, 
-        "num_supply": 3,
-        "num_pieces": 3, 
-    },
-    {
-        "username": "alex",
-        "email": "alex@alex.com",
-        "password": generate_password_hash("abc"),
-        "nation": "england",
-        "orders_submitted" : 0, 
-        "num_orders": 3, 
-        "num_supply": 3,
-        "num_pieces": 3, 
-    },
-    {
-        "username": "pearse",
-        "email": "pearse@pearse.com",
-        "password": generate_password_hash("abc"),
-        "nation": "austria",
-        "orders_submitted" : 0, 
-        "num_orders": 3, 
-        "num_supply": 3,
-        "num_pieces": 3, 
-    },
-    {
-        "username": "ollie",
-        "email": "ollie@ollie.com",
-        "password": generate_password_hash("abc"),
-        "nation": "russia",
-        "orders_submitted" : 0, 
-        "num_orders": 4, 
-        "num_supply": 4,
-        "num_pieces": 4, 
-    },
-    {
-        "username": "niall",
-        "email": "niall@niall.com",
-        "password": generate_password_hash("abc"),
-        "nation": "turkey",
-        "orders_submitted" : 0, 
-        "num_orders": 3, 
-        "num_supply": 3, 
-        "num_pieces": 3, 
-    },
-]

@@ -11,7 +11,8 @@ class SupplyCenterSerializer(serializers.ModelSerializer):
 
 class NationSerializer(serializers.ModelSerializer):
     pieces = serializers.StringRelatedField(many=True, read_only=True)
-    supply_centers = serializers.StringRelatedField(many=True, read_only=True)
+    supply_centers = serializers.StringRelatedField(many=True, read_only=True,
+            source='controlled_supply_centers')
 
     class Meta:
         model = models.Nation

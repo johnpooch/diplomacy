@@ -2,6 +2,11 @@
 version: '3'
 
 services:
+  diplomacy.mysql:
+    image: 'mariadb:latest'
+    environment:
+      - MYSQL_ROOT_PASSWORD=diplomacy
+      - MYSQL_DATABASE=diplomacy
   diplomacy.service:
     build: 
       context: .
