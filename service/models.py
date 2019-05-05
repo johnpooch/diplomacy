@@ -166,9 +166,6 @@ class Territory(models.Model):
 
     abbreviation = models.CharField(max_length=6, null=False)
     display_name = models.CharField(max_length=50, null=False)
-    nationality = models.ForeignKey('Nation', on_delete=models.CASCADE,
-            db_column='nationality_id', null=True,
-            related_name='national_territories',)
     controlled_by = models.ForeignKey('Nation', on_delete=models.CASCADE,
             db_column='controlled_by_id', null=True,
             related_name='controlled_territories',)

@@ -197,7 +197,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "adriatic sea",
-            "nationality": null,
             "neighbours": [
                 20,
                 22,
@@ -217,7 +216,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "aegean sea",
-            "nationality": null,
             "neighbours": [
                 5,
                 73,
@@ -240,7 +238,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "baltic sea",
-            "nationality": null,
             "neighbours": [
                 24,
                 6,
@@ -261,7 +258,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "barrents sea",
-            "nationality": null,
             "neighbours": [
                 15,
                 42,
@@ -280,7 +276,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "black sea",
-            "nationality": null,
             "neighbours": [
                 21,
                 23,
@@ -302,7 +297,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "gulf of bothnia",
-            "nationality": null,
             "neighbours": [
                 3,
                 31,
@@ -323,7 +317,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "eastern mediterranean",
-            "nationality": null,
             "neighbours": [
                 2,
                 50,
@@ -341,7 +334,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "english channel",
-            "nationality": null,
             "neighbours": [
                 25,
                 26,
@@ -364,7 +356,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "gulf of lyon",
-            "nationality": null,
             "neighbours": [
                 39,
                 44,
@@ -386,7 +377,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "heligoland blight",
-            "nationality": null,
             "neighbours": [
                 29,
                 34,
@@ -405,7 +395,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "ionian sea",
-            "nationality": null,
             "neighbours": [
                 2,
                 1,
@@ -428,7 +417,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "irish sea",
-            "nationality": null,
             "neighbours": [
                 8,
                 38,
@@ -448,7 +436,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "mid_atlantic ocean",
-            "nationality": null,
             "neighbours": [
                 26,
                 8,
@@ -474,7 +461,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "north atlantic",
-            "nationality": null,
             "neighbours": [
                 27,
                 12,
@@ -494,7 +480,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "norwegian sea",
-            "nationality": null,
             "neighbours": [
                 4,
                 27,
@@ -515,7 +500,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "north sea",
-            "nationality": null,
             "neighbours": [
                 25,
                 29,
@@ -541,7 +525,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "skagerrack",
-            "nationality": null,
             "neighbours": [
                 29,
                 16,
@@ -560,7 +543,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "tyrrhenian sea",
-            "nationality": null,
             "neighbours": [
                 9,
                 11,
@@ -582,7 +564,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "western mediterranean",
-            "nationality": null,
             "neighbours": [
                 9,
                 13,
@@ -604,7 +585,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "albania",
-            "nationality": null,
             "neighbours": [
                 1,
                 33,
@@ -625,9 +605,8 @@
         "fields": {
             "abbreviation": "ank",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 7,
             "display_name": "ankara",
-            "nationality": null,
             "neighbours": [
                 23,
                 5,
@@ -647,9 +626,8 @@
         "fields": {
             "abbreviation": "apu",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 5,
             "display_name": "apulia",
-            "nationality": null,
             "neighbours": [
                 1,
                 11,
@@ -670,9 +648,8 @@
         "fields": {
             "abbreviation": "arm",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 7,
             "display_name": "armenia",
-            "nationality": null,
             "neighbours": [
                 21,
                 21,
@@ -693,9 +670,8 @@
         "fields": {
             "abbreviation": "ber",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 3,
             "display_name": "berlin",
-            "nationality": null,
             "neighbours": [
                 3,
                 35,
@@ -718,7 +694,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "belgium",
-            "nationality": null,
             "neighbours": [
                 61,
                 8,
@@ -739,9 +714,8 @@
         "fields": {
             "abbreviation": "bre",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 2,
             "display_name": "brest",
-            "nationality": null,
             "neighbours": [
                 8,
                 32,
@@ -762,9 +736,8 @@
         "fields": {
             "abbreviation": "cly",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 1,
             "display_name": "clyde",
-            "nationality": null,
             "neighbours": [
                 30,
                 38,
@@ -785,9 +758,8 @@
         "fields": {
             "abbreviation": "con",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 7,
             "display_name": "constantinople",
-            "nationality": null,
             "neighbours": [
                 2,
                 21,
@@ -812,7 +784,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "denmark",
-            "nationality": null,
             "neighbours": [
                 3,
                 10,
@@ -834,9 +805,8 @@
         "fields": {
             "abbreviation": "edi",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 1,
             "display_name": "edinburgh",
-            "nationality": null,
             "neighbours": [
                 27,
                 38,
@@ -858,9 +828,8 @@
         "fields": {
             "abbreviation": "fin",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "finland",
-            "nationality": null,
             "neighbours": [
                 6,
                 42,
@@ -880,9 +849,8 @@
         "fields": {
             "abbreviation": "gas",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 2,
             "display_name": "gascony",
-            "nationality": null,
             "neighbours": [
                 26,
                 61,
@@ -906,7 +874,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "greece",
-            "nationality": null,
             "neighbours": [
                 2,
                 20,
@@ -930,7 +897,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "holland",
-            "nationality": null,
             "neighbours": [
                 25,
                 10,
@@ -951,9 +917,8 @@
         "fields": {
             "abbreviation": "kie",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 3,
             "display_name": "kiel",
-            "nationality": null,
             "neighbours": [
                 3,
                 24,
@@ -977,9 +942,8 @@
         "fields": {
             "abbreviation": "lon",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 1,
             "display_name": "london",
-            "nationality": null,
             "neighbours": [
                 8,
                 16,
@@ -999,9 +963,8 @@
         "fields": {
             "abbreviation": "lvn",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "livonia",
-            "nationality": null,
             "neighbours": [
                 3,
                 6,
@@ -1023,9 +986,8 @@
         "fields": {
             "abbreviation": "lvp",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 1,
             "display_name": "liverpool",
-            "nationality": null,
             "neighbours": [
                 27,
                 30,
@@ -1047,9 +1009,8 @@
         "fields": {
             "abbreviation": "mar",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 2,
             "display_name": "marseilles",
-            "nationality": null,
             "neighbours": [
                 61,
                 32,
@@ -1072,7 +1033,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "north africa",
-            "nationality": null,
             "neighbours": [
                 13,
                 54,
@@ -1090,9 +1050,8 @@
         "fields": {
             "abbreviation": "nap",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 5,
             "display_name": "naples",
-            "nationality": null,
             "neighbours": [
                 22,
                 11,
@@ -1114,7 +1073,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "norway",
-            "nationality": null,
             "neighbours": [
                 4,
                 31,
@@ -1137,9 +1095,8 @@
         "fields": {
             "abbreviation": "pic",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 2,
             "display_name": "picardy",
-            "nationality": null,
             "neighbours": [
                 26,
                 25,
@@ -1160,9 +1117,8 @@
         "fields": {
             "abbreviation": "pie",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 5,
             "display_name": "piedmont",
-            "nationality": null,
             "neighbours": [
                 9,
                 39,
@@ -1185,7 +1141,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "portugal",
-            "nationality": null,
             "neighbours": [
                 13,
                 74,
@@ -1202,9 +1157,8 @@
         "fields": {
             "abbreviation": "rom",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 5,
             "display_name": "rome",
-            "nationality": null,
             "neighbours": [
                 22,
                 41,
@@ -1227,7 +1181,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "rumania",
-            "nationality": null,
             "neighbours": [
                 5,
                 60,
@@ -1250,9 +1203,8 @@
         "fields": {
             "abbreviation": "pru",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 3,
             "display_name": "prussia",
-            "nationality": null,
             "neighbours": [
                 3,
                 24,
@@ -1273,9 +1225,8 @@
         "fields": {
             "abbreviation": "sev",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "sevastapol",
-            "nationality": null,
             "neighbours": [
                 23,
                 5,
@@ -1296,9 +1247,8 @@
         "fields": {
             "abbreviation": "smy",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 7,
             "display_name": "smyrna",
-            "nationality": null,
             "neighbours": [
                 2,
                 23,
@@ -1322,7 +1272,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "sweden",
-            "nationality": null,
             "neighbours": [
                 3,
                 6,
@@ -1345,9 +1294,8 @@
         "fields": {
             "abbreviation": "syr",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 7,
             "display_name": "syria",
-            "nationality": null,
             "neighbours": [
                 23,
                 7,
@@ -1365,9 +1313,8 @@
         "fields": {
             "abbreviation": "tri",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 4,
             "display_name": "trieste",
-            "nationality": null,
             "neighbours": [
                 1,
                 20,
@@ -1392,7 +1339,6 @@
             "coast": true,
             "controlled_by": null,
             "display_name": "tunis",
-            "nationality": null,
             "neighbours": [
                 11,
                 40,
@@ -1411,9 +1357,8 @@
         "fields": {
             "abbreviation": "tus",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 5,
             "display_name": "tuscany",
-            "nationality": null,
             "neighbours": [
                 9,
                 44,
@@ -1434,9 +1379,8 @@
         "fields": {
             "abbreviation": "ven",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 5,
             "display_name": "venice",
-            "nationality": null,
             "neighbours": [
                 1,
                 22,
@@ -1459,9 +1403,8 @@
         "fields": {
             "abbreviation": "wal",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 1,
             "display_name": "wales",
-            "nationality": null,
             "neighbours": [
                 8,
                 12,
@@ -1482,9 +1425,8 @@
         "fields": {
             "abbreviation": "yor",
             "coast": true,
-            "controlled_by": null,
+            "controlled_by": 1,
             "display_name": "yorkshire",
-            "nationality": null,
             "neighbours": [
                 30,
                 36,
@@ -1505,9 +1447,8 @@
         "fields": {
             "abbreviation": "boh",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 4,
             "display_name": "bohemia",
-            "nationality": null,
             "neighbours": [
                 62,
                 64,
@@ -1525,9 +1466,8 @@
         "fields": {
             "abbreviation": "bud",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 4,
             "display_name": "budapest",
-            "nationality": null,
             "neighbours": [
                 62,
                 47,
@@ -1545,9 +1485,8 @@
         "fields": {
             "abbreviation": "bur",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 2,
             "display_name": "burgundy",
-            "nationality": null,
             "neighbours": [
                 26,
                 25,
@@ -1568,9 +1507,8 @@
         "fields": {
             "abbreviation": "gal",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 4,
             "display_name": "galicia",
-            "nationality": null,
             "neighbours": [
                 59,
                 60,
@@ -1590,9 +1528,8 @@
         "fields": {
             "abbreviation": "mos",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "moscow",
-            "nationality": null,
             "neighbours": [
                 37,
                 47,
@@ -1611,9 +1548,8 @@
         "fields": {
             "abbreviation": "mun",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 3,
             "display_name": "munich",
-            "nationality": null,
             "neighbours": [
                 24,
                 59,
@@ -1633,9 +1569,8 @@
         "fields": {
             "abbreviation": "par",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 2,
             "display_name": "paris",
-            "nationality": null,
             "neighbours": [
                 26,
                 61,
@@ -1655,9 +1590,8 @@
         "fields": {
             "abbreviation": "ruh",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 3,
             "display_name": "ruhr",
-            "nationality": null,
             "neighbours": [
                 26,
                 61,
@@ -1677,7 +1611,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "serbia",
-            "nationality": null,
             "neighbours": [
                 20,
                 60,
@@ -1696,9 +1629,8 @@
         "fields": {
             "abbreviation": "sil",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 3,
             "display_name": "silesia",
-            "nationality": null,
             "neighbours": [
                 24,
                 59,
@@ -1716,9 +1648,8 @@
         "fields": {
             "abbreviation": "tyr",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 4,
             "display_name": "tyrolia",
-            "nationality": null,
             "neighbours": [
                 59,
                 64,
@@ -1736,9 +1667,8 @@
         "fields": {
             "abbreviation": "ukr",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "ukraine",
-            "nationality": null,
             "neighbours": [
                 62,
                 63,
@@ -1756,9 +1686,8 @@
         "fields": {
             "abbreviation": "vie",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 4,
             "display_name": "vienna",
-            "nationality": null,
             "neighbours": [
                 59,
                 60,
@@ -1776,9 +1705,8 @@
         "fields": {
             "abbreviation": "war",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "warsaw",
-            "nationality": null,
             "neighbours": [
                 62,
                 37,
@@ -1799,7 +1727,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "bulgaria",
-            "nationality": null,
             "neighbours": [
                 2,
                 5,
@@ -1820,7 +1747,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "spain",
-            "nationality": null,
             "neighbours": [
                 32,
                 39,
@@ -1836,9 +1762,8 @@
         "fields": {
             "abbreviation": "stp",
             "coast": false,
-            "controlled_by": null,
+            "controlled_by": 6,
             "display_name": "st. petersburg",
-            "nationality": null,
             "neighbours": [
                 31,
                 37,
@@ -1857,7 +1782,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "bulgaria (north coast)",
-            "nationality": null,
             "neighbours": [
                 5,
                 28,
@@ -1875,7 +1799,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "bulgaria (south coast)",
-            "nationality": null,
             "neighbours": [
                 2,
                 28,
@@ -1893,7 +1816,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "spain (north coast)",
-            "nationality": null,
             "neighbours": [
                 32,
                 13,
@@ -1911,7 +1833,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "spain (south coast)",
-            "nationality": null,
             "neighbours": [
                 9,
                 39,
@@ -1931,7 +1852,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "st. petersburg (south coast)",
-            "nationality": null,
             "neighbours": [
                 6,
                 31,
@@ -1949,7 +1869,6 @@
             "coast": false,
             "controlled_by": null,
             "display_name": "st. petersburg (north coast)",
-            "nationality": null,
             "neighbours": [
                 4,
                 42
