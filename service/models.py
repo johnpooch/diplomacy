@@ -18,6 +18,9 @@ class Announcement(models.Model):
 class Command(models.Model):
     """
     """
+    class Meta:
+        db_table = "command"
+
     COMMAND_TYPES = (
        ('H', 'Hold'),
        ('M', 'Move'),
@@ -45,12 +48,18 @@ class Command(models.Model):
 class Game(models.Model):
     """
     """
+    class Meta:
+        db_table = "game"
+
     name = models.CharField(max_length=50, null=False)
 
 
 class Message(models.Model):
     """
     """
+    class Meta:
+        db_table = "message"
+
     sender = models.ForeignKey('Nation', related_name='sent_messages',
             on_delete=models.CASCADE, null=False)
     recipient = models.ForeignKey('Nation', related_name='received_messages',
@@ -61,6 +70,9 @@ class Message(models.Model):
 class Nation(models.Model):
     """
     """
+    class Meta:
+        db_table = "nation"
+
     name = models.CharField(max_length=15)
     active = models.BooleanField(default=True)
     
@@ -71,6 +83,9 @@ class Nation(models.Model):
 class Order(models.Model):
     """
     """
+    class Meta:
+        db_table = "order"
+
     nation = models.ForeignKey('Nation', related_name='orders',
             on_delete=models.CASCADE, db_column="nation_id", null=False,
             db_constraint=False)
@@ -81,6 +96,9 @@ class Order(models.Model):
 class Piece(models.Model):
     """
     """
+    class Meta:
+        db_table = "piece"
+
     nation = models.ForeignKey('Nation', related_name='pieces',
             on_delete=models.CASCADE, db_column="nation_id", null=False,
             db_constraint=False)
@@ -96,6 +114,9 @@ class Piece(models.Model):
 class Phase(models.Model):
     """
     """
+    class Meta:
+        db_table = "phase"
+
     SEASONS = (
         ('S', 'Spring'),
         ('F', 'Fall'),
@@ -116,6 +137,9 @@ class Phase(models.Model):
 class SupplyCenter(models.Model):
     """
     """
+    class Meta:
+        db_table = "supply_center"
+
     owner = models.ForeignKey('Nation',
             related_name='controlled_supply_centers', on_delete=models.CASCADE,
             db_column='nation_id', null=True)
@@ -132,6 +156,8 @@ class SupplyCenter(models.Model):
 class Territory(models.Model):
     """
     """
+    class Meta:
+        db_table = "territory"
 
     TERRITORY_TYPES = (
         ('L', 'Land'),
@@ -141,9 +167,12 @@ class Territory(models.Model):
     abbreviation = models.CharField(max_length=6, null=False)
     display_name = models.CharField(max_length=50, null=False)
     nationality = models.ForeignKey('Nation', on_delete=models.CASCADE,
-            db_column='nation_id', null=True)
-    neighours = models.ManyToManyField('self', related_name='neighbours',
-            blank=True)
+            db_column='nationality_id', null=True,
+            related_name='national_territories',)
+    controlled_by = models.ForeignKey('Nation', on_delete=models.CASCADE,
+            db_column='controlled_by_id', null=True,
+            related_name='controlled_territories',)
+    neighbours = models.ManyToManyField('self', blank=True)
     shared_coasts = models.ManyToManyField('self', related_name='shared_coasts',
             blank=True)
     type = models.CharField(max_length=10, choices=TERRITORY_TYPES, null=False)
@@ -156,6 +185,9 @@ class Territory(models.Model):
 class Turn(models.Model):
     """
     """
+    class Meta:
+        db_table = "turn"
+
     year = models.IntegerField()
     phase = models.ForeignKey('Phase', on_delete=models.CASCADE, null=False)
     game = models.ForeignKey('Game', on_delete=models.CASCADE, null=False)

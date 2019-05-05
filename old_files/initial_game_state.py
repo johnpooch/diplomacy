@@ -279,6 +279,7 @@ setattr(stp_sc, 'parent_territory', stp)
 
 def get_territories():
     territories = Territory.all_territories
+    print(territories)
     key_dict = {}
     territories_dicts = []
     for i in range(len(territories)):
@@ -291,6 +292,9 @@ def get_territories():
                 "display_name": t.display_name,
                 "neighbours": [],
                 "shared_coasts": [],
+                "coast": False,
+                "nationality": None,
+                "controlled_by": None,
                 }
             })
 
@@ -299,6 +303,9 @@ def get_territories():
 
         if isinstance(t, Water):
             territories_dicts[i]["fields"]["type"] = "S"
+
+        if isinstance(t, Coastal):
+            territories_dicts[i]["fields"]["coast"] = True
         
         key_dict[t.name] = i + 1
 

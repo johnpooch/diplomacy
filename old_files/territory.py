@@ -6,10 +6,10 @@
 
 # Territory =======================================================================================
 
-  class Territory():
+class Territory():
     all_territories = []
     def __init__(self, name, display_name, neighbours):  # 
-          # Territory.all_territories.append(self) # 
+        Territory.all_territories.append(self) # 
         self.name = name
         self.display_name = display_name
         self.neighbours = neighbours
