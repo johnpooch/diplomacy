@@ -4,9 +4,13 @@ from rest_framework import serializers
 
 
 class SupplyCenterSerializer(serializers.ModelSerializer):
+    controlled_by = serializers.StringRelatedField()
+    nationality = serializers.StringRelatedField()
+    territory = serializers.StringRelatedField()
+
     class Meta:
         model = models.SupplyCenter
-        fields = ['territory']
+        fields = '__all__'
 
 
 class NationSerializer(serializers.ModelSerializer):
@@ -20,13 +24,25 @@ class NationSerializer(serializers.ModelSerializer):
 
 
 class PieceSerializer(serializers.ModelSerializer):
+    nation = serializers.StringRelatedField()
+    territory = serializers.StringRelatedField()
     class Meta:
         model = models.Piece
         fields = '__all__'
 
 
+class NeighbourSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Territory
+        fields = ('display_name',)
+
+    def to_representation(self, value):
+        return value.abbreviation
+
 class TerritorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Territory
+        depth = 1
         fields = '__all__'
  
+    neighbours = NeighbourSerializer(many=True)

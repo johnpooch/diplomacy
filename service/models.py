@@ -1,10 +1,6 @@
 from django.db import models
-
-
-PIECE_TYPES = (
-    ('A', 'Army'),
-    ('F', 'Fleet'),
-)
+from django.db.models import Manager, QuerySet, Sum, When, Case
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class Announcement(models.Model):
@@ -39,9 +35,15 @@ class Command(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE,
             related_name='commands', db_column="order_id", null=False)
     type = models.CharField(max_length=1, choices=COMMAND_TYPES, null=False)
+    # The outcome of an order
+    result = models.CharField(max_length=1, null=True)
+    # Outcome in human friendly terms
+    result_display = models.CharField(max_length=50, null=True)
 
     def validate_command(self):
         # check source territory contains piece belonging to player
+        if self.type == 'H':
+            pass
         pass
         
 
@@ -75,7 +77,10 @@ class Nation(models.Model):
 
     name = models.CharField(max_length=15)
     active = models.BooleanField(default=True)
-    
+
+    def has_pieces_which_must_retreat(self):
+        return any([piece.must_retreat for piece in self.pieces.all()])
+
     def __str__(self):
         return self.name
 
@@ -96,6 +101,12 @@ class Order(models.Model):
 class Piece(models.Model):
     """
     """
+
+    PIECE_TYPES = (
+        ('A', 'Army'),
+        ('F', 'Fleet'),
+    )
+
     class Meta:
         db_table = "piece"
 
@@ -104,8 +115,11 @@ class Piece(models.Model):
             db_constraint=False)
     type = models.CharField(max_length=1, choices=PIECE_TYPES, null=False)
     territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
-            db_column='territory_id', null=True)
+            db_column='territory_id', related_name='pieces', null=True)
+    must_retreat = models.BooleanField(default=False)
+    must_disband = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
+
 
     def __str__(self):
         return ' '.join([self.get_type_display(), self.territory.display_name])
@@ -122,13 +136,13 @@ class Phase(models.Model):
         ('F', 'Fall'),
     )
     PHASE_TYPES = (
-        ('M', 'Move'),
-        ('B', 'Build'),
-        ('R', 'Retreat'),
-        ('D', 'Disband'),
+        ('O', 'Order'),
+        ('R', 'Retreat and Disband'),
+        ('B', 'Build and Disband'),
     )
     season = models.CharField(max_length=1, choices=SEASONS, null=False)
     type = models.CharField(max_length=1, choices=PHASE_TYPES, null=False)
+
 
     def __str__(self):
         return " ".join([self.get_type_display(), self.get_season_display()])
@@ -140,14 +154,16 @@ class SupplyCenter(models.Model):
     class Meta:
         db_table = "supply_center"
 
-    owner = models.ForeignKey('Nation',
+    controlled_by = models.ForeignKey('Nation',
             related_name='controlled_supply_centers', on_delete=models.CASCADE,
             db_column='nation_id', null=True)
     nationality = models.ForeignKey('Nation',
             related_name='national_supply_centers',
             on_delete=models.CASCADE, null=True)
-    territory = models.ForeignKey('Territory', related_name='supply_center',
-            on_delete=models.CASCADE, db_column='territory_id', null=False)
+    territory = models.OneToOneField('Territory', primary_key=True,
+            on_delete=models.CASCADE, db_column='territory_id',
+            related_name='supply_center', null=False)
+
 
     def __str__(self):
         return self.territory.display_name
@@ -175,13 +191,51 @@ class Territory(models.Model):
     type = models.CharField(max_length=10, choices=TERRITORY_TYPES, null=False)
     coast = models.BooleanField(default=False)
 
+    def is_neighbour(self, territory):
+        return territory in self.neighbours.all()
+
+    def get_friendly_piece(self, nation):
+        """
+        Get piece belonging to nation if exists in territory.
+        """
+        for piece in self.pieces.all():
+            if piece.nation == nation:
+                return piece
+        return False
+
+    def accessible_by_piece_type(self, piece):
+        """
+        Armies cannot enter sea territories. Fleets cannot enter non-coastal
+        land territories.
+        """
+        if piece.type == 'A':
+            return self.type == 'L'
+        return self.type == 'S' or self.coast
+
+    def has_supply_center(self):
+        try:
+            return bool(self.supply_center)
+        except ObjectDoesNotExist:
+            return False
+
     def __str__(self):
         return self.display_name
+
+
+class TurnManager(Manager):
+    
+    def get_queryset(self):
+        """
+        """
+        queryset = super().get_queryset()
+        return queryset
 
 
 class Turn(models.Model):
     """
     """
+    objects = TurnManager()
+
     class Meta:
         db_table = "turn"
 

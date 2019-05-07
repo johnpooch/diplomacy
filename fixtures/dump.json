@@ -193,14 +193,506 @@
     },
     {
         "fields": {
+            "active": true,
+            "nation": 1,
+            "territory": 36,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 1,
+            "territory": 30,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 1,
+            "territory": 38,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 4,
+            "territory": 71,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 4,
+            "territory": 60,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 4,
+            "territory": 53,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 2,
+            "territory": 65,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 2,
+            "territory": 39,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 2,
+            "territory": 26,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 9
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 3,
+            "territory": 24,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 3,
+            "territory": 64,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 3,
+            "territory": 35,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 5,
+            "territory": 46,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 5,
+            "territory": 56,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 5,
+            "territory": 41,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 6,
+            "territory": 63,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 6,
+            "territory": 49,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 6,
+            "territory": 72,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 6,
+            "territory": 75,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 7,
+            "territory": 21,
+            "type": "F"
+        },
+        "model": "service.piece",
+        "pk": 20
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 7,
+            "territory": 28,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "active": true,
+            "nation": 7,
+            "territory": 50,
+            "type": "A"
+        },
+        "model": "service.piece",
+        "pk": 22
+    },
+    {
+        "fields": {
+            "controlled_by": 7,
+            "nationality": 7
+        },
+        "model": "service.supplycenter",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "controlled_by": 3,
+            "nationality": 3
+        },
+        "model": "service.supplycenter",
+        "pk": 24
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 25
+    },
+    {
+        "fields": {
+            "controlled_by": 2,
+            "nationality": 2
+        },
+        "model": "service.supplycenter",
+        "pk": 26
+    },
+    {
+        "fields": {
+            "controlled_by": 7,
+            "nationality": 7
+        },
+        "model": "service.supplycenter",
+        "pk": 28
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 29
+    },
+    {
+        "fields": {
+            "controlled_by": 1,
+            "nationality": 1
+        },
+        "model": "service.supplycenter",
+        "pk": 30
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 33
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 34
+    },
+    {
+        "fields": {
+            "controlled_by": 3,
+            "nationality": 3
+        },
+        "model": "service.supplycenter",
+        "pk": 35
+    },
+    {
+        "fields": {
+            "controlled_by": 1,
+            "nationality": 1
+        },
+        "model": "service.supplycenter",
+        "pk": 36
+    },
+    {
+        "fields": {
+            "controlled_by": 1,
+            "nationality": 1
+        },
+        "model": "service.supplycenter",
+        "pk": 38
+    },
+    {
+        "fields": {
+            "controlled_by": 2,
+            "nationality": 2
+        },
+        "model": "service.supplycenter",
+        "pk": 39
+    },
+    {
+        "fields": {
+            "controlled_by": 5,
+            "nationality": 5
+        },
+        "model": "service.supplycenter",
+        "pk": 41
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 42
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 45
+    },
+    {
+        "fields": {
+            "controlled_by": 5,
+            "nationality": 5
+        },
+        "model": "service.supplycenter",
+        "pk": 46
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 47
+    },
+    {
+        "fields": {
+            "controlled_by": 6,
+            "nationality": 6
+        },
+        "model": "service.supplycenter",
+        "pk": 49
+    },
+    {
+        "fields": {
+            "controlled_by": 7,
+            "nationality": 7
+        },
+        "model": "service.supplycenter",
+        "pk": 50
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 51
+    },
+    {
+        "fields": {
+            "controlled_by": 4,
+            "nationality": 4
+        },
+        "model": "service.supplycenter",
+        "pk": 53
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 54
+    },
+    {
+        "fields": {
+            "controlled_by": 5,
+            "nationality": 5
+        },
+        "model": "service.supplycenter",
+        "pk": 56
+    },
+    {
+        "fields": {
+            "controlled_by": 4,
+            "nationality": 4
+        },
+        "model": "service.supplycenter",
+        "pk": 60
+    },
+    {
+        "fields": {
+            "controlled_by": 6,
+            "nationality": 6
+        },
+        "model": "service.supplycenter",
+        "pk": 63
+    },
+    {
+        "fields": {
+            "controlled_by": 3,
+            "nationality": 3
+        },
+        "model": "service.supplycenter",
+        "pk": 64
+    },
+    {
+        "fields": {
+            "controlled_by": 2,
+            "nationality": 2
+        },
+        "model": "service.supplycenter",
+        "pk": 65
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 67
+    },
+    {
+        "fields": {
+            "controlled_by": 4,
+            "nationality": 4
+        },
+        "model": "service.supplycenter",
+        "pk": 71
+    },
+    {
+        "fields": {
+            "controlled_by": 6,
+            "nationality": 6
+        },
+        "model": "service.supplycenter",
+        "pk": 72
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 73
+    },
+    {
+        "fields": {
+            "controlled_by": null,
+            "nationality": null
+        },
+        "model": "service.supplycenter",
+        "pk": 74
+    },
+    {
+        "fields": {
+            "controlled_by": 6,
+            "nationality": 6
+        },
+        "model": "service.supplycenter",
+        "pk": 75
+    },
+    {
+        "fields": {
             "abbreviation": "adr",
             "coast": false,
             "controlled_by": null,
             "display_name": "adriatic sea",
             "neighbours": [
+                11,
                 20,
                 22,
-                11,
                 53,
                 56
             ],
@@ -217,14 +709,13 @@
             "controlled_by": null,
             "display_name": "aegean sea",
             "neighbours": [
-                5,
-                73,
-                77,
-                28,
                 7,
-                33,
                 11,
-                50
+                28,
+                33,
+                50,
+                73,
+                77
             ],
             "shared_coasts": [],
             "type": "S"
@@ -239,10 +730,11 @@
             "controlled_by": null,
             "display_name": "baltic sea",
             "neighbours": [
-                24,
                 6,
+                24,
                 29,
                 35,
+                37,
                 48,
                 51
             ],
@@ -261,8 +753,7 @@
             "neighbours": [
                 15,
                 42,
-                75,
-                80
+                81
             ],
             "shared_coasts": [],
             "type": "S"
@@ -278,12 +769,11 @@
             "display_name": "black sea",
             "neighbours": [
                 21,
-                23,
-                73,
-                76,
                 28,
                 47,
-                49
+                49,
+                73,
+                76
             ],
             "shared_coasts": [],
             "type": "S"
@@ -302,8 +792,7 @@
                 31,
                 37,
                 51,
-                75,
-                75
+                80
             ],
             "shared_coasts": [],
             "type": "S"
@@ -335,12 +824,12 @@
             "controlled_by": null,
             "display_name": "english channel",
             "neighbours": [
-                25,
-                26,
                 12,
-                36,
                 13,
                 16,
+                25,
+                26,
+                36,
                 43,
                 57
             ],
@@ -357,13 +846,12 @@
             "controlled_by": null,
             "display_name": "gulf of lyon",
             "neighbours": [
+                18,
+                19,
                 39,
                 44,
-                74,
-                79,
                 55,
-                18,
-                19
+                79
             ],
             "shared_coasts": [],
             "type": "S"
@@ -378,10 +866,10 @@
             "controlled_by": null,
             "display_name": "heligoland blight",
             "neighbours": [
+                16,
                 29,
                 34,
-                35,
-                16
+                35
             ],
             "shared_coasts": [],
             "type": "S"
@@ -396,14 +884,14 @@
             "controlled_by": null,
             "display_name": "ionian sea",
             "neighbours": [
-                2,
                 1,
+                2,
+                18,
                 20,
                 22,
                 33,
                 41,
-                54,
-                18
+                54
             ],
             "shared_coasts": [],
             "type": "S"
@@ -419,9 +907,10 @@
             "display_name": "irish sea",
             "neighbours": [
                 8,
-                38,
                 13,
                 14,
+                27,
+                38,
                 57
             ],
             "shared_coasts": [],
@@ -437,17 +926,16 @@
             "controlled_by": null,
             "display_name": "mid_atlantic ocean",
             "neighbours": [
-                26,
                 8,
-                32,
                 12,
-                40,
                 14,
-                74,
-                78,
-                79,
+                19,
+                26,
+                32,
+                40,
                 45,
-                19
+                78,
+                79
             ],
             "shared_coasts": [],
             "type": "S"
@@ -462,11 +950,12 @@
             "controlled_by": null,
             "display_name": "north atlantic",
             "neighbours": [
-                27,
                 12,
-                38,
                 13,
-                15
+                15,
+                27,
+                30,
+                38
             ],
             "shared_coasts": [],
             "type": "S"
@@ -482,11 +971,11 @@
             "display_name": "norwegian sea",
             "neighbours": [
                 4,
+                14,
+                16,
                 27,
                 30,
-                14,
-                42,
-                16
+                42
             ],
             "shared_coasts": [],
             "type": "S"
@@ -501,16 +990,15 @@
             "controlled_by": null,
             "display_name": "north sea",
             "neighbours": [
-                25,
-                29,
-                30,
                 8,
                 10,
+                15,
+                17,
+                29,
+                30,
                 34,
                 36,
-                15,
                 42,
-                17,
                 58
             ],
             "shared_coasts": [],
@@ -526,8 +1014,8 @@
             "controlled_by": null,
             "display_name": "skagerrack",
             "neighbours": [
-                29,
                 16,
+                29,
                 42,
                 51
             ],
@@ -546,11 +1034,12 @@
             "neighbours": [
                 9,
                 11,
+                19,
                 41,
                 46,
                 54,
                 55,
-                19
+                56
             ],
             "shared_coasts": [],
             "type": "S"
@@ -567,11 +1056,10 @@
             "neighbours": [
                 9,
                 13,
+                18,
                 40,
-                74,
-                79,
                 54,
-                18
+                79
             ],
             "shared_coasts": [],
             "type": "S"
@@ -587,10 +1075,10 @@
             "display_name": "albania",
             "neighbours": [
                 1,
-                33,
                 11,
-                67,
-                53
+                33,
+                53,
+                67
             ],
             "shared_coasts": [
                 33,
@@ -608,8 +1096,8 @@
             "controlled_by": 7,
             "display_name": "ankara",
             "neighbours": [
-                23,
                 5,
+                23,
                 28,
                 50
             ],
@@ -652,14 +1140,13 @@
             "display_name": "armenia",
             "neighbours": [
                 21,
-                21,
                 49,
                 50,
                 52
             ],
             "shared_coasts": [
-                49,
-                21
+                21,
+                49
             ],
             "type": "L"
         },
@@ -675,8 +1162,8 @@
             "neighbours": [
                 3,
                 35,
-                64,
                 48,
+                64,
                 68
             ],
             "shared_coasts": [
@@ -695,11 +1182,10 @@
             "controlled_by": null,
             "display_name": "belgium",
             "neighbours": [
-                61,
                 8,
                 34,
                 43,
-                66
+                61
             ],
             "shared_coasts": [
                 34,
@@ -718,10 +1204,12 @@
             "display_name": "brest",
             "neighbours": [
                 8,
-                32,
                 13,
+                32,
+                43,
+                61,
                 65,
-                43
+                66
             ],
             "shared_coasts": [
                 32,
@@ -739,11 +1227,11 @@
             "controlled_by": 1,
             "display_name": "clyde",
             "neighbours": [
-                30,
-                38,
                 12,
                 14,
-                15
+                15,
+                30,
+                38
             ],
             "shared_coasts": [
                 30,
@@ -762,12 +1250,12 @@
             "display_name": "constantinople",
             "neighbours": [
                 2,
-                21,
                 5,
+                21,
+                50,
                 73,
-                77,
                 76,
-                50
+                77
             ],
             "shared_coasts": [
                 21,
@@ -787,9 +1275,9 @@
             "neighbours": [
                 3,
                 10,
-                35,
                 16,
                 17,
+                35,
                 51
             ],
             "shared_coasts": [
@@ -808,11 +1296,11 @@
             "controlled_by": 1,
             "display_name": "edinburgh",
             "neighbours": [
-                27,
-                38,
                 14,
                 15,
                 16,
+                27,
+                38,
                 58
             ],
             "shared_coasts": [
@@ -833,9 +1321,9 @@
             "neighbours": [
                 6,
                 42,
+                51,
                 75,
-                80,
-                51
+                80
             ],
             "shared_coasts": [
                 51
@@ -852,10 +1340,10 @@
             "controlled_by": 2,
             "display_name": "gascony",
             "neighbours": [
-                26,
-                61,
-                39,
                 13,
+                26,
+                39,
+                61,
                 65,
                 74,
                 78
@@ -876,15 +1364,14 @@
             "display_name": "greece",
             "neighbours": [
                 2,
-                20,
-                73,
-                77,
                 11,
-                67
+                20,
+                67,
+                73,
+                77
             ],
             "shared_coasts": [
-                20,
-                73
+                20
             ],
             "type": "L"
         },
@@ -898,10 +1385,10 @@
             "controlled_by": null,
             "display_name": "holland",
             "neighbours": [
-                25,
                 10,
-                35,
                 16,
+                25,
+                35,
                 66
             ],
             "shared_coasts": [
@@ -921,9 +1408,9 @@
             "display_name": "kiel",
             "neighbours": [
                 3,
+                10,
                 24,
                 29,
-                10,
                 34,
                 64,
                 66
@@ -968,11 +1455,11 @@
             "neighbours": [
                 3,
                 6,
-                63,
                 48,
+                63,
+                72,
                 75,
-                80,
-                72
+                80
             ],
             "shared_coasts": [
                 48
@@ -989,10 +1476,10 @@
             "controlled_by": 1,
             "display_name": "liverpool",
             "neighbours": [
-                27,
-                30,
                 12,
                 14,
+                27,
+                30,
                 57,
                 58
             ],
@@ -1012,10 +1499,10 @@
             "controlled_by": 2,
             "display_name": "marseilles",
             "neighbours": [
-                61,
-                32,
                 9,
+                32,
                 44,
+                61,
                 74,
                 79
             ],
@@ -1035,8 +1522,8 @@
             "display_name": "north africa",
             "neighbours": [
                 13,
-                54,
-                19
+                19,
+                54
             ],
             "shared_coasts": [
                 54
@@ -1053,10 +1540,10 @@
             "controlled_by": 5,
             "display_name": "naples",
             "neighbours": [
-                22,
                 11,
-                46,
-                18
+                18,
+                22,
+                46
             ],
             "shared_coasts": [
                 22,
@@ -1075,13 +1562,13 @@
             "display_name": "norway",
             "neighbours": [
                 4,
-                31,
                 15,
                 16,
                 17,
+                31,
+                51,
                 75,
-                81,
-                51
+                81
             ],
             "shared_coasts": [
                 51
@@ -1098,15 +1585,15 @@
             "controlled_by": 2,
             "display_name": "picardy",
             "neighbours": [
-                26,
-                25,
-                61,
                 8,
+                25,
+                26,
+                61,
                 65
             ],
             "shared_coasts": [
-                26,
-                25
+                25,
+                26
             ],
             "type": "L"
         },
@@ -1123,7 +1610,6 @@
                 9,
                 39,
                 55,
-                69,
                 56
             ],
             "shared_coasts": [
@@ -1160,10 +1646,10 @@
             "controlled_by": 5,
             "display_name": "rome",
             "neighbours": [
+                18,
                 22,
                 41,
                 55,
-                18,
                 56
             ],
             "shared_coasts": [
@@ -1183,13 +1669,14 @@
             "display_name": "rumania",
             "neighbours": [
                 5,
-                60,
-                73,
-                76,
-                62,
-                67,
                 49,
-                70
+                60,
+                62,
+                63,
+                67,
+                70,
+                73,
+                76
             ],
             "shared_coasts": [
                 49
@@ -1209,7 +1696,6 @@
                 3,
                 24,
                 37,
-                68,
                 72
             ],
             "shared_coasts": [
@@ -1228,10 +1714,10 @@
             "controlled_by": 6,
             "display_name": "sevastapol",
             "neighbours": [
-                23,
                 5,
-                63,
+                23,
                 47,
+                63,
                 70
             ],
             "shared_coasts": [
@@ -1251,10 +1737,10 @@
             "display_name": "smyrna",
             "neighbours": [
                 2,
-                23,
-                21,
-                28,
                 7,
+                21,
+                23,
+                28,
                 52
             ],
             "shared_coasts": [
@@ -1275,10 +1761,10 @@
             "neighbours": [
                 3,
                 6,
+                17,
                 29,
                 31,
-                42,
-                17
+                42
             ],
             "shared_coasts": [
                 29,
@@ -1297,9 +1783,10 @@
             "controlled_by": 7,
             "display_name": "syria",
             "neighbours": [
-                23,
                 7,
-                50
+                23,
+                50,
+                53
             ],
             "shared_coasts": [
                 50
@@ -1318,10 +1805,11 @@
             "neighbours": [
                 1,
                 20,
-                60,
                 52,
-                69,
                 56,
+                60,
+                67,
+                69,
                 71
             ],
             "shared_coasts": [
@@ -1341,9 +1829,9 @@
             "display_name": "tunis",
             "neighbours": [
                 11,
-                40,
                 18,
-                19
+                19,
+                40
             ],
             "shared_coasts": [
                 40
@@ -1361,10 +1849,9 @@
             "display_name": "tuscany",
             "neighbours": [
                 9,
-                44,
-                46,
                 18,
-                56
+                44,
+                46
             ],
             "shared_coasts": [
                 44,
@@ -1383,11 +1870,11 @@
             "display_name": "venice",
             "neighbours": [
                 1,
-                22,
-                46,
-                44,
-                53,
                 18,
+                22,
+                44,
+                46,
+                53,
                 69
             ],
             "shared_coasts": [
@@ -1428,10 +1915,10 @@
             "controlled_by": 1,
             "display_name": "yorkshire",
             "neighbours": [
+                16,
                 30,
                 36,
                 38,
-                16,
                 57
             ],
             "shared_coasts": [
@@ -1469,10 +1956,10 @@
             "controlled_by": 4,
             "display_name": "budapest",
             "neighbours": [
-                62,
                 47,
-                67,
                 53,
+                62,
+                67,
                 71
             ],
             "shared_coasts": [],
@@ -1488,13 +1975,13 @@
             "controlled_by": 2,
             "display_name": "burgundy",
             "neighbours": [
-                26,
                 25,
+                26,
                 32,
                 39,
+                43,
                 64,
                 65,
-                43,
                 66
             ],
             "shared_coasts": [],
@@ -1510,9 +1997,9 @@
             "controlled_by": 4,
             "display_name": "galicia",
             "neighbours": [
+                47,
                 59,
                 60,
-                47,
                 68,
                 70,
                 71,
@@ -1534,9 +2021,9 @@
                 37,
                 47,
                 49,
-                75,
                 70,
-                72
+                72,
+                75
             ],
             "shared_coasts": [],
             "type": "L"
@@ -1552,11 +2039,11 @@
             "display_name": "munich",
             "neighbours": [
                 24,
+                35,
                 59,
                 61,
-                35,
-                68,
                 66,
+                68,
                 69
             ],
             "shared_coasts": [],
@@ -1573,12 +2060,9 @@
             "display_name": "paris",
             "neighbours": [
                 26,
-                61,
                 32,
                 43,
-                68,
-                66,
-                69
+                61
             ],
             "shared_coasts": [],
             "type": "L"
@@ -1594,9 +2078,9 @@
             "display_name": "ruhr",
             "neighbours": [
                 26,
-                61,
                 34,
                 35,
+                61,
                 64
             ],
             "shared_coasts": [],
@@ -1613,11 +2097,11 @@
             "display_name": "serbia",
             "neighbours": [
                 20,
-                60,
-                73,
                 33,
                 47,
-                53
+                53,
+                60,
+                73
             ],
             "shared_coasts": [],
             "type": "L"
@@ -1651,10 +2135,10 @@
             "controlled_by": 4,
             "display_name": "tyrolia",
             "neighbours": [
-                59,
-                64,
                 53,
                 56,
+                59,
+                64,
                 71
             ],
             "shared_coasts": [],
@@ -1670,10 +2154,10 @@
             "controlled_by": 6,
             "display_name": "ukraine",
             "neighbours": [
-                62,
-                63,
                 47,
                 49,
+                62,
+                63,
                 72
             ],
             "shared_coasts": [],
@@ -1689,10 +2173,10 @@
             "controlled_by": 4,
             "display_name": "vienna",
             "neighbours": [
+                53,
                 59,
                 60,
                 62,
-                53,
                 69
             ],
             "shared_coasts": [],
@@ -1708,11 +2192,11 @@
             "controlled_by": 6,
             "display_name": "warsaw",
             "neighbours": [
-                62,
                 37,
+                48,
+                62,
                 63,
                 68,
-                48,
                 70
             ],
             "shared_coasts": [],
@@ -1767,8 +2251,8 @@
             "neighbours": [
                 31,
                 37,
-                63,
-                42
+                42,
+                63
             ],
             "shared_coasts": [],
             "type": "L"
@@ -1817,8 +2301,8 @@
             "controlled_by": null,
             "display_name": "spain (north coast)",
             "neighbours": [
-                32,
                 13,
+                32,
                 45
             ],
             "shared_coasts": [],
@@ -1835,10 +2319,10 @@
             "display_name": "spain (south coast)",
             "neighbours": [
                 9,
-                39,
                 13,
-                45,
-                19
+                19,
+                39,
+                45
             ],
             "shared_coasts": [],
             "type": "S"
