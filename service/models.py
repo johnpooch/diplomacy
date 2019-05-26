@@ -11,6 +11,15 @@ class Announcement(models.Model):
     text = models.CharField(max_length=1000, null=False)
 
 
+class CurrentCommandManager(Manager):
+    
+    def get_queryset(self):
+        """
+        """
+        queryset = super().get_queryset().filter(order__turn__current_turn=True)
+        return queryset
+
+
 class Command(models.Model):
     """
     """
@@ -26,6 +35,10 @@ class Command(models.Model):
        ('D', 'Disband'),
        ('B', 'Build'),
     )
+
+    objects = models.Manager()
+    current_turn_commands = CurrentCommandManager()
+
     source_territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
             related_name='source_commands', null=False, db_constraint=False)
     target_territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
@@ -35,17 +48,15 @@ class Command(models.Model):
     order = models.ForeignKey('Order', on_delete=models.CASCADE,
             related_name='commands', db_column="order_id", null=False)
     type = models.CharField(max_length=1, choices=COMMAND_TYPES, null=False)
-    # The outcome of an order
-    result = models.CharField(max_length=1, null=True)
+    successful = models.BooleanField(default=True)
     # Outcome in human friendly terms
-    result_display = models.CharField(max_length=50, null=True)
+    result_message = models.CharField(max_length=100, null=True)
 
-    def validate_command(self):
-        # check source territory contains piece belonging to player
-        if self.type == 'H':
-            pass
-        pass
-        
+    def fail(self, result_message):
+        command.success = False
+        command.result_message = result_message
+        command.save()
+
 
 class Game(models.Model):
     """
@@ -116,6 +127,9 @@ class Piece(models.Model):
     type = models.CharField(max_length=1, choices=PIECE_TYPES, null=False)
     territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
             db_column='territory_id', related_name='pieces', null=True)
+    challenging = models.ForeignKey('Territory', on_delete=models.SET_NULL,
+            db_column='challenging_territory_id',
+            related_name='challenging_pieces', null=True)
     must_retreat = models.BooleanField(default=False)
     must_disband = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
@@ -164,7 +178,6 @@ class SupplyCenter(models.Model):
             on_delete=models.CASCADE, db_column='territory_id',
             related_name='supply_center', null=False)
 
-
     def __str__(self):
         return self.territory.display_name
 
@@ -172,6 +185,7 @@ class SupplyCenter(models.Model):
 class Territory(models.Model):
     """
     """
+
     class Meta:
         db_table = "territory"
 
@@ -193,6 +207,20 @@ class Territory(models.Model):
 
     def is_neighbour(self, territory):
         return territory in self.neighbours.all()
+
+    def get_piece(self):
+        """
+        Return the piece if it exists in the territory. If no piece exists
+        in the territory, return False. If more than one piece exists in the
+        territory, throw an error.
+        """
+        if self.pieces.all().count() == 1:
+            return self.pieces.all()[0]
+        if self.pieces.all().count() > 1:
+            raise ValueError((f"More than one piece exists in {self}. "
+                    "There should never be more than one piece in a territory "
+                    "except when retreating or disbanding."))
+        return False
 
     def get_friendly_piece(self, nation):
         """
@@ -219,7 +247,7 @@ class Territory(models.Model):
             return False
 
     def __str__(self):
-        return self.display_name
+        return self.display_name.capitalize()
 
 
 class TurnManager(Manager):
@@ -242,6 +270,7 @@ class Turn(models.Model):
     year = models.IntegerField()
     phase = models.ForeignKey('Phase', on_delete=models.CASCADE, null=False)
     game = models.ForeignKey('Game', on_delete=models.CASCADE, null=False)
+    current_turn = models.BooleanField(default=True)
 
     def __str__(self):
         return " ".join([str(self.phase), str(self.year)])
