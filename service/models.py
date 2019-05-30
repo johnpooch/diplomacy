@@ -23,6 +23,7 @@ class CurrentCommandManager(Manager):
 class Command(models.Model):
     """
     """
+    # TODO: should make tight db constraints for different commands
     class Meta:
         db_table = "command"
 
@@ -99,6 +100,7 @@ class Nation(models.Model):
 class Order(models.Model):
     """
     """
+    # TODO: use signals when all orders are submitted
     class Meta:
         db_table = "order"
 
