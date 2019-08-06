@@ -2,24 +2,8 @@ from .base import InitialGameStateTestCase as TestCase
 
 from service.command_validator import ArmyMoveValidator, FleetMoveValidator, \
     get_command_validator
-from service.models import Challenge, Command, Game, Nation, Order, Phase, \
-    Piece, Territory, Turn
-
-
-class TerritoriesMixin:
-
-    def initialise_territories(self):
-        self.brest = Territory.objects.get(name='brest')
-        self.burgundy = Territory.objects.get(name='burgundy')
-        self.english_channel = Territory.objects.get(name='english channel')
-        self.gascony = Territory.objects.get(name='gascony')
-        self.gulf_of_lyon = Territory.objects.get(name='gulf of lyon')
-        self.irish_sea = Territory.objects.get(name='irish sea')
-        self.marseilles = Territory.objects.get(name='marseilles')
-        self.paris = Territory.objects.get(name='paris')
-        self.picardy = Territory.objects.get(name='picardy')
-        self.piedmont = Territory.objects.get(name='piedmont')
-        self.silesia = Territory.objects.get(name='silesia')
+from service.models import Command, NamedCoast, Nation, Order, Piece
+from service.tests.utils import TerritoriesMixin
 
 
 class HelperMixin:
@@ -30,7 +14,7 @@ class HelperMixin:
         piece.territory = territory
         piece.save()
 
-    def create_move_command(self, source, target):
+    def create_move_command(self, source, target, named_coast=None):
         """
         """
         return Command.objects.create(
@@ -38,6 +22,7 @@ class HelperMixin:
             target_territory=target,
             order=self.order,
             type=Command.CommandType.MOVE,
+            named_coast=named_coast,
         )
 
 
@@ -76,11 +61,12 @@ class TestGetCommandValidator(TestCase, TerritoriesMixin):
 
 class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['nations.json', 'territories.json', 'pieces.json']
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json']
 
     # TODO bin validator messages
 
-    # NOTE these tests should work without saving the object. Should instead do 
+    # NOTE these tests should work without saving the object. Should instead do
     # ``command.validate()``. This is because the save function should run the
     # validate method and raise an error if the command is invalid.
     def setUp(self):
@@ -148,6 +134,39 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
             validator.message,
             'Target is not accessible by piece type.'
         )
+
+    def test_cannot_move_to_complex_territory_and_not_named_coast(self):
+        """
+        A fleet cannot move to a complex territory without specifying which named
+        coast.
+        """
+        self.set_piece_territory(self.fleet, self.mid_atlantic)
+        command = self.create_move_command(
+            self.mid_atlantic,
+            self.spain,
+        )
+        validator = get_command_validator(command)
+        self.assertFalse(validator.is_valid())
+        self.assertEqual(
+            validator.message,
+            ('Fleet cannot move to complex territory without specifying a '
+             'named coast')
+        )
+
+    def test_can_move_to_complex_territory_with_named_coast(self):
+        """
+        A fleet can move to a complex territory if specifying which named
+        coast.
+        """
+        self.set_piece_territory(self.fleet, self.mid_atlantic)
+        spain_nc = NamedCoast.objects.get(name='spain north coast')
+        command = self.create_move_command(
+            self.mid_atlantic,
+            self.spain,
+            named_coast=spain_nc
+        )
+        validator = get_command_validator(command)
+        self.assertTrue(validator.is_valid())
 
 
 class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):

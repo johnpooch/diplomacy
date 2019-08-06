@@ -1,6 +1,11 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import gettext as _
 
-class Piece(models.Model):
+from service.models import HygenicModel
+
+
+class Piece(HygenicModel):
     """
     """
     class PieceType:
@@ -24,6 +29,12 @@ class Piece(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
+    named_coast = models.OneToOneField(
+        'NamedCoast',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
     type = models.CharField(
         max_length=50,
         null=False,
@@ -39,6 +50,23 @@ class Piece(models.Model):
 
     def __str__(self):
         return f'{self.type.title()} {self.territory} ({self.nation})'
+
+    def clean(self):
+        super().clean()
+        if self.is_fleet():
+            if self.territory.is_complex() and not self.named_coast:
+                raise ValidationError({
+                    'territory': _(
+                        'Fleet cannot be in complex territory without also '
+                        'being in a named coast.'
+                    ),
+                })
+            if self.territory.is_inland():
+                raise ValidationError({
+                    'territory': _(
+                        'Fleet cannot be in an inland territory.'
+                    ),
+                })
 
     def is_army(self):
         return self.type == self.PieceType.ARMY

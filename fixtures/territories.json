@@ -254,7 +254,7 @@
       "model":"service.territory",
       "pk":13,
       "fields":{
-         "name":"mid_atlantic ocean",
+         "name":"mid atlantic",
          "neighbours":[
             26,
             8,
@@ -1552,14 +1552,17 @@
       "fields":{
          "name":"spain",
          "neighbours":[
-            32,
-            39,
-            45
+             32,
+             39,
+             45,
+             9,
+             19,
+             13
          ],
          "shared_coasts":[
 
          ],
-         "coastal":false,
+         "coastal":true,
          "controlled_by":null,
          "type":"land"
       }

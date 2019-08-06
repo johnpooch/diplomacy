@@ -16,6 +16,7 @@ class MoveValidator(CommandValidator):
         super().__init__(command)
         self.source = command.source_territory
         self.target = command.target_territory
+        self.named_coast = command.named_coast
 
     def is_valid(self):
         if not self._friendly_piece_exists_in_source():
@@ -46,8 +47,8 @@ class ArmyMoveValidator(MoveValidator):
 
         if not (self._target_adjacent_to_source() or self._convoy_is_possible()):
             self.message = _(
-                'Army cannot move to non adjacent territory unless moving from '
-                'one coastal territory to another coastal territory.'
+                'Army cannot move to non adjacent territory unless moving '
+                'from one coastal territory to another coastal territory.'
             )
             return False
         return True
@@ -62,6 +63,13 @@ class FleetMoveValidator(MoveValidator):
         if not super().is_valid():
             return False
 
+        if self.target.is_complex() and not self.named_coast:
+            self.message = _(
+                'Fleet cannot move to complex territory without specifying a '
+                'named coast'
+            )
+            return False
+
         if not self._target_adjacent_to_source():
             self.message = _('Fleet cannot move to non adjacent territory.')
             return False
@@ -73,7 +81,6 @@ class FleetMoveValidator(MoveValidator):
                 'unless both territories share a coastline.'
             )
             return False
-
         return True
 
 

@@ -1,21 +1,26 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.db.models import Manager, QuerySet, Sum, When, Case
+from django.db.models import Manager
 from django.utils.translation import gettext as _
 
 
 # Create challenges based on whether the move is possible.
 # Resolve challenges into outcomes
 
+
 class Announcement(models.Model):
     """
     """
-    nation = models.ForeignKey('Nation', related_name='announcements',
-            on_delete=models.CASCADE, null=False)
+    nation = models.ForeignKey(
+        'Nation',
+        related_name='announcements',
+        on_delete=models.CASCADE,
+        null=False
+    )
     text = models.CharField(max_length=1000, null=False)
 
     class Meta:
         db_table = "announcement"
+
 
 class Challenge(models.Model):
     """
@@ -42,14 +47,15 @@ class Command(models.Model):
     """
     # TODO: should make tight db constraints for different commands
     COMMAND_TYPES = (
-       ('H', 'Hold'),
-       ('M', 'Move'),
-       ('S', 'Support'),
-       ('C', 'Convoy'),
-       ('R', 'Retreat'),
-       ('D', 'Disband'),
-       ('B', 'Build'),
+        ('H', 'Hold'),
+        ('M', 'Move'),
+        ('S', 'Support'),
+        ('C', 'Convoy'),
+        ('R', 'Retreat'),
+        ('D', 'Disband'),
+        ('B', 'Build'),
     )
+
     class CommandType:
         HOLD = 'hold'
         MOVE = 'move'
@@ -58,14 +64,38 @@ class Command(models.Model):
             (MOVE, 'Fleet'),
         )
 
-    source_territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
-            related_name='source_commands', null=False, db_constraint=False)
-    aux_territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
-            related_name='aux_commands', null=True)
-    target_territory = models.ForeignKey('Territory', on_delete=models.CASCADE,
-            related_name='target_commands', null=True)
-    order = models.ForeignKey('Order', on_delete=models.CASCADE,
-            related_name='commands', db_column="order_id", null=False)
+    source_territory = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        related_name='source_commands',
+        null=False,
+        db_constraint=False
+    )
+    aux_territory = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        related_name='aux_commands',
+        null=True
+    )
+    target_territory = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        related_name='target_commands',
+        null=True
+    )
+    named_coast = models.ForeignKey(
+        'NamedCoast',
+        on_delete=models.CASCADE,
+        related_name='commands',
+        null=True
+    )
+    order = models.ForeignKey(
+        'Order',
+        on_delete=models.CASCADE,
+        related_name='commands',
+        db_column="order_id",
+        null=False
+    )
     type = models.CharField(
         max_length=100,
         choices=CommandType.CHOICES,
@@ -73,7 +103,7 @@ class Command(models.Model):
     )
     valid = models.BooleanField(default=True)
     success = models.BooleanField(default=True)
-    # Outcome in human friendly terms 
+    # Outcome in human friendly terms
     result_message = models.CharField(max_length=100, null=True)
 
     objects = models.Manager()
@@ -103,7 +133,7 @@ class Command(models.Model):
 
         convoy_move_is_possible = source.coastal and target.coastal
 
-        if not target in source.neighbours.all():
+        if target not in source.neighbours.all():
             if (piece.type == piece.PieceType.ARMY and not convoy_move_is_possible):
                 message = _(
                     'Army cannot move to non adjacent territory unless moving from '
@@ -118,7 +148,6 @@ class Command(models.Model):
                 )
                 self.invalidate(message)
                 return False
-
 
         if not target.accessible_by_piece_type(piece):
             message = _('Target is not accessible by piece type.')
@@ -150,10 +179,18 @@ class Game(models.Model):
 class Message(models.Model):
     """
     """
-    sender = models.ForeignKey('Nation', related_name='sent_messages',
-            on_delete=models.CASCADE, null=False)
-    recipient = models.ForeignKey('Nation', related_name='received_messages',
-            on_delete=models.CASCADE, null=False)
+    sender = models.ForeignKey(
+        'Nation',
+        related_name='sent_messages',
+        on_delete=models.CASCADE,
+        null=False
+    )
+    recipient = models.ForeignKey(
+        'Nation',
+        related_name='received_messages',
+        on_delete=models.CASCADE,
+        null=False
+    )
     text = models.CharField(max_length=1000, null=False)
 
     class Meta:
@@ -179,7 +216,7 @@ class Nation(models.Model):
 
 
 class OrderManager(Manager):
-    
+
     def get_queryset(self):
         """
         """
@@ -200,9 +237,14 @@ class Order(models.Model):
     """
     """
     # TODO: use signals when all orders are submitted
-    nation = models.ForeignKey('Nation', related_name='orders',
-            on_delete=models.CASCADE, db_column="nation_id", null=False,
-            db_constraint=False)
+    nation = models.ForeignKey(
+        'Nation',
+        related_name='orders',
+        on_delete=models.CASCADE,
+        db_column="nation_id",
+        null=False,
+        db_constraint=False
+    )
     turn = models.ForeignKey('Turn', on_delete=models.CASCADE, null=False)
     finalised = models.BooleanField(default=False)
 
@@ -237,15 +279,27 @@ class Phase(models.Model):
 class SupplyCenter(models.Model):
     """
     """
-    controlled_by = models.ForeignKey('Nation',
-            related_name='controlled_supply_centers', on_delete=models.CASCADE,
-            db_column='nation_id', null=True)
-    nationality = models.ForeignKey('Nation',
-            related_name='national_supply_centers',
-            on_delete=models.CASCADE, null=True)
-    territory = models.OneToOneField('Territory', primary_key=True,
-            on_delete=models.CASCADE, db_column='territory_id',
-            related_name='supply_center', null=False)
+    controlled_by = models.ForeignKey(
+        'Nation',
+        related_name='controlled_supply_centers',
+        on_delete=models.CASCADE,
+        db_column='nation_id',
+        null=True
+    )
+    nationality = models.ForeignKey(
+        'Nation',
+        related_name='national_supply_centers',
+        on_delete=models.CASCADE,
+        null=True
+    )
+    territory = models.OneToOneField(
+        'Territory',
+        primary_key=True,
+        on_delete=models.CASCADE,
+        db_column='territory_id',
+        related_name='supply_center',
+        null=False
+    )
 
     class Meta:
         db_table = "supply_center"
@@ -255,7 +309,7 @@ class SupplyCenter(models.Model):
 
 
 class TurnManager(Manager):
-    
+
     def get_queryset(self):
         """
         """
@@ -278,4 +332,3 @@ class Turn(models.Model):
 
     def __str__(self):
         return " ".join([str(self.phase), str(self.year)])
-

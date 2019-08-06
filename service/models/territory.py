@@ -15,8 +15,9 @@ class Territory(models.Model):
     # TODO add ForeignKey to Variant. Create Variant model.
     # TODO territory should inherit from a model called space which has details
     # about the representation of the territory on the front end.
-    # TODO there should be an ImpassableTerritory model which inherits from Space too.
-    name = models.CharField(max_length=50, null=False)
+    # TODO there should be an ImpassableTerritory model which inherits from
+    # Space too.
+    name = models.CharField(max_length=50, null=False, unique=True)
     controlled_by = models.ForeignKey(
         'Nation',
         on_delete=models.CASCADE,
@@ -57,9 +58,10 @@ class Territory(models.Model):
         if self.pieces.all().count() == 1:
             return self.pieces.all()[0]
         if self.pieces.all().count() > 1:
-            raise ValueError((f"More than one piece exists in {self}. "
-                    "There should never be more than one piece in a territory "
-                    "except when retreating or disbanding."))
+            raise ValueError((
+                f"More than one piece exists in {self}. There should never be "
+                "more than one piece in a territory except when retreating or "
+                "disbanding."))
         return False
 
     def get_friendly_piece(self, nation):
@@ -85,6 +87,12 @@ class Territory(models.Model):
             return bool(self.supply_center)
         except ObjectDoesNotExist:
             return False
+
+    def is_inland(self):
+        return self.type == self.TerritoryType.LAND and not self.coastal
+
+    def is_complex(self):
+        return self.named_coasts.exists()
 
     def __str__(self):
         return self.name.capitalize()

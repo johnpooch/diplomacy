@@ -1,0 +1,32 @@
+[
+   {
+      "model":"service.namedcoast",
+      "pk":1,
+      "fields":{
+         "name":"spain north coast",
+         "map_abbreviation":"nc",
+         "parent":74,
+         "neighbours":[
+             13,
+             32,
+             45
+         ]
+      }
+   },
+   {
+      "model":"service.namedcoast",
+      "pk":2,
+      "fields":{
+         "name":"spain south coast",
+         "map_abbreviation":"sc",
+         "parent":74,
+         "neighbours":[
+             39,
+             9,
+             19,
+             13,
+             45
+         ]
+      }
+   }
+]
