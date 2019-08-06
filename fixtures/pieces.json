@@ -1,0 +1,110 @@
+[
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 1,
+            "territory": 36,
+            "type": "fleet"
+        },
+        "model": "service.piece",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 1,
+            "territory": 38,
+            "type": "army"
+        },
+        "model": "service.piece",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 1,
+            "territory": 30,
+            "type": "fleet"
+        },
+        "model": "service.piece",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 2,
+            "territory": 65,
+            "type": "army"
+        },
+        "model": "service.piece",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 2,
+            "territory": 26,
+            "type": "fleet"
+        },
+        "model": "service.piece",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 2,
+            "territory": 39,
+            "type": "army"
+        },
+        "model": "service.piece",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 3,
+            "territory": 35,
+            "type": "fleet"
+        },
+        "model": "service.piece",
+        "pk": 7
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 3,
+            "territory": 24,
+            "type": "army"
+        },
+        "model": "service.piece",
+        "pk": 8
+    },
+    {
+        "fields": {
+            "active": true,
+            "must_disband": false,
+            "must_retreat": false,
+            "nation": 3,
+            "territory": 64,
+            "type": "army"
+        },
+        "model": "service.piece",
+        "pk": 9
+    }
+]

@@ -1,9 +1,5 @@
-from nation import *
-from phase import *
-from game_properties import *
-from piece import *
-from territory import *
-from order import *
+from .nation import *
+from .territory import *
 
 """ This script creates the object instances that exist at the start of the game. Dictionaries for pieces, ownership, 
     game properties are here. They are uploaded to the mongo db when the game is initialised. """
@@ -288,8 +284,7 @@ def get_territories():
             "model": "service.territory",
             "pk": i + 1,
             "fields": {
-                "abbreviation": t.name,
-                "display_name": t.display_name,
+                "name": t.display_name,
                 "neighbours": [],
                 "shared_coasts": [],
                 "coast": False,

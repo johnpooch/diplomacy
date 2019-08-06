@@ -4,9 +4,15 @@ version: '3'
 services:
   diplomacy.mysql:
     image: 'mariadb:latest'
+    restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=diplomacy
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_HOST=%
       - MYSQL_DATABASE=diplomacy
+      - MYSQL_USER=APP_USER
+      - MYSQL_PASSWORD=APP_USER
+      - MYSQL_ROOT_PASSWORD=root
   diplomacy.service:
     build: 
       context: .

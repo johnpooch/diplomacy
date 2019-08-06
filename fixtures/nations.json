@@ -1,0 +1,58 @@
+[
+    {
+        "fields": {
+            "active": true,
+            "name": "England"
+        },
+        "model": "service.nation",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "active": true,
+            "name": "France"
+        },
+        "model": "service.nation",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "active": true,
+            "name": "Germany"
+        },
+        "model": "service.nation",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "active": true,
+            "name": "Austria-Hungary"
+        },
+        "model": "service.nation",
+        "pk": 4
+    },
+    {
+        "fields": {
+            "active": true,
+            "name": "Italy"
+        },
+        "model": "service.nation",
+        "pk": 5
+    },
+    {
+        "fields": {
+            "active": true,
+            "name": "Russia"
+        },
+        "model": "service.nation",
+        "pk": 6
+    },
+    {
+        "fields": {
+            "active": true,
+            "name": "Turkey"
+        },
+        "model": "service.nation",
+        "pk": 7
+    }
+]

@@ -34,10 +34,10 @@ class PieceSerializer(serializers.ModelSerializer):
 class NeighbourSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Territory
-        fields = ('display_name',)
+        fields = ('name',)
 
     def to_representation(self, value):
-        return value.abbreviation
+        return value.name
 
 class TerritorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,3 +46,4 @@ class TerritorySerializer(serializers.ModelSerializer):
         fields = '__all__'
  
     neighbours = NeighbourSerializer(many=True)
+    shared_coasts = NeighbourSerializer(many=True)
