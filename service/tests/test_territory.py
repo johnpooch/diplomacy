@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from service.tests.utils import TerritoriesMixin
+from service.tests.base import TerritoriesMixin
 
 
 class TestTerritory(TestCase, TerritoriesMixin):

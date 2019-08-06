@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from service.models import Nation, Piece
-from service.tests.utils import TerritoriesMixin
+from service.tests.base import TerritoriesMixin
 
 
 class TestPiece(TestCase, TerritoriesMixin):

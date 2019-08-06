@@ -53,6 +53,7 @@ class Piece(HygenicModel):
 
     def clean(self):
         super().clean()
+        # TODO move into methods
         if self.is_fleet():
             if self.territory.is_complex() and not self.named_coast:
                 raise ValidationError({

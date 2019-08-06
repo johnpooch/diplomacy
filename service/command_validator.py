@@ -16,7 +16,8 @@ class MoveValidator(CommandValidator):
         super().__init__(command)
         self.source = command.source_territory
         self.target = command.target_territory
-        self.named_coast = command.named_coast
+        self.source_coast = command.source_coast
+        self.target_coast = command.target_coast
 
     def is_valid(self):
         if not self._friendly_piece_exists_in_source():
@@ -63,12 +64,27 @@ class FleetMoveValidator(MoveValidator):
         if not super().is_valid():
             return False
 
-        if self.target.is_complex() and not self.named_coast:
-            self.message = _(
-                'Fleet cannot move to complex territory without specifying a '
-                'named coast'
-            )
-            return False
+        if self.source.is_complex():
+            if self.target not in self.source_coast.neighbours.all():
+                self.message = _(
+                    'Fleet cannot move from a named coast to a territory '
+                    'which is not a neighbour the named coast.'
+                )
+                return False
+
+        if self.target.is_complex():
+            if not self.target_coast:
+                self.message = _(
+                    'Fleet cannot move to complex territory without specifying a '
+                    'named coast'
+                )
+                return False
+            if self.source not in self.target_coast.neighbours.all():
+                self.message = _(
+                    'Fleet cannot move to a named coast which does not neighbour '
+                    'the source territory.'
+                )
+                return False
 
         if not self._target_adjacent_to_source():
             self.message = _('Fleet cannot move to non adjacent territory.')

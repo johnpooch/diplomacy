@@ -83,10 +83,16 @@ class Command(models.Model):
         related_name='target_commands',
         null=True
     )
-    named_coast = models.ForeignKey(
+    source_coast = models.ForeignKey(
         'NamedCoast',
         on_delete=models.CASCADE,
-        related_name='commands',
+        related_name='+',
+        null=True
+    )
+    target_coast = models.ForeignKey(
+        'NamedCoast',
+        on_delete=models.CASCADE,
+        related_name='+',
         null=True
     )
     order = models.ForeignKey(

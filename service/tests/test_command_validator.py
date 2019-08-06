@@ -3,18 +3,20 @@ from .base import InitialGameStateTestCase as TestCase
 from service.command_validator import ArmyMoveValidator, FleetMoveValidator, \
     get_command_validator
 from service.models import Command, NamedCoast, Nation, Order, Piece
-from service.tests.utils import TerritoriesMixin
+from service.tests.base import TerritoriesMixin
 
 
 class HelperMixin:
 
-    def set_piece_territory(self, piece, territory):
+    def set_piece_territory(self, piece, territory, named_coast=None):
         """
         """
         piece.territory = territory
+        piece.named_coast = named_coast
         piece.save()
 
-    def create_move_command(self, source, target, named_coast=None):
+    def create_move_command(self, source, target,
+                            source_coast=None, target_coast=None):
         """
         """
         return Command.objects.create(
@@ -22,7 +24,8 @@ class HelperMixin:
             target_territory=target,
             order=self.order,
             type=Command.CommandType.MOVE,
-            named_coast=named_coast,
+            source_coast=source_coast,
+            target_coast=target_coast,
         )
 
 
@@ -163,10 +166,50 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         command = self.create_move_command(
             self.mid_atlantic,
             self.spain,
-            named_coast=spain_nc
+            target_coast=spain_nc
         )
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
+
+    def test_cannot_move_to_non_adjacent_named_coast(self):
+        """
+        A fleet cannot move to a named coast of a complex territory if the
+        source territory is not a neighbour of the named coast.
+        """
+        self.set_piece_territory(self.fleet, self.western_mediterranean)
+        spain_nc = NamedCoast.objects.get(name='spain north coast')
+        command = self.create_move_command(
+            self.western_mediterranean,
+            self.spain,
+            target_coast=spain_nc
+        )
+        validator = get_command_validator(command)
+        self.assertFalse(validator.is_valid())
+        self.assertEqual(
+            validator.message,
+            ('Fleet cannot move to a named coast which does not neighbour '
+             'the source territory.')
+        )
+
+    def test_cannot_move_from_named_coast_to_non_neighbour(self):
+        """
+        A fleet cannot move from a named coast of a complex territory if the
+        target territory is not a neighbour of the named coast.
+        """
+        spain_nc = NamedCoast.objects.get(name='spain north coast')
+        self.set_piece_territory(self.fleet, self.spain, named_coast=spain_nc)
+        command = self.create_move_command(
+            self.spain,
+            self.western_mediterranean,
+            source_coast=spain_nc
+        )
+        validator = get_command_validator(command)
+        self.assertFalse(validator.is_valid())
+        self.assertEqual(
+            validator.message,
+            ('Fleet cannot move from a named coast to a territory '
+             'which is not a neighbour the named coast.')
+        )
 
 
 class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
