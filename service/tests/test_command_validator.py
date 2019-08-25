@@ -1,32 +1,11 @@
-from .base import InitialGameStateTestCase as TestCase
+from django.core.exceptions import ValidationError
+
 
 from service.command_validator import ArmyMoveValidator, FleetMoveValidator, \
-    get_command_validator
+    ArmySupportValidator, FleetSupportValidator, get_command_validator
 from service.models import Command, NamedCoast, Nation, Order, Piece
-from service.tests.base import TerritoriesMixin
-
-
-class HelperMixin:
-
-    def set_piece_territory(self, piece, territory, named_coast=None):
-        """
-        """
-        piece.territory = territory
-        piece.named_coast = named_coast
-        piece.save()
-
-    def create_move_command(self, source, target,
-                            source_coast=None, target_coast=None):
-        """
-        """
-        return Command.objects.create(
-            source_territory=source,
-            target_territory=target,
-            order=self.order,
-            type=Command.CommandType.MOVE,
-            source_coast=source_coast,
-            target_coast=target_coast,
-        )
+from service.tests.base import HelperMixin, TerritoriesMixin
+from .base import InitialGameStateTestCase as TestCase
 
 
 class TestGetCommandValidator(TestCase, TerritoriesMixin):
@@ -61,17 +40,32 @@ class TestGetCommandValidator(TestCase, TerritoriesMixin):
         validator = get_command_validator(command)
         self.assertTrue(isinstance(validator, FleetMoveValidator))
 
+    def test_get_army_support_validator(self):
+        command = Command.objects.create(
+            source_territory=self.paris,
+            target_territory=self.burgundy,
+            order=self.order,
+            type=Command.CommandType.SUPPORT,
+        )
+        validator = get_command_validator(command)
+        self.assertTrue(isinstance(validator, ArmySupportValidator))
+
+    def test_get_fleet_support_validator(self):
+        command = Command.objects.create(
+            source_territory=self.brest,
+            target_territory=self.english_channel,
+            order=self.order,
+            type=Command.CommandType.SUPPORT,
+        )
+        validator = get_command_validator(command)
+        self.assertTrue(isinstance(validator, FleetSupportValidator))
+
 
 class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
 
     fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
                 'pieces.json']
 
-    # TODO bin validator messages
-
-    # NOTE these tests should work without saving the object. Should instead do
-    # ``command.validate()``. This is because the save function should run the
-    # validate method and raise an error if the command is invalid.
     def setUp(self):
         super().setUp()
         self.initialise_territories()
@@ -86,7 +80,7 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         Fleet can move to adjacent sea territory.
         """
         self.set_piece_territory(self.fleet, self.english_channel)
-        command = self.create_move_command(self.english_channel, self.irish_sea)
+        command = self.move_command(self.english_channel, self.irish_sea)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -95,7 +89,7 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         Fleet can move from sea territory to adjacent coastal territory.
         """
         self.set_piece_territory(self.fleet, self.english_channel)
-        command = self.create_move_command(self.english_channel, self.brest)
+        command = self.move_command(self.english_channel, self.brest)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -104,7 +98,7 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         Fleet can move from coastal territory to adjacent coastal territory.
         """
         self.set_piece_territory(self.fleet, self.brest)
-        command = self.create_move_command(self.brest, self.gascony)
+        command = self.move_command(self.brest, self.gascony)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -115,14 +109,10 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         Piece.objects.get(territory__name='marseilles').delete()
         self.set_piece_territory(self.fleet, self.marseilles)
-        command = self.create_move_command(self.marseilles, self.gascony)
+        command = self.move_command(self.marseilles, self.gascony)
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            ('Fleet cannot move from one coastal territory to another unless '
-             'both territories share a coastline.')
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
     def test_coastal_to_adjacent_inland_territory(self):
         """
@@ -130,13 +120,10 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         Piece.objects.get(territory__name='marseilles').delete()
         self.set_piece_territory(self.fleet, self.marseilles)
-        command = self.create_move_command(self.marseilles, self.burgundy)
+        command = self.move_command(self.marseilles, self.burgundy)
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            'Target is not accessible by piece type.'
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
     def test_cannot_move_to_complex_territory_and_not_named_coast(self):
         """
@@ -144,17 +131,13 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         coast.
         """
         self.set_piece_territory(self.fleet, self.mid_atlantic)
-        command = self.create_move_command(
+        command = self.move_command(
             self.mid_atlantic,
             self.spain,
         )
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            ('Fleet cannot move to complex territory without specifying a '
-             'named coast')
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
     def test_can_move_to_complex_territory_with_named_coast(self):
         """
@@ -163,7 +146,7 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         spain_nc = NamedCoast.objects.get(name='spain north coast')
-        command = self.create_move_command(
+        command = self.move_command(
             self.mid_atlantic,
             self.spain,
             target_coast=spain_nc
@@ -178,18 +161,14 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.fleet, self.western_mediterranean)
         spain_nc = NamedCoast.objects.get(name='spain north coast')
-        command = self.create_move_command(
+        command = self.move_command(
             self.western_mediterranean,
             self.spain,
             target_coast=spain_nc
         )
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            ('Fleet cannot move to a named coast which does not neighbour '
-             'the source territory.')
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
     def test_cannot_move_from_named_coast_to_non_neighbour(self):
         """
@@ -198,18 +177,14 @@ class TestFleetMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         spain_nc = NamedCoast.objects.get(name='spain north coast')
         self.set_piece_territory(self.fleet, self.spain, named_coast=spain_nc)
-        command = self.create_move_command(
+        command = self.move_command(
             self.spain,
             self.western_mediterranean,
             source_coast=spain_nc
         )
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            ('Fleet cannot move from a named coast to a territory '
-             'which is not a neighbour the named coast.')
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
 
 class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
@@ -230,7 +205,7 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         Army can move from a coastal territory to an adjacent coastal territory
         when there is a shared coast.
         """
-        command = self.create_move_command(self.marseilles, self.piedmont)
+        command = self.move_command(self.marseilles, self.piedmont)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -239,7 +214,7 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         Army can move from coastal territory to adjacent coastal territory when
         no shared coast.
         """
-        command = self.create_move_command(self.marseilles, self.gascony)
+        command = self.move_command(self.marseilles, self.gascony)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -247,7 +222,7 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         Army can move from coastal territory to adjacent inland territory.
         """
-        command = self.create_move_command(self.marseilles, self.burgundy)
+        command = self.move_command(self.marseilles, self.burgundy)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -255,7 +230,7 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         Army can move from inland territory to adjacent inland territory.
         """
-        command = self.create_move_command(self.paris, self.burgundy)
+        command = self.move_command(self.paris, self.burgundy)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -263,7 +238,7 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         Army can move from inland territory to adjacent coastal territory.
         """
-        command = self.create_move_command(self.paris, self.picardy)
+        command = self.move_command(self.paris, self.picardy)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -271,13 +246,10 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         """
         Army cannot move from coastal to adjacent sea territory.
         """
-        command = self.create_move_command(self.marseilles, self.gulf_of_lyon)
+        command = self.move_command(self.marseilles, self.gulf_of_lyon)
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            'Target is not accessible by piece type.'
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
     def test_coastal_to_non_adjacent_coastal_territory(self):
         """
@@ -285,7 +257,7 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         territory via a convoy.
         """
         self.set_piece_territory(self.army, self.gascony)
-        command = self.create_move_command(self.gascony, self.picardy)
+        command = self.move_command(self.gascony, self.picardy)
         validator = get_command_validator(command)
         self.assertTrue(validator.is_valid())
 
@@ -295,14 +267,10 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         territory.
         """
         self.set_piece_territory(self.army, self.burgundy)
-        command = self.create_move_command(self.burgundy, self.silesia)
+        command = self.move_command(self.burgundy, self.silesia)
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            ('Army cannot move to non adjacent territory unless moving from '
-             'one coastal territory to another coastal territory.')
-        )
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
 
     def test_inland_to_non_adjacent_coastal_territory(self):
         """
@@ -310,11 +278,216 @@ class TestArmyMoveValidator(TestCase, TerritoriesMixin, HelperMixin):
         territory.
         """
         self.set_piece_territory(self.army, self.silesia)
-        command = self.create_move_command(self.silesia, self.gascony)
+        command = self.move_command(self.silesia, self.gascony)
         validator = get_command_validator(command)
-        self.assertFalse(validator.is_valid())
-        self.assertEqual(
-            validator.message,
-            ('Army cannot move to non adjacent territory unless moving from '
-             'one coastal territory to another coastal territory.')
+        with self.assertRaises(ValidationError):
+            validator.is_valid()
+
+
+class TestFleetSupportValidator(TestCase, TerritoriesMixin, HelperMixin):
+
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json']
+
+    def setUp(self):
+        super().setUp()
+        self.initialise_territories()
+        self.order = Order.objects.create(
+            nation=Nation.objects.get(name='France'),
+            turn=self.turn,
         )
+        self.fleet = Piece.objects.get(territory__name='brest')
+        self.attacking_army = Piece.objects.get(territory__name='paris')
+        self.attacking_fleet = Piece.objects.get(territory__name='london')
+
+    def test_no_piece_in_source(self):
+        """
+        There must be a piece in the source territory.
+        """
+        # TODO repeat this test for move.
+        self.set_piece_territory(self.attacking_fleet, self.holland)
+        command = self.support_command(
+            self.belgium,
+            self.kiel,
+            self.holland
+        )
+        validator = get_command_validator(command)
+        with self.assertRaisesRegexp(
+            ValidationError,
+            'No piece exists in this territory'
+        ):
+            validator.is_valid()
+
+    def test_support_fleet_does_not_belong_to_command(self):
+        """
+        Supporting fleet must belong to nation which created the order.
+        """
+        self.set_piece_territory(self.attacking_fleet, self.belgium)
+        command = self.support_command(
+            self.kiel,
+            self.belgium,
+            self.holland
+        )
+        validator = get_command_validator(command)
+        with self.assertRaisesRegexp(
+            ValidationError,
+            'No friendly piece exists in the source territory.'
+        ):
+            validator.is_valid()
+
+    def test_support_fleet_to_adjacent_territory(self):
+        """
+        Fleet can support fleet to territory adjacent to both fleets.
+        """
+        self.set_piece_territory(self.attacking_fleet, self.english_channel)
+        command = self.support_command(
+            self.brest,
+            self.picardy,
+            self.english_channel
+        )
+        validator = get_command_validator(command)
+        self.assertTrue(validator.is_valid())
+
+    def test_support_fleet_to_territory_not_adjacent_to_supporting(self):
+        """
+        Fleet cannot support fleet to territory not adjacent to supporting
+        fleet.
+        """
+        self.set_piece_territory(self.attacking_fleet, self.holland)
+        command = self.support_command(
+            self.brest,
+            self.belgium,
+            self.holland
+        )
+        validator = get_command_validator(command)
+        with self.assertRaisesRegexp(
+            ValidationError,
+            'Supporting fleet cannot support piece into a territory which is '
+            'not adjacent to the supporting fleet.'
+        ):
+            validator.is_valid()
+
+    def test_support_fleet_to_territory_not_adjacent_to_attacking_fleet(self):
+        """
+        Supporting fleet cannot support fleet into territory which is not
+        adjacent to the attacking fleet.
+        """
+        self.set_piece_territory(self.attacking_fleet, self.holland)
+        command = self.support_command(
+            self.brest,
+            self.picardy,
+            self.holland
+        )
+        validator = get_command_validator(command)
+        with self.assertRaisesRegexp(
+            ValidationError,
+            'Supporting fleet cannot support fleet into territory which is '
+            'not adjacent to the attacking fleet.'
+        ):
+            validator.is_valid()
+
+    def test_support_army_to_territory_not_adjacent_to_attacking_army(self):
+        """
+        Supporting fleet can support army into territory which is not adjacent
+        to the attacking army if convoy is possible.
+        """
+        pass
+
+    def test_support_army_to_inland_territory(self):
+        """
+        Fleet cannot support army into an inland territory.
+        """
+        pass
+
+    def test_support_from_named_coast_adjacent(self):
+        """
+        Fleet on a named coast can support army into a territory if the named
+        coast is a neighbour of the territory.
+        """
+        pass
+
+    def test_support_from_named_coast_not_adjacent(self):
+        """
+        Fleet on a named coast cannot support army into a territory if the
+        named coast is not a neighbour of the territory.
+        """
+        pass
+
+    def test_support_fleet_to_different_named_coast(self):
+        """
+        Fleet which neighbours one named coast of a complex territory (e.g.
+        'Spain S.C') can support a fleet into the other named coast (e.g.
+        'Spain N.C').
+        """
+        pass
+
+
+class TestArmySupportValidator(TestCase, TerritoriesMixin, HelperMixin):
+
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json']
+
+    def setUp(self):
+        super().setUp()
+        self.initialise_territories()
+        self.order = Order.objects.create(
+            nation=Nation.objects.get(name='France'),
+            turn=self.turn,
+        )
+        self.army = Piece.objects.get(territory__name='paris')
+        self.attacking_fleet = Piece.objects.get(territory__name='brest')
+        self.attacking_army = Piece.objects.get(territory__name='marseilles')
+
+    def test_support_fleet_to_territory_not_adjacent_to_supporting(self):
+        """
+        Supporting fleet must belong to nation which created the order.
+        """
+        pass
+
+    def test_support_fleet_to_adjacent_territory_coastal(self):
+        """
+        Army can support fleet to territory adjacent to both pieces if coastal.
+        """
+        pass
+
+    def test_support_fleet_to_adjacent_territory_sea(self):
+        """
+        Army cannot support fleet to territory adjacent to both pieces if
+        territory is a sea territory.
+        """
+        pass
+
+    def test_support_fleet_to_adjacent_territory_inland(self):
+        """
+        Army cannot support fleet to territory adjacent to both pieces if
+        territory is inland.
+        """
+        pass
+
+    def test_support_fleet_to_coastal_territory_not_adjacent_to_supporter(self):
+        """
+        Army cannot support fleet to coastal territory if not adjacent to
+        supporting army.
+        """
+        pass
+
+    def test_support_fleet_to_territory_not_adjacent_to_attacking_fleet(self):
+        """
+        Army cannot support fleet to territory not adjacent to attacking fleet.
+        """
+        pass
+
+    def test_support_fleet_to_complex_territory_neighbour_named_coast(self):
+        """
+        An army can support a fleet into a complex territory when the army is
+        adjacent to the named coast that the fleet is attacking.
+        """
+        pass
+
+    def test_support_fleet_to_complex_territory_not_neighbour_named_coast(self):
+        """
+        An army can support a fleet into a complex territory when the army is
+        adjacent to the territory but not adjacent to the named coast that the
+        fleet is attacking.
+        """
+        pass

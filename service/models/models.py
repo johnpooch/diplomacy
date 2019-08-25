@@ -3,6 +3,10 @@ from django.db.models import Manager
 from django.utils.translation import gettext as _
 
 
+from service.command_validator import get_command_validator
+from service.models.base import HygenicModel
+
+
 # Create challenges based on whether the move is possible.
 # Resolve challenges into outcomes
 
@@ -42,58 +46,53 @@ class Challenge(models.Model):
         db_table = "challenge"
 
 
-class Command(models.Model):
+class Command(HygenicModel):
     """
     """
-    # TODO: should make tight db constraints for different commands
-    COMMAND_TYPES = (
-        ('H', 'Hold'),
-        ('M', 'Move'),
-        ('S', 'Support'),
-        ('C', 'Convoy'),
-        ('R', 'Retreat'),
-        ('D', 'Disband'),
-        ('B', 'Build'),
-    )
 
     class CommandType:
         HOLD = 'hold'
         MOVE = 'move'
+        SUPPORT = 'support'
         CHOICES = (
             (HOLD, 'Hold'),
             (MOVE, 'Fleet'),
+            (SUPPORT, 'Support'),
         )
 
     source_territory = models.ForeignKey(
         'Territory',
         on_delete=models.CASCADE,
         related_name='source_commands',
-        null=False,
-        db_constraint=False
+        null=False
     )
     aux_territory = models.ForeignKey(
         'Territory',
         on_delete=models.CASCADE,
         related_name='aux_commands',
-        null=True
+        null=True,
+        blank=True
     )
     target_territory = models.ForeignKey(
         'Territory',
         on_delete=models.CASCADE,
         related_name='target_commands',
-        null=True
+        null=True,
+        blank=True
     )
     source_coast = models.ForeignKey(
         'NamedCoast',
         on_delete=models.CASCADE,
         related_name='+',
-        null=True
+        null=True,
+        blank=True
     )
     target_coast = models.ForeignKey(
         'NamedCoast',
         on_delete=models.CASCADE,
         related_name='+',
-        null=True
+        null=True,
+        blank=True
     )
     order = models.ForeignKey(
         'Order',
@@ -110,12 +109,22 @@ class Command(models.Model):
     valid = models.BooleanField(default=True)
     success = models.BooleanField(default=True)
     # Outcome in human friendly terms
-    result_message = models.CharField(max_length=100, null=True)
+    result_message = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True
+    )
 
     objects = models.Manager()
 
     class Meta:
         db_table = "command"
+
+    def clean(self):
+        """
+        """
+        validator = get_command_validator(self)
+        validator.is_valid()
 
     @property
     def source_piece(self):
@@ -169,8 +178,16 @@ class Command(models.Model):
             )
             self.invalidate(message)
             return False
-
         return True
+
+    def process(self):
+        """
+        """
+        if self.type == self.CommandType.MOVE:
+            Challenge.objects.create(
+                piece=self.source_piece,
+                territory=self.target_territory
+            )
 
 
 class Game(models.Model):

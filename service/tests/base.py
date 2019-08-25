@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from service.models import Game, Phase, Territory, Turn
+from service.models import Command, Game, Order, Phase, Territory, Turn
 
 
 class InitialGameStateTestCase(TestCase):
@@ -26,12 +26,15 @@ class InitialGameStateTestCase(TestCase):
 class TerritoriesMixin:
 
     def initialise_territories(self):
+        self.belgium = Territory.objects.get(name='belgium')
         self.brest = Territory.objects.get(name='brest')
         self.burgundy = Territory.objects.get(name='burgundy')
         self.english_channel = Territory.objects.get(name='english channel')
         self.gascony = Territory.objects.get(name='gascony')
         self.gulf_of_lyon = Territory.objects.get(name='gulf of lyon')
+        self.holland = Territory.objects.get(name='holland')
         self.irish_sea = Territory.objects.get(name='irish sea')
+        self.kiel = Territory.objects.get(name='kiel')
         self.marseilles = Territory.objects.get(name='marseilles')
         self.mid_atlantic = Territory.objects.get(name='mid atlantic')
         self.paris = Territory.objects.get(name='paris')
@@ -40,3 +43,40 @@ class TerritoriesMixin:
         self.silesia = Territory.objects.get(name='silesia')
         self.spain = Territory.objects.get(name='spain')
         self.western_mediterranean = Territory.objects.get(name='western mediterranean')
+
+
+class HelperMixin:
+
+    def set_piece_territory(self, piece, territory, named_coast=None):
+        """
+        """
+        piece.territory = territory
+        piece.named_coast = named_coast
+        piece.save()
+
+    def move_command(self, source, target,
+                            source_coast=None, target_coast=None):
+        """
+        """
+        return Command(
+            source_territory=source,
+            target_territory=target,
+            order=self.order,
+            type=Command.CommandType.MOVE,
+            source_coast=source_coast,
+            target_coast=target_coast,
+        )
+
+    def support_command(self, source, target, aux,
+                            source_coast=None, target_coast=None):
+        """
+        """
+        return Command(
+            source_territory=source,
+            target_territory=target,
+            aux_territory=aux,
+            order=self.order,
+            type=Command.CommandType.SUPPORT,
+            source_coast=source_coast,
+            target_coast=target_coast,
+        )
