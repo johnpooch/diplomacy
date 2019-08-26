@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from service.models import Command, Game, Order, Phase, Territory, Turn
+from service.models import Move, Game, Order, Phase, Territory, Turn
 
 
 class InitialGameStateTestCase(TestCase):
@@ -35,6 +35,7 @@ class TerritoriesMixin:
         self.holland = Territory.objects.get(name='holland')
         self.irish_sea = Territory.objects.get(name='irish sea')
         self.kiel = Territory.objects.get(name='kiel')
+        self.london = Territory.objects.get(name='london')
         self.marseilles = Territory.objects.get(name='marseilles')
         self.mid_atlantic = Territory.objects.get(name='mid atlantic')
         self.paris = Territory.objects.get(name='paris')
@@ -42,6 +43,7 @@ class TerritoriesMixin:
         self.piedmont = Territory.objects.get(name='piedmont')
         self.silesia = Territory.objects.get(name='silesia')
         self.spain = Territory.objects.get(name='spain')
+        self.wales = Territory.objects.get(name='wales')
         self.western_mediterranean = Territory.objects.get(name='western mediterranean')
 
 
@@ -54,15 +56,13 @@ class HelperMixin:
         piece.named_coast = named_coast
         piece.save()
 
-    def move_command(self, source, target,
-                            source_coast=None, target_coast=None):
+    def move(self, source, target, source_coast=None, target_coast=None):
         """
         """
-        return Command(
+        return Move(
             source_territory=source,
             target_territory=target,
             order=self.order,
-            type=Command.CommandType.MOVE,
             source_coast=source_coast,
             target_coast=target_coast,
         )

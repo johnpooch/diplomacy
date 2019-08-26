@@ -74,3 +74,12 @@ class Piece(HygenicModel):
 
     def is_fleet(self):
         return self.type == self.PieceType.FLEET
+
+    def can_reach(self, territory):
+        """
+        """
+        # Check if convoy is possible
+        if self.is_army() and (self.territory.coastal and territory.coastal):
+            return True
+        # Check adjacent to territory
+        return self.territory.adjacent_to(territory)

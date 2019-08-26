@@ -4,6 +4,7 @@ from django.utils.translation import gettext as _
 from service.models import Piece, Territory
 
 
+# REFACTOR
 class CommandValidator:
 
     def __init__(self, command):
@@ -118,6 +119,11 @@ class SupportValidator(CommandValidator):
         self.source_coast = command.source_coast
         self.target_coast = command.target_coast
 
+    # NOTE can be simplified by simply asking can both the source and aux piece
+    # reach the target.
+
+    # Add a method to Piece which determines whether a territory can be reached.
+
     def is_valid(self):
         if not self._friendly_piece_exists_in_source():
             raise ValidationError(_(
@@ -127,7 +133,7 @@ class SupportValidator(CommandValidator):
 
         if not self.target.accessible_by_piece_type(self.source.piece):
             raise ValidationError(_(
-                'Target is not accessible by piece type.'
+                'Target is not accessible by supporting piece.'
                 )
             )
         return True
@@ -144,6 +150,9 @@ class SupportValidator(CommandValidator):
     def _source_and_target_coastal(self):
         return (self.source.coastal and self.target.coastal)
 
+    def _aux_and_target_coastal(self):
+        return (self.aux.coastal and self.target.coastal)
+
     # TODO dry
     def _friendly_piece_exists_in_source(self):
         return Piece.objects.filter(
@@ -151,6 +160,9 @@ class SupportValidator(CommandValidator):
             nation=self.nation
         ).exists()
 
+    # TODO dry
+    def _aux_convoy_is_possible(self):
+        return self._aux_and_target_coastal() and self.aux.piece.is_army()
 
 class ArmySupportValidator(SupportValidator):
 
@@ -205,11 +217,13 @@ class FleetSupportValidator(SupportValidator):
             )
 
         if not self._target_adjacent_to_aux():
-            raise ValidationError(_(
-                'Supporting fleet cannot support fleet into territory which is '
-                'not adjacent to the attacking fleet.'
+            # TODO refactor into single method
+            if not self._aux_convoy_is_possible():
+                raise ValidationError(_(
+                    'Supporting fleet cannot support fleet into territory which is '
+                    'not adjacent to the attacking fleet.'
+                    )
                 )
-            )
 
         if self._source_and_target_coastal() and \
                 not self.source.shares_coast_with(self.target):
