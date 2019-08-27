@@ -75,11 +75,32 @@ class Piece(HygenicModel):
     def is_fleet(self):
         return self.type == self.PieceType.FLEET
 
-    def can_reach(self, territory):
+    def can_reach(self, target, target_coast=None):
         """
         """
+        # if target coast, check that it is accessible
+        if target_coast:
+            if self.is_army():
+                raise ValueError(_(
+                    'Army cannot access named coasts. This error should not be '
+                    'happening!'
+                ))
+            if not self.territory in target_coast.neighbours.all():
+                return False
+
         # Check if convoy is possible
-        if self.is_army() and (self.territory.coastal and territory.coastal):
-            return True
-        # Check adjacent to territory
-        return self.territory.adjacent_to(territory)
+        if self.is_army():
+            if self.territory.coastal and target.coastal:
+                return True
+
+        if self.is_fleet():
+            # if fleet moving from one coast to another, check shared coast
+            if self.territory.coastal and target.coastal:
+                return target in self.territory.shared_coasts.all()
+            if self.territory.is_complex():
+                if target not in self.named_coast.neighbours.all():
+                    return False
+
+        # Check adjacent to target and accessible by piece type
+        return self.territory.adjacent_to(target) and \
+            target.accessible_by_piece_type(self)

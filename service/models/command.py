@@ -1,22 +1,14 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
 from service.models.base import HygenicModel
+from service.models.models import Challenge
 
 
 class Command(HygenicModel):
     """
     """
-
-    class CommandType:
-        HOLD = 'hold'
-        MOVE = 'move'
-        SUPPORT = 'support'
-        CHOICES = (
-            (HOLD, 'Hold'),
-            (MOVE, 'Fleet'),
-            (SUPPORT, 'Support'),
-        )
 
     source_territory = models.ForeignKey(
         'Territory',
@@ -24,37 +16,18 @@ class Command(HygenicModel):
         related_name='source_commands',
         null=False
     )
-    # aux_territory = models.ForeignKey(
-    #     'Territory',
-    #     on_delete=models.CASCADE,
-    #     related_name='aux_commands',
-    #     null=True,
-    #     blank=True
-    # )
-    # source_coast = models.ForeignKey(
-    #     'NamedCoast',
-    #     on_delete=models.CASCADE,
-    #     related_name='+',
-    #     null=True,
-    #     blank=True
-    # )
-    # target_coast = models.ForeignKey(
-    #     'NamedCoast',
-    #     on_delete=models.CASCADE,
-    #     related_name='+',
-    #     null=True,
-    #     blank=True
-    # )
+    source_coast = models.ForeignKey(
+        'NamedCoast',
+        on_delete=models.CASCADE,
+        related_name='+',
+        null=True,
+        blank=True
+    )
     order = models.ForeignKey(
         'Order',
         on_delete=models.CASCADE,
         related_name='commands',
         db_column="order_id",
-        null=False
-    )
-    type = models.CharField(
-        max_length=100,
-        choices=CommandType.CHOICES,
         null=False
     )
     valid = models.BooleanField(default=True)
@@ -66,58 +39,96 @@ class Command(HygenicModel):
         blank=True
     )
 
-    objects = models.Manager()
-
     class Meta:
         abstract = True
 
     def clean(self):
         """
         """
-        self.is_valid()
+        pass
 
     @property
-    def source_piece(self):
+    def piece(self):
         """
+        Helper to get ``source_territory.piece``.
         """
         return self.source_territory.piece
+
+    @property
+    def nation(self):
+        """
+        Helper to get the nation of a command more easily.
+        """
+        return self.order.nation
 
     def process(self):
         """
         """
-        if self.type == self.CommandType.MOVE:
-            Challenge.objects.create(
-                piece=self.source_piece,
-                territory=self.target_territory
-            )
+        pass
 
 
-class Move(Command):
+class TargetCommand(Command):
     """
     """
     target_territory = models.ForeignKey(
         'Territory',
         on_delete=models.CASCADE,
         related_name='target_commands',
+        null=False,
+    )
+    target_coast = models.ForeignKey(
+        'NamedCoast',
+        on_delete=models.CASCADE,
+        related_name='+',
         null=True,
         blank=True
     )
 
     class Meta:
+        abstract = True
+
+
+class Move(TargetCommand):
+    """
+    """
+
+    class Meta:
         db_table = 'move'
 
-    def is_valid(self):
+    def clean(self):
         """
         """
-        if not self._friendly_piece_exists_in_source():
+
+        # check friendly piece exists in source
+        if not self.source_territory.friendly_piece_exists(self.nation):
             raise ValidationError(_(
                 f'No friendly piece exists in {self.source_territory}.'
                 )
             )
-        if not self.piece.can_reach(self.target_territory):
+
+        # check fleet moving to complex territory specifies named coast
+        if self.target_territory.is_complex() \
+                and self.source_territory.piece.is_fleet() \
+                and not self.target_coast:
             raise ValidationError(_(
-                f'{self.piece.type} {self.source_territory} cannot reach '
-                f'{self.target_territory}.'
+                'Cannot order an fleet into a complex territory without '
+                'specifying a named coast.'
+                )
+            )
+
+        # check piece can reach target territory and target coast
+        if not self.piece.can_reach(self.target_territory, self.target_coast):
+            raise ValidationError(_(
+                f'{self.piece.type.title()} {self.source_territory} cannot reach '
+                f'{self.target_territory} {self.target_coast}.'
                 )
             )
         return True
+
+    def process(self):
+        """
+        """
+        Challenge.objects.create(
+            piece=self.source_territory.piece,
+            territory=self.target_territory
+        )

@@ -2,8 +2,6 @@ from django.db import models
 from django.db.models import Manager
 from django.utils.translation import gettext as _
 
-
-from service.command_validator import get_command_validator
 from service.models.base import HygenicModel
 
 

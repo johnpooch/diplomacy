@@ -43,7 +43,7 @@ class Territory(models.Model):
     class Meta:
         db_table = "territory"
 
-    def is_neighbour(self, territory):
+    def adjacent_to(self, territory):
         return territory in self.neighbours.all()
 
     def shares_coast_with(self, territory):
@@ -64,14 +64,11 @@ class Territory(models.Model):
                 "disbanding."))
         return False
 
-    def get_friendly_piece(self, nation):
+    def friendly_piece_exists(self, nation):
         """
-        Get piece belonging to nation if exists in territory.
+        Determine whether a piece blonging to ``nation`` exists in a territory.
         """
-        for piece in self.pieces.all():
-            if piece.nation == nation:
-                return piece
-        return False
+        return self.piece.nation == nation
 
     def accessible_by_piece_type(self, piece):
         """
