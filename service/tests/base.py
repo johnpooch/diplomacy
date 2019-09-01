@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from service.models import Build, Convoy, Game, Move, Order, Phase, Support, \
-    Territory, Turn
+from service.models import Build, Convoy, Game, Hold, Move, Order, Phase, \
+    Support, Territory, Turn
 
 
 class InitialGameStateTestCase(TestCase):
@@ -59,6 +59,14 @@ class HelperMixin:
         piece.territory = territory
         piece.named_coast = named_coast
         piece.save()
+
+    def hold(self, source):
+        """
+        """
+        return Hold(
+            source_territory=source,
+            order=self.order,
+        )
 
     def move(self, source, target, target_coast=None):
         """

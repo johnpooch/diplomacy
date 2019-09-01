@@ -1,87 +1,103 @@
-from service.command import Hold, Move, Support, Convoy
-from service.piece import Army, Fleet
-from service.territory import InlandTerritory, CoastalTerritory, SeaTerritory
+from service.models import Build, Convoy, Disband, Hold, Move, Support
+
+
+class Challenge:
+
+    def __init__(self, piece, territory):
+        self.piece = piece
+        self.territory = territory
+
+        self.supporting_pieces = []
+        self.convoying_pieces = []
+
+    # TODO add some sort of validation to make it so that a fleet challenge
+    # can't have convoying_pieces.
 
 
 class CommandProcessor:
-    """
-    Determines the results of a list of commands.
 
-    Returns a list of commands.
-    """
-    def __init__(self, territories, borders, identified_coast_borders, pieces, commands):
-        self.territories = territories
-        self.borders = borders
-        self.identified_coast_borders = identified_coast_borders
-        self.pieces = pieces
-        self.commands = commands
+    def __init__(self):
+        self.challenges = []
 
-    def process_commands(self):
-        resolved_commands = []
-        for command in self.commands:
-            if not self._friendly_piece_exists_in_territory(command.nation, \
-                    command.source):
-                command.result = "invalid"
-                resolved_commands.append(command)
-                continue
+        # create a challenge for every hold command
+        for hold in Hold.objects.all():
+            challenge = Challenge(hold.piece, hold.source_territory)
+            self.challenges.append(challenge)
 
+        # create a challenge for every move command
+        for move in Move.objects.all():
+            challenge = Challenge(move.piece, move.target_territory)
+            self.challenges.append(challenge)
 
-            piece = self._get_friendly_piece_from_territory(command.nation, \
-                    command.source)
+        # add a supporting piece to challenge.convoy for every support command
+        for support in Support.objects.all():
+            challenge = Challenge(support.piece, support.source_territory)
+            self.challenges.append(challenge)
+            challenge = self._get_challenge(
+                support.aux_piece,
+                support.target_territory
+            )
+            if challenge:
+                challenge.supporting_pieces.append(support.piece)
+            else:
+                # support has failed because aux piece is not attacking target
+                pass
 
+        # add a convoying piece to challenge.convoy for every convoy command
+        for convoy in Convoy.objects.all():
+            challenge = Challenge(convoy.piece, convoy.source_territory)
+            self.challenges.append(challenge)
+            challenge = self._get_challenge(
+                convoy.aux_piece,
+                convoy.target_territory
+            )
+            if challenge:
+                challenge.convoying_pieces.append(convoy.piece)
+            else:
+                # convoy has failed because aux piece is not attacking target
+                pass
 
-            # TODO decompose into methods on the command
+        # find out if any convoying pieces have been dislodged
+        # * only fleets can dislodge a convoying piece
+        # * fleets can't be convoyed
+        # * resolve fleet challenges to sea territories
 
-            if isinstance(command, (Move, Support, Convoy)):
-                if not command.target.accessible_by_piece_type(piece):
-                    command.result = "invalid"
-                if not self._convoy_is_possible(piece, command.source, command.target):
-                    pass
-                if isinstance(command.source, CoastalTerritory):
-                    if command.source.identified_coasts and isinstance(piece, Fleet):
-                        if not self._share_identified_coast_border(piece.identified_coast, command.target):
-                            command.result = "invalid"
-                if not self._share_border(command.source, command.target):
-                    command.result = "invalid"
-                if isinstance(piece, Fleet):
-                    if self._both_coastal(command.source, command.target):
-                        if not self._share_coast(command.source, command.target):
-                            command.result = "invalid"
-            resolved_commands.append(command)
-        return resolved_commands
+        # resolve fleet challenges
+        [self._resolve_challenge(c) for c in self.challenges
+         if c.piece.is_fleet()]
 
-    def _convoy_is_possible(self, piece, t1, t2):
-        return isinstance(t1, CoastalTerritory) and \
-                isinstance(t2, CoastalTerritory) and \
-                isinstance(piece, Army)
+    def _resolve_challenges(self, challenge):
+        """
+        """
+        pass
 
-    def _both_coastal(self, t1, t2):
-        return isinstance(t1, CoastalTerritory) and \
-                isinstance(t2, CoastalTerritory)
+    def _determine_strength(self, challenge):
+        """
+        Determine the strength of a challenge.
+        """
+        return 1 + len([s for s in challenge.supporting_pieces
+                        if not self._dislodged(s)])
 
-    def _share_border(self, t1, t2):
-        for border in self.borders:
-            if (t1 in border.territories) and (t2 in border.territories):
-                return True
-        return False
+    def _dislodged(self, piece):
+        """
+        Determine whether a piece has been dislodged.
+        """
+        challenge = self._get_challenge(piece, piece.territory)
+        strength = self._determine_strength(self._determine_strength(challenge))
+        opposing_challenges = [c for c in self.challenges
+                               if c.territory == piece.territory]
+        if not opposing_challenges:
+            return False
+        highest_opposing_strength = max([self._determine_strength(c)
+                                         for c in opposing_challenges])
+        return strength < highest_opposing_strength
 
-    def _share_identified_coast_border(self, coast, territory):
-        for border in self.identified_coast_borders:
-            if (coast == border.identified_coast) and (territory == border.territory):
-                return True
-        return False
-
-    def _share_coast(self, t1, t2):
-        for border in self.borders:
-            if (t1 in border.territories) and (t2 in border.territories) and border.shared_coast:
-                return True
-        return False
-
-    def _get_friendly_piece_from_territory(self, nation, territory):
-        return [p for p in self.pieces if \
-                p.territory == territory and p.nation == nation][0]
-
-    def _friendly_piece_exists_in_territory(self, nation, territory):
-        return any([p for p in self.pieces if \
-                p.territory == territory and p.nation == nation])
-
+    def _get_challenge(self, piece, territory):
+        """
+        Get a ``Challenge`` instance from ``self.challenges`` by the ``piece``
+        and ``territory`` attributes of the ``Challenge``.
+        """
+        for c in self.challenges:
+            if c.piece == piece and c.territory == territory:
+                return c
+        return None

@@ -3,7 +3,6 @@ from django.db import models
 from django.utils.translation import gettext as _
 
 from service.models.base import HygenicModel
-from service.models.models import Challenge
 from service.models.piece import Piece
 
 
@@ -266,14 +265,6 @@ class Move(Command, TargetCoastMixin, TargetTerritoryMixin):
             self._specifies_target_named_coast_if_fleet(),
         ])
 
-    def process(self):
-        """
-        """
-        Challenge.objects.create(
-            piece=self.source_territory.piece,
-            territory=self.target_territory
-        )
-
 
 class Support(Command, AuxTerritoryMixin, TargetTerritoryMixin):
     """
@@ -338,10 +329,4 @@ class Retreat(Command, TargetCoastMixin, TargetTerritoryMixin):
             self._target_not_vacant_by_standoff_on_previous_turn(),
         ])
 
-    def process(self):
-        """
-        """
-        Challenge.objects.create(
-            piece=self.source_territory.piece,
-            territory=self.target_territory
-        )
+
