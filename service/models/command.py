@@ -103,8 +103,7 @@ class Move(TargetCommand):
         if not self.source_territory.friendly_piece_exists(self.nation):
             raise ValidationError(_(
                 f'No friendly piece exists in {self.source_territory}.'
-                )
-            )
+            ))
 
         # check fleet moving to complex territory specifies named coast
         if self.target_territory.is_complex() \
@@ -113,16 +112,14 @@ class Move(TargetCommand):
             raise ValidationError(_(
                 'Cannot order an fleet into a complex territory without '
                 'specifying a named coast.'
-                )
-            )
+            ))
 
         # check piece can reach target territory and target coast
         if not self.piece.can_reach(self.target_territory, self.target_coast):
             raise ValidationError(_(
                 f'{self.piece.type.title()} {self.source_territory} cannot reach '
                 f'{self.target_territory} {self.target_coast}.'
-                )
-            )
+            ))
         return True
 
     def process(self):

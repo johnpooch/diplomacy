@@ -88,8 +88,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
 
     def test_cannot_move_to_complex_territory_and_not_named_coast(self):
         """
-        A fleet cannot move to a complex territory without specifying which named
-        coast.
+        A fleet cannot move to a complex territory without specifying which
+        named coast.
         """
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         command = self.move(
@@ -250,7 +250,6 @@ class TestCreateChallenge(TestCase, HelperMixin, TerritoriesMixin):
         challenge.
         """
         command = self.move(self.paris, self.burgundy)
-        challenges = Challenge.objects.all()
         self.assertEqual(Challenge.objects.count(), 0)
         command.process()
         self.assertEqual(Challenge.objects.count(), 1)
@@ -267,7 +266,6 @@ class TestCreateChallenge(TestCase, HelperMixin, TerritoriesMixin):
         challenge.
         """
         command = self.move(self.brest, self.english_channel)
-        challenges = Challenge.objects.all()
         self.assertEqual(Challenge.objects.count(), 0)
         command.process()
         self.assertEqual(Challenge.objects.count(), 1)

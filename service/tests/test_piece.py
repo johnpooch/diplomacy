@@ -28,3 +28,13 @@ class TestPiece(TestCase, TerritoriesMixin):
                 territory=self.paris,
                 type=Piece.PieceType.FLEET
             )
+
+    def test_army_cannot_be_on_named_coast(self):
+        nation = Nation.objects.get(name='France')
+        with self.assertRaises(ValueError):
+            Piece.objects.create(
+                nation=nation,
+                territory=self.spain,
+                named_coast=self.spain_nc,
+                type=Piece.PieceType.ARMY
+            )

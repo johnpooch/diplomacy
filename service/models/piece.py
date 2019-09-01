@@ -68,6 +68,13 @@ class Piece(HygenicModel):
                         'Fleet cannot be in an inland territory.'
                     ),
                 })
+        if self.is_army():
+            if self.named_coast:
+                raise ValidationError({
+                    'territory': _(
+                        'Army cannot be n a named coast.'
+                    )
+                })
 
     def is_army(self):
         return self.type == self.PieceType.ARMY
