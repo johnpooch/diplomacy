@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from service.models import Move, Game, Order, Phase, Territory, Turn
+from service.models import Build, Convoy, Game, Move, Order, Phase, Support, \
+    Territory, Turn
 
 
 class InitialGameStateTestCase(TestCase):
@@ -43,8 +44,11 @@ class TerritoriesMixin:
         self.piedmont = Territory.objects.get(name='piedmont')
         self.silesia = Territory.objects.get(name='silesia')
         self.spain = Territory.objects.get(name='spain')
+        self.st_petersburg = Territory.objects.get(name='st. petersburg')
         self.wales = Territory.objects.get(name='wales')
-        self.western_mediterranean = Territory.objects.get(name='western mediterranean')
+        self.western_mediterranean = Territory.objects.get(
+            name='western mediterranean'
+        )
 
 
 class HelperMixin:
@@ -67,16 +71,33 @@ class HelperMixin:
             target_coast=target_coast,
         )
 
-    def support_command(self, source, target, aux,
-                            source_coast=None, target_coast=None):
+    def support(self, source, target, aux, source_coast=None):
         """
         """
-        return Command(
+        return Support(
             source_territory=source,
             target_territory=target,
             aux_territory=aux,
             order=self.order,
-            type=Command.CommandType.SUPPORT,
             source_coast=source_coast,
-            target_coast=target_coast,
+        )
+
+    def convoy(self, source, target, aux):
+        """
+        """
+        return Convoy(
+            source_territory=source,
+            target_territory=target,
+            aux_territory=aux,
+            order=self.order,
+        )
+
+    def build(self, source, piece_type, source_coast=None):
+        """
+        """
+        return Build(
+            source_territory=source,
+            source_coast=source_coast,
+            piece_type=piece_type,
+            order=self.order,
         )

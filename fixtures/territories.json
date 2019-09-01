@@ -443,7 +443,7 @@
             28
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":7,
          "type":"land"
       }
    },
@@ -464,7 +464,7 @@
             56
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":5,
          "type":"land"
       }
    },
@@ -485,7 +485,7 @@
             21
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":7,
          "type":"land"
       }
    },
@@ -506,7 +506,7 @@
             48
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":3,
          "type":"land"
       }
    },
@@ -548,7 +548,7 @@
             43
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":2,
          "type":"land"
       }
    },
@@ -569,7 +569,7 @@
             38
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":1,
          "type":"land"
       }
    },
@@ -592,7 +592,7 @@
             50
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":7,
          "type":"land"
       }
    },
@@ -636,7 +636,7 @@
             58
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":1,
          "type":"land"
       }
    },
@@ -678,7 +678,7 @@
             26
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":2,
          "type":"land"
       }
    },
@@ -745,7 +745,7 @@
             34
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":3,
          "type":"land"
       }
    },
@@ -765,7 +765,7 @@
             58
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":1,
          "type":"land"
       }
    },
@@ -787,7 +787,7 @@
             48
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":6,
          "type":"land"
       }
    },
@@ -809,7 +809,7 @@
             57
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":1,
          "type":"land"
       }
    },
@@ -830,7 +830,7 @@
             44
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":2,
          "type":"land"
       }
    },
@@ -868,7 +868,7 @@
             46
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":5,
          "type":"land"
       }
    },
@@ -912,7 +912,7 @@
             25
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":2,
          "type":"land"
       }
    },
@@ -933,7 +933,7 @@
             55
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":5,
          "type":"land"
       }
    },
@@ -973,7 +973,7 @@
             55
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":5,
          "type":"land"
       }
    },
@@ -1017,7 +1017,7 @@
             37
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":3,
          "type":"land"
       }
    },
@@ -1038,7 +1038,7 @@
             47
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":6,
          "type":"land"
       }
    },
@@ -1060,7 +1060,7 @@
             52
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":7,
          "type":"land"
       }
    },
@@ -1101,7 +1101,7 @@
             50
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":7,
          "type":"land"
       }
    },
@@ -1124,7 +1124,7 @@
             56
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":4,
          "type":"land"
       }
    },
@@ -1164,7 +1164,7 @@
             46
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":5,
          "type":"land"
       }
    },
@@ -1187,7 +1187,7 @@
             53
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":5,
          "type":"land"
       }
    },
@@ -1208,7 +1208,7 @@
             38
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":1,
          "type":"land"
       }
    },
@@ -1229,7 +1229,7 @@
             36
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by":1,
          "type":"land"
       }
    },
@@ -1249,7 +1249,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":4,
          "type":"land"
       }
    },
@@ -1269,7 +1269,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":4,
          "type":"land"
       }
    },
@@ -1292,7 +1292,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":2,
          "type":"land"
       }
    },
@@ -1314,7 +1314,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":4,
          "type":"land"
       }
    },
@@ -1335,7 +1335,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":6,
          "type":"land"
       }
    },
@@ -1357,7 +1357,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":3,
          "type":"land"
       }
    },
@@ -1379,7 +1379,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":2,
          "type":"land"
       }
    },
@@ -1399,7 +1399,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":3,
          "type":"land"
       }
    },
@@ -1440,7 +1440,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":3,
          "type":"land"
       }
    },
@@ -1460,7 +1460,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":4,
          "type":"land"
       }
    },
@@ -1480,7 +1480,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":6,
          "type":"land"
       }
    },
@@ -1500,7 +1500,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":4,
          "type":"land"
       }
    },
@@ -1521,7 +1521,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by":6,
          "type":"land"
       }
    },
@@ -1541,7 +1541,7 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
+         "coastal":true,
          "controlled_by":null,
          "type":"land"
       }
@@ -1581,118 +1581,9 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
-         "controlled_by":null,
+         "coastal":true,
+         "controlled_by":6,
          "type":"land"
-      }
-   },
-   {
-      "model":"service.territory",
-      "pk":76,
-      "fields":{
-         "name":"bulgaria (north coast)",
-         "neighbours":[
-            5,
-            28,
-            47
-         ],
-         "shared_coasts":[
-
-         ],
-         "coastal":false,
-         "controlled_by":null,
-         "type":"sea"
-      }
-   },
-   {
-      "model":"service.territory",
-      "pk":77,
-      "fields":{
-         "name":"bulgaria (south coast)",
-         "neighbours":[
-            2,
-            28,
-            33
-         ],
-         "shared_coasts":[
-
-         ],
-         "coastal":false,
-         "controlled_by":null,
-         "type":"sea"
-      }
-   },
-   {
-      "model":"service.territory",
-      "pk":78,
-      "fields":{
-         "name":"spain (north coast)",
-         "neighbours":[
-            32,
-            13,
-            45
-         ],
-         "shared_coasts":[
-
-         ],
-         "coastal":false,
-         "controlled_by":null,
-         "type":"sea"
-      }
-   },
-   {
-      "model":"service.territory",
-      "pk":79,
-      "fields":{
-         "name":"spain (south coast)",
-         "neighbours":[
-            9,
-            39,
-            13,
-            45,
-            19
-         ],
-         "shared_coasts":[
-
-         ],
-         "coastal":false,
-         "controlled_by":null,
-         "type":"sea"
-      }
-   },
-   {
-      "model":"service.territory",
-      "pk":80,
-      "fields":{
-         "name":"st. petersburg (south coast)",
-         "neighbours":[
-            6,
-            31,
-            37
-         ],
-         "shared_coasts":[
-
-         ],
-         "coastal":false,
-         "controlled_by":null,
-         "type":"sea"
-      }
-   },
-   {
-      "model":"service.territory",
-      "pk":81,
-      "fields":{
-         "name":"st. petersburg (north coast)",
-         "neighbours":[
-            4,
-            42
-         ],
-         "shared_coasts":[
-
-         ],
-         "coastal":false,
-         "controlled_by":null,
-         "type":"sea"
       }
    }
 ]

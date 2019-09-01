@@ -41,8 +41,12 @@ class Piece(HygenicModel):
         choices=PieceType.CHOICES,
         default=PieceType.ARMY,
     )
-    must_retreat = models.BooleanField(default=False)
-    must_disband = models.BooleanField(default=False)
+    dislodged_by = models.ForeignKey(
+        'Piece',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     active = models.BooleanField(default=True)
 
     class Meta:
@@ -53,7 +57,6 @@ class Piece(HygenicModel):
 
     def clean(self):
         super().clean()
-        # TODO move into methods
         if self.is_fleet():
             if self.territory.is_complex() and not self.named_coast:
                 raise ValidationError({
@@ -82,6 +85,16 @@ class Piece(HygenicModel):
     def is_fleet(self):
         return self.type == self.PieceType.FLEET
 
+    def dislodged(self):
+        try:
+            return bool(self.dislodged_by)
+        except Piece.DoesNotExist:
+            return False
+
+    def get_previous_territory(self):
+        # TODO do this when phases/logs are properly handled
+        return None
+
     def can_reach(self, target, target_coast=None):
         """
         """
@@ -92,7 +105,7 @@ class Piece(HygenicModel):
                     'Army cannot access named coasts. This error should not be '
                     'happening!'
                 ))
-            if not self.territory in target_coast.neighbours.all():
+            if self.territory not in target_coast.neighbours.all():
                 return False
 
         # Check if convoy is possible
@@ -102,7 +115,9 @@ class Piece(HygenicModel):
 
         if self.is_fleet():
             # if fleet moving from one coast to another, check shared coast
-            if self.territory.coastal and target.coastal:
+            # (unless complex)
+            if self.territory.coastal and target.coastal and not \
+                    self.territory.is_complex():
                 return target in self.territory.shared_coasts.all()
             if self.territory.is_complex():
                 if target not in self.named_coast.neighbours.all():

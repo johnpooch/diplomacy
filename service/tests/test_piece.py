@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from service.models import Nation, Piece
+from service.models import NamedCoast, Nation, Piece
 from service.tests.base import TerritoriesMixin
 
 
@@ -31,10 +31,11 @@ class TestPiece(TestCase, TerritoriesMixin):
 
     def test_army_cannot_be_on_named_coast(self):
         nation = Nation.objects.get(name='France')
+        spain_nc = NamedCoast.objects.get(name='spain north coast')
         with self.assertRaises(ValueError):
             Piece.objects.create(
                 nation=nation,
                 territory=self.spain,
-                named_coast=self.spain_nc,
+                named_coast=spain_nc,
                 type=Piece.PieceType.ARMY
             )

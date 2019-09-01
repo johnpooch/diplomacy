@@ -1,6 +1,8 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
+from service.models import Piece
+
 
 class Territory(models.Model):
     """
@@ -24,6 +26,15 @@ class Territory(models.Model):
         null=True,
         related_name='controlled_territories',
     )
+    # TODO nationality and controlled by should be synced up on game
+    # initializaition.
+    nationality = models.ForeignKey(
+        'Nation',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='national_territories',
+    )
     neighbours = models.ManyToManyField(
         'self',
         symmetrical=True,
@@ -42,6 +53,15 @@ class Territory(models.Model):
 
     class Meta:
         db_table = "territory"
+
+    # TODO add validation so that sea territories can't be controlled.
+
+    def __str__(self):
+        return self.name.capitalize()
+
+    def standoff_occured_on_previous_turn(self):
+        # TODO do this when phases/logs are properly handled
+        pass
 
     def adjacent_to(self, territory):
         return territory in self.neighbours.all()
@@ -64,11 +84,24 @@ class Territory(models.Model):
                 "disbanding."))
         return False
 
+    def occupied(self):
+        """
+        Determine whether a piece  exists in a territory.
+        """
+        try:
+            return bool(self.piece)
+        except Piece.DoesNotExist:
+            return False
+
     def friendly_piece_exists(self, nation):
         """
-        Determine whether a piece blonging to ``nation`` exists in a territory.
+        Determine whether a piece belonging to ``nation`` exists in a
+        territory.
         """
-        return self.piece.nation == nation
+        try:
+            return self.piece.nation == nation
+        except Piece.DoesNotExist:
+            return False
 
     def accessible_by_piece_type(self, piece):
         """
@@ -85,11 +118,14 @@ class Territory(models.Model):
         except ObjectDoesNotExist:
             return False
 
-    def is_inland(self):
+    def is_land(self):
         return self.type == self.TerritoryType.LAND and not self.coastal
+
+    def is_sea(self):
+        return self.type == self.TerritoryType.SEA
+
+    def is_inland(self):
+        return self.is_land() and not self.coastal
 
     def is_complex(self):
         return self.named_coasts.exists()
-
-    def __str__(self):
-        return self.name.capitalize()

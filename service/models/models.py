@@ -153,38 +153,6 @@ class Phase(models.Model):
         return " ".join([self.get_type_display(), self.get_season_display()])
 
 
-class SupplyCenter(models.Model):
-    """
-    """
-    controlled_by = models.ForeignKey(
-        'Nation',
-        related_name='controlled_supply_centers',
-        on_delete=models.CASCADE,
-        db_column='nation_id',
-        null=True
-    )
-    nationality = models.ForeignKey(
-        'Nation',
-        related_name='national_supply_centers',
-        on_delete=models.CASCADE,
-        null=True
-    )
-    territory = models.OneToOneField(
-        'Territory',
-        primary_key=True,
-        on_delete=models.CASCADE,
-        db_column='territory_id',
-        related_name='supply_center',
-        null=False
-    )
-
-    class Meta:
-        db_table = "supply_center"
-
-    def __str__(self):
-        return self.territory.display_name
-
-
 class TurnManager(Manager):
 
     def get_queryset(self):
