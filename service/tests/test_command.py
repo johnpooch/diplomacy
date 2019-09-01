@@ -138,7 +138,6 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         command = self.move(
             self.spain,
             self.western_mediterranean,
-            source_coast=spain_nc
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -352,7 +351,6 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.spain,
             self.gascony,
             self.marseilles,
-            spain_nc
         )
         self.assertTrue(command.clean())
 
@@ -367,7 +365,6 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.spain,
             self.gascony,
             self.marseilles,
-            spain_sc
         )
         with self.assertRaises(ValidationError):
             self.assertTrue(command.clean())

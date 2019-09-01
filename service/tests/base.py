@@ -60,18 +60,17 @@ class HelperMixin:
         piece.named_coast = named_coast
         piece.save()
 
-    def move(self, source, target, source_coast=None, target_coast=None):
+    def move(self, source, target, target_coast=None):
         """
         """
         return Move(
             source_territory=source,
             target_territory=target,
             order=self.order,
-            source_coast=source_coast,
             target_coast=target_coast,
         )
 
-    def support(self, source, target, aux, source_coast=None):
+    def support(self, source, target, aux):
         """
         """
         return Support(
@@ -79,7 +78,6 @@ class HelperMixin:
             target_territory=target,
             aux_territory=aux,
             order=self.order,
-            source_coast=source_coast,
         )
 
     def convoy(self, source, target, aux):
