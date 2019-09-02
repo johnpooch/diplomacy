@@ -1,17 +1,56 @@
+from copy import copy
+
 from service.models import Build, Convoy, Disband, Hold, Move, Support
 
 
 class Challenge:
 
+    challenges = []
+
     def __init__(self, piece, territory):
+        # register the new challenge with the class
+        Challenge.challenges.append(self)
         self.piece = piece
         self.territory = territory
 
         self.supporting_pieces = []
         self.convoying_pieces = []
 
-    # TODO add some sort of validation to make it so that a fleet challenge
-    # can't have convoying_pieces.
+        resolved = False
+
+    def __repr__(self):
+        return f'{self.piece.type} {self.piece.territory} -> {self.territory}'
+
+    @property
+    def other_challenges(self):
+        """
+        Get all challenges other than ``self``.
+        """
+        # TODO test
+        challenges = copy(self.__class__.challenges)
+        challenges.remove(self)
+        return challenges
+
+    @property
+    def strength(self):
+        """
+        Determine the strength of a challenge.
+        """
+        pass
+
+    def dislodged(self):
+        """
+        Determine whether a challenge has been dislodged/defeated.
+        """
+        opposing_challenges = [c for c in self.other_challenges
+                               if c.territory == self.territory]
+        if not opposing_challenges:
+            return False
+        strongest_challenge = max([c.strength for c in opposing_challenges])
+        # if this challenge is the strongest
+        if self.strength > strongest_challenge.strength:
+            # defeat all opposing challenges
+            [self.defeat(c) for c in opposing_challenges]
 
 
 class CommandProcessor:
@@ -65,6 +104,9 @@ class CommandProcessor:
         # resolve fleet challenges
         [self._resolve_challenge(c) for c in self.challenges
          if c.piece.is_fleet()]
+
+    def bounce(self):
+        pass
 
     def _resolve_challenges(self, challenge):
         """
