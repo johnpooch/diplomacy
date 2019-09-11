@@ -63,8 +63,8 @@ class CommandProcessor:
         # * resolve fleet challenges to sea territories
 
         # resolve fleet challenges
-        [self._resolve_challenge(c) for c in self.challenges
-         if c.piece.is_fleet()]
+        # [self._resolve_challenge(c) for c in self.challenges
+        #  if c.piece.is_fleet()]
 
     def _resolve_challenges(self, challenge):
         """
