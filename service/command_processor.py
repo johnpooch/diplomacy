@@ -1,145 +1,65 @@
-from copy import copy
+"""
+Dislodged:
+    - A unit can only be dislodged when it stays in its current space. This is
+      the case when the unit did not receive a move order, or if the unit was
+      ordered to move but failed. If so, the unit is dislodged if another unit
+      has a move order attacking the unit and for which the move succeeds.
 
-from service.models import Build, Convoy, Disband, Hold, Move, Support
+Convoy Order:
+    - A fleet with a successful convoy order can be part of a convoy. A convoy
+      order is successful when the fleet receiving the order is not dislodged.
 
+Path
+    - The path of a move order is successful when the origin and destination of
+      the move order are adjacent, or when there is a chain of adjacent fleets
+      from origin to destination each with a matching and successful convoy
+      order.
 
-class Challenge:
+Support
+    - A support order is cut when another unit is ordered to move to the area
+      of the supporting unit and the following conditions are satisfied:
+        * The moving unit is of a different nationality
+        * The destination of the supported unit is not the area of the unit
+          attacking the support
+        * The moving unit has a successful path
+        * A support is also cut when it is dislodged.
 
-    challenges = []
+Hold strength
+    - The hold strength is defined for an area, rather than for an order.
+    - The hold strength is 0 when the area is empty, or when it contains a unit
+      that is ordered to move and for which the move succeeds.
+    - It is 1 when the area contains a unit that is ordered to move and for
+      which the move fails.
+    - In all other cases, it is 1 plus the number of orders that successfully
+      support the unit to hold.
 
-    def __init__(self, piece, territory):
-        # register the new challenge with the class
-        Challenge.challenges.append(self)
-        self.piece = piece
-        self.territory = territory
+Attack strength
+    - If the path of the move order is not successful, then the attack strength
+      is 0.
+    - Otherwise, if the destination is empty, or in a case where there is no
+      head-to-head battle and the unit at the destination has a move order for
+      which the move is successful, then the attack strength is 1 plus the
+      number of successful support orders.
+    - If not and the unit at the destination is of the same nationality, then
+      the attack strength is 0.
+    - In all other cases, the attack strength is 1 plus the number of
+      successful support orders of units that do not have the same nationality
+      as the unit at the destination.
 
-        self.supporting_pieces = []
-        self.convoying_pieces = []
+Defend strength
+    - In cases where the unit is engaged in a head-to-head battle, the unit has
+      to overcome the power of the move of the opposing unit instead of the
+      hold strength of the area.
+    - The defend strength of a unit with a move order is 1 plus the number of
+      successful support orders.
 
-        resolved = False
-
-    def __repr__(self):
-        return f'{self.piece.type} {self.piece.territory} -> {self.territory}'
-
-    @property
-    def other_challenges(self):
-        """
-        Get all challenges other than ``self``.
-        """
-        # TODO test
-        challenges = copy(self.__class__.challenges)
-        challenges.remove(self)
-        return challenges
-
-    @property
-    def strength(self):
-        """
-        Determine the strength of a challenge.
-        """
-        pass
-
-    def dislodged(self):
-        """
-        Determine whether a challenge has been dislodged/defeated.
-        """
-        opposing_challenges = [c for c in self.other_challenges
-                               if c.territory == self.territory]
-        if not opposing_challenges:
-            return False
-        strongest_challenge = max([c.strength for c in opposing_challenges])
-        # if this challenge is the strongest
-        if self.strength > strongest_challenge.strength:
-            # defeat all opposing challenges
-            [self.defeat(c) for c in opposing_challenges]
-
-
-class CommandProcessor:
-
-    def __init__(self):
-        self.challenges = []
-
-        # create a challenge for every hold command
-        for hold in Hold.objects.all():
-            challenge = Challenge(hold.piece, hold.source_territory)
-            self.challenges.append(challenge)
-
-        # create a challenge for every move command
-        for move in Move.objects.all():
-            challenge = Challenge(move.piece, move.target_territory)
-            self.challenges.append(challenge)
-
-        # add a supporting piece to challenge.convoy for every support command
-        for support in Support.objects.all():
-            challenge = Challenge(support.piece, support.source_territory)
-            self.challenges.append(challenge)
-            challenge = self._get_challenge(
-                support.aux_piece,
-                support.target_territory
-            )
-            if challenge:
-                challenge.supporting_pieces.append(support.piece)
-            else:
-                # support has failed because aux piece is not attacking target
-                pass
-
-        # add a convoying piece to challenge.convoy for every convoy command
-        for convoy in Convoy.objects.all():
-            challenge = Challenge(convoy.piece, convoy.source_territory)
-            self.challenges.append(challenge)
-            challenge = self._get_challenge(
-                convoy.aux_piece,
-                convoy.target_territory
-            )
-            if challenge:
-                challenge.convoying_pieces.append(convoy.piece)
-            else:
-                # convoy has failed because aux piece is not attacking target
-                pass
-
-        # find out if any convoying pieces have been dislodged
-        # * only fleets can dislodge a convoying piece
-        # * fleets can't be convoyed
-        # * resolve fleet challenges to sea territories
-
-        # resolve fleet challenges
-        # [self._resolve_challenge(c) for c in self.challenges
-        #  if c.piece.is_fleet()]
-
-    def bounce(self):
-        pass
-
-    def _resolve_challenges(self, challenge):
-        """
-        """
-        pass
-
-    def _determine_strength(self, challenge):
-        """
-        Determine the strength of a challenge.
-        """
-        return 1 + len([s for s in challenge.supporting_pieces
-                        if not self._dislodged(s)])
-
-    def _dislodged(self, piece):
-        """
-        Determine whether a piece has been dislodged.
-        """
-        challenge = self._get_challenge(piece, piece.territory)
-        strength = self._determine_strength(self._determine_strength(challenge))
-        opposing_challenges = [c for c in self.challenges
-                               if c.territory == piece.territory]
-        if not opposing_challenges:
-            return False
-        highest_opposing_strength = max([self._determine_strength(c)
-                                         for c in opposing_challenges])
-        return strength < highest_opposing_strength
-
-    def _get_challenge(self, piece, territory):
-        """
-        Get a ``Challenge`` instance from ``self.challenges`` by the ``piece``
-        and ``territory`` attributes of the ``Challenge``.
-        """
-        for c in self.challenges:
-            if c.piece == piece and c.territory == territory:
-                return c
-        return None
+Move
+    - In case of a head-to-head battle, the move succeeds when the attack
+      strength is larger then the defend strength of the opposing unit and
+      larger than the prevent strength of any unit moving to the same area. If
+      one of the opposing strengths is equal or greater, then the move fails.
+    - If there is no head-to-head battle, the move succeeds when the attack
+      strength is larger then the hold strength of the destination and larger
+      than the prevent strength of any unit moving to the same area. If one of
+      the opposing strengths is equal or greater, then the move fails.
+"""

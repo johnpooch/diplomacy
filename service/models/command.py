@@ -9,6 +9,15 @@ from service.models.piece import Piece
 class Command(HygenicModel):
     """
     """
+    class CommandStates:
+        UNRESOLVED = 'unresolved'
+        SUCCEEDS = 'succeeds'
+        FAILS = 'fails'
+        CHOICES = (
+            (UNRESOLVED, 'unresolved'),
+            (SUCCEEDS, 'succeeds'),
+            (FAILS, 'fails')
+        )
 
     source_territory = models.ForeignKey(
         'Territory',
@@ -25,6 +34,12 @@ class Command(HygenicModel):
     )
     valid = models.BooleanField(default=True)
     success = models.BooleanField(default=True)
+    state = models.CharField(
+        max_length=15,
+        null=False,
+        choices=CommandStates.CHOICES,
+        default=CommandStates.UNRESOLVED
+    )
     # Outcome in human friendly terms
     result_message = models.CharField(
         max_length=100,
@@ -40,6 +55,35 @@ class Command(HygenicModel):
         """
         pass
 
+    def resolve(self):
+        if self.state == self.CommandStates.RESOLVED:
+            return
+        # check if resolution of the command is dependent on other commands
+
+    def succeed(self):
+        """
+        """
+        self.state = self.CommandStates.SUCCEDED
+        self.save()
+
+    def fail(self):
+        """
+        """
+        self.state = self.CommandStates.FAILED
+        self.save()
+
+    @property
+    def succeeded(self):
+        """
+        """
+        return self.state == self.CommandStates.SUCCEEDED
+
+    @property
+    def failed(self):
+        """
+        """
+        return self.state == self.CommandStates.FAILED
+
     @property
     def piece(self):
         """
@@ -48,16 +92,11 @@ class Command(HygenicModel):
         return self.source_territory.piece
 
     @property
-    def nation(self):
+    def nationality(self):
         """
         Helper to get the nation of a command more easily.
         """
         return self.order.nation
-
-    def process(self):
-        """
-        """
-        pass
 
     def _friendly_piece_exists_in_source(self):
         if not self.source_territory.friendly_piece_exists(self.nation):
@@ -265,11 +304,66 @@ class Move(Command, TargetCoastMixin, TargetTerritoryMixin):
             self._specifies_target_named_coast_if_fleet(),
         ])
 
+    def resolve(self):
+        """
+        - In case of a head-to-head battle, the move succeeds when the
+          attack strength is larger then the defend strength of the
+          opposing unit and larger than the prevent strength of any unit
+          moving to the same area. If one of the opposing strengths is
+          equal or greater, then the move fails.
+
+        - If there is no head-to-head battle, the move succeeds when the
+          attack strength is larger then the hold strength of the
+          destination and larger than the prevent strength of any unit
+          moving to the same area. If one of the opposing strengths is
+          equal or greater, then the move fails.
+        """
+        if False:  # head-to-head battle
+            if self.attack_strength > opposing_unit.defend_strength and \
+                    self.attack_strength > max([unit.prevent_strength for unit in units]):
+                return self.succeed()
+            return self.failed()
+        else:
+            if self.attack_strength > self.target_territory.hold_strength and \
+                    self.attack_strength > max([unit.prevent_strength for unit in units]):
+                return self.state = self.succeed()
+            return self.failed()
+
+    @property
+    def attack_strength(self):
+        """
+        - If the path of the move order is not successful, then the attack
+          strength is 0.
+
+        - Otherwise, if the destination is empty, or in a case where there
+          is no head-to-head battle and the unit at the destination has a
+          move order for which the move is successful, then the attack
+          strength is 1 plus the number of successful support orders.
+
+        - If not and the unit at the destination is of the same
+          nationality, then the attack strength is 0.
+
+        - In all other cases, the attack strength is 1 plus the number of
+          successful support orders of units that do not have the same
+          nationality as the unit at the destination.
+        """
+        if not self.path or \
+                self.target_territory.piece.nationality == self.nationality:
+            return 0
+
+        if not self.target_territory.piece or \
+                (self.target_territory.no_head_to_head and
+                 self.target_territory.piece.command.state == self.CommandStates.SUCCEEDED and
+                 self.target_territory.piece.command.type == 'MOVE'):
+            return 1 + self.support
+
+        return 1 + len([s for s in self.supporting_pieces
+                        if s.nationality != self.target_territory.piece.nationality])
+
 
 class Support(Command, AuxTerritoryMixin, TargetTerritoryMixin):
     """
     """
-
     class Meta:
         db_table = 'support'
 
@@ -287,10 +381,30 @@ class Support(Command, AuxTerritoryMixin, TargetTerritoryMixin):
             self._aux_piece_can_reach_target(),
         ])
 
-    def process(self):
+    @property
+    def cut:
         """
+        - A support order is cut when another unit is ordered to move to the
+          area of the supporting unit and the following conditions are
+          satisfied:
+
+            * The moving unit is of a different nationality
+            * The destination of the supported unit is not the area of the unit
+              attacking the support
+            * The moving unit has a successful path
+            * A support is also cut when it is dislodged.
         """
-        pass
+        if self.dislodged:
+            return True
+        foreign_attacking_pieces = self.territory.attacking_pieces.all()\
+            .exclude(nation=self.nationality)
+        if foreign_attacking_pieces:
+            for piece in foreign_attacking_pieces:
+                if piece.path and \
+                        a.territory != self.aux_territory.piece.command.target_territory:
+                    return True
+        return False
+
 
 
 class Convoy(Command, AuxTerritoryMixin, TargetTerritoryMixin):

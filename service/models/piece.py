@@ -126,3 +126,17 @@ class Piece(HygenicModel):
         # Check adjacent to target and accessible by piece type
         return self.territory.adjacent_to(target) and \
             target.accessible_by_piece_type(self)
+
+    @property
+    def dislodged(self):
+        """
+        - A unit can only be dislodged when it stays in its current space. This is
+          the case when the unit did not receive a move order, or if the unit was
+          ordered to move but failed. If so, the unit is dislodged if another unit
+          has a move order attacking the unit and for which the move succeeds.
+        """
+        if isinstance(self.command, (Hold, Support, Convoy)):
+            pass
+        
+        if isinstance(self.command, Move) and self.command.failed:
+            pass

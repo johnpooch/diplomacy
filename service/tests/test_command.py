@@ -688,3 +688,9 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         )
         with self.assertRaises(ValidationError):
             command.clean()
+
+
+class TestResolve(TestCase):
+    
+    def test_run_command(self):
+        pass
