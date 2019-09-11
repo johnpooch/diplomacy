@@ -24,26 +24,6 @@ class Announcement(models.Model):
         db_table = "announcement"
 
 
-class Challenge(models.Model):
-    """
-    """
-    piece = models.OneToOneField(
-        'Piece',
-        on_delete=models.CASCADE,
-        null=False,
-        related_name='challenging',
-    )
-    territory = models.ForeignKey(
-        'Territory',
-        on_delete=models.CASCADE,
-        null=False,
-        related_name='challenges',
-    )
-
-    class Meta:
-        db_table = "challenge"
-
-
 class Game(models.Model):
     """
     """
