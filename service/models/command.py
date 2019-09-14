@@ -423,6 +423,11 @@ class Convoy(Command, AuxTerritoryMixin, TargetTerritoryMixin):
             self._source_piece_is_at_sea(),
         ])
 
+    def resolve(self):
+        """
+        """
+        return not self.piece.dislodged
+
 
 class Retreat(Command, TargetCoastMixin, TargetTerritoryMixin):
     """
