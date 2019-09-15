@@ -9,22 +9,35 @@ from service.models.piece import Piece
 class Command(HygenicModel):
     """
     """
+
+    class CommandTypes:
+        HOLD = 'hold'
+        MOVE = 'move'
+        SUPPORT = 'support'
+        CONVOY = 'convoy'
+        RETREAT = 'retreat'
+        BUILD = 'build'
+        DISBAND = 'disband'
+        CHOICES = (
+            (HOLD, 'Hold'),
+            (MOVE, 'Move'),
+            (SUPPORT, 'Support'),
+            (CONVOY, 'Convoy'),
+            (RETREAT, 'Retreat'),
+            (BUILD, 'Build'),
+            (DISBAND, 'Disband')
+        )
+
     class CommandStates:
         UNRESOLVED = 'unresolved'
         SUCCEEDS = 'succeeds'
         FAILS = 'fails'
         CHOICES = (
-            (UNRESOLVED, 'unresolved'),
-            (SUCCEEDS, 'succeeds'),
-            (FAILS, 'fails')
+            (UNRESOLVED, 'Unresolved'),
+            (SUCCEEDS, 'Succeeds'),
+            (FAILS, 'Fails')
         )
 
-    source_territory = models.ForeignKey(
-        'Territory',
-        on_delete=models.CASCADE,
-        related_name='+',
-        null=False
-    )
     order = models.ForeignKey(
         'Order',
         on_delete=models.CASCADE,
@@ -32,14 +45,51 @@ class Command(HygenicModel):
         db_column="order_id",
         null=False
     )
-    valid = models.BooleanField(default=True)
-    success = models.BooleanField(default=True)
+    type = models.CharField(
+        max_length=8,
+        null=False,
+        choices=CommandTypes.CHOICES,
+        default=CommandTypes.HOLD
+    )
     state = models.CharField(
         max_length=15,
         null=False,
         choices=CommandStates.CHOICES,
         default=CommandStates.UNRESOLVED
     )
+    source = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        related_name='+',
+        null=True
+    )
+    piece = models.OneToOneField(
+        'Piece',
+        null=True,
+        on_delete=models.CASCADE,
+    )
+    target = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        related_name='+',
+        null=True,
+    )
+    target_coast = models.ForeignKey(
+        'NamedCoast',
+        on_delete=models.CASCADE,
+        related_name='+',
+        null=True,
+        blank=True
+    )
+    aux = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        related_name='+',
+        null=True,
+        blank=True,
+    )
+    valid = models.BooleanField(default=True)
+    success = models.BooleanField(default=True)
     # Outcome in human friendly terms
     result_message = models.CharField(
         max_length=100,
@@ -48,17 +98,7 @@ class Command(HygenicModel):
     )
 
     class Meta:
-        abstract = True
-
-    def clean(self):
-        """
-        """
-        pass
-
-    def resolve(self):
-        if self.state == self.CommandStates.RESOLVED:
-            return
-        # check if resolution of the command is dependent on other commands
+        db_table = 'command'
 
     def succeed(self):
         """
@@ -84,12 +124,63 @@ class Command(HygenicModel):
         """
         return self.state == self.CommandStates.FAILED
 
+    def resolve(self):
+        """
+        MOVE:
+            - In case of a head-to-head battle, the move succeeds when the
+              attack strength is larger then the defend strength of the
+              opposing unit and larger than the prevent strength of any unit
+              moving to the same area. If one of the opposing strengths is
+              equal or greater, then the move fails.
+
+            - If there is no head-to-head battle, the move succeeds when the
+              attack strength is larger then the hold strength of the
+              destination and larger than the prevent strength of any unit
+              moving to the same area. If one of the opposing strengths is
+              equal or greater, then the move fails.
+        """
+        # if self.type == self.CommandTypes.MOVE:
+        #     if False:  # head-to-head battle
+        #         if self.attack_strength > opposing_unit.defend_strength and \
+        #                 self.attack_strength > max([unit.prevent_strength for unit in units]):
+        #             return self.succeed()
+        #         return self.failed()
+        #     else:
+        #         if self.attack_strength > self.target_territory.hold_strength and \
+        #                 self.attack_strength > max([unit.prevent_strength for unit in units]):
+        #             return self.succeed()
+        #         return self.failed()
+        pass
+
     @property
-    def piece(self):
+    def cut(self):
         """
-        Helper to get ``source_territory.piece``.
+        Determine whether a support command has been cut. Other types of
+        command cannot be cut.
+
+        A support order is cut when another unit is ordered to move to the area
+        of the supporting unit and the following conditions are satisfied:
+
+          - The moving unit is of a different nationality
+          - The destination of the supported unit is not the area of the unit
+            attacking the support
+          - The moving unit has a successful path
+          - A support is also cut when it is dislodged.
         """
-        return self.source_territory.piece
+        if self.type != self.CommandTypes.SUPPORT:
+            raise ValueError('Only `support` commands can be cut.')
+
+        if self.piece.dislodged:
+            return True
+
+        foreign_attacking_pieces = self.source\
+            .foreign_attacking_pieces(self.nationality)
+
+        for attacker in foreign_attacking_pieces:
+            if attacker.path and \
+                    attacker.territory != self.aux.piece.command.target:
+                return True
+        return False
 
     @property
     def nationality(self):
@@ -181,271 +272,221 @@ class Command(HygenicModel):
         return True
 
 
-class TargetTerritoryMixin(models.Model):
-    """
-    """
-    target_territory = models.ForeignKey(
-        'Territory',
-        on_delete=models.CASCADE,
-        related_name='+',
-        null=False,
-    )
+# class Hold(Command):
 
-    class Meta:
-        abstract = True
+#     def clean(self):
+#         return self._friendly_piece_exists_in_source(),
 
 
-class TargetCoastMixin(models.Model):
-    """
-    """
-    target_coast = models.ForeignKey(
-        'NamedCoast',
-        on_delete=models.CASCADE,
-        related_name='+',
-        null=True,
-        blank=True
-    )
+# class Build(Command):
 
-    class Meta:
-        abstract = True
+#     source_coast = models.ForeignKey(
+#         'NamedCoast',
+#         on_delete=models.CASCADE,
+#         related_name='+',
+#         null=True,
+#         blank=True
+#     )
+#     piece_type = models.CharField(
+#         max_length=50,
+#         null=False,
+#         choices=Piece.PieceType.CHOICES,
+#     )
 
+#     def clean(self):
 
-class AuxTerritoryMixin(models.Model):
-    """
-    """
-    aux_territory = models.ForeignKey(
-        'Territory',
-        on_delete=models.CASCADE,
-        related_name='+',
-        null=False,
-    )
-
-    class Meta:
-        abstract = True
-
-    @property
-    def aux_piece(self):
-        return self.aux_territory.piece
-
-
-class Hold(Command):
-
-    def clean(self):
-        return self._friendly_piece_exists_in_source(),
-
-
-class Build(Command):
-
-    source_coast = models.ForeignKey(
-        'NamedCoast',
-        on_delete=models.CASCADE,
-        related_name='+',
-        null=True,
-        blank=True
-    )
-    piece_type = models.CharField(
-        max_length=50,
-        null=False,
-        choices=Piece.PieceType.CHOICES,
-    )
-
-    def clean(self):
-
-        # check territory is not occupied
-        if self.source_territory.occupied():
-            raise ValidationError(_(
-                'Cannot build in occupied territory.'
-            ))
-        # check source territory has supply center
-        if not self.source_territory.has_supply_center():
-            raise ValidationError(_(
-                'Cannot build in a territory that does not have a supply '
-                'center.'
-            ))
-        # check source territory nationality
-        if not self.source_territory.supply_center.nationality == self.nation:
-            raise ValidationError(_(
-                'Cannot build in supply centers outside of home territory.'
-            ))
-        # check source territory nationality
-        if not self.source_territory.controlled_by == self.nation:
-            raise ValidationError(_(
-                'Cannot build in supply centers which are not controlled by '
-                'nation.'
-            ))
-        # cannot build fleet inland
-        if self.source_territory.is_inland() and \
-                self.piece_type == Piece.PieceType.FLEET:
-            raise ValidationError(_(
-                'Cannot build fleet in inland territory.'
-            ))
-        return True
+#         # check territory is not occupied
+#         if self.source_territory.occupied():
+#             raise ValidationError(_(
+#                 'Cannot build in occupied territory.'
+#             ))
+#         # check source territory has supply center
+#         if not self.source_territory.has_supply_center():
+#             raise ValidationError(_(
+#                 'Cannot build in a territory that does not have a supply '
+#                 'center.'
+#             ))
+#         # check source territory nationality
+#         if not self.source_territory.supply_center.nationality == self.nation:
+#             raise ValidationError(_(
+#                 'Cannot build in supply centers outside of home territory.'
+#             ))
+#         # check source territory nationality
+#         if not self.source_territory.controlled_by == self.nation:
+#             raise ValidationError(_(
+#                 'Cannot build in supply centers which are not controlled by '
+#                 'nation.'
+#             ))
+#         # cannot build fleet inland
+#         if self.source_territory.is_inland() and \
+#                 self.piece_type == Piece.PieceType.FLEET:
+#             raise ValidationError(_(
+#                 'Cannot build fleet in inland territory.'
+#             ))
+#         return True
 
 
-class Disband(Command):
+# class Disband(Command):
 
-    def clean(self):
-        return self._friendly_piece_exists_in_source(),
-
-
-class Move(Command, TargetCoastMixin, TargetTerritoryMixin):
-    """
-    """
-
-    class Meta:
-        db_table = 'move'
-
-    def clean(self):
-        """
-        """
-        return all([
-            self._friendly_piece_exists_in_source(),
-            self._source_piece_can_reach_target(),
-            self._specifies_target_named_coast_if_fleet(),
-        ])
-
-    def resolve(self):
-        """
-        - In case of a head-to-head battle, the move succeeds when the
-          attack strength is larger then the defend strength of the
-          opposing unit and larger than the prevent strength of any unit
-          moving to the same area. If one of the opposing strengths is
-          equal or greater, then the move fails.
-
-        - If there is no head-to-head battle, the move succeeds when the
-          attack strength is larger then the hold strength of the
-          destination and larger than the prevent strength of any unit
-          moving to the same area. If one of the opposing strengths is
-          equal or greater, then the move fails.
-        """
-        if False:  # head-to-head battle
-            if self.attack_strength > opposing_unit.defend_strength and \
-                    self.attack_strength > max([unit.prevent_strength for unit in units]):
-                return self.succeed()
-            return self.failed()
-        else:
-            if self.attack_strength > self.target_territory.hold_strength and \
-                    self.attack_strength > max([unit.prevent_strength for unit in units]):
-                return self.state = self.succeed()
-            return self.failed()
-
-    @property
-    def attack_strength(self):
-        """
-        - If the path of the move order is not successful, then the attack
-          strength is 0.
-
-        - Otherwise, if the destination is empty, or in a case where there
-          is no head-to-head battle and the unit at the destination has a
-          move order for which the move is successful, then the attack
-          strength is 1 plus the number of successful support orders.
-
-        - If not and the unit at the destination is of the same
-          nationality, then the attack strength is 0.
-
-        - In all other cases, the attack strength is 1 plus the number of
-          successful support orders of units that do not have the same
-          nationality as the unit at the destination.
-        """
-        if not self.path or \
-                self.target_territory.piece.nationality == self.nationality:
-            return 0
-
-        if not self.target_territory.piece or \
-                (self.target_territory.no_head_to_head and
-                 self.target_territory.piece.command.state == self.CommandStates.SUCCEEDED and
-                 self.target_territory.piece.command.type == 'MOVE'):
-            return 1 + self.support
-
-        return 1 + len([s for s in self.supporting_pieces
-                        if s.nationality != self.target_territory.piece.nationality])
+#     def clean(self):
+#         return self._friendly_piece_exists_in_source(),
 
 
-class Support(Command, AuxTerritoryMixin, TargetTerritoryMixin):
-    """
-    """
-    class Meta:
-        db_table = 'support'
+# class Move(Command, TargetCoastMixin, TargetTerritoryMixin):
+#     """
+#     """
 
-    @property
-    def aux_piece(self):
-        return self.aux_territory.piece
+#     class Meta:
+#         db_table = 'move'
 
-    def clean(self):
-        """
-        """
-        return all([
-            self._friendly_piece_exists_in_source(),
-            self._source_piece_can_reach_target(),
-            self._aux_territory_occupied(),
-            self._aux_piece_can_reach_target(),
-        ])
+#     def clean(self):
+#         """
+#         """
+#         return all([
+#             self._friendly_piece_exists_in_source(),
+#             self._source_piece_can_reach_target(),
+#             self._specifies_target_named_coast_if_fleet(),
+#         ])
 
-    @property
-    def cut:
-        """
-        - A support order is cut when another unit is ordered to move to the
-          area of the supporting unit and the following conditions are
-          satisfied:
+#     def resolve(self):
+#         """
+#         - In case of a head-to-head battle, the move succeeds when the
+#           attack strength is larger then the defend strength of the
+#           opposing unit and larger than the prevent strength of any unit
+#           moving to the same area. If one of the opposing strengths is
+#           equal or greater, then the move fails.
 
-            * The moving unit is of a different nationality
-            * The destination of the supported unit is not the area of the unit
-              attacking the support
-            * The moving unit has a successful path
-            * A support is also cut when it is dislodged.
-        """
-        if self.dislodged:
-            return True
-        foreign_attacking_pieces = self.territory.attacking_pieces.all()\
-            .exclude(nation=self.nationality)
-        if foreign_attacking_pieces:
-            for piece in foreign_attacking_pieces:
-                if piece.path and \
-                        a.territory != self.aux_territory.piece.command.target_territory:
-                    return True
-        return False
+#         - If there is no head-to-head battle, the move succeeds when the
+#           attack strength is larger then the hold strength of the
+#           destination and larger than the prevent strength of any unit
+#           moving to the same area. If one of the opposing strengths is
+#           equal or greater, then the move fails.
+#         """
+#         if False:  # head-to-head battle
+#             if self.attack_strength > opposing_unit.defend_strength and \
+#                     self.attack_strength > max([unit.prevent_strength for unit in units]):
+#                 return self.succeed()
+#             return self.failed()
+#         else:
+#             if self.attack_strength > self.target_territory.hold_strength and \
+#                     self.attack_strength > max([unit.prevent_strength for unit in units]):
+#                 return self.succeed()
+#             return self.failed()
 
+#     @property
+#     def attack_strength(self):
+#         """
+#         - If the path of the move order is not successful, then the attack
+#           strength is 0.
 
+#         - Otherwise, if the destination is empty, or in a case where there
+#           is no head-to-head battle and the unit at the destination has a
+#           move order for which the move is successful, then the attack
+#           strength is 1 plus the number of successful support orders.
 
-class Convoy(Command, AuxTerritoryMixin, TargetTerritoryMixin):
-    """
-    """
-    class Meta:
-        db_table = 'convoy'
+#         - If not and the unit at the destination is of the same
+#           nationality, then the attack strength is 0.
 
-    def clean(self):
-        """
-        """
-        return all([
-            self._friendly_piece_exists_in_source(),
-            self._aux_territory_occupied(),
-            self._aux_piece_can_reach_target(),
-            self._source_piece_is_at_sea(),
-        ])
+#         - In all other cases, the attack strength is 1 plus the number of
+#           successful support orders of units that do not have the same
+#           nationality as the unit at the destination.
+#         """
+#         if not self.path or \
+#                 self.target_territory.piece.nationality == self.nationality:
+#             return 0
 
-    def resolve(self):
-        """
-        """
-        return not self.piece.dislodged
+#         if not self.target_territory.piece or \
+#                 (self.target_territory.no_head_to_head and
+#                  self.target_territory.piece.command.state == self.CommandStates.SUCCEEDED and
+#                  self.target_territory.piece.command.type == 'MOVE'):
+#             return 1 + self.support
 
-
-class Retreat(Command, TargetCoastMixin, TargetTerritoryMixin):
-    """
-    """
-    class Meta:
-        db_table = 'retreat'
-
-    def clean(self):
-        """
-        """
-        return all([
-            self._friendly_piece_exists_in_source(),
-            self._source_piece_can_reach_target(),
-            self._specifies_target_named_coast_if_fleet(),
-            self._piece_has_been_dislodged(),
-            self._target_territory_not_occupied(),
-            self._target_territory_not_where_attacker_came_from(),
-            self._target_not_vacant_by_standoff_on_previous_turn(),
-        ])
+#         return 1 + len([s for s in self.supporting_pieces
+#                         if s.nationality != self.target_territory.piece.nationality])
 
 
+# class Support(Command, AuxTerritoryMixin, TargetTerritoryMixin):
+#     """
+#     """
+#     class Meta:
+#         db_table = 'support'
+
+#     @property
+#     def aux_piece(self):
+#         return self.aux_territory.piece
+
+#     def clean(self):
+#         """
+#         """
+#         return all([
+#             self._friendly_piece_exists_in_source(),
+#             self._source_piece_can_reach_target(),
+#             self._aux_territory_occupied(),
+#             self._aux_piece_can_reach_target(),
+#         ])
+
+#     @property
+#     def cut(self):
+#         """
+#         - A support order is cut when another unit is ordered to move to the
+#           area of the supporting unit and the following conditions are
+#           satisfied:
+
+#             * The moving unit is of a different nationality
+#             * The destination of the supported unit is not the area of the unit
+#               attacking the support
+#             * The moving unit has a successful path
+#             * A support is also cut when it is dislodged.
+#         """
+#         if self.piece.dislodged:
+#             return True
+#         foreign_attacking_pieces = self.territory.attacking_pieces.all()\
+#             .exclude(nation=self.nationality)
+#         if foreign_attacking_pieces:
+#             for piece in foreign_attacking_pieces:
+#                 if piece.path and \
+#                         a.territory != self.aux_territory.piece.command.target_territory:
+#                     return True
+#         return False
+
+
+# class Convoy(Command, AuxTerritoryMixin, TargetTerritoryMixin):
+#     """
+#     """
+#     class Meta:
+#         db_table = 'convoy'
+
+#     def clean(self):
+#         """
+#         """
+#         return all([
+#             self._friendly_piece_exists_in_source(),
+#             self._aux_territory_occupied(),
+#             self._aux_piece_can_reach_target(),
+#             self._source_piece_is_at_sea(),
+#         ])
+
+#     def resolve(self):
+#         """
+#         """
+#         return not self.piece.dislodged
+
+
+# class Retreat(Command, TargetCoastMixin, TargetTerritoryMixin):
+#     """
+#     """
+#     class Meta:
+#         db_table = 'retreat'
+
+#     def clean(self):
+#         """
+#         """
+#         return all([
+#             self._friendly_piece_exists_in_source(),
+#             self._source_piece_can_reach_target(),
+#             self._specifies_target_named_coast_if_fleet(),
+#             self._piece_has_been_dislodged(),
+#             self._target_territory_not_occupied(),
+#             self._target_territory_not_where_attacker_came_from(),
+#             self._target_not_vacant_by_standoff_on_previous_turn(),
+#         ])

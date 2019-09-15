@@ -129,3 +129,17 @@ class Territory(models.Model):
 
     def is_complex(self):
         return self.named_coasts.exists()
+
+    @property
+    def attacking_pieces(self):
+        """
+        Helper method to get all pieces which are moving into this territory.
+        """
+        return Piece.objects.filter(command__target=self)
+
+    def foreign_attacking_pieces(self, nation):
+        """
+        Helper method to get all pieces which are moving into this territory
+        who do not belong to ``nation``.
+        """
+        return self.attacking_pieces.exclude(nation=nation)

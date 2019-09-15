@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 
-from service.models import NamedCoast, Nation, Order, Piece
+from service.models import Command, NamedCoast, Nation, Order, Piece
 from service.tests.base import HelperMixin, TerritoriesMixin
 from .base import InitialGameStateTestCase as TestCase
 
@@ -694,3 +694,53 @@ class TestResolve(TestCase):
     
     def test_run_command(self):
         pass
+
+
+class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
+    """
+    """
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json', 'supply_centers.json']
+
+    def setUp(self):
+        super().setUp()
+        self.initialise_territories()
+        self.order = Order.objects.create(
+            nation=Nation.objects.get(name='France'),
+            turn=self.turn,
+        )
+        self.fleet = Piece.objects.get(territory__name='brest')
+        self.attacking_fleet = Piece.objects.get(territory__name='brest')
+        self.supporting_army = Piece.objects.get(territory__name='paris')
+
+    def test_no_other_unit_is_ordered_to_move_to_supporting_territory(self):
+        """
+        If no other piece is ordered to move to the territory where the
+        supporting unit is positioned, the supporting command is not cut.
+        """
+        support_command = Command(
+            source=self.paris,
+            piece=self.supporting_army,
+            aux=self.brest,
+            target=self.picardy,
+            type=Command.CommandTypes.SUPPORT,
+            order=self.order
+        )
+        self.assertFalse(support_command.cut)
+
+    def test_non_support_command_raises_value_error(self):
+        """
+        All command types other than support cannot use ``cut()`` method. A
+        ``ValueError`` is raised if this method is accessed by a non-support
+        command.
+        """
+        move_command = Command(
+            source=self.paris,
+            piece=self.supporting_army,
+            aux=self.brest,
+            target=self.picardy,
+            type=Command.CommandTypes.MOVE,
+            order=self.order
+        )
+        with self.assertRaises(ValueError):
+            move_command.cut

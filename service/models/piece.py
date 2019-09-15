@@ -85,12 +85,6 @@ class Piece(HygenicModel):
     def is_fleet(self):
         return self.type == self.PieceType.FLEET
 
-    def dislodged(self):
-        try:
-            return bool(self.dislodged_by)
-        except Piece.DoesNotExist:
-            return False
-
     def get_previous_territory(self):
         # TODO do this when phases/logs are properly handled
         return None
@@ -130,13 +124,17 @@ class Piece(HygenicModel):
     @property
     def dislodged(self):
         """
-        - A unit can only be dislodged when it stays in its current space. This is
-          the case when the unit did not receive a move order, or if the unit was
-          ordered to move but failed. If so, the unit is dislodged if another unit
-          has a move order attacking the unit and for which the move succeeds.
+        - A unit can only be dislodged when it stays in its current space. This
+          is the case when the unit did not receive a move order, or if the
+          unit was ordered to move but failed. If so, the unit is dislodged if
+          another unit has a move order attacking the unit and for which the
+          move succeeds.
         """
-        if isinstance(self.command, (Hold, Support, Convoy)):
-            pass
-        
-        if isinstance(self.command, Move) and self.command.failed:
-            pass
+        pass
+
+    @property
+    def command(self):
+        """
+        Helper method to get the unit's current command.
+        """
+        return

@@ -1,7 +1,6 @@
 from django.test import TestCase
 
-from service.models import Build, Convoy, Game, Hold, Move, Order, Phase, \
-    Support, Territory, Turn
+from service.models import Game, Phase, Territory, Turn
 
 
 class InitialGameStateTestCase(TestCase):
@@ -39,6 +38,7 @@ class TerritoriesMixin:
         self.london = Territory.objects.get(name='london')
         self.marseilles = Territory.objects.get(name='marseilles')
         self.mid_atlantic = Territory.objects.get(name='mid atlantic')
+        self.munich = Territory.objects.get(name='munich')
         self.paris = Territory.objects.get(name='paris')
         self.picardy = Territory.objects.get(name='picardy')
         self.piedmont = Territory.objects.get(name='piedmont')
@@ -63,47 +63,52 @@ class HelperMixin:
     def hold(self, source):
         """
         """
-        return Hold(
-            source_territory=source,
-            order=self.order,
-        )
+        pass
+        # return Hold(
+        #     source_territory=source,
+        #     order=self.order,
+        # )
 
     def move(self, source, target, target_coast=None):
         """
         """
-        return Move(
-            source_territory=source,
-            target_territory=target,
-            order=self.order,
-            target_coast=target_coast,
-        )
+        pass
+        # return Move(
+        #     source_territory=source,
+        #     target_territory=target,
+        #     order=self.order,
+        #     target_coast=target_coast,
+        # )
 
     def support(self, source, target, aux):
         """
         """
-        return Support(
-            source_territory=source,
-            target_territory=target,
-            aux_territory=aux,
-            order=self.order,
-        )
+        pass
+        # return Support(
+        #     source_territory=source,
+        #     target_territory=target,
+        #     aux_territory=aux,
+        #     order=self.order,
+        # )
 
     def convoy(self, source, target, aux):
         """
         """
-        return Convoy(
-            source_territory=source,
-            target_territory=target,
-            aux_territory=aux,
-            order=self.order,
-        )
+        pass
+        # return Convoy(
+        #     source_territory=source,
+        #     target_territory=target,
+        #     aux_territory=aux,
+        #     order=self.order,
+        # )
 
     def build(self, source, piece_type, source_coast=None):
         """
         """
-        return Build(
-            source_territory=source,
-            source_coast=source_coast,
-            piece_type=piece_type,
-            order=self.order,
-        )
+        pass
+        # return Build(
+        #     source_territory=source,
+        #     source_coast=source_coast,
+        #     piece_type=piece_type,
+        #     order=self.order,
+        # )
