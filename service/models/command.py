@@ -1,9 +1,64 @@
+from copy import deepcopy
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
 from service.models.base import HygenicModel
-from service.models.piece import Piece
+
+
+class CommandManager(models.Manager):
+    """
+    """
+
+    def get_convoy_paths(self, source, target):
+        """
+        Gets a list of all available convoy paths from one territory to
+        another.
+
+        Returns:
+            * A ``list`` where each item in the list is a unique ``tuple`` of
+            ``Command`` instances. Each ``tuple`` represents a possible convoy
+            path.
+        """
+        qs = super().get_queryset()
+
+        convoy_paths = set()
+        # get all commands which are convoying the source to the target
+        convoying_commands = qs.filter(
+            type=Command.CommandTypes.CONVOY,
+            aux=source,
+            target=target
+        )
+        for command in convoying_commands:
+
+            # for every territory that neighbours the source, dig
+            if command.source.adjacent_to(source):
+                # if direct convoy
+                if command.source.adjacent_to(target):
+                    path = (command,)
+                    convoy_paths.add(path)
+                else:
+                    remaining_commands = list(deepcopy(convoying_commands))
+                    remaining_commands.remove(command)
+                    path = self.dig([command], target, remaining_commands)
+                    convoy_paths.add(path)
+
+        return list(convoy_paths)
+
+    def dig(self, previous_commands, target, remaining_commands):
+        """
+        """
+        # TODO test?
+        # check if any command is neighbour of command
+        # if that neighbour is adjacent to target return both commands
+        for command in remaining_commands:
+            if command.source.adjacent_to(previous_commands[-1].source):
+                if command.source.adjacent_to(target):
+                    return tuple(previous_commands + [command])
+                remaining_commands = list(deepcopy(remaining_commands))
+                remaining_commands.remove(command)
+                return self.dig(previous_commands + [command], target, remaining_commands)
 
 
 class Command(HygenicModel):
@@ -97,6 +152,8 @@ class Command(HygenicModel):
         blank=True
     )
 
+    objects = CommandManager()
+
     class Meta:
         db_table = 'command'
 
@@ -123,6 +180,48 @@ class Command(HygenicModel):
         """
         """
         return self.state == self.CommandStates.FAILED
+
+    @property
+    def path(self):
+        """
+        The path of a move command is successful when the origin and
+        destination of the move command are adjacent and accessible by the
+        moving piece type, or when there is a chain of adjacent fleets from
+        origin to destination each with a matching and successful convoy order.
+        """
+        if self.piece.is_fleet():
+            # if moving from named coast, ensure target is neighbour of coast
+            if self.piece.named_coast:
+                return self.target in self.piece.named_coast.neighbours.all()
+
+            # if moving from one coast to another, check shared coast
+            if self.source.coastal and self.target.coastal:
+                return self.target in self.territory.shared_coasts.all()
+
+        # check adjacent to target and accessible by piece type
+        if self.source.adjacent_to(self.target) and \
+                self.target.accessible_by_piece_type(self.piece):
+            return True
+
+        # if not adjacent, check for convoy
+        if self.is_army():
+            if self.source.coastal and self.target.coastal:
+                return self.successful_convoy_exists()
+        return False
+
+    @property
+    def successful_convoy_exists(self):
+        """
+        Determines whether a successful convoy exists between ``source`` and
+        ``target``.
+        """
+        # gather all convoy paths
+        # for each path, determine if any are not dislodged
+        # TODO test
+        pass
+
+
+
 
     def resolve(self):
         """
@@ -196,7 +295,7 @@ class Command(HygenicModel):
             ))
         return True
 
-    def _source_piece_can_reach_target(self):
+    def source_piece_can_reach_target(self):
         try:
             target_coast = self.target_coast
         except AttributeError:

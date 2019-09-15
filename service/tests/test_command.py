@@ -744,3 +744,209 @@ class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
         )
         with self.assertRaises(ValueError):
             move_command.cut
+
+    def test_foreign_attacking_piece(self):
+        """
+        If there is a foreign piece moving into the territory of the supoorting
+        piece and the attacking piece is not coming from the target of the
+        supported piece, the support is cut.
+        """
+        pass
+
+    def test_foreign_attacking_piece_from_support_target(self):
+        """
+        If there is a foreign piece moving into the territory of the supoorting
+        piece but the attacking piece is coming from the target of the
+        supported piece, the support is not cut.
+        """
+        pass
+
+
+class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
+
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json']
+
+    def setUp(self):
+        super().setUp()
+        self.initialise_territories()
+        self.france = Nation.objects.get(name='France')
+        self.order = Order.objects.create(
+            nation=self.france,
+            turn=self.turn,
+        )
+        self.army = Piece.objects.get(territory__name='paris')
+        self.convoying_fleet = Piece.objects.get(territory__name='brest')
+        self.set_piece_territory(self.convoying_fleet, self.english_channel)
+        self.set_piece_territory(self.army, self.belgium)
+
+    def test_no_convoy_no_path_returned(self):
+        """
+        If there is no convoying fleets an empty list is returned.
+        """
+        convoy_paths = Command.objects.get_convoy_paths(
+            self.belgium,
+            self.london
+        )
+        self.assertEqual(len(convoy_paths), 0)
+
+    def test_single_territory_convoy_is_added(self):
+        """
+        If there is only a single fleet convoying from source to target and
+        that fleet is a neighbour of both the source and the target, the
+        returned list should contain a tuple with only that fleet's
+        command.
+        """
+        convoy_command = Command.objects.create(
+            source=self.english_channel,
+            piece=self.convoying_fleet,
+            aux=self.belgium,
+            target=self.london,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        convoy_paths = Command.objects.get_convoy_paths(
+            self.belgium,
+            self.london
+        )
+        # length of set is 1
+        self.assertEqual(len(convoy_paths), 1)
+        # length of tuple is 1
+        self.assertEqual(len(convoy_paths[0]), 1)
+        # tuple item is convoy command
+        self.assertEqual(convoy_paths[0][0], convoy_command)
+
+    def test_two_territories_can_convoy(self):
+        """
+        If there are two territories that can convoy from source to target
+        directly, a list is returned with two tuples, each containing only one
+        command.
+        """
+        north_sea_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.north_sea,
+            type=Piece.PieceType.FLEET
+        )
+        english_channel_command = Command.objects.create(
+            source=self.english_channel,
+            piece=self.convoying_fleet,
+            aux=self.belgium,
+            target=self.london,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        north_sea_command = Command.objects.create(
+            source=self.north_sea,
+            piece=north_sea_fleet,
+            aux=self.belgium,
+            target=self.london,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        convoy_paths = Command.objects.get_convoy_paths(
+            self.belgium,
+            self.london
+        )
+        self.assertEqual(len(convoy_paths), 2)
+        self.assertTrue(english_channel_command in
+                        [convoy_paths[0][0], convoy_paths[1][0]])
+        self.assertTrue(north_sea_command in
+                        [convoy_paths[0][0], convoy_paths[1][0]])
+
+    def test_single_path_with_two_territories(self):
+        """
+        If there are two covoying commands which make a convoy chain from
+        target to source, a list with a single tuple containing both commands
+        is returned.
+        """
+        self.set_piece_territory(self.army, self.picardy)
+        north_sea_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.north_sea,
+            type=Piece.PieceType.FLEET
+        )
+        english_channel_command = Command.objects.create(
+            source=self.english_channel,
+            piece=self.convoying_fleet,
+            aux=self.picardy,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        north_sea_command = Command.objects.create(
+            source=self.north_sea,
+            piece=north_sea_fleet,
+            aux=self.picardy,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        convoy_paths = Command.objects.get_convoy_paths(
+            self.picardy,
+            self.edinburgh
+        )
+        self.assertEqual(len(convoy_paths), 1)
+        self.assertTrue(english_channel_command in
+                        [convoy_paths[0][0], convoy_paths[0][1]])
+        self.assertTrue(north_sea_command in
+                        [convoy_paths[0][0], convoy_paths[0][1]])
+
+    def test_single_path_with_three_territories(self):
+        """
+        If there are three covoying commands which make a convoy chain from
+        target to source, a list with a single tuple containing all three
+        commands is returned.
+        """
+        self.set_piece_territory(self.army, self.portugal)
+        north_sea_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.north_sea,
+            type=Piece.PieceType.FLEET
+        )
+        mid_atlantic_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.mid_atlantic,
+            type=Piece.PieceType.FLEET
+        )
+        english_channel_command = Command.objects.create(
+            source=self.english_channel,
+            piece=self.convoying_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        north_sea_command = Command.objects.create(
+            source=self.north_sea,
+            piece=north_sea_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        mid_atlantic_command = Command.objects.create(
+            source=self.mid_atlantic,
+            piece=mid_atlantic_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        convoy_paths = Command.objects.get_convoy_paths(
+            self.portugal,
+            self.edinburgh
+        )
+        self.assertEqual(len(convoy_paths), 1)
+        self.assertEqual(len(convoy_paths[0]), 3)
+        self.assertTrue(
+            english_channel_command in
+            [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
+        )
+        self.assertTrue(
+            north_sea_command in
+            [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
+        )
+        self.assertTrue(
+            mid_atlantic_command in
+            [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
+        )
