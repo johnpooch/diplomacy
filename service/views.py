@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets, generics
+from core.models import *
 from .serializers import *
-from .models import *
 
 
 class NationViewSet(viewsets.ReadOnlyModelViewSet):

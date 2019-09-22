@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-from . import models
+from core import models
 from rest_framework import serializers
 
 
@@ -39,11 +39,12 @@ class NeighbourSerializer(serializers.ModelSerializer):
     def to_representation(self, value):
         return value.name
 
+
 class TerritorySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Territory
         depth = 1
         fields = '__all__'
- 
+
     neighbours = NeighbourSerializer(many=True)
     shared_coasts = NeighbourSerializer(many=True)
