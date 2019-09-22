@@ -950,3 +950,88 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             mid_atlantic_command in
             [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
         )
+
+    def test_multiple_paths_with_multiple_territories(self):
+        """
+        If there are multiple routes in a set of convoying commands, those
+        routes are returned.
+        """
+        self.set_piece_territory(self.army, self.portugal)
+        north_sea_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.north_sea,
+            type=Piece.PieceType.FLEET
+        )
+        mid_atlantic_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.mid_atlantic,
+            type=Piece.PieceType.FLEET
+        )
+        north_atlantic_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.north_atlantic,
+            type=Piece.PieceType.FLEET
+        )
+        norwegian_sea_fleet = Piece.objects.create(
+            nation=self.france,
+            territory=self.norwegian_sea,
+            type=Piece.PieceType.FLEET
+        )
+        english_channel_command = Command.objects.create(
+            source=self.english_channel,
+            piece=self.convoying_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        north_sea_command = Command.objects.create(
+            source=self.north_sea,
+            piece=north_sea_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        mid_atlantic_command = Command.objects.create(
+            source=self.mid_atlantic,
+            piece=mid_atlantic_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        north_atlantic_command = Command.objects.create(
+            source=self.north_atlantic,
+            piece=north_atlantic_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        norwegian_sea_command = Command.objects.create(
+            source=self.norwegian_sea,
+            piece=norwegian_sea_fleet,
+            aux=self.portugal,
+            target=self.edinburgh,
+            type=Command.CommandTypes.CONVOY,
+            order=self.order
+        )
+        convoy_paths = Command.objects.get_convoy_paths(
+            self.portugal,
+            self.edinburgh
+        )
+        self.assertEqual(len(convoy_paths), 2)
+        # self.assertEqual(len(convoy_paths[0]), 3)
+        # self.assertTrue(
+        #     english_channel_command in
+        #     [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
+        # )
+        # self.assertTrue(
+        #     north_sea_command in
+        #     [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
+        # )
+        # self.assertTrue(
+        #     mid_atlantic_command in
+        #     [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
+        # )

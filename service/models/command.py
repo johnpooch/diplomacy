@@ -41,8 +41,8 @@ class CommandManager(models.Manager):
                 else:
                     remaining_commands = list(deepcopy(convoying_commands))
                     remaining_commands.remove(command)
-                    path = self.dig([command], target, remaining_commands)
-                    convoy_paths.add(path)
+                    paths = self.dig([command], target, remaining_commands)
+                    [convoy_paths.add(p) for p in paths]
 
         return list(convoy_paths)
 
@@ -52,13 +52,22 @@ class CommandManager(models.Manager):
         # TODO test?
         # check if any command is neighbour of command
         # if that neighbour is adjacent to target return both commands
+        paths = []
         for command in remaining_commands:
             if command.source.adjacent_to(previous_commands[-1].source):
                 if command.source.adjacent_to(target):
-                    return tuple(previous_commands + [command])
-                remaining_commands = list(deepcopy(remaining_commands))
-                remaining_commands.remove(command)
-                return self.dig(previous_commands + [command], target, remaining_commands)
+                    paths.append(tuple(previous_commands + [command]))
+                else:
+                    remaining_commands = list(deepcopy(remaining_commands))
+                    remaining_commands.remove(command)
+                    paths.append(
+                        self.dig(
+                            previous_commands + [command],
+                            target,
+                            remaining_commands
+                        )[0]
+                    )
+        return paths
 
 
 class Command(HygenicModel):
@@ -156,6 +165,9 @@ class Command(HygenicModel):
 
     class Meta:
         db_table = 'command'
+
+    def __str__(self):
+        return f'{self.piece.type} {self.source} {self.type}'
 
     def succeed(self):
         """
