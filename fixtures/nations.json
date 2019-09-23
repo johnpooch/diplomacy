@@ -4,7 +4,7 @@
             "active": true,
             "name": "England"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 1
     },
     {
@@ -12,7 +12,7 @@
             "active": true,
             "name": "France"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 2
     },
     {
@@ -20,7 +20,7 @@
             "active": true,
             "name": "Germany"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 3
     },
     {
@@ -28,7 +28,7 @@
             "active": true,
             "name": "Austria-Hungary"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 4
     },
     {
@@ -36,7 +36,7 @@
             "active": true,
             "name": "Italy"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 5
     },
     {
@@ -44,7 +44,7 @@
             "active": true,
             "name": "Russia"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 6
     },
     {
@@ -52,7 +52,7 @@
             "active": true,
             "name": "Turkey"
         },
-        "model": "service.nation",
+        "model": "core.nation",
         "pk": 7
     }
 ]

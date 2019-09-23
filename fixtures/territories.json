@@ -1,6 +1,6 @@
 [
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":1,
       "fields":{
          "name":"adriatic sea",
@@ -20,7 +20,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":2,
       "fields":{
          "name":"aegean sea",
@@ -43,7 +43,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":3,
       "fields":{
          "name":"baltic sea",
@@ -64,7 +64,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":4,
       "fields":{
          "name":"barrents sea",
@@ -83,7 +83,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":5,
       "fields":{
          "name":"black sea",
@@ -105,7 +105,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":6,
       "fields":{
          "name":"gulf of bothnia",
@@ -126,7 +126,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":7,
       "fields":{
          "name":"eastern mediterranean",
@@ -144,7 +144,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":8,
       "fields":{
          "name":"english channel",
@@ -167,7 +167,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":9,
       "fields":{
          "name":"gulf of lyon",
@@ -189,7 +189,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":10,
       "fields":{
          "name":"heligoland blight",
@@ -208,7 +208,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":11,
       "fields":{
          "name":"ionian sea",
@@ -231,7 +231,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":12,
       "fields":{
          "name":"irish sea",
@@ -251,7 +251,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":13,
       "fields":{
          "name":"mid atlantic",
@@ -277,7 +277,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":14,
       "fields":{
          "name":"north atlantic",
@@ -297,7 +297,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":15,
       "fields":{
          "name":"norwegian sea",
@@ -318,7 +318,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":16,
       "fields":{
          "name":"north sea",
@@ -344,7 +344,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":17,
       "fields":{
          "name":"skagerrack",
@@ -363,7 +363,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":18,
       "fields":{
          "name":"tyrrhenian sea",
@@ -385,7 +385,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":19,
       "fields":{
          "name":"western mediterranean",
@@ -407,7 +407,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":20,
       "fields":{
          "name":"albania",
@@ -428,7 +428,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":21,
       "fields":{
          "name":"ankara",
@@ -448,7 +448,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":22,
       "fields":{
          "name":"apulia",
@@ -469,7 +469,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":23,
       "fields":{
          "name":"armenia",
@@ -490,7 +490,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":24,
       "fields":{
          "name":"berlin",
@@ -511,7 +511,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":25,
       "fields":{
          "name":"belgium",
@@ -533,7 +533,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":26,
       "fields":{
          "name":"brest",
@@ -554,7 +554,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":27,
       "fields":{
          "name":"clyde",
@@ -575,7 +575,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":28,
       "fields":{
          "name":"constantinople",
@@ -598,7 +598,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":29,
       "fields":{
          "name":"denmark",
@@ -620,7 +620,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":30,
       "fields":{
          "name":"edinburgh",
@@ -641,7 +641,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":31,
       "fields":{
          "name":"finland",
@@ -661,7 +661,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":32,
       "fields":{
          "name":"gascony",
@@ -683,7 +683,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":33,
       "fields":{
          "name":"greece",
@@ -705,7 +705,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":34,
       "fields":{
          "name":"holland",
@@ -726,7 +726,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":35,
       "fields":{
          "name":"kiel",
@@ -750,7 +750,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":36,
       "fields":{
          "name":"london",
@@ -770,7 +770,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":37,
       "fields":{
          "name":"livonia",
@@ -792,7 +792,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":38,
       "fields":{
          "name":"liverpool",
@@ -814,7 +814,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":39,
       "fields":{
          "name":"marseilles",
@@ -835,7 +835,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":40,
       "fields":{
          "name":"north africa",
@@ -853,7 +853,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":41,
       "fields":{
          "name":"naples",
@@ -873,7 +873,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":42,
       "fields":{
          "name":"norway",
@@ -896,7 +896,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":43,
       "fields":{
          "name":"picardy",
@@ -917,7 +917,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":44,
       "fields":{
          "name":"piedmont",
@@ -938,7 +938,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":45,
       "fields":{
          "name":"portugal",
@@ -957,7 +957,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":46,
       "fields":{
          "name":"rome",
@@ -978,7 +978,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":47,
       "fields":{
          "name":"rumania",
@@ -1001,7 +1001,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":48,
       "fields":{
          "name":"prussia",
@@ -1022,7 +1022,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":49,
       "fields":{
          "name":"sevastapol",
@@ -1043,7 +1043,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":50,
       "fields":{
          "name":"smyrna",
@@ -1065,7 +1065,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":51,
       "fields":{
          "name":"sweden",
@@ -1088,7 +1088,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":52,
       "fields":{
          "name":"syria",
@@ -1106,7 +1106,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":53,
       "fields":{
          "name":"trieste",
@@ -1129,7 +1129,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":54,
       "fields":{
          "name":"tunis",
@@ -1148,7 +1148,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":55,
       "fields":{
          "name":"tuscany",
@@ -1169,7 +1169,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":56,
       "fields":{
          "name":"venice",
@@ -1192,7 +1192,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":57,
       "fields":{
          "name":"wales",
@@ -1213,7 +1213,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":58,
       "fields":{
          "name":"yorkshire",
@@ -1234,7 +1234,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":59,
       "fields":{
          "name":"bohemia",
@@ -1254,7 +1254,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":60,
       "fields":{
          "name":"budapest",
@@ -1274,7 +1274,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":61,
       "fields":{
          "name":"burgundy",
@@ -1297,7 +1297,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":62,
       "fields":{
          "name":"galicia",
@@ -1319,7 +1319,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":63,
       "fields":{
          "name":"moscow",
@@ -1340,7 +1340,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":64,
       "fields":{
          "name":"munich",
@@ -1362,7 +1362,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":65,
       "fields":{
          "name":"paris",
@@ -1384,7 +1384,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":66,
       "fields":{
          "name":"ruhr",
@@ -1404,7 +1404,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":67,
       "fields":{
          "name":"serbia",
@@ -1425,7 +1425,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":68,
       "fields":{
          "name":"silesia",
@@ -1445,7 +1445,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":69,
       "fields":{
          "name":"tyrolia",
@@ -1465,7 +1465,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":70,
       "fields":{
          "name":"ukraine",
@@ -1485,7 +1485,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":71,
       "fields":{
          "name":"vienna",
@@ -1505,7 +1505,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":72,
       "fields":{
          "name":"warsaw",
@@ -1526,7 +1526,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":73,
       "fields":{
          "name":"bulgaria",
@@ -1547,7 +1547,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":74,
       "fields":{
          "name":"spain",
@@ -1568,7 +1568,7 @@
       }
    },
    {
-      "model":"service.territory",
+      "model":"core.territory",
       "pk":75,
       "fields":{
          "name":"st. petersburg",
