@@ -1,6 +1,6 @@
 [
    {
-      "model":"service.namedcoast",
+      "model":"core.namedcoast",
       "pk":1,
       "fields":{
          "name":"spain north coast",
@@ -14,7 +14,7 @@
       }
    },
    {
-      "model":"service.namedcoast",
+      "model":"core.namedcoast",
       "pk":2,
       "fields":{
          "name":"spain south coast",
