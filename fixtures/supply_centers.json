@@ -5,7 +5,7 @@
             "territory": 36,
             "initial_piece_type": "fleet"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 1
     },
     {
@@ -14,7 +14,7 @@
             "territory": 38,
             "initial_piece_type": "army"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 2
     },
     {
@@ -23,7 +23,7 @@
             "territory": 30,
             "initial_piece_type": "fleet"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 3
     },
     {
@@ -32,7 +32,7 @@
             "territory": 65,
             "initial_piece_type": "army"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 4
     },
     {
@@ -41,7 +41,7 @@
             "territory": 26,
             "initial_piece_type": "fleet"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 5
     },
     {
@@ -50,7 +50,7 @@
             "territory": 39,
             "initial_piece_type": "army"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 6
     },
     {
@@ -59,7 +59,7 @@
             "territory": 35,
             "initial_piece_type": "fleet"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 7
     },
     {
@@ -68,7 +68,7 @@
             "territory": 24,
             "initial_piece_type": "army"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 8
     },
     {
@@ -77,7 +77,7 @@
             "territory": 64,
             "initial_piece_type": "army"
         },
-        "model": "service.supplycenter",
+        "model": "core.supplycenter",
         "pk": 9
     }
 ]

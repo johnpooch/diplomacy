@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from service.models import NamedCoast, Nation, Piece
-from service.tests.base import TerritoriesMixin
+from core.models import NamedCoast, Nation, Piece
+from core.tests.base import TerritoriesMixin
 
 
 class TestPieceClean(TestCase, TerritoriesMixin):
