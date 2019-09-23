@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from service.models import Game, Phase, Territory, Turn
+from core.models import Game, Phase, Territory, Turn
 
 
 class InitialGameStateTestCase(TestCase):
