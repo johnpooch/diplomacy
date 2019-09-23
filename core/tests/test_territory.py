@@ -1,10 +1,10 @@
 from django.test import TestCase
 
-from service.models import Nation, Piece
-from service.tests.utils import TerritoriesMixin
+from core.models import Nation, Piece
+from core.tests.utils import TerritoriesMixin
 
 
-class TestPiece(TestCase, TerritoriesMixin):
+class TestTerritory(TestCase, TerritoriesMixin):
 
     fixtures = ['nations.json', 'territories.json', 'named_coasts.json']
 

@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 
-from service.models import Command, NamedCoast, Nation, Order, Piece
-from service.tests.base import HelperMixin, TerritoriesMixin
+from core.models import Command, NamedCoast, Nation, Order, Piece
+from core.tests.base import HelperMixin, TerritoriesMixin
 from .base import InitialGameStateTestCase as TestCase
 
 

@@ -10,7 +10,7 @@ class HygenicModel(models.Model):
     to fail.
 
     This class relies upon the ``hygenic_model_pre_save()`` function
-    in ``service.signals`` module to work properly.
+    in ``core.signals`` module to work properly.
     """
     class Meta:
         abstract = True
