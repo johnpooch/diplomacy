@@ -11,63 +11,90 @@ class CommandManager(models.Manager):
     """
     """
 
+    def get_convoying_commands(self, source, target):
+        """
+        Get all commands which are convoying from ``source`` to ``target``.
+
+        Args:
+            * ``source`` - ``Territory``
+            * ``target`` - ``Territory``
+
+        Returns:
+            * ``QuerySet`` of ``Command`` instances.
+        """
+        qs = super().get_queryset()
+        return qs.filter(
+            type=Command.CommandTypes.CONVOY,
+            aux=source,
+            target=target
+        )
+
     def get_convoy_paths(self, source, target):
         """
         Gets a list of all available convoy paths from one territory to
         another.
+
+        Args:
+            * ``source`` - ``Territory``
+            * ``target`` - ``Territory``
 
         Returns:
             * A ``list`` where each item in the list is a unique ``tuple`` of
             ``Command`` instances. Each ``tuple`` represents a possible convoy
             path.
         """
-        qs = super().get_queryset()
-
         convoy_paths = set()
-        # get all commands which are convoying the source to the target
-        convoying_commands = qs.filter(
-            type=Command.CommandTypes.CONVOY,
-            aux=source,
-            target=target
-        )
-        for command in convoying_commands:
-
-            # for every territory that neighbours the source, dig
+        commands = self.get_convoying_commands(source, target)
+        for command in commands:
             if command.source.adjacent_to(source):
                 # if direct convoy
                 if command.source.adjacent_to(target):
+                    # add single command tuple to `convoy_paths`
                     path = (command,)
                     convoy_paths.add(path)
                 else:
-                    remaining_commands = list(deepcopy(convoying_commands))
-                    remaining_commands.remove(command)
-                    paths = self.dig([command], target, remaining_commands)
+                    remaining = self.__all_other_commands(commands, command)
+                    paths = self.__build_chain([command], target, remaining)
                     [convoy_paths.add(p) for p in paths]
-
         return list(convoy_paths)
 
-    def dig(self, previous_commands, target, remaining_commands):
+    def __build_chain(self, initial_chain, target, commands):
         """
+        Recursive method which attempts to build a chain of convoying commands
+        to a given ``target``.
         """
-        # TODO test?
-        # check if any command is neighbour of command
-        # if that neighbour is adjacent to target return both commands
-        paths = []
-        for command in remaining_commands:
-            if command.source.adjacent_to(previous_commands[-1].source):
+        complete_chains = []
+        for command in commands:
+            # if command neigbouring last node in chain, add command to chain
+            if command.source.adjacent_to(initial_chain[-1].source):
+                chain = initial_chain + [command]
+
+                # path found - neighbouring piece is adjacent to target
                 if command.source.adjacent_to(target):
-                    paths.append(tuple(previous_commands + [command]))
-                else:
-                    remaining_commands = list(deepcopy(remaining_commands))
-                    remaining_commands.remove(command)
-                    paths.append(
-                        self.dig(
-                            previous_commands + [command],
-                            target,
-                            remaining_commands
-                        )[0]
-                    )
-        return paths
+                    complete_chains.append(tuple(chain))
+                    continue
+
+                # path not found - check new node's neighbours (recurse)
+                remaining = self.__all_other_commands(commands, command)
+                inner_chains = self.__build_chain(chain, target, remaining)
+
+                # if the inner method returns complete chains, add them to
+                # outer method's complete chains
+                if inner_chains:
+                    complete_chains.append(inner_chains[0])
+
+        if complete_chains:
+            return complete_chains
+
+    @staticmethod
+    def __all_other_commands(commands, command_to_remove):
+        """
+        Helper method to get a copy of a list containing all commands other
+        than the given ``command``.
+        """
+        remaining_commands = list(deepcopy(commands))
+        remaining_commands.remove(command_to_remove)
+        return remaining_commands
 
 
 class Command(HygenicModel):

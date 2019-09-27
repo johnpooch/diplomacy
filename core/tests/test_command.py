@@ -792,10 +792,9 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
 
     def test_single_territory_convoy_is_added(self):
         """
-        If there is only a single fleet convoying from source to target and
-        that fleet is a neighbour of both the source and the target, the
-        returned list should contain a tuple with only that fleet's
-        command.
+        If there is a single fleet convoying from source to target and that
+        fleet is a neighbour of both the source and the target, the returned
+        list should contain a tuple with only that fleet's command.
         """
         convoy_command = Command.objects.create(
             source=self.english_channel,
@@ -1017,21 +1016,14 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             type=Command.CommandTypes.CONVOY,
             order=self.order
         )
+        path_a = (mid_atlantic_command, north_atlantic_command,
+                  norwegian_sea_command)
+        path_b = (mid_atlantic_command, english_channel_command,
+                  north_sea_command)
         convoy_paths = Command.objects.get_convoy_paths(
             self.portugal,
             self.edinburgh
         )
         self.assertEqual(len(convoy_paths), 2)
-        # self.assertEqual(len(convoy_paths[0]), 3)
-        # self.assertTrue(
-        #     english_channel_command in
-        #     [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
-        # )
-        # self.assertTrue(
-        #     north_sea_command in
-        #     [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
-        # )
-        # self.assertTrue(
-        #     mid_atlantic_command in
-        #     [convoy_paths[0][0], convoy_paths[0][1], convoy_paths[0][2]]
-        # )
+        self.assertEqual(path_a, convoy_paths[0])
+        self.assertEqual(path_b, convoy_paths[1])
