@@ -158,6 +158,7 @@ class Command(HygenicModel):
     piece = models.OneToOneField(
         'Piece',
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
     )
     target = models.ForeignKey(
@@ -298,13 +299,19 @@ class Command(HygenicModel):
         return self.state == self.CommandStates.FAILED
 
     @property
-    def path(self):
+    def move_path(self):
         """
+        Determine whether a move command has a path to the target.
+
         The path of a move command is successful when the origin and
         destination of the move command are adjacent and accessible by the
         moving piece type, or when there is a chain of adjacent fleets from
         origin to destination each with a matching and successful convoy order.
         """
+        if self.type != self.Types.MOVE:
+            raise ValueError(
+                '`move_path` method can only be used on move commands.'
+            )
         if self.source.piece.is_fleet():
             # if moving from named coast, ensure target is neighbour of coast
             if self.source.piece.named_coast:
@@ -320,9 +327,9 @@ class Command(HygenicModel):
             return True
 
         # if not adjacent, check for convoy
-        if self.is_army():
+        if self.source.piece.is_army():
             if self.source.coastal and self.target.coastal:
-                return self.successful_convoy_exists()
+                return self.successful_convoy_exists
         return False
 
     @property
@@ -331,13 +338,12 @@ class Command(HygenicModel):
         Determines whether a successful convoy exists between ``source`` and
         ``target``.
         """
-        # gather all convoy paths
-        # for each path, determine if any are not dislodged
-        # TODO test
-        pass
-
-
-
+        convoy_paths = self.__class__.objects\
+            .get_convoy_paths(self.source, self.target)
+        for path in convoy_paths:
+            if not any([c.source.piece.dislodged for c in path]):
+                return True
+        return False
 
     def resolve(self):
         """

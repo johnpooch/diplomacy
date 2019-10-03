@@ -130,7 +130,7 @@ class Piece(HygenicModel):
           another unit has a move order attacking the unit and for which the
           move succeeds.
         """
-        pass
+        return False
 
     @property
     def command(self):
