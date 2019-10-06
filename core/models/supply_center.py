@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models.piece import Piece
+from core.models.base import PieceType
 
 
 class SupplyCenter(models.Model):
@@ -23,7 +23,7 @@ class SupplyCenter(models.Model):
     initial_piece_type = models.CharField(
         max_length=50,
         null=False,
-        choices=Piece.PieceType.CHOICES,
+        choices=PieceType.CHOICES,
     )
 
     class Meta:

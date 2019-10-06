@@ -2,6 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models import Piece
+from core.models.base import CommandType, PieceType
 
 
 class Territory(models.Model):
@@ -108,7 +109,7 @@ class Territory(models.Model):
         Armies cannot enter sea territories. Fleets cannot enter non-coastal
         land territories.
         """
-        if piece.type == piece.PieceType.ARMY:
+        if piece.type == PieceType.ARMY:
             return self.type == self.TerritoryType.LAND
         return (self.type == self.TerritoryType.SEA) or self.coastal
 
@@ -135,7 +136,10 @@ class Territory(models.Model):
         """
         Helper method to get all pieces which are moving into this territory.
         """
-        return Piece.objects.filter(command__target=self)
+        return Piece.objects.filter(
+            command__target=self,
+            command__type=CommandType.MOVE
+        )
 
     def foreign_attacking_pieces(self, nation):
         """

@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from core import models
+from core.models.base import CommandType
 
 
 class InitialGameStateTestCase(TestCase):
@@ -65,24 +66,26 @@ class HelperMixin:
         piece.named_coast = named_coast
         piece.save()
 
-    def hold(self, source):
-        """
-        """
-        pass
-        # return Hold(
-        #     source=source,
-        #     order=self.order,
-        # )
-
-    def move(self, source, target, target_coast=None):
+    def hold(self, piece, source):
         """
         """
         return models.Command(
             source=source,
+            piece=piece,
+            order=self.order,
+            type=CommandType.HOLD,
+        )
+
+    def move(self, piece, source, target, target_coast=None):
+        """
+        """
+        return models.Command(
+            piece=piece,
+            source=source,
             target=target,
             order=self.order,
             target_coast=target_coast,
-            type=models.Command.Types.MOVE,
+            type=CommandType.MOVE,
         )
 
     def support(self, source, target, aux):
@@ -93,7 +96,7 @@ class HelperMixin:
             target=target,
             aux=aux,
             order=self.order,
-            type=models.Command.Types.SUPPORT,
+            type=CommandType.SUPPORT,
         )
 
     def convoy(self, source, target, aux):
@@ -104,7 +107,7 @@ class HelperMixin:
             target=target,
             aux=aux,
             order=self.order,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
         )
 
     def build(self, target, piece_type, target_coast=None):
@@ -115,5 +118,5 @@ class HelperMixin:
             target_coast=target_coast,
             piece_type=piece_type,
             order=self.order,
-            type=models.Command.Types.BUILD
+            type=CommandType.BUILD
         )

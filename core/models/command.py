@@ -4,8 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.base import HygenicModel
-from core.models.piece import Piece
+from core.models.base import CommandState, CommandType, HygenicModel, PieceType
 
 
 class CommandManager(models.Manager):
@@ -25,7 +24,7 @@ class CommandManager(models.Manager):
         """
         qs = super().get_queryset()
         return qs.filter(
-            type=Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             aux=source,
             target=target
         )
@@ -102,34 +101,6 @@ class Command(HygenicModel):
     """
     """
 
-    class Types:
-        HOLD = 'hold'
-        MOVE = 'move'
-        SUPPORT = 'support'
-        CONVOY = 'convoy'
-        RETREAT = 'retreat'
-        BUILD = 'build'
-        DISBAND = 'disband'
-        CHOICES = (
-            (HOLD, 'Hold'),
-            (MOVE, 'Move'),
-            (SUPPORT, 'Support'),
-            (CONVOY, 'Convoy'),
-            (RETREAT, 'Retreat'),
-            (BUILD, 'Build'),
-            (DISBAND, 'Disband')
-        )
-
-    class CommandStates:
-        UNRESOLVED = 'unresolved'
-        SUCCEEDS = 'succeeds'
-        FAILS = 'fails'
-        CHOICES = (
-            (UNRESOLVED, 'Unresolved'),
-            (SUCCEEDS, 'Succeeds'),
-            (FAILS, 'Fails')
-        )
-
     order = models.ForeignKey(
         'Order',
         on_delete=models.CASCADE,
@@ -140,14 +111,14 @@ class Command(HygenicModel):
     type = models.CharField(
         max_length=8,
         null=False,
-        choices=Types.CHOICES,
-        default=Types.HOLD
+        choices=CommandType.CHOICES,
+        default=CommandType.HOLD
     )
     state = models.CharField(
         max_length=15,
         null=False,
-        choices=CommandStates.CHOICES,
-        default=CommandStates.UNRESOLVED
+        choices=CommandState.CHOICES,
+        default=CommandState.UNRESOLVED
     )
     source = models.ForeignKey(
         'Territory',
@@ -166,6 +137,7 @@ class Command(HygenicModel):
         on_delete=models.CASCADE,
         related_name='+',
         null=True,
+        blank=True,
     )
     target_coast = models.ForeignKey(
         'NamedCoast',
@@ -186,7 +158,7 @@ class Command(HygenicModel):
         max_length=50,
         null=True,
         blank=True,
-        choices=Piece.PieceType.CHOICES,
+        choices=PieceType.CHOICES,
     )
     valid = models.BooleanField(default=True)
     success = models.BooleanField(default=True)
@@ -208,30 +180,30 @@ class Command(HygenicModel):
     def clean(self):
         """
         """
-        if self.type == self.Types.HOLD:
+        if self.type == CommandType.HOLD:
             self._friendly_piece_exists_in_source(),
 
-        if self.type == self.Types.MOVE:
+        if self.type == CommandType.MOVE:
             [
                 self._friendly_piece_exists_in_source(),
                 self._source_piece_can_reach_target(),
                 self._specifies_target_named_coast_if_fleet(),
             ]
-        if self.type == self.Types.SUPPORT:
+        if self.type == CommandType.SUPPORT:
             [
                 self._friendly_piece_exists_in_source(),
                 self._source_piece_can_reach_target(),
                 self._aux_occupied(),
                 self._aux_piece_can_reach_target(),
             ]
-        if self.type == self.Types.CONVOY:
+        if self.type == CommandType.CONVOY:
             [
                 self._friendly_piece_exists_in_source(),
                 self._aux_occupied(),
                 self._aux_piece_can_reach_target(),
                 self._source_piece_is_at_sea(),
             ]
-        if self.type == self.Types.RETREAT:
+        if self.type == CommandType.RETREAT:
             [
                 self._friendly_piece_exists_in_source(),
                 self._source_piece_can_reach_target(),
@@ -241,10 +213,10 @@ class Command(HygenicModel):
                 self._target_not_where_attacker_came_from(),
                 self._target_not_vacant_by_standoff_on_previous_turn(),
             ]
-        if self.type == self.Types.DISBAND:
+        if self.type == CommandType.DISBAND:
             self._friendly_piece_exists_in_source()
 
-        if self.type == self.Types.BUILD:
+        if self.type == CommandType.BUILD:
             # check territory is not occupied
             if self.target.occupied():
                 raise ValidationError(_(
@@ -269,7 +241,7 @@ class Command(HygenicModel):
                 ))
             # cannot build fleet inland
             if self.target.is_inland() and \
-                    self.piece_type == Piece.PieceType.FLEET:
+                    self.piece_type == PieceType.FLEET:
                 raise ValidationError(_(
                     'Cannot build fleet in inland territory.'
                 ))
@@ -277,26 +249,32 @@ class Command(HygenicModel):
     def succeed(self):
         """
         """
-        self.state = self.CommandStates.SUCCEDED
+        self.state = CommandState.SUCCEDED
         self.save()
 
     def fail(self):
         """
         """
-        self.state = self.CommandStates.FAILED
+        self.state = CommandState.FAILED
         self.save()
 
     @property
-    def succeeded(self):
+    def unresolved(self):
         """
         """
-        return self.state == self.CommandStates.SUCCEEDED
+        return self.state == CommandState.UNRESOLVED
 
     @property
-    def failed(self):
+    def succeeds(self):
         """
         """
-        return self.state == self.CommandStates.FAILED
+        return self.state == CommandState.SUCCEEDS
+
+    @property
+    def fails(self):
+        """
+        """
+        return self.state == CommandState.FAILS
 
     @property
     def move_path(self):
@@ -308,7 +286,7 @@ class Command(HygenicModel):
         moving piece type, or when there is a chain of adjacent fleets from
         origin to destination each with a matching and successful convoy order.
         """
-        if self.type != self.Types.MOVE:
+        if self.type != CommandType.MOVE:
             raise ValueError(
                 '`move_path` method can only be used on move commands.'
             )
@@ -419,7 +397,7 @@ class Command(HygenicModel):
           - The moving unit has a successful path
           - A support is also cut when it is dislodged.
         """
-        if self.type != self.Types.SUPPORT:
+        if self.type != CommandType.SUPPORT:
             raise ValueError('Only `support` commands can be cut.')
 
         if self.source.piece.dislodged:

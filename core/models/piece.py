@@ -2,20 +2,13 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.base import HygenicModel
+from core.models import Command
+from core.models.base import HygenicModel, CommandType, PieceType
 
 
 class Piece(HygenicModel):
     """
     """
-    class PieceType:
-        ARMY = 'army'
-        FLEET = 'fleet'
-        CHOICES = (
-            (ARMY, 'Army'),
-            (FLEET, 'Fleet'),
-        )
-
     nation = models.ForeignKey(
         'Nation',
         related_name='pieces',
@@ -80,10 +73,10 @@ class Piece(HygenicModel):
                 })
 
     def is_army(self):
-        return self.type == self.PieceType.ARMY
+        return self.type == PieceType.ARMY
 
     def is_fleet(self):
-        return self.type == self.PieceType.FLEET
+        return self.type == PieceType.FLEET
 
     def get_previous_territory(self):
         # TODO do this when phases/logs are properly handled
@@ -130,6 +123,25 @@ class Piece(HygenicModel):
           another unit has a move order attacking the unit and for which the
           move succeeds.
         """
+        if self.command.type == CommandType.MOVE:
+            # resolve if unresolved
+            if self.command.unresolved:
+                self.command.resolve()
+            # cannot be dislodged if successfully moved
+            if self.command.succeeds:
+                return False
+
+        attacking_pieces = self.territory.attacking_pieces
+        attacking_commands = Command.objects.filter(
+            piece__in=attacking_pieces
+        )
+        for command in attacking_commands:
+            # resolve if unresolved
+            print(command)
+            if self.command.unresolved:
+                self.command.resolve()
+            if self.command.succeeds:
+                return True
         return False
 
     @property

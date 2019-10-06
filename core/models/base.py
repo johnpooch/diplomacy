@@ -2,6 +2,45 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
+class PieceType:
+    ARMY = 'army'
+    FLEET = 'fleet'
+    CHOICES = (
+        (ARMY, 'Army'),
+        (FLEET, 'Fleet'),
+    )
+
+
+class CommandType:
+    HOLD = 'hold'
+    MOVE = 'move'
+    SUPPORT = 'support'
+    CONVOY = 'convoy'
+    RETREAT = 'retreat'
+    BUILD = 'build'
+    DISBAND = 'disband'
+    CHOICES = (
+        (HOLD, 'Hold'),
+        (MOVE, 'Move'),
+        (SUPPORT, 'Support'),
+        (CONVOY, 'Convoy'),
+        (RETREAT, 'Retreat'),
+        (BUILD, 'Build'),
+        (DISBAND, 'Disband')
+    )
+
+
+class CommandState:
+    UNRESOLVED = 'unresolved'
+    SUCCEEDS = 'succeeds'
+    FAILS = 'fails'
+    CHOICES = (
+        (UNRESOLVED, 'Unresolved'),
+        (SUCCEEDS, 'Succeeds'),
+        (FAILS, 'Fails')
+    )
+
+
 class HygenicModel(models.Model):
     """
     Models which inherit from this base will run ``Model.full_clean()`` before
