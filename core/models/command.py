@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
@@ -7,9 +8,25 @@ from django.utils.translation import gettext as _
 from core.models.base import CommandState, CommandType, HygenicModel, PieceType
 
 
+class CommandQuerySet(models.QuerySet):
+
+    @property
+    def pieces(self):
+        """
+
+        """
+        # TODO test
+        Piece = apps.get_model('core', 'Piece')
+        return Piece.objects.filter(command__in=self)
+
+
+
 class CommandManager(models.Manager):
     """
     """
+    def get_queryset(self):
+        queryset = CommandQuerySet(self.model, using=self._db)
+        return queryset
 
     def get_convoying_commands(self, source, target):
         """
@@ -249,13 +266,13 @@ class Command(HygenicModel):
     def succeed(self):
         """
         """
-        self.state = CommandState.SUCCEDED
+        self.state = CommandState.SUCCEEDS
         self.save()
 
     def fail(self):
         """
         """
-        self.state = CommandState.FAILED
+        self.state = CommandState.FAILS
         self.save()
 
     @property
@@ -319,7 +336,7 @@ class Command(HygenicModel):
         convoy_paths = self.__class__.objects\
             .get_convoy_paths(self.source, self.target)
         for path in convoy_paths:
-            if not any([c.source.piece.dislodged for c in path]):
+            if not any([c.piece.dislodged for c in path]):
                 return True
         return False
 
@@ -338,49 +355,82 @@ class Command(HygenicModel):
               moving to the same area. If one of the opposing strengths is
               equal or greater, then the move fails.
         """
-        # if self.type == self.Types.MOVE:
-        #     if False:  # head-to-head battle
-        #         if self.attack_strength > opposing_unit.defend_strength and \
-        #                 self.attack_strength > max([unit.prevent_strength for unit in units]):
-        #             return self.succeed()
-        #         return self.failed()
-        #     else:
-        #         if self.attack_strength > self.target.hold_strength and \
-        #                 self.attack_strength > max([unit.prevent_strength for unit in units]):
-        #             return self.succeed()
-        #         return self.failed()
-        pass
+        if self.type == CommandType.MOVE:
+            # TODO implement
+            if False:  # head-to-head battle
+                if self.attack_strength > opposing_unit.defend_strength and \
+                        self.attack_strength > max([unit.prevent_strength for unit in units]):
+                    return self.succeed()
+                return self.failed()
+            else:
+                if not self.target.other_attacking_pieces(self.piece) and \
+                        not self.target.occupied():
+                    return self.succeed()
+                if self.attack_strength > self.target.hold_strength and \
+                            self.attack_strength > max([
+                                p.command.prevent_strength for p in self.target.attacking_pieces
+                            ]):
+                    return self.succeed()
+                return self.fail()
 
-#     @property
-#     def attack_strength(self):
-#         """
-#         - If the path of the move order is not successful, then the attack
-#           strength is 0.
+    @property
+    def attack_strength(self):
+        # TODO test
+        """
+        - If the path of the move order is not successful, then the attack
+          strength is 0.
 
-#         - Otherwise, if the destination is empty, or in a case where there
-#           is no head-to-head battle and the unit at the destination has a
-#           move order for which the move is successful, then the attack
-#           strength is 1 plus the number of successful support orders.
+        - Otherwise, if the destination is empty, or in a case where there
+          is no head-to-head battle and the unit at the destination has a
+          move order for which the move is successful, then the attack
+          strength is 1 plus the number of successful support orders.
 
-#         - If not and the unit at the destination is of the same
-#           nationality, then the attack strength is 0.
+        - If not and the unit at the destination is of the same
+          nation, then the attack strength is 0.
 
-#         - In all other cases, the attack strength is 1 plus the number of
-#           successful support orders of units that do not have the same
-#           nationality as the unit at the destination.
-#         """
-#         if not self.path or \
-#                 self.target.piece.nationality == self.nationality:
-#             return 0
+        - In all other cases, the attack strength is 1 plus the number of
+          successful support orders of units that do not have the same
+          nation as the unit at the destination.
+        """
+        if not self.move_path:
+            return 0
 
-#         if not self.target.piece or \
-#                 (self.target.no_head_to_head and
-#                  self.target.piece.command.state == self.CommandStates.SUCCEEDED and
-#                  self.target.piece.command.type == 'MOVE'):
-#             return 1 + self.support
+        if self.target.occupied():
+            if self.target.piece.nation == self.nation:
+                return 0
 
-#         return 1 + len([s for s in self.supporting_pieces
-#                         if s.nationality != self.target.piece.nationality])
+        # NOTE broken
+        if not self.target.occupied() or \
+                (self.target.piece.command.state == CommandState and
+                 self.target.piece.command.type == 'MOVE'):
+            return 1 + len(self.supporting_commands)
+
+        return 1 + len([s for s in self.supporting_commands.pieces
+                        if s.nation != self.target.piece.nation])
+
+    @property
+    def prevent_strength(self):
+        # TODO test
+        """
+        If the path of the move order is not successful, then the prevent
+        strength is 0.
+
+        In cases where the move is part of a head-to-head battle and the move
+        of the opposing unit is successful, then the prevent strength is 0.
+
+        In the remaining cases the prevent strength is 1 plus the number of
+        successful support orders.
+        """
+        if not self.type == CommandType.MOVE:
+            raise Exception
+        if not self.move_path:
+            return 0
+        if not self.unresolved:
+            self.resolve()
+        if self.fails:
+            return 0
+        return 1 + len([s for s in self.supporting_commands if s.succeeds])
+
 
     @property
     def cut(self):
@@ -411,6 +461,23 @@ class Command(HygenicModel):
                     attacker.territory != self.aux.piece.command.target:
                 return True
         return False
+
+    @property
+    def supporting_commands(self):
+        # TODO test
+        """
+        
+        """
+        if self.type == CommandType.MOVE:
+            return Command.objects.filter(
+                aux=self.source,
+                target=self.target,
+            )
+        if self.type in [CommandType.CONVOY, CommandType.SUPPORT, CommandType.HOLD]:
+            return Command.objects.filter(
+                aux=self.source,
+                target=self.source,
+            )
 
     @property
     def nation(self):

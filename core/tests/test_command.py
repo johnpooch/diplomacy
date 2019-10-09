@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 
 from core import models
+from core.models.base import CommandType, PieceType
 from core.tests.base import HelperMixin, TerritoriesMixin
 from .base import InitialGameStateTestCase as TestCase
 
@@ -20,7 +21,7 @@ class TestClean(TestCase, HelperMixin, TerritoriesMixin):
     def test_raises_value_error_when_move_invalid(self):
         """
         """
-        command = self.move(self.paris, self.english_channel)
+        command = self.move(None, self.paris, self.english_channel)
         with self.assertRaises(ValueError):
             command.save()
 
@@ -44,7 +45,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         Fleet can move to adjacent sea territory.
         """
         self.set_piece_territory(self.fleet, self.english_channel)
-        command = self.move(self.english_channel, self.irish_sea)
+        command = self.move(self.fleet, self.english_channel, self.irish_sea)
         command.clean()
 
     def test_sea_to_adjacent_coastal_territory(self):
@@ -52,7 +53,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         Fleet can move from sea territory to adjacent coastal territory.
         """
         self.set_piece_territory(self.fleet, self.english_channel)
-        command = self.move(self.english_channel, self.brest)
+        command = self.move(self.fleet, self.english_channel, self.brest)
         command.clean()
 
     def test_coastal_to_adjacent_coastal_territory_if_shared_coast(self):
@@ -60,7 +61,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         Fleet can move from coastal territory to adjacent coastal territory.
         """
         self.set_piece_territory(self.fleet, self.brest)
-        command = self.move(self.brest, self.gascony)
+        command = self.move(self.fleet, self.brest, self.gascony)
         command.clean()
 
     def test_coastal_to_adjacent_coastal_territory_if_not_shared_coast(self):
@@ -70,7 +71,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         """
         models.Piece.objects.get(territory__name='marseilles').delete()
         self.set_piece_territory(self.fleet, self.marseilles)
-        command = self.move(self.marseilles, self.gascony)
+        command = self.move(self.fleet, self.marseilles, self.gascony)
         with self.assertRaises(ValidationError):
             command.clean()
 
@@ -80,7 +81,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         """
         models.Piece.objects.get(territory__name='marseilles').delete()
         self.set_piece_territory(self.fleet, self.marseilles)
-        command = self.move(self.marseilles, self.burgundy)
+        command = self.move(self.fleet, self.marseilles, self.burgundy)
         with self.assertRaises(ValidationError):
             command.clean()
 
@@ -90,10 +91,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         named coast.
         """
         self.set_piece_territory(self.fleet, self.mid_atlantic)
-        command = self.move(
-            self.mid_atlantic,
-            self.spain,
-        )
+        command = self.move(self.fleet, self.mid_atlantic, self.spain)
         with self.assertRaises(ValidationError):
             command.clean()
 
@@ -105,6 +103,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         spain_nc = models.NamedCoast.objects.get(name='spain north coast')
         command = self.move(
+            self.fleet,
             self.mid_atlantic,
             self.spain,
             target_coast=spain_nc
@@ -119,6 +118,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         self.set_piece_territory(self.fleet, self.western_mediterranean)
         spain_nc = models.NamedCoast.objects.get(name='spain north coast')
         command = self.move(
+            self.fleet,
             self.western_mediterranean,
             self.spain,
             target_coast=spain_nc
@@ -134,6 +134,7 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         spain_nc = models.NamedCoast.objects.get(name='spain north coast')
         self.set_piece_territory(self.fleet, self.spain, named_coast=spain_nc)
         command = self.move(
+            self.fleet,
             self.spain,
             self.western_mediterranean,
         )
@@ -159,7 +160,7 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         Army can move from a coastal territory to an adjacent coastal territory
         when there is a shared coast.
         """
-        command = self.move(self.marseilles, self.piedmont)
+        command = self.move(self.army, self.marseilles, self.piedmont)
         command.clean()
 
     def test_coastal_to_adjacent_coastal_territory_no_shared_coast(self):
@@ -167,35 +168,37 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         Army can move from coastal territory to adjacent coastal territory when
         no shared coast.
         """
-        command = self.move(self.marseilles, self.gascony)
+        command = self.move(self.army, self.marseilles, self.gascony)
         command.clean()
 
     def test_coastal_to_adjacent_inland_territory(self):
         """
         Army can move from coastal territory to adjacent inland territory.
         """
-        command = self.move(self.marseilles, self.burgundy)
+        command = self.move(self.army, self.marseilles, self.burgundy)
         command.clean()
 
     def test_inland_to_adjacent_inland_territory(self):
         """
         Army can move from inland territory to adjacent inland territory.
         """
-        command = self.move(self.paris, self.burgundy)
+        self.army = models.Piece.objects.get(territory=self.paris)
+        command = self.move(self.army, self.paris, self.burgundy)
         command.clean()
 
     def test_inland_to_adjacent_coastal_territory(self):
         """
         Army can move from inland territory to adjacent coastal territory.
         """
-        command = self.move(self.paris, self.picardy)
+        self.army = models.Piece.objects.get(territory=self.paris)
+        command = self.move(self.army, self.paris, self.picardy)
         command.clean()
 
     def test_coastal_to_adjacent_sea_territory(self):
         """
         Army cannot move from coastal to adjacent sea territory.
         """
-        command = self.move(self.marseilles, self.gulf_of_lyon)
+        command = self.move(self.army, self.marseilles, self.gulf_of_lyon)
         with self.assertRaises(ValidationError):
             command.clean()
 
@@ -205,7 +208,7 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         territory via a convoy.
         """
         self.set_piece_territory(self.army, self.gascony)
-        command = self.move(self.gascony, self.picardy)
+        command = self.move(self.army, self.gascony, self.picardy)
         command.clean()
 
     def test_inland_to_non_adjacent_inland_territory(self):
@@ -214,7 +217,7 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         territory.
         """
         self.set_piece_territory(self.army, self.burgundy)
-        command = self.move(self.burgundy, self.silesia)
+        command = self.move(self.army, self.burgundy, self.silesia)
         with self.assertRaises(ValidationError):
             command.clean()
 
@@ -224,7 +227,7 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         territory.
         """
         self.set_piece_territory(self.army, self.silesia)
-        command = self.move(self.silesia, self.gascony)
+        command = self.move(self.army, self.silesia, self.gascony)
         with self.assertRaises(ValidationError):
             command.clean()
 
@@ -252,6 +255,7 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         # TODO repeat this test for move.
         self.set_piece_territory(self.attacking_fleet, self.holland)
         command = self.support(
+            self.fleet,
             self.belgium,
             self.kiel,
             self.holland
@@ -265,9 +269,10 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.belgium)
         command = self.support(
+            self.fleet,
             self.kiel,
             self.belgium,
-            self.holland
+            self.holland,
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -278,9 +283,10 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.english_channel)
         command = self.support(
+            self.fleet,
             self.brest,
+            self.english_channel,
             self.picardy,
-            self.english_channel
         )
         command.clean()
 
@@ -291,6 +297,7 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.holland)
         command = self.support(
+            self.fleet,
             self.brest,
             self.belgium,
             self.holland
@@ -305,9 +312,10 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.holland)
         command = self.support(
+            self.fleet,
             self.brest,
+            self.holland,
             self.picardy,
-            self.holland
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -319,9 +327,10 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_army, self.wales)
         command = self.support(
+            self.fleet,
             self.brest,
+            self.wales,
             self.picardy,
-            self.wales
         )
         command.clean()
 
@@ -331,6 +340,7 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_army, self.picardy)
         command = self.support(
+            self.fleet,
             self.brest,
             self.paris,
             self.picardy
@@ -346,9 +356,10 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         spain_nc = models.NamedCoast.objects.get(name='spain north coast')
         self.set_piece_territory(self.fleet, self.spain, spain_nc)
         command = self.support(
+            self.fleet,
             self.spain,
-            self.gascony,
             self.marseilles,
+            self.gascony,
         )
         command.clean()
 
@@ -360,6 +371,7 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         spain_sc = models.NamedCoast.objects.get(name='spain south coast')
         self.set_piece_territory(self.fleet, self.spain, spain_sc)
         command = self.support(
+            self.fleet,
             self.spain,
             self.gascony,
             self.marseilles,
@@ -376,9 +388,10 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.fleet, self.gulf_of_lyon)
         self.set_piece_territory(self.attacking_fleet, self.mid_atlantic)
         command = self.support(
+            self.fleet,
             self.gulf_of_lyon,
-            self.spain,
             self.mid_atlantic,
+            self.spain,
         )
         command.clean()
 
@@ -405,9 +418,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.gulf_of_lyon)
         command = self.support(
+            self.army,
             self.marseilles,
+            self.gulf_of_lyon,
             self.piedmont,
-            self.gulf_of_lyon
         )
         command.clean()
 
@@ -417,9 +431,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.piedmont)
         command = self.support(
+            self.army,
             self.marseilles,
+            self.piedmont,
             self.gulf_of_lyon,
-            self.piedmont
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -431,9 +446,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.gascony)
         command = self.support(
+            self.army,
             self.marseilles,
+            self.gascony,
             self.burgundy,
-            self.gascony
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -445,9 +461,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.gascony)
         command = self.support(
+            self.army,
             self.marseilles,
+            self.gascony,
             self.paris,
-            self.gascony
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -458,9 +475,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.gascony)
         command = self.support(
+            self.army,
             self.marseilles,
+            self.gascony,
             self.piedmont,
-            self.gascony
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -473,9 +491,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.army, self.gascony)
         self.set_piece_territory(self.attacking_fleet, self.mid_atlantic)
         command = self.support(
+            self.army,
             self.gascony,
+            self.mid_atlantic,
             self.spain,
-            self.mid_atlantic
         )
         command.clean()
 
@@ -488,9 +507,10 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.army, self.gascony)
         self.set_piece_territory(self.attacking_fleet, self.mid_atlantic)
         command = self.support(
+            self.army,
             self.marseilles,
+            self.mid_atlantic,
             self.spain,
-            self.mid_atlantic
         )
         command.clean()
 
@@ -517,6 +537,7 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_fleet, self.gascony)
         command = self.convoy(
+            self.fleet,
             self.brest,
             self.picardy,
             self.gascony
@@ -532,6 +553,7 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.fleet, self.english_channel)
         self.set_piece_territory(self.attacking_army, self.wales)
         command = self.convoy(
+            self.fleet,
             self.english_channel,
             self.picardy,
             self.wales
@@ -544,6 +566,7 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.attacking_army, self.gascony)
         command = self.convoy(
+            self.fleet,
             self.brest,
             self.picardy,
             self.gascony
@@ -558,6 +581,7 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         self.set_piece_territory(self.attacking_army, self.spain)
         command = self.convoy(
+            self.fleet,
             self.mid_atlantic,
             self.brest,
             self.spain
@@ -571,6 +595,7 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         self.set_piece_territory(self.attacking_army, self.brest)
         command = self.convoy(
+            self.fleet,
             self.mid_atlantic,
             self.spain,
             self.brest
@@ -584,6 +609,7 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         self.set_piece_territory(self.attacking_army, self.st_petersburg)
         command = self.convoy(
+            self.fleet,
             self.mid_atlantic,
             self.spain,
             self.st_petersburg
@@ -614,7 +640,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         command = self.build(
             self.london,
-            models.Piece.PieceType.FLEET
+            PieceType.FLEET
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -628,7 +654,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         self.paris.save()
         command = self.build(
             self.paris,
-            models.Piece.PieceType.ARMY
+            PieceType.ARMY
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -639,7 +665,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         command = self.build(
             self.burgundy,
-            models.Piece.PieceType.ARMY
+            PieceType.ARMY
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -651,7 +677,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         models.Piece.objects.get(territory=self.brest).delete()
         command = self.build(
             self.brest,
-            models.Piece.PieceType.ARMY
+            PieceType.ARMY,
         )
         command.clean()
 
@@ -662,7 +688,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         models.Piece.objects.get(territory=self.paris).delete()
         command = self.build(
             self.paris,
-            models.Piece.PieceType.ARMY
+            PieceType.ARMY,
         )
         command.clean()
 
@@ -673,7 +699,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         models.Piece.objects.get(territory=self.brest).delete()
         command = self.build(
             self.brest,
-            models.Piece.PieceType.FLEET
+            PieceType.FLEET
         )
         command.clean()
 
@@ -684,7 +710,7 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
         models.Piece.objects.get(territory=self.paris).delete()
         command = self.build(
             self.paris,
-            models.Piece.PieceType.FLEET
+            PieceType.FLEET
         )
         with self.assertRaises(ValidationError):
             command.clean()
@@ -718,14 +744,13 @@ class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
         If no other piece is ordered to move to the territory where the
         supporting unit is positioned, the supporting command is not cut.
         """
-        support_command = models.Command(
-            source=self.paris,
-            piece=self.supporting_army,
-            aux=self.brest,
-            target=self.picardy,
-            type=models.Command.Types.SUPPORT,
-            order=self.order
+        support_command = self.support(
+            self.supporting_army,
+            self.paris,
+            self.brest,
+            self.picardy,
         )
+        support_command.save()
         self.assertFalse(support_command.cut)
 
     def test_non_support_command_raises_value_error(self):
@@ -739,7 +764,7 @@ class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
             piece=self.supporting_army,
             aux=self.brest,
             target=self.picardy,
-            type=models.Command.Types.MOVE,
+            type=CommandType.MOVE,
             order=self.order
         )
         with self.assertRaises(ValueError):
@@ -801,7 +826,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=self.convoying_fleet,
             aux=self.belgium,
             target=self.london,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         convoy_paths = models.Command.objects.get_convoy_paths(
@@ -824,14 +849,14 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
         north_sea_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.north_sea,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         english_channel_command = models.Command.objects.create(
             source=self.english_channel,
             piece=self.convoying_fleet,
             aux=self.belgium,
             target=self.london,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         north_sea_command = models.Command.objects.create(
@@ -839,7 +864,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=north_sea_fleet,
             aux=self.belgium,
             target=self.london,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         convoy_paths = models.Command.objects.get_convoy_paths(
@@ -862,14 +887,14 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
         north_sea_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.north_sea,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         english_channel_command = models.Command.objects.create(
             source=self.english_channel,
             piece=self.convoying_fleet,
             aux=self.picardy,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         north_sea_command = models.Command.objects.create(
@@ -877,7 +902,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=north_sea_fleet,
             aux=self.picardy,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         convoy_paths = models.Command.objects.get_convoy_paths(
@@ -900,19 +925,19 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
         north_sea_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.north_sea,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         mid_atlantic_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.mid_atlantic,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         english_channel_command = models.Command.objects.create(
             source=self.english_channel,
             piece=self.convoying_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         north_sea_command = models.Command.objects.create(
@@ -920,7 +945,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=north_sea_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         mid_atlantic_command = models.Command.objects.create(
@@ -928,7 +953,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=mid_atlantic_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         convoy_paths = models.Command.objects.get_convoy_paths(
@@ -959,29 +984,29 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
         north_sea_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.north_sea,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         mid_atlantic_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.mid_atlantic,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         north_atlantic_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.north_atlantic,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         norwegian_sea_fleet = models.Piece.objects.create(
             nation=self.france,
             territory=self.norwegian_sea,
-            type=models.Piece.PieceType.FLEET
+            type=PieceType.FLEET
         )
         english_channel_command = models.Command.objects.create(
             source=self.english_channel,
             piece=self.convoying_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         north_sea_command = models.Command.objects.create(
@@ -989,7 +1014,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=north_sea_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         mid_atlantic_command = models.Command.objects.create(
@@ -997,7 +1022,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=mid_atlantic_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         north_atlantic_command = models.Command.objects.create(
@@ -1005,7 +1030,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=north_atlantic_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         norwegian_sea_command = models.Command.objects.create(
@@ -1013,7 +1038,7 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             piece=norwegian_sea_fleet,
             aux=self.portugal,
             target=self.edinburgh,
-            type=models.Command.Types.CONVOY,
+            type=CommandType.CONVOY,
             order=self.order
         )
         path_a = (mid_atlantic_command, north_atlantic_command,
@@ -1038,8 +1063,13 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         super().setUp()
         self.initialise_territories()
         self.france = models.Nation.objects.get(name='France')
+        self.germany = models.Nation.objects.get(name='Germany')
         self.order = models.Order.objects.create(
             nation=self.france,
+            turn=self.turn,
+        )
+        self.german_order = models.Order.objects.create(
+            nation=self.germany,
             turn=self.turn,
         )
         self.army = models.Piece.objects.get(territory__name='paris')
@@ -1050,7 +1080,7 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         ``move_path`` will be ``True`` if an army is moving to an adjacent land
         territory.
         """
-        move = self.move(self.paris, self.burgundy)
+        move = self.move(self.army, self.paris, self.burgundy)
         self.assertTrue(move.move_path)
 
     def test_army_move_to_adjacent_sea_territory(self):
@@ -1059,7 +1089,7 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         sea territory.
         """
         self.set_piece_territory(self.army, self.picardy)
-        move = self.move(self.picardy, self.english_channel)
+        move = self.move(self.army, self.picardy, self.english_channel)
         self.assertFalse(move.move_path)
 
     def test_army_move_to_non_adjacent_inland_territory(self):
@@ -1067,7 +1097,7 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         ``move_path`` will be ``False`` if an army is moving to a non adjacent
         inland territory.
         """
-        move = self.move(self.paris, self.munich)
+        move = self.move(self.army, self.paris, self.munich)
         self.assertFalse(move.move_path)
 
     def test_army_move_to_non_adjacent_coastal_territory_no_convoy(self):
@@ -1076,7 +1106,7 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         coastal territory and there is no convoy.
         """
         self.set_piece_territory(self.army, self.picardy)
-        move = self.move(self.picardy, self.london)
+        move = self.move(self.army, self.picardy, self.london)
         self.assertFalse(move.move_path)
 
     def test_army_move_to_non_adjacent_coastal_territory_unsuccessful_convoy(self):
@@ -1085,10 +1115,14 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         coastal territory and there is a convoy but it is not successful.
         """
         self.set_piece_territory(self.army, self.picardy)
-        move = self.move(self.picardy, self.london)
-
+        move = self.move(self.army, self.picardy, self.london)
         self.set_piece_territory(self.fleet, self.english_channel)
-        self.convoy(self.english_channel, self.london, self.picardy).save()
+        self.convoy(
+            self.fleet,
+            self.english_channel,
+            self.london,
+            self.picardy
+        ).save()
 
         germany = models.Nation.objects.get(name='Germany')
 
@@ -1096,17 +1130,30 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         models.Piece.objects.create(
             nation=germany,
             territory=self.north_sea,
-            type=models.Piece.PieceType.FLEET,
+            type=PieceType.FLEET,
         )
-        self.move(self.north_sea, self.english_channel)
+        models.Command.objects.create(
+            piece=self.army,
+            source=self.north_sea,
+            target=self.english_channel,
+            type=CommandType.MOVE,
+            order=self.german_order,
+        ).save()
 
         # supporting piece
-        models.Piece.objects.create(
+        supporting_piece = models.Piece.objects.create(
             nation=germany,
             territory=self.irish_sea,
-            type=models.Piece.PieceType.FLEET,
+            type=PieceType.FLEET,
         )
-        self.support(self.irish_sea, self.english_channel, self.north_sea)
+        models.Command.objects.create(
+            piece=supporting_piece,
+            source=self.irish_sea,
+            target=self.english_channel,
+            aux=self.north_sea,
+            type=CommandType.SUPPORT,
+            order=self.german_order,
+        )
         self.assertFalse(move.move_path)
 
     def test_army_move_to_non_adjacent_coastal_territory_successful_convoy(self):
@@ -1116,8 +1163,13 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.army, self.picardy)
         self.set_piece_territory(self.fleet, self.english_channel)
-        move = self.move(self.picardy, self.london)
-        self.convoy(self.english_channel, self.london, self.picardy).save()
+        move = self.move(self.army, self.picardy, self.london)
+        self.convoy(
+            self.fleet,
+            self.english_channel,
+            self.london,
+            self.picardy,
+        ).save()
         self.assertTrue(move.move_path)
 
     def test_fleet_move_to_adjacent_coastal_territory(self):
@@ -1187,5 +1239,60 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         """
         ``move_path`` will be ``False`` if a fleet is moving to an adjacent
         inland territory.
+        """
+        pass
+
+
+class TestMoveResolve(TestCase, TerritoriesMixin, HelperMixin):
+
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json']
+
+    def setUp(self):
+        super().setUp()
+        self.initialise_territories()
+        self.france = models.Nation.objects.get(name='France')
+        self.order = models.Order.objects.create(
+            nation=self.france,
+            turn=self.turn,
+        )
+        germany = models.Nation.objects.get(name='Germany')
+        self.german_order = models.Order.objects.create(
+            nation=germany,
+            turn=self.turn,
+        )
+        self.army = models.Piece.objects.get(territory__name='paris')
+        self.german_army = models.Piece.objects.get(territory__name='munich')
+
+    def test_resolve_unchallenged_move(self):
+        """
+        Moving to a territory with no piece and no head to head battle
+        succeeds.
+        """
+        move = self.move(self.army, self.paris, self.gascony)
+        self.assertTrue(move.unresolved)
+        move.resolve()
+        self.assertTrue(move.succeeds)
+
+    def test_resolve_move_to_occupied(self):
+        """
+        Moving to a territory with no piece and no head to head battle
+        succeeds.
+        """
+        move = self.move(self.army, self.paris, self.gascony)
+        self.set_piece_territory(self.german_army, self.gascony)
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.gascony,
+            order=self.german_order,
+            type=CommandType.HOLD,
+        )
+        self.assertTrue(move.unresolved)
+        move.resolve()
+        self.assertTrue(move.fails)
+
+    def test_resolve_move_to_piece_successfully(self):
+        """
+        support
         """
         pass

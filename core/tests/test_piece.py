@@ -17,7 +17,7 @@ class TestPieceClean(TestCase, TerritoriesMixin):
             models.Piece.objects.create(
                 nation=nation,
                 territory=self.spain,
-                type=models.Piece.models.PieceType.FLEET
+                type=PieceType.FLEET
             )
 
     def test_fleet_cannot_be_in_inland_territory(self):
@@ -26,7 +26,7 @@ class TestPieceClean(TestCase, TerritoriesMixin):
             models.Piece.objects.create(
                 nation=nation,
                 territory=self.paris,
-                type=models.Piece.models.PieceType.FLEET
+                type=PieceType.FLEET
             )
 
     def test_army_cannot_be_on_named_coast(self):
@@ -37,7 +37,7 @@ class TestPieceClean(TestCase, TerritoriesMixin):
                 nation=nation,
                 territory=self.spain,
                 named_coast=spain_nc,
-                type=models.Piece.models.PieceType.ARMY
+                type=PieceType.ARMY
             )
 
 

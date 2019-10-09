@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from core.models import Nation, Piece
+from core.models.base import PieceType
 from core.tests.base import TerritoriesMixin
 
 
@@ -17,5 +18,5 @@ class TestTerritory(TestCase, TerritoriesMixin):
             Piece.objects.create(
                 nation=nation,
                 territory=self.spain,
-                type=Piece.PieceType.FLEET
+                type=PieceType.FLEET
             )

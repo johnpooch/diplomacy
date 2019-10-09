@@ -88,10 +88,11 @@ class HelperMixin:
             type=CommandType.MOVE,
         )
 
-    def support(self, source, target, aux):
+    def support(self, piece, source, aux, target):
         """
         """
         return models.Command(
+            piece=piece,
             source=source,
             target=target,
             aux=aux,
@@ -99,10 +100,11 @@ class HelperMixin:
             type=CommandType.SUPPORT,
         )
 
-    def convoy(self, source, target, aux):
+    def convoy(self, piece, source, target, aux):
         """
         """
         return models.Command(
+            piece=piece,
             source=source,
             target=target,
             aux=aux,

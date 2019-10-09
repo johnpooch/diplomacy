@@ -137,10 +137,9 @@ class Piece(HygenicModel):
         )
         for command in attacking_commands:
             # resolve if unresolved
-            print(command)
-            if self.command.unresolved:
-                self.command.resolve()
-            if self.command.succeeds:
+            if command.unresolved:
+                command.resolve()
+            if command.succeeds:
                 return True
         return False
 

@@ -87,7 +87,7 @@ class Territory(models.Model):
 
     def occupied(self):
         """
-        Determine whether a piece  exists in a territory.
+        Determine whether a piece exists in a territory.
         """
         try:
             return bool(self.piece)
@@ -141,9 +141,54 @@ class Territory(models.Model):
             command__type=CommandType.MOVE
         )
 
+    @property
+    def hold_strength(self):
+        # TODO test
+        """
+        Unlike ``attack_strength``,  ``hold_strength`` is defined for an
+        territory, rather than for a command.
+
+        Returnes 0 when the territory is empty, or when it contains a unit that
+        is ordered to move and for which the move succeeds.
+
+        Returns 1 when the area contains a unit that is ordered to move and for
+        which the move fails.
+
+        In all other cases, returns 1 plus the number of orders that
+        successfully support the unit to hold.
+        """
+        if not self.occupied():
+            return 0
+
+        if self.piece.command.type == CommandType.MOVE:
+            # resolve if unresolved
+            if self.piece.command.unresolved:
+                self.piece.command.resolve()
+            if self.piece.command.succeeds:
+                return 0
+            if self.piece.command.fails:
+                return 1
+
+        return 1 + len([c for s in self.piece.command.supporting_commands
+                        if c.succeeds])
+
+
+        if not self.occupied() or \
+                (self.piece.command.state == CommandState.resolved and
+                 self.target.piece.command.type == 'MOVE'):
+            return 1 + self.support
+
     def foreign_attacking_pieces(self, nation):
         """
         Helper method to get all pieces which are moving into this territory
         who do not belong to ``nation``.
         """
         return self.attacking_pieces.exclude(nation=nation)
+
+    def other_attacking_pieces(self, piece):
+        # TODO test
+        """
+        Helper method to get all pieces which are moving into this territory
+        not including ``piece``.
+        """
+        return self.attacking_pieces.exclude(id=piece.id)
