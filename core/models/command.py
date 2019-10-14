@@ -1,11 +1,12 @@
 from copy import deepcopy
 
 from django.apps import apps
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.base import CommandState, CommandType, HygenicModel, PieceType
+from core.models.base import CommandState, CommandType, DislodgedState, HygenicModel, PieceType
+from core.exceptions import IllegalMoveException
 
 
 class CommandQuerySet(models.QuerySet):
@@ -27,6 +28,30 @@ class CommandManager(models.Manager):
     def get_queryset(self):
         queryset = CommandQuerySet(self.model, using=self._db)
         return queryset
+
+    def process_commands(self):
+        """
+        """
+        all_commands_resolved = False
+        qs = super().get_queryset()
+
+        while not all_commands_resolved:
+            for command in qs:
+                command.check_illegal()
+
+            for command in qs:
+                if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
+                    command.piece.dislodged_decision()
+
+            for command in qs:
+                if not command.illegal:
+                    command.resolve()
+            for command in qs:
+                command.save()
+            if not super().get_queryset().filter(state=CommandState.UNRESOLVED).exists():
+                all_commands_resolved = True
+
+
 
     def get_convoying_commands(self, source, target):
         """
@@ -177,8 +202,16 @@ class Command(HygenicModel):
         blank=True,
         choices=PieceType.CHOICES,
     )
-    valid = models.BooleanField(default=True)
+    illegal = models.BooleanField(
+        default=False
+    )
+    illegal_message = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+    )
     success = models.BooleanField(default=True)
+    bounced = models.BooleanField(default=False)
     # Outcome in human friendly terms
     result_message = models.CharField(
         max_length=100,
@@ -197,71 +230,94 @@ class Command(HygenicModel):
     def clean(self):
         """
         """
-        if self.type == CommandType.HOLD:
-            self._friendly_piece_exists_in_source(),
+        if self.piece.type == PieceType.ARMY:
+            if self.target_coast:
+                raise ValueError('Army command cannot specify a target coast.')
 
-        if self.type == CommandType.MOVE:
-            [
+    def check_illegal(self):
+        """
+        Checks if a given command is illegal.
+        """
+        try:
+            if self.type == CommandType.HOLD:
                 self._friendly_piece_exists_in_source(),
-                self._source_piece_can_reach_target(),
-                self._specifies_target_named_coast_if_fleet(),
-            ]
-        if self.type == CommandType.SUPPORT:
-            [
-                self._friendly_piece_exists_in_source(),
-                self._source_piece_can_reach_target(),
-                self._aux_occupied(),
-                self._aux_piece_can_reach_target(),
-            ]
-        if self.type == CommandType.CONVOY:
-            [
-                self._friendly_piece_exists_in_source(),
-                self._aux_occupied(),
-                self._aux_piece_can_reach_target(),
-                self._source_piece_is_at_sea(),
-            ]
-        if self.type == CommandType.RETREAT:
-            [
-                self._friendly_piece_exists_in_source(),
-                self._source_piece_can_reach_target(),
-                self._specifies_target_named_coast_if_fleet(),
-                self._piece_has_been_dislodged(),
-                self._target_not_occupied(),
-                self._target_not_where_attacker_came_from(),
-                self._target_not_vacant_by_standoff_on_previous_turn(),
-            ]
-        if self.type == CommandType.DISBAND:
-            self._friendly_piece_exists_in_source()
 
-        if self.type == CommandType.BUILD:
-            # check territory is not occupied
-            if self.target.occupied():
-                raise ValidationError(_(
-                    'Cannot build in occupied territory.'
-                ))
-            # check target territory has supply center
-            if not self.target.has_supply_center():
-                raise ValidationError(_(
-                    'Cannot build in a territory that does not have a supply '
-                    'center.'
-                ))
-            # check target territory nationality
-            if not self.target.supply_center.nationality == self.nation:
-                raise ValidationError(_(
-                    'Cannot build in supply centers outside of home territory.'
-                ))
-            # check target territory nationality
-            if not self.target.controlled_by == self.nation:
-                raise ValidationError(_(
-                    'Cannot build in supply centers which are not controlled by '
-                    'nation.'
-                ))
-            # cannot build fleet inland
-            if self.target.is_inland() and \
-                    self.piece_type == PieceType.FLEET:
-                raise ValidationError(_(
-                    'Cannot build fleet in inland territory.'
-                ))
+            if self.type == CommandType.MOVE:
+                [
+                    self._friendly_piece_exists_in_source(),
+                    self._target_not_same_as_source(),
+                    self._specifies_target_named_coast_if_fleet(),
+                    self._source_piece_can_reach_target(),
+                ]
+            if self.type == CommandType.SUPPORT:
+                [
+                    self._friendly_piece_exists_in_source(),
+                    self._aux_not_same_as_source(),
+                    self._source_piece_can_reach_target(),
+                    self._source_piece_can_reach_target(),
+                    self._aux_occupied(),
+                    self._aux_piece_can_reach_target(),
+                    self._aux_piece_command_legal(),
+                ]
+            if self.type == CommandType.CONVOY:
+                [
+                    self._friendly_piece_exists_in_source(),
+                    self._aux_occupied(),
+                    self._aux_piece_can_reach_target(),
+                    self._source_piece_is_at_sea(),
+                    self._aux_piece_command_legal(),
+                ]
+            if self.type == CommandType.RETREAT:
+                [
+                    self._friendly_piece_exists_in_source(),
+                    self._source_piece_can_reach_target(),
+                    self._specifies_target_named_coast_if_fleet(),
+                    self._piece_has_been_dislodged(),
+                    self._target_not_occupied(),
+                    self._target_not_where_attacker_came_from(),
+                    self._target_not_vacant_by_standoff_on_previous_turn(),
+                ]
+            if self.type == CommandType.DISBAND:
+                self._friendly_piece_exists_in_source()
+
+            if self.type == CommandType.BUILD:
+                if self.target.occupied():
+                    raise IllegalMoveException(_(
+                        'Cannot build in occupied territory.'
+                    ))
+                    raise IllegalMoveException(_(
+                        'Cannot build in occupied territory.'
+                    ))
+                if not self.target.has_supply_center():
+                    raise IllegalMoveException(_(
+                        'Cannot build in a territory that does not have a supply '
+                        'center.'
+                    ))
+                if not self.target.supply_center.nationality == self.nation:
+                    raise IllegalMoveException(_(
+                        'Cannot build in supply centers outside of national '
+                        'borders.'
+                    ))
+                if not self.target.controlled_by == self.nation:
+                    raise IllegalMoveException(_(
+                        'Cannot build in a supply center which is controlled by a '
+                        'foreign power.'
+                    ))
+                if self.target.is_inland() and \
+                        self.piece_type == PieceType.FLEET:
+                    raise IllegalMoveException(_(
+                        'Cannot build a fleet in an inland territory.'
+                    ))
+        except IllegalMoveException as e:
+            self.set_illegal(str(e))
+
+    def set_illegal(self, message):
+        """
+        Helper to
+        """
+        self.illegal = True
+        self.illegal_message = message
+        self.save()
 
     def succeed(self):
         """
@@ -314,7 +370,7 @@ class Command(HygenicModel):
 
             # if moving from one coast to another, check shared coast
             if self.source.coastal and self.target.coastal:
-                return self.target in self.territory.shared_coasts.all()
+                return self.target in self.source.shared_coasts.all()
 
         # check adjacent to target and accessible by piece type
         if self.source.adjacent_to(self.target) and \
@@ -340,6 +396,28 @@ class Command(HygenicModel):
                 return True
         return False
 
+    def head_to_head_exists(self):
+        """
+        Determine whether the piece in the target territory of a move command
+        is moving to the source of this command, i.e. two pieces are trying to
+        move into eachother's territories.
+        """
+        if not self.type == CommandType.MOVE:
+            raise ValueError(
+                'Only move commands can be in head to head battles.'
+            )
+
+        if not self.target.occupied():
+            return False
+
+        if self.target.piece.nation == self.nation:
+            return False
+        if self.target.piece.command.target == self.source:
+            if self.target.piece.command.move_path:
+                self.head_to_head_opposing_piece = self.target.piece
+                return True
+        return False
+
     def resolve(self):
         """
         MOVE:
@@ -354,23 +432,64 @@ class Command(HygenicModel):
               destination and larger than the prevent strength of any unit
               moving to the same area. If one of the opposing strengths is
               equal or greater, then the move fails.
+
+              A MOVE decision of a unit ordered to move results in 'moves' when:
+
+            The minimum of the ATTACK STRENGTH is larger than the maximum of
+            the DEFEND STRENGTH of the opposing unit in case of a head to head
+            battle or otherwise larger than the maximum of the HOLD STRENGTH of
+            the attacked area. And in all cases the minimum of the ATTACK
+            STRENGTH is larger than the maximum of the PREVENT STRENGTH of all
+            of the units moving to the same area.
+
+            A MOVE decision of a unit ordered to move results in 'fails' when:
+
+            The maximum of the ATTACK STRENGTH is smaller than or equal to the
+            minimum of the DEFEND STRENGTH of the opposing unit in case of a
+            head to head battle or otherwise smaller than or equal to the
+            minimum of the HOLD STRENGTH of the attacked area. Or the maximum
+            of the ATTACK STRENGTH is smaller than or equal to the minimum of
+            the PREVENT STRENGTH of at least one of the units moving to the
+            same area.
+
+            In all other cases a MOVE decision of a unit ordered to move
+            remains 'undecided'.
         """
+        if self.check_illegal():
+            self.illegal_move = True
+            return self.fail()
+
+        if not self.unresolved:
+            raise ValueError(
+                'Cannot call `resolve()` on a command which is already resolved.'
+            )
+
         if self.type == CommandType.MOVE:
-            # TODO implement
-            if False:  # head-to-head battle
-                if self.attack_strength > opposing_unit.defend_strength and \
-                        self.attack_strength > max([unit.prevent_strength for unit in units]):
+            # succeeds if...
+            if self.head_to_head_exists():
+                opposing_unit = self.target.piece
+                if self.min_attack_strength < opposing_unit.max_defend_strength:
+                    if self.min_attack_strength > max(
+                            [p.command.max_prevent_strength
+                             for p in self.target.attacking_pieces]
+                        ):
+                        return self.succeed()
+            if self.min_attack_strength < self.target.max_hold_strength:
+                if self.min_attack_strength > max(
+                        [p.command.max_prevent_strength for p in self.target.attacking_pieces]
+                    ):
                     return self.succeed()
-                return self.failed()
-            else:
-                if not self.target.other_attacking_pieces(self.piece) and \
-                        not self.target.occupied():
-                    return self.succeed()
-                if self.attack_strength > self.target.hold_strength and \
-                            self.attack_strength > max([
-                                p.command.prevent_strength for p in self.target.attacking_pieces
-                            ]):
-                    return self.succeed()
+
+            # fails if...
+            if self.head_to_head_exists():
+                opposing_unit = self.target.piece
+                if self.max_attack_strength <= opposing_unit.min_defend_strength:
+                    return self.fail()
+            if self.max_attack_strength <= self.target.min_hold_strength:
+                return self.fail()
+            if self.max_attack_strength <= min(
+                        [p.command.min_prevent_strength for p in self.target.attacking_pieces]
+                    ):
                 return self.fail()
 
     @property
@@ -401,12 +520,107 @@ class Command(HygenicModel):
 
         # NOTE broken
         if not self.target.occupied() or \
-                (self.target.piece.command.state == CommandState and
+                (self.target.piece.command.succeeds and
                  self.target.piece.command.type == 'MOVE'):
-            return 1 + len(self.supporting_commands)
-
-        return 1 + len([s for s in self.supporting_commands.pieces
+            return 1 + len(self.successful_supporting_commands)
+        return 1 + len([s for s in self.successful_supporting_commands.pieces
                         if s.nation != self.target.piece.nation])
+
+    @property
+    def min_attack_strength(self):
+        """
+        Determine the minimum attack strength of a command.
+        """
+        if not self.type == CommandType.MOVE:
+            raise ValueError(
+                'Attack strength should only be calculated for move commands.'
+            )
+        if not self.move_path:
+            return 0
+        if self.target.occupied():
+            if self.head_to_head_exists() or \
+                    self.target.piece.command.type != CommandType.MOVE or \
+                    (not self.target.piece.command.succeeds):
+                if self.target.piece.nation == self.nation:
+                    return 0
+                return 1 + len([c for c in self.supporting_commands if c.success and
+                            c.nation != self.target.piece.nation])
+        if self.target.occupied():
+            return 1 + len([c for c in self.supporting_commands if c.success and
+                        c.nation != self.target.piece.nation])
+        return 1 + len([c for c in self.supporting_commands if c.success])
+
+    @property
+    def max_attack_strength(self):
+        """
+        """
+        if not self.type == CommandType.MOVE:
+            raise ValueError(
+                'Attack strength should only be calculated for move commands.'
+            )
+        if not self.move_path:
+            return 0
+        if self.target.occupied():
+            if self.head_to_head_exists() or \
+                    self.target.piece.command.type != CommandType.MOVE or \
+                    self.target.piece.command.fails:
+                if self.target.piece.nation == self.nation:
+                    return 0
+                return 1 + len([c for c in self.supporting_commands if (not c.fails) and
+                            c.nation != self.target.piece.nation])
+        if self.target.occupied():
+            return 1 + len([c for c in self.supporting_commands if (not c.fails) and
+                        c.nation != self.target.piece.nation])
+        return 1 + len([c for c in self.supporting_commands if (not c.fails)])
+
+
+    @property
+    def min_defend_strength(self):
+        """
+        """
+        if not self.type == CommandType.MOVE:
+            raise ValueError(
+                'Defend strength should only be calculated for move commands.'
+            )
+        return 1 + len([c for c in self.supporting_commands
+                        if c.succeeds])
+
+    @property
+    def max_defend_strength(self):
+        """
+        """
+        if not self.type == CommandType.MOVE:
+            raise ValueError(
+                'Defend strength should only be calculated for move commands.'
+            )
+        return 1 + len([c for c in self.supporting_commands
+                        if not c.fails])
+
+    @property
+    def min_prevent_strength(self):
+        """
+        """
+        # NOTE need to add unresolved to path
+        if not self.move_path:
+            return 0
+        if self.head_to_head_exists():
+            opposing_unit = self.target.piece
+            if not opposing_unit.command.fails:
+                return 0
+        return 1 + len([c for c in self.supporting_commands if c.succeeds])
+
+    @property
+    def max_prevent_strength(self):
+        """
+        """
+        # NOTE need to add unresolved to path
+        if not self.move_path:
+            return 0
+        if self.head_to_head_exists():
+            opposing_unit = self.target.piece
+            if opposing_unit.command.succeds:
+                return 0
+        return 1 + len([c for c in self.supporting_commands if not c.fails])
 
     @property
     def prevent_strength(self):
@@ -425,11 +639,12 @@ class Command(HygenicModel):
             raise Exception
         if not self.move_path:
             return 0
-        if not self.unresolved:
-            self.resolve()
-        if self.fails:
-            return 0
-        return 1 + len([s for s in self.supporting_commands if s.succeeds])
+        if self.head_to_head_exists():
+            # TODO address this.
+            pass
+        # if self.fails:
+        #     return 0
+        return 1 + len([s for s in self.successful_supporting_commands])
 
 
     @property
@@ -457,7 +672,7 @@ class Command(HygenicModel):
             .foreign_attacking_pieces(self.nation)
 
         for attacker in foreign_attacking_pieces:
-            if attacker.path and \
+            if attacker.command.move_path and \
                     attacker.territory != self.aux.piece.command.target:
                 return True
         return False
@@ -480,6 +695,13 @@ class Command(HygenicModel):
             )
 
     @property
+    def successful_supporting_commands(self):
+        """
+        
+        """
+        return self.supporting_commands.filter(illegal=False)
+
+    @property
     def nation(self):
         """
         Helper to get the nation of a command more easily.
@@ -488,8 +710,24 @@ class Command(HygenicModel):
 
     def _friendly_piece_exists_in_source(self):
         if not self.source.friendly_piece_exists(self.nation):
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 f'No friendly piece exists in {self.source}.'
+            ))
+        return True
+
+    def _target_not_same_as_source(self):
+        if self.source == self.target:
+            raise IllegalMoveException(_(
+                f'{self.source.piece.type.title()} {self.source} cannot '
+                'move to its own territory.'
+            ))
+        return True
+
+    def _aux_not_same_as_source(self):
+        if self.source == self.aux:
+            raise IllegalMoveException(_(
+                f'{self.source.piece.type.title()} {self.source} cannot '
+                f'{self.type} its own territory.'
             ))
         return True
 
@@ -498,8 +736,21 @@ class Command(HygenicModel):
             target_coast = self.target_coast
         except AttributeError:
             target_coast = None
+        # TODO refactor
         if not self.source.piece.can_reach(self.target, target_coast):
-            raise ValidationError(_(
+            if not target_coast:
+                if self.source.is_complex():
+                    raise IllegalMoveException(_(
+                        f'{self.source.piece.type.title()} {self.source} '
+                        f'({self.piece.named_coast.map_abbreviation}) cannot '
+                        f'reach {self.target}.'
+                    ))
+                else:
+                    raise IllegalMoveException(_(
+                        f'{self.source.piece.type.title()} {self.source} cannot reach '
+                        f'{self.target}.'
+                    ))
+            raise IllegalMoveException(_(
                 f'{self.source.piece.type.title()} {self.source} cannot reach '
                 f'{self.target}.'
             ))
@@ -507,46 +758,68 @@ class Command(HygenicModel):
 
     def _source_piece_is_at_sea(self):
         if not self.source.is_sea():
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 'Cannot convoy unless piece is at sea.'
             ))
         return True
 
     def _specifies_target_named_coast_if_fleet(self):
+        """
+        If the command piece is a fleet and the ``target`` is has named coasts,
+        the command must specify a ``target_coast`` unless only one of the
+        named coasts is within reach of the command piece, in which case the
+        target coast is assumed to be that coast.
+        """
         if self.target.is_complex() \
                 and self.source.piece.is_fleet() \
                 and not self.target_coast:
-            raise ValidationError(_(
-                'Cannot order an fleet into a complex territory without '
-                'specifying a named coast.'
-            ))
+            # if more than one accessible coast there is ambiguity
+            if len([nc for nc in self.target.named_coasts.all() if self.source
+                    in nc.neighbours.all()]) > 1:
+                raise IllegalMoveException(_(
+                    'Cannot order an fleet into a territory with named coasts '
+                    'without specifying a named coast.'
+                ))
+            else:
+                self.target_coast = [nc for nc in self.target.named_coasts.all()
+                                     if self.source in nc.neighbours.all()][0]
+                self.save()
         return True
 
     def _aux_occupied(self):
         if not self.aux.occupied():
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 f'No piece exists in {self.aux}.'
             ))
         return True
 
     def _aux_piece_can_reach_target(self):
         if not self.aux.piece.can_reach(self.target):
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 f'{self.aux.piece.type.title()} {self.aux} cannot '
                 f'reach {self.target}.'
             ))
         return True
 
+    def _aux_piece_command_legal(self):
+        self.aux.piece.command.check_illegal()
+        if self.aux.piece.command.illegal:
+            raise IllegalMoveException(_(
+                'Illegal because the command of '
+                f'{self.aux.piece.type.title()} {self.aux} is illegal.'
+            ))
+        return True
+
     def _piece_has_been_dislodged(self):
         if not self.source.piece.dislodged():
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 'Only pieces which have been dislodged can retreat.'
             ))
         return True
 
     def _target_not_occupied(self):
         if self.target.occupied():
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 'Dislodged piece cannot move to occupied territory.'
             ))
         return True
@@ -554,7 +827,7 @@ class Command(HygenicModel):
     def _target_not_where_attacker_came_from(self):
         if self.target == self.source.piece.dislodged_by\
                 .get_previous_territory():
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 'Dislodged piece cannot move to territory from which '
                 'attacking piece came.'
             ))
@@ -562,7 +835,7 @@ class Command(HygenicModel):
 
     def _target_not_vacant_by_standoff_on_previous_turn(self):
         if self.target.standoff_occured_on_previous_turn():
-            raise ValidationError(_(
+            raise IllegalMoveException(_(
                 'Dislodged piece cannot move to territory where a standoff '
                 'occured on the previous turn.'
             ))

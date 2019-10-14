@@ -3,6 +3,34 @@
       "model":"core.namedcoast",
       "pk":1,
       "fields":{
+         "name":"bulgaria east coast",
+         "map_abbreviation":"ec",
+         "parent":73,
+         "neighbours":[
+             28,
+             5,
+             47
+         ]
+      }
+   },
+   {
+      "model":"core.namedcoast",
+      "pk":2,
+      "fields":{
+         "name":"spain south coast",
+         "map_abbreviation":"sc",
+         "parent":73,
+         "neighbours":[
+             28,
+             33,
+             2
+         ]
+      }
+   },
+   {
+      "model":"core.namedcoast",
+      "pk":3,
+      "fields":{
          "name":"spain north coast",
          "map_abbreviation":"nc",
          "parent":74,
@@ -15,7 +43,7 @@
    },
    {
       "model":"core.namedcoast",
-      "pk":2,
+      "pk":4,
       "fields":{
          "name":"spain south coast",
          "map_abbreviation":"sc",

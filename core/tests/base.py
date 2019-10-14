@@ -27,37 +27,57 @@ class InitialGameStateTestCase(TestCase):
 class TerritoriesMixin:
 
     def initialise_territories(self):
-        self.belgium = models.Territory.objects.get(name='belgium')
-        self.brest = models.Territory.objects.get(name='brest')
-        self.burgundy = models.Territory.objects.get(name='burgundy')
-        self.english_channel = models.Territory.objects.get(name='english channel')
-        self.edinburgh = models.Territory.objects.get(name='edinburgh')
-        self.gascony = models.Territory.objects.get(name='gascony')
-        self.gulf_of_lyon = models.Territory.objects.get(name='gulf of lyon')
-        self.holland = models.Territory.objects.get(name='holland')
-        self.irish_sea = models.Territory.objects.get(name='irish sea')
-        self.kiel = models.Territory.objects.get(name='kiel')
-        self.london = models.Territory.objects.get(name='london')
-        self.marseilles = models.Territory.objects.get(name='marseilles')
-        self.mid_atlantic = models.Territory.objects.get(name='mid atlantic')
-        self.munich = models.Territory.objects.get(name='munich')
-        self.north_atlantic = models.Territory.objects.get(name='north atlantic')
-        self.north_sea = models.Territory.objects.get(name='north sea')
-        self.norwegian_sea = models.Territory.objects.get(name='norwegian sea')
-        self.paris = models.Territory.objects.get(name='paris')
-        self.picardy = models.Territory.objects.get(name='picardy')
-        self.piedmont = models.Territory.objects.get(name='piedmont')
-        self.portugal = models.Territory.objects.get(name='portugal')
-        self.silesia = models.Territory.objects.get(name='silesia')
-        self.spain = models.Territory.objects.get(name='spain')
-        self.st_petersburg = models.Territory.objects.get(name='st. petersburg')
-        self.wales = models.Territory.objects.get(name='wales')
-        self.western_mediterranean = models.Territory.objects.get(
-            name='western mediterranean'
-        )
+        """
+        Makes all territories available as attributes, e.g. ``self.paris``.
+        """
+        for territory in models.Territory.objects.all():
+            name = territory.name.lower().replace(' ', '_').replace('.', '')
+            setattr(self, name, territory)
 
 
 class HelperMixin:
+
+    def initialise_nations(self):
+        """
+        Makes all nations available as attributes, e.g. ``self.england``.
+        Makes 'Austria-Hungary' available as 'austria'.
+        """
+        for nation in models.Nation.objects.all():
+            if nation.name == 'Austria-Hungary':
+                name = 'austria'
+            else:
+                name = nation.name.lower()
+            setattr(self, name, nation)
+
+    def initialise_orders(self):
+        """
+        """
+        for nation in models.Nation.objects.all():
+            if nation.name == 'Austria-Hungary':
+                name = 'austria'
+            else:
+                name = nation.name.lower()
+            order = models.Order.objects.create(
+                nation=nation,
+                turn=self.turn,
+            )
+            setattr(self, name + '_order', order)
+
+    def initialise_territories(self):
+        """
+        Makes all territories available as attributes, e.g. ``self.paris``.
+        """
+        for territory in models.Territory.objects.all():
+            name = territory.name.lower().replace(' ', '_').replace('.', '')
+            setattr(self, name, territory)
+
+    def initialise_named_coasts(self):
+        """
+        Makes all named coasts available as attributes, e.g. ``self.spain_nc``.
+        """
+        for named_coast in models.NamedCoast.objects.all():
+            name = named_coast.parent.name + '_' + named_coast.map_abbreviation
+            setattr(self, name, named_coast)
 
     def set_piece_territory(self, piece, territory, named_coast=None):
         """
@@ -78,6 +98,7 @@ class HelperMixin:
 
     def move(self, piece, source, target, target_coast=None):
         """
+        Helper to create a move command.
         """
         return models.Command(
             piece=piece,

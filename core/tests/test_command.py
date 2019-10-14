@@ -1,29 +1,9 @@
 from django.core.exceptions import ValidationError
 
 from core import models
-from core.models.base import CommandType, PieceType
+from core.models.base import CommandState, CommandType, PieceType
 from core.tests.base import HelperMixin, TerritoriesMixin
 from .base import InitialGameStateTestCase as TestCase
-
-
-class TestClean(TestCase, HelperMixin, TerritoriesMixin):
-
-    fixtures = ['nations.json', 'territories.json', 'pieces.json']
-
-    def setUp(self):
-        super().setUp()
-        self.order = models.Order.objects.create(
-            nation=models.Nation.objects.get(name='France'),
-            turn=self.turn,
-        )
-        self.initialise_territories()
-
-    def test_raises_value_error_when_move_invalid(self):
-        """
-        """
-        command = self.move(None, self.paris, self.english_channel)
-        with self.assertRaises(ValueError):
-            command.save()
 
 
 class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
@@ -46,7 +26,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         """
         self.set_piece_territory(self.fleet, self.english_channel)
         command = self.move(self.fleet, self.english_channel, self.irish_sea)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_sea_to_adjacent_coastal_territory(self):
         """
@@ -54,7 +35,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         """
         self.set_piece_territory(self.fleet, self.english_channel)
         command = self.move(self.fleet, self.english_channel, self.brest)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_coastal_to_adjacent_coastal_territory_if_shared_coast(self):
         """
@@ -62,7 +44,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         """
         self.set_piece_territory(self.fleet, self.brest)
         command = self.move(self.fleet, self.brest, self.gascony)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_coastal_to_adjacent_coastal_territory_if_not_shared_coast(self):
         """
@@ -72,8 +55,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         models.Piece.objects.get(territory__name='marseilles').delete()
         self.set_piece_territory(self.fleet, self.marseilles)
         command = self.move(self.fleet, self.marseilles, self.gascony)
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_coastal_to_adjacent_inland_territory(self):
         """
@@ -82,8 +65,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         models.Piece.objects.get(territory__name='marseilles').delete()
         self.set_piece_territory(self.fleet, self.marseilles)
         command = self.move(self.fleet, self.marseilles, self.burgundy)
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_cannot_move_to_complex_territory_and_not_named_coast(self):
         """
@@ -92,8 +75,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
         """
         self.set_piece_territory(self.fleet, self.mid_atlantic)
         command = self.move(self.fleet, self.mid_atlantic, self.spain)
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_can_move_to_complex_territory_with_named_coast(self):
         """
@@ -108,7 +91,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
             self.spain,
             target_coast=spain_nc
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_cannot_move_to_non_adjacent_named_coast(self):
         """
@@ -123,8 +107,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
             self.spain,
             target_coast=spain_nc
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_cannot_move_from_named_coast_to_non_neighbour(self):
         """
@@ -138,8 +122,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
             self.spain,
             self.western_mediterranean,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
 
 class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
@@ -161,7 +145,8 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         when there is a shared coast.
         """
         command = self.move(self.army, self.marseilles, self.piedmont)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_coastal_to_adjacent_coastal_territory_no_shared_coast(self):
         """
@@ -169,14 +154,16 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         no shared coast.
         """
         command = self.move(self.army, self.marseilles, self.gascony)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_coastal_to_adjacent_inland_territory(self):
         """
         Army can move from coastal territory to adjacent inland territory.
         """
         command = self.move(self.army, self.marseilles, self.burgundy)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_inland_to_adjacent_inland_territory(self):
         """
@@ -184,7 +171,8 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.army = models.Piece.objects.get(territory=self.paris)
         command = self.move(self.army, self.paris, self.burgundy)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_inland_to_adjacent_coastal_territory(self):
         """
@@ -192,15 +180,16 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.army = models.Piece.objects.get(territory=self.paris)
         command = self.move(self.army, self.paris, self.picardy)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_coastal_to_adjacent_sea_territory(self):
         """
         Army cannot move from coastal to adjacent sea territory.
         """
         command = self.move(self.army, self.marseilles, self.gulf_of_lyon)
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_coastal_to_non_adjacent_coastal_territory(self):
         """
@@ -209,7 +198,8 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.army, self.gascony)
         command = self.move(self.army, self.gascony, self.picardy)
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_inland_to_non_adjacent_inland_territory(self):
         """
@@ -218,8 +208,8 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.army, self.burgundy)
         command = self.move(self.army, self.burgundy, self.silesia)
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_inland_to_non_adjacent_coastal_territory(self):
         """
@@ -228,8 +218,8 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.army, self.silesia)
         command = self.move(self.army, self.silesia, self.gascony)
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
 
 class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
@@ -260,8 +250,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.kiel,
             self.holland
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_does_not_belong_to_command(self):
         """
@@ -274,8 +264,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.belgium,
             self.holland,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_adjacent_territory(self):
         """
@@ -288,7 +278,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.english_channel,
             self.picardy,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_support_fleet_to_territory_not_adjacent_to_supporting(self):
         """
@@ -302,8 +293,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.belgium,
             self.holland
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_territory_not_adjacent_to_attacking_fleet(self):
         """
@@ -317,8 +308,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.holland,
             self.picardy,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_army_to_territory_not_adjacent_to_attacking_army_coastal(self):
         """
@@ -332,7 +323,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.wales,
             self.picardy,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_support_army_to_territory_inland(self):
         """
@@ -345,8 +337,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.paris,
             self.picardy
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_from_named_coast_adjacent(self):
         """
@@ -361,7 +353,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.marseilles,
             self.gascony,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_support_from_named_coast_not_adjacent(self):
         """
@@ -376,8 +369,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.gascony,
             self.marseilles,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_different_named_coast(self):
         """
@@ -393,7 +386,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.mid_atlantic,
             self.spain,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
 
 class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
@@ -423,7 +417,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.gulf_of_lyon,
             self.piedmont,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_support_fleet_to_adjacent_territory_sea(self):
         """
@@ -436,8 +431,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.piedmont,
             self.gulf_of_lyon,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_adjacent_territory_inland(self):
         """
@@ -451,8 +446,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.gascony,
             self.burgundy,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_coastal_territory_not_adjacent_to_supporter(self):
         """
@@ -466,8 +461,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.gascony,
             self.paris,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_territory_not_adjacent_to_attacking_fleet(self):
         """
@@ -480,8 +475,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.gascony,
             self.piedmont,
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_support_fleet_to_complex_territory_neighbour_named_coast(self):
         """
@@ -496,7 +491,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.mid_atlantic,
             self.spain,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_support_fleet_to_complex_territory_not_neighbour_named_coast(self):
         """
@@ -512,7 +508,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
             self.mid_atlantic,
             self.spain,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
 
 class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
@@ -542,8 +539,8 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
             self.picardy,
             self.gascony
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_convoy_army(self):
         """
@@ -558,7 +555,8 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
             self.picardy,
             self.wales
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_convoy_army_fleet_on_coast(self):
         """
@@ -571,8 +569,8 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
             self.picardy,
             self.gascony
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_convoy_army_from_complex_territory(self):
         """
@@ -586,7 +584,8 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
             self.brest,
             self.spain
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_convoy_army_to_complex_territory(self):
         """
@@ -600,7 +599,8 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
             self.spain,
             self.brest
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_convoy_army_from_complex_territory_to_complex_territory(self):
         """
@@ -614,7 +614,8 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
             self.spain,
             self.st_petersburg
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
 
 class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
@@ -642,8 +643,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.london,
             PieceType.FLEET
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_build_army_supply_center_not_controlled_by_nation(self):
         """
@@ -656,8 +657,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.paris,
             PieceType.ARMY
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_build_army_no_supply_center(self):
         """
@@ -667,8 +668,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.burgundy,
             PieceType.ARMY
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
     def test_build_army_coastal(self):
         """
@@ -679,7 +680,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.brest,
             PieceType.ARMY,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_build_army_inland(self):
         """
@@ -690,7 +692,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.paris,
             PieceType.ARMY,
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_build_fleet_coastal(self):
         """
@@ -701,7 +704,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.brest,
             PieceType.FLEET
         )
-        command.clean()
+        command.check_illegal()
+        self.assertFalse(command.illegal)
 
     def test_build_fleet_inland(self):
         """
@@ -712,14 +716,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
             self.paris,
             PieceType.FLEET
         )
-        with self.assertRaises(ValidationError):
-            command.clean()
-
-
-class TestResolve(TestCase):
-
-    def test_run_command(self):
-        pass
+        command.check_illegal()
+        self.assertTrue(command.illegal)
 
 
 class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
@@ -1243,7 +1241,7 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
         pass
 
 
-class TestMoveResolve(TestCase, TerritoriesMixin, HelperMixin):
+class TestResolveMove(TestCase, TerritoriesMixin, HelperMixin):
 
     fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
                 'pieces.json']
@@ -1264,9 +1262,9 @@ class TestMoveResolve(TestCase, TerritoriesMixin, HelperMixin):
         self.army = models.Piece.objects.get(territory__name='paris')
         self.german_army = models.Piece.objects.get(territory__name='munich')
 
-    def test_resolve_unchallenged_move(self):
+    def test_move_to_unoccupied_and_unchallenged_area(self):
         """
-        Moving to a territory with no piece and no head to head battle
+        A move to an unoccupied territory where there are no attacking pieces
         succeeds.
         """
         move = self.move(self.army, self.paris, self.gascony)
@@ -1274,10 +1272,10 @@ class TestMoveResolve(TestCase, TerritoriesMixin, HelperMixin):
         move.resolve()
         self.assertTrue(move.succeeds)
 
-    def test_resolve_move_to_occupied(self):
+    def test_move_to_occupied_territory(self):
         """
-        Moving to a territory with no piece and no head to head battle
-        succeeds.
+        A move to a territory which is occupied where there is no support and
+        no attacking pieces fails.
         """
         move = self.move(self.army, self.paris, self.gascony)
         self.set_piece_territory(self.german_army, self.gascony)
@@ -1291,8 +1289,160 @@ class TestMoveResolve(TestCase, TerritoriesMixin, HelperMixin):
         move.resolve()
         self.assertTrue(move.fails)
 
-    def test_resolve_move_to_piece_successfully(self):
+    def test_move_to_occupied_territory_but_piece_move_successfully(self):
         """
-        support
+        A move to a territory which is occupied by a piece which successfully
+        moves succeeds.
+        """
+        move = self.move(self.army, self.paris, self.gascony)
+        self.set_piece_territory(self.german_army, self.gascony)
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.gascony,
+            target=self.spain,
+            order=self.german_order,
+            type=CommandType.MOVE,
+            state=CommandState.SUCCEEDS,
+        )
+        self.assertTrue(move.unresolved)
+        move.resolve()
+        self.assertTrue(move.succeeds)
+
+    def test_move_with_support_to_occupied_territory_without_support(self):
+        """
+        A move with support to a territory which is occupied without support
+        and no attacking pieces succeeds.
         """
         pass
+
+
+class TestHeadToHead(TestCase, TerritoriesMixin, HelperMixin):
+
+    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+                'pieces.json']
+
+    def setUp(self):
+        super().setUp()
+        self.initialise_territories()
+        self.france = models.Nation.objects.get(name='France')
+        self.germany = models.Nation.objects.get(name='Germany')
+        self.french_order = models.Order.objects.create(
+            nation=self.france,
+            turn=self.turn,
+        )
+        self.german_order = models.Order.objects.create(
+            nation=self.germany,
+            turn=self.turn,
+        )
+        self.french_army = models.Piece.objects.get(territory__name='paris')
+        self.second_french_army = models.Piece.objects.get(territory__name='marseilles')
+        self.german_army = models.Piece.objects.get(territory__name='munich')
+        self.german_fleet = models.Piece.objects.get(territory__name='kiel')
+
+    def test_head_to_head_battle_exists(self):
+        """
+        Two pieces from different nations attempting to move into eachother's
+        territories causes a head-to-head battle.
+        """
+        self.set_piece_territory(self.german_army, self.burgundy)
+        command = models.Command.objects.create(
+            piece=self.french_army,
+            source=self.paris,
+            target=self.burgundy,
+            order=self.french_order,
+            type=CommandType.MOVE,
+        )
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.burgundy,
+            target=self.paris,
+            order=self.german_order,
+            type=CommandType.MOVE,
+        )
+        self.assertTrue(command.head_to_head_exists())
+
+    def test_head_to_head_battle_same_nation(self):
+        """
+        Two pieces from the same nation attempting to move into eachother's
+        territories does not cause a head-to-head battle.
+        """
+        self.set_piece_territory(self.second_french_army, self.burgundy)
+        command = models.Command.objects.create(
+            piece=self.french_army,
+            source=self.paris,
+            target=self.burgundy,
+            order=self.french_order,
+            type=CommandType.MOVE,
+        )
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.burgundy,
+            target=self.paris,
+            order=self.french_order,
+            type=CommandType.MOVE,
+        )
+        self.assertFalse(command.head_to_head_exists())
+
+    def test_head_to_head_battle_moving_to_different_territory(self):
+        """
+        If a the piece in the target territory is moving to a territory other
+        than the source of the given command, no head-to-head battle.
+        """
+        self.set_piece_territory(self.german_army, self.burgundy)
+        command = models.Command.objects.create(
+            piece=self.french_army,
+            source=self.paris,
+            target=self.burgundy,
+            order=self.french_order,
+            type=CommandType.MOVE,
+        )
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.burgundy,
+            target=self.picardy,
+            order=self.german_order,
+            type=CommandType.MOVE,
+        )
+        self.assertFalse(command.head_to_head_exists())
+
+    def test_head_to_head_battle_hold(self):
+        """
+        If a the piece in the target territory is holds there is no
+        head-to-head battle.
+        """
+        self.set_piece_territory(self.german_army, self.burgundy)
+        command = models.Command.objects.create(
+            piece=self.french_army,
+            source=self.paris,
+            target=self.burgundy,
+            order=self.french_order,
+            type=CommandType.MOVE,
+        )
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.burgundy,
+            order=self.german_order,
+            type=CommandType.HOLD,
+        )
+        self.assertFalse(command.head_to_head_exists())
+
+    def test_head_to_head_battle_piece_moving_into_target_territory(self):
+        """
+        If the enemy other piece is moving into the target territory, no
+        head-to-head battle.
+        """
+        command = models.Command.objects.create(
+            piece=self.french_army,
+            source=self.paris,
+            target=self.burgundy,
+            order=self.french_order,
+            type=CommandType.MOVE,
+        )
+        models.Command.objects.create(
+            piece=self.german_army,
+            source=self.munich,
+            target=self.burgundy,
+            order=self.german_order,
+            type=CommandType.HOLD,
+        )
+        self.assertFalse(command.head_to_head_exists())

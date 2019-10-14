@@ -41,6 +41,17 @@ class CommandState:
     )
 
 
+class DislodgedState:
+    UNRESOLVED = 'unresolved'
+    SUSTAINS = 'sustains'
+    DISLODGED = 'dislodged'
+    CHOICES = (
+        (UNRESOLVED, 'Unresolved'),
+        (SUSTAINS, 'Sustains'),
+        (DISLODGED, 'Dislodged')
+    )
+
+
 class HygenicModel(models.Model):
     """
     Models which inherit from this base will run ``Model.full_clean()`` before
