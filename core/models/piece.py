@@ -132,8 +132,9 @@ class Piece(HygenicModel):
                 'Cannot call `dislodged_decision()` on a piece for which '
                 '`dislodged_state` has already been determined.'
             )
-        # TODO this shouldn't be a property
         # sustains if...
+        if not self.territory.attacking_pieces:
+            return self.set_sustains()
         if self.command.type == CommandType.MOVE:
             # cannot be dislodged if successfully moved
             if self.command.succeeds:
@@ -148,7 +149,7 @@ class Piece(HygenicModel):
         # dislodged if...
         if self.command.type == CommandType.MOVE:
             if self.command.fails and any([p for p in self.territory.attacking_pieces
-                                   if p.command.succeeds]):
+                                           if p.command.succeeds]):
                 piece = [p for p in self.territory.attacking_pieces if
                          p.command.succeeds][0]
                 return self.set_dislodged(piece)
@@ -170,7 +171,6 @@ class Piece(HygenicModel):
         """
         self.dislodged_state = DislodgedState.DISLODGED
         self.dislodged_by = piece
-        print('here')
         self.save()
 
     @property
@@ -178,6 +178,12 @@ class Piece(HygenicModel):
         """
         """
         return self.dislodged_state == DislodgedState.DISLODGED
+
+    @property
+    def sustains(self):
+        """
+        """
+        return self.dislodged_state == DislodgedState.SUSTAINS
 
     @property
     def command(self):

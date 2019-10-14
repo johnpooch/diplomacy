@@ -1,5 +1,3 @@
-from django.core.exceptions import ValidationError
-
 from core import models
 from core.models.base import CommandState, CommandType, PieceType
 from core.tests.base import HelperMixin, TerritoriesMixin
