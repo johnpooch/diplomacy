@@ -79,5 +79,95 @@
         },
         "model": "core.supplycenter",
         "pk": 9
+    },
+    {
+        "fields": {
+            "nationality": 4,
+            "territory": 71,
+            "initial_piece_type": "army"
+        },
+        "model": "core.supplycenter",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "nationality": 4,
+            "territory": 60,
+            "initial_piece_type": "army"
+        },
+        "model": "core.supplycenter",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "nationality": 4,
+            "territory": 53,
+            "initial_piece_type": "fleet"
+        },
+        "model": "core.supplycenter",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "nationality": 5,
+            "territory": 56,
+            "initial_piece_type": "army"
+        },
+        "model": "core.supplycenter",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "nationality": 5,
+            "territory": 46,
+            "initial_piece_type": "army"
+        },
+        "model": "core.supplycenter",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "nationality": 5,
+            "territory": 41,
+            "initial_piece_type": "fleet"
+        },
+        "model": "core.supplycenter",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "nationality": 6,
+            "territory": 75,
+            "initial_piece_type": "fleet"
+        },
+        "model": "core.supplycenter",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "nationality": 6,
+            "territory": 63,
+            "initial_piece_type": "army"
+        },
+        "model": "core.supplycenter",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "nationality": 6,
+            "territory": 72,
+            "initial_piece_type": "army"
+        },
+        "model": "core.supplycenter",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "nationality": 6,
+            "territory": 49,
+            "initial_piece_type": "fleet"
+        },
+        "model": "core.supplycenter",
+        "pk": 18
     }
 ]

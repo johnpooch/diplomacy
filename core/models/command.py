@@ -58,16 +58,52 @@ class CommandManager(models.Manager):
         for command in qs:
             command.check_illegal()
 
+        qs = super().get_queryset()
+
         while not all_commands_resolved:
             qs = qs.exclude(type=CommandType.CONVOY)
+
+            for command in qs.exclude(illegal=True):
+                if command.paradox_exists:
+                    print('PARADOX EXISTS')
+                    print(command)
+                    if command._min_attack_strength_result == command.min_attack_strength and command._max_attack_strength_result == command.max_attack_strength:
+                        dependencies = command.get_attack_strength_dependencies()
+                        for d in dependencies:
+                            d.set_succeeds()
+                else:
+                    if command.type == CommandType.MOVE:
+                        command._min_attack_strength_result = \
+                            command.min_attack_strength
+                        command._max_attack_strength_result = \
+                            command.max_attack_strength
+
+                        command._min_defend_strength_result = \
+                            command.min_defend_strength
+                        command._max_defend_strength_result = \
+                            command.max_defend_strength
+
+                        command._min_prevent_strength_result = \
+                            command.min_prevent_strength
+                        command._max_prevent_strength_result = \
+                            command.max_prevent_strength
+
+                        command._min_hold_strength_result = \
+                            command.target.min_hold_strength
+                        command._max_hold_strength_result = \
+                            command.target.max_hold_strength
+
+                    command.save()
 
             for command in qs:
                 if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
                     command.piece.dislodged_decision()
 
             for command in qs:
-                if not command.illegal and command.state == CommandState.UNRESOLVED:
+                if not command.illegal \
+                        and command.state == CommandState.UNRESOLVED:
                     command.resolve()
+
             for command in qs:
                 command.save()
                 # debug_command(command)
@@ -76,6 +112,8 @@ class CommandManager(models.Manager):
                 Q(state=CommandState.UNRESOLVED) |
                 Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
             )
+
+            print
             if not qs:
                 all_commands_resolved = True
 
@@ -244,6 +282,39 @@ class Command(HygenicModel):
         null=True,
         blank=True
     )
+    # TODO explore whether these can be made into non db values
+    _min_attack_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _max_attack_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _min_defend_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _max_defend_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _min_prevent_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _max_prevent_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _min_hold_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+    _max_hold_strength_result = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
 
     objects = CommandManager()
 
@@ -262,6 +333,26 @@ class Command(HygenicModel):
                     raise ValueError('Army command cannot specify a target coast.')
         except AttributeError:
             pass
+
+    @property
+    def paradox_exists(self):
+        # TODO test
+        # TODO refactor
+        """
+        Paradox exists if none of the values have changed from the previous
+        iteration of the loop.
+        """
+        if self.type == CommandType.MOVE:
+            return all([
+                self._min_attack_strength_result == self.min_attack_strength,
+                self._max_attack_strength_result == self.max_attack_strength,
+                self._min_defend_strength_result == self.min_defend_strength,
+                self._max_defend_strength_result == self.max_defend_strength,
+                self._min_prevent_strength_result == self.min_prevent_strength,
+                self._max_prevent_strength_result == self.max_prevent_strength,
+                self._min_hold_strength_result == self.target.min_hold_strength,
+                self._max_hold_strength_result == self.target.max_hold_strength,
+            ])
 
     def check_illegal(self):
         """
@@ -320,8 +411,8 @@ class Command(HygenicModel):
                     ))
                 if not self.target.has_supply_center():
                     raise IllegalCommandException(_(
-                        'Cannot build in a territory that does not have a supply '
-                        'center.'
+                        'Cannot build in a territory that does not have a '
+                        'supply center.'
                     ))
                 if not self.target.supply_center.nationality == self.nation:
                     raise IllegalCommandException(_(
@@ -330,13 +421,20 @@ class Command(HygenicModel):
                     ))
                 if not self.target.controlled_by == self.nation:
                     raise IllegalCommandException(_(
-                        'Cannot build in a supply center which is controlled by a '
-                        'foreign power.'
+                        'Cannot build in a supply center which is controlled '
+                        'by a foreign power.'
                     ))
                 if self.target.is_inland() and \
                         self.piece_type == PieceType.FLEET:
                     raise IllegalCommandException(_(
                         'Cannot build a fleet in an inland territory.'
+                    ))
+                if self.target.is_complex() and \
+                        self.piece_type == PieceType.FLEET and \
+                        not self.target_coast:
+                    raise IllegalCommandException(_(
+                        'Must specify a coast when building a fleet in a '
+                        'territory with named coasts.'
                     ))
         except IllegalCommandException as e:
             self.set_illegal(str(e))
@@ -565,6 +663,21 @@ class Command(HygenicModel):
                 self.set_succeeds()
             if self.piece.dislodged:
                 self.set_fails()
+
+    def get_attack_strength_dependencies(self, dependencies=[]):
+        """
+        """
+        # TODO test
+        if self not in dependencies:
+            dependencies.append(self)
+        else:
+            return dependencies
+        if self.target.piece:
+            if self.target.piece.command.unresolved:
+                for c in self.target.piece.command.get_attack_strength_dependencies(dependencies):
+                    if c not in dependencies:
+                        dependencies.append(c)
+        return dependencies
 
     @property
     def min_attack_strength(self):

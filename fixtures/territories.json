@@ -1585,7 +1585,9 @@
             42
          ],
          "shared_coasts":[
-
+             37,
+             31,
+             42
          ],
          "coastal":true,
          "controlled_by":6,

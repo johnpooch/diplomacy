@@ -56,5 +56,32 @@
              45
          ]
       }
+   },
+   {
+      "model":"core.namedcoast",
+      "pk":5,
+      "fields":{
+         "name":"st. petersburg north coast",
+         "map_abbreviation":"nc",
+         "parent":75,
+         "neighbours":[
+             4,
+             42
+         ]
+      }
+   },
+   {
+      "model":"core.namedcoast",
+      "pk":6,
+      "fields":{
+         "name":"st. petersburg south coast",
+         "map_abbreviation":"sc",
+         "parent":75,
+         "neighbours":[
+             37,
+             31,
+             6
+         ]
+      }
    }
 ]

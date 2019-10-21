@@ -171,11 +171,10 @@ class Territory(models.Model):
         if not self.occupied():
             return 0
         if self.piece.command.type == CommandType.MOVE:
-            if not self.piece.command.unresolved:
-                if self.piece.command.succeeds:
-                    return 0
-                if self.piece.command.fails:
-                    return 1
+            if not self.piece.command.fails:
+                return 0
+            else:
+                return 1
         # return 1 plus the number of supporting pieces that are successful
         return 1 + len([c for c in self.piece.command.supporting_commands
                         if c.succeeds])
