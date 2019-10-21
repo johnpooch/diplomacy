@@ -133,6 +133,8 @@ class TestDislodged(TestCase, TerritoriesMixin, HelperMixin):
             order=self.german_order,
             type=CommandType.SUPPORT,
         )
+        models.Command.objects.process_commands()
+        self.defending_army.refresh_from_db()
         self.assertTrue(self.defending_army.dislodged)
 
     def test_moving_piece_not_dislodged(self):

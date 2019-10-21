@@ -10,6 +10,26 @@ from core.models.base import CommandState, CommandType, DislodgedState, \
 from core.exceptions import IllegalCommandException
 
 
+def debug_command(command):
+    print(command)
+    if command.type == CommandType.MOVE:
+        print(f'MAX ATTACK STRENGTH: {command.max_attack_strength}')
+        print(f'MIN ATTACK STRENGTH: {command.min_attack_strength}')
+
+        print(f'MAX PREVENT STRENGTH: {command.max_prevent_strength}')
+        print(f'MIN PREVENT STRENGTH: {command.min_prevent_strength}')
+
+        print(f'TERRITORY MAX HOLD STRENGTH: {command.target.max_hold_strength}')
+        print(f'TERRITORY MIN HOLD STRENGTH: {command.target.min_hold_strength}')
+
+        print(
+            'OTHER ATTACKING PIECES: '
+            f'{command.target.other_attacking_pieces(command.piece)}'
+        )
+
+        print(f'COMMAND OUTCOME: {command.state}')
+
+
 class CommandQuerySet(models.QuerySet):
 
     @property
@@ -47,12 +67,15 @@ class CommandManager(models.Manager):
 
             for command in qs:
                 if not command.illegal and command.state == CommandState.UNRESOLVED:
-                    print(command)
                     command.resolve()
             for command in qs:
                 command.save()
+                # debug_command(command)
 
-            qs = qs.filter(Q(state=CommandState.UNRESOLVED) | Q(piece__dislodged_state=DislodgedState.UNRESOLVED))
+            qs = qs.filter(
+                Q(state=CommandState.UNRESOLVED) |
+                Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
+            )
             if not qs:
                 all_commands_resolved = True
 
@@ -481,10 +504,15 @@ class Command(HygenicModel):
                              for p in self.target.other_attacking_pieces(self.piece)]
                     ):
                         return self.set_succeeds()
-            if self.min_attack_strength > self.target.max_hold_strength:
-                if self.min_attack_strength > max(
-                        [p.command.max_prevent_strength for p in self.target.other_attacking_pieces(self.piece)]
-                ):
+            if self.target.other_attacking_pieces(self.piece):
+                if self.min_attack_strength > self.target.max_hold_strength:
+                    if self.min_attack_strength > max(
+                        [p.command.max_prevent_strength
+                         for p in self.target.other_attacking_pieces(self.piece)]
+                    ):
+                        return self.set_succeeds()
+            else:
+                if self.min_attack_strength > self.target.max_hold_strength:
                     return self.set_succeeds()
 
             # fails if...
@@ -494,10 +522,12 @@ class Command(HygenicModel):
                     return self.set_fails()
             if self.max_attack_strength <= self.target.min_hold_strength:
                 return self.set_fails()
-            if self.max_attack_strength <= min(
-                [p.command.min_prevent_strength for p in self.target.other_attacking_pieces(self.piece)]
-            ):
-                return self.set_fails()
+            if self.target.other_attacking_pieces(self.piece):
+                if self.max_attack_strength <= min(
+                    [p.command.min_prevent_strength
+                     for p in self.target.other_attacking_pieces(self.piece)]
+                ):
+                    return self.set_fails()
 
         if self.type == CommandType.SUPPORT:
             # TODO refactor
@@ -732,10 +762,15 @@ class Command(HygenicModel):
                         f'{self.source.piece.type.title()} {self.source} cannot reach '
                         f'{self.target}.'
                     ))
-            raise IllegalCommandException(_(
-                f'{self.source.piece.type.title()} {self.source} cannot reach '
-                f'{self.target}.'
-            ))
+            if self.target.is_complex() and self.target_coast:
+                raise IllegalCommandException(_(
+                    f'{self.source.piece.type.title()} {self.source} cannot reach '
+                    f'{self.target} ({self.target_coast.map_abbreviation}).'
+                ))
+                raise IllegalCommandException(_(
+                    f'{self.source.piece.type.title()} {self.source} cannot reach '
+                    f'{self.target}.'
+                ))
         return True
 
     def _source_piece_is_at_sea(self):

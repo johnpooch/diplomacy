@@ -17,7 +17,7 @@
       "model":"core.namedcoast",
       "pk":2,
       "fields":{
-         "name":"spain south coast",
+         "name":"bulgaria south coast",
          "map_abbreviation":"sc",
          "parent":73,
          "neighbours":[

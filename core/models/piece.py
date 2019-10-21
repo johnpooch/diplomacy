@@ -139,10 +139,9 @@ class Piece(HygenicModel):
             # cannot be dislodged if successfully moved
             if self.command.succeeds:
                 return self.set_sustains()
-        else:
-            if all([p for p in self.territory.attacking_pieces
-                    if p.command.fails]):
-                return self.set_sustains()
+        if [p for p in self.territory.attacking_pieces
+            if p.command.fails] and all([p.command.fails for p in self.territory.attacking_pieces]):
+            return self.set_sustains()
 
         # TODO add dislodged by
 
@@ -154,9 +153,10 @@ class Piece(HygenicModel):
                          p.command.succeeds][0]
                 return self.set_dislodged(piece)
         else:
-            if any([p for p in self.territory.attacking_pieces if
-                    p.command.succeeds]):
-                return self.set_dislodged()
+            if any([p.command.succeeds for p in self.territory.attacking_pieces]):
+                piece = [p for p in self.territory.attacking_pieces
+                         if p.command.succeeds][0]
+                return self.set_dislodged(piece)
 
     def set_sustains(self):
         """
