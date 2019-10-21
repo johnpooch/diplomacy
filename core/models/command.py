@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 
 from core.models.base import CommandState, CommandType, DislodgedState, \
     HygenicModel, PieceType
-from core.exceptions import IllegalMoveException
+from core.exceptions import IllegalCommandException
 
 
 class CommandQuerySet(models.QuerySet):
@@ -168,7 +168,8 @@ class Command(HygenicModel):
         'Territory',
         on_delete=models.CASCADE,
         related_name='+',
-        null=True
+        null=True,
+        blank=True,
     )
     piece = models.OneToOneField(
         'Piece',
@@ -232,9 +233,12 @@ class Command(HygenicModel):
     def clean(self):
         """
         """
-        if self.piece.type == PieceType.ARMY:
-            if self.target_coast:
-                raise ValueError('Army command cannot specify a target coast.')
+        try:
+            if self.piece.type == PieceType.ARMY:
+                if self.target_coast:
+                    raise ValueError('Army command cannot specify a target coast.')
+        except AttributeError:
+            pass
 
     def check_illegal(self):
         """
@@ -285,33 +289,33 @@ class Command(HygenicModel):
 
             if self.type == CommandType.BUILD:
                 if self.target.occupied():
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         'Cannot build in occupied territory.'
                     ))
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         'Cannot build in occupied territory.'
                     ))
                 if not self.target.has_supply_center():
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         'Cannot build in a territory that does not have a supply '
                         'center.'
                     ))
                 if not self.target.supply_center.nationality == self.nation:
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         'Cannot build in supply centers outside of national '
                         'borders.'
                     ))
                 if not self.target.controlled_by == self.nation:
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         'Cannot build in a supply center which is controlled by a '
                         'foreign power.'
                     ))
                 if self.target.is_inland() and \
                         self.piece_type == PieceType.FLEET:
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         'Cannot build a fleet in an inland territory.'
                     ))
-        except IllegalMoveException as e:
+        except IllegalCommandException as e:
             self.set_illegal(str(e))
 
     def set_illegal(self, message):
@@ -688,14 +692,14 @@ class Command(HygenicModel):
 
     def _friendly_piece_exists_in_source(self):
         if not self.source.friendly_piece_exists(self.nation):
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'No friendly piece exists in {self.source}.'
             ))
         return True
 
     def _target_not_same_as_source(self):
         if self.source == self.target:
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'{self.source.piece.type.title()} {self.source} cannot '
                 'move to its own territory.'
             ))
@@ -703,7 +707,7 @@ class Command(HygenicModel):
 
     def _aux_not_same_as_source(self):
         if self.source == self.aux:
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'{self.source.piece.type.title()} {self.source} cannot '
                 f'{self.type} its own territory.'
             ))
@@ -718,17 +722,17 @@ class Command(HygenicModel):
         if not self.source.piece.can_reach(self.target, target_coast):
             if not target_coast:
                 if self.source.is_complex():
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         f'{self.source.piece.type.title()} {self.source} '
                         f'({self.piece.named_coast.map_abbreviation}) cannot '
                         f'reach {self.target}.'
                     ))
                 else:
-                    raise IllegalMoveException(_(
+                    raise IllegalCommandException(_(
                         f'{self.source.piece.type.title()} {self.source} cannot reach '
                         f'{self.target}.'
                     ))
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'{self.source.piece.type.title()} {self.source} cannot reach '
                 f'{self.target}.'
             ))
@@ -736,7 +740,7 @@ class Command(HygenicModel):
 
     def _source_piece_is_at_sea(self):
         if not self.source.is_sea():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 'Cannot convoy unless piece is at sea.'
             ))
         return True
@@ -754,7 +758,7 @@ class Command(HygenicModel):
             # if more than one accessible coast there is ambiguity
             if len([nc for nc in self.target.named_coasts.all() if self.source
                     in nc.neighbours.all()]) > 1:
-                raise IllegalMoveException(_(
+                raise IllegalCommandException(_(
                     'Cannot order an fleet into a territory with named coasts '
                     'without specifying a named coast.'
                 ))
@@ -766,14 +770,14 @@ class Command(HygenicModel):
 
     def _aux_occupied(self):
         if not self.aux.occupied():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'No piece exists in {self.aux}.'
             ))
         return True
 
     def _aux_piece_can_reach_target(self):
         if not self.aux.piece.can_reach(self.target):
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'{self.aux.piece.type.title()} {self.aux} cannot '
                 f'reach {self.target}.'
             ))
@@ -781,7 +785,7 @@ class Command(HygenicModel):
 
     def _aux_piece_is_army(self):
         if not self.aux.piece.is_army():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 f'{self.piece.type.title()} {self.source} cannot '
                 f'convoy piece at {self.aux} because it is a fleet.'
             ))
@@ -790,7 +794,7 @@ class Command(HygenicModel):
     def _aux_piece_command_legal(self):
         self.aux.piece.command.check_illegal()
         if self.aux.piece.command.illegal:
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 'Illegal because the command of '
                 f'{self.aux.piece.type.title()} {self.aux} is illegal.'
             ))
@@ -798,14 +802,14 @@ class Command(HygenicModel):
 
     def _piece_has_been_dislodged(self):
         if not self.source.piece.dislodged():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 'Only pieces which have been dislodged can retreat.'
             ))
         return True
 
     def _target_not_occupied(self):
         if self.target.occupied():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 'Dislodged piece cannot move to occupied territory.'
             ))
         return True
@@ -813,7 +817,7 @@ class Command(HygenicModel):
     def _target_not_where_attacker_came_from(self):
         if self.target == self.source.piece.dislodged_by\
                 .get_previous_territory():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 'Dislodged piece cannot move to territory from which '
                 'attacking piece came.'
             ))
@@ -821,7 +825,7 @@ class Command(HygenicModel):
 
     def _target_not_vacant_by_standoff_on_previous_turn(self):
         if self.target.standoff_occured_on_previous_turn():
-            raise IllegalMoveException(_(
+            raise IllegalCommandException(_(
                 'Dislodged piece cannot move to territory where a standoff '
                 'occured on the previous turn.'
             ))

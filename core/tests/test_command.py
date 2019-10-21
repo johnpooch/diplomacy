@@ -396,6 +396,7 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
     def setUp(self):
         super().setUp()
         self.initialise_territories()
+        self.initialise_named_coasts()
         self.order = models.Order.objects.create(
             nation=models.Nation.objects.get(name='France'),
             turn=self.turn,
@@ -409,14 +410,19 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         Army can support fleet to territory adjacent to both pieces if coastal.
         """
         self.set_piece_territory(self.attacking_fleet, self.gulf_of_lyon)
-        command = self.support(
+        self.move(
+            self.attacking_fleet,
+            self.gulf_of_lyon,
+            self.piedmont,
+        )
+        supporting_command = self.support(
             self.army,
             self.marseilles,
             self.gulf_of_lyon,
             self.piedmont,
         )
-        command.check_illegal()
-        self.assertFalse(command.illegal)
+        supporting_command.check_illegal()
+        self.assertFalse(supporting_command.illegal)
 
     def test_support_fleet_to_adjacent_territory_sea(self):
         """
@@ -483,14 +489,20 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.army, self.gascony)
         self.set_piece_territory(self.attacking_fleet, self.mid_atlantic)
-        command = self.support(
+        self.move(
+            self.attacking_fleet,
+            self.mid_atlantic,
+            self.spain,
+            self.spain_nc,
+        )
+        supporting_command = self.support(
             self.army,
             self.gascony,
             self.mid_atlantic,
             self.spain,
         )
-        command.check_illegal()
-        self.assertFalse(command.illegal)
+        supporting_command.check_illegal()
+        self.assertFalse(supporting_command.illegal)
 
     def test_support_fleet_to_complex_territory_not_neighbour_named_coast(self):
         """
@@ -500,6 +512,12 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
         """
         self.set_piece_territory(self.army, self.gascony)
         self.set_piece_territory(self.attacking_fleet, self.mid_atlantic)
+        self.move(
+            self.attacking_fleet,
+            self.mid_atlantic,
+            self.spain,
+            self.spain_nc,
+        )
         command = self.support(
             self.army,
             self.marseilles,
@@ -542,11 +560,16 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
 
     def test_convoy_army(self):
         """
-        Can convoy army if army is on the coast, target is coastal, and fleet is
-        at sea.
+        Can convoy army if army is on the coast, target is coastal, and fleet
+        is at sea.
         """
         self.set_piece_territory(self.fleet, self.english_channel)
         self.set_piece_territory(self.attacking_army, self.wales)
+        self.move(
+            self.attacking_army,
+            self.picardy,
+            self.wales
+        )
         command = self.convoy(
             self.fleet,
             self.english_channel,

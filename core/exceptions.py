@@ -1,0 +1,2 @@
+class IllegalCommandException(Exception):
+    pass
