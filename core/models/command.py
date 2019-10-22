@@ -56,7 +56,6 @@ class CommandManager(models.Manager):
     def process_commands(self):
         """
         """
-        all_convoys_resolved = False
         all_commands_resolved = False
         qs = super().get_queryset()
 
@@ -67,16 +66,38 @@ class CommandManager(models.Manager):
 
         # NOTE need to resolve all convoy commands first
 
-        # while not all_commands_resolved:
-        #     qs = qs.filter(type=CommandType.CONVOY)
-        #     # check if commands are dislodged
-        #     for command in qs:
-        #         if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
-        #             command.piece.dislodged_decision()
-        #         if command.piece.dislodged:
-        #             command.set_fails()
-        #         if command.piece.sustains:
-        #             command.set_succeeds()
+        all_convoys_resolved = False
+        while not all_convoys_resolved:
+            # Need to find out if any convoys are dislodged. To do this we need
+            # to resolve the moves and supports of all other fleets.
+            fleet_commands = qs.filter(piece__type=PieceType.FLEET)\
+                .exclude(illegal=True)
+            convoy_commands = fleet_commands.filter(type=CommandType.CONVOY)
+
+            for command in fleet_commands:
+                if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
+                    command.piece.dislodged_decision()
+
+            for command in fleet_commands:
+                if not command.illegal \
+                        and command.state == CommandState.UNRESOLVED:
+                    command.resolve()
+
+            for command in fleet_commands:
+                command.save()
+                # debug_command(command)
+
+            fleet_commands = fleet_commands.filter(
+                Q(state=CommandState.UNRESOLVED) |
+                Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
+            )
+            convoy_commands = convoy_commands.filter(
+                Q(state=CommandState.UNRESOLVED) |
+                Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
+            )
+
+            if not convoy_commands:
+                all_convoys_resolved = True
 
         while not all_commands_resolved:
             qs = qs.exclude(type=CommandType.CONVOY)
@@ -91,29 +112,6 @@ class CommandManager(models.Manager):
                             dependencies = qs.filter(id__in=[d.id for d in dependencies])
                             dependencies.update(state=CommandState.SUCCEEDS)
 
-                else:
-                    if command.type == CommandType.MOVE:
-                        command._min_attack_strength_result = \
-                            command.min_attack_strength
-                        command._max_attack_strength_result = \
-                            command.max_attack_strength
-
-                        command._min_defend_strength_result = \
-                            command.min_defend_strength
-                        command._max_defend_strength_result = \
-                            command.max_defend_strength
-
-                        command._min_prevent_strength_result = \
-                            command.min_prevent_strength
-                        command._max_prevent_strength_result = \
-                            command.max_prevent_strength
-
-                        command._min_hold_strength_result = \
-                            command.target.min_hold_strength
-                        command._max_hold_strength_result = \
-                            command.target.max_hold_strength
-
-                    command.save()
 
             for command in qs:
                 if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
@@ -123,6 +121,29 @@ class CommandManager(models.Manager):
                 if not command.illegal \
                         and command.state == CommandState.UNRESOLVED:
                     command.resolve()
+
+            if command.type == CommandType.MOVE:
+                command._min_attack_strength_result = \
+                    command.min_attack_strength
+                command._max_attack_strength_result = \
+                    command.max_attack_strength
+
+                command._min_defend_strength_result = \
+                    command.min_defend_strength
+                command._max_defend_strength_result = \
+                    command.max_defend_strength
+
+                command._min_prevent_strength_result = \
+                    command.min_prevent_strength
+                command._max_prevent_strength_result = \
+                    command.max_prevent_strength
+
+                command._min_hold_strength_result = \
+                    command.target.min_hold_strength
+                command._max_hold_strength_result = \
+                    command.target.max_hold_strength
+
+            command.save()
 
             for command in qs:
                 command.save()
@@ -678,6 +699,12 @@ class Command(HygenicModel):
                 self.set_fails()
 
         if self.type == CommandType.HOLD:
+            if self.piece.sustains:
+                self.set_succeeds()
+            if self.piece.dislodged:
+                self.set_fails()
+
+        if self.type == CommandType.CONVOY:
             if self.piece.sustains:
                 self.set_succeeds()
             if self.piece.dislodged:

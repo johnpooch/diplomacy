@@ -140,7 +140,7 @@ class Piece(HygenicModel):
             if self.command.succeeds:
                 return self.set_sustains()
         if [p for p in self.territory.attacking_pieces
-            if p.command.fails] and all([p.command.fails for p in self.territory.attacking_pieces]):
+                if p.command.fails] and all([p.command.fails for p in self.territory.attacking_pieces]):
             return self.set_sustains()
 
         # TODO add dislodged by
