@@ -1116,8 +1116,8 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
             self.edinburgh
         )
         self.assertEqual(len(convoy_paths), 2)
-        self.assertEqual(path_a, convoy_paths[0])
-        self.assertEqual(path_b, convoy_paths[1])
+        self.assertTrue(path_a in convoy_paths)
+        self.assertTrue(path_b in convoy_paths)
 
 
 class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
@@ -1429,28 +1429,6 @@ class TestHeadToHead(TestCase, TerritoriesMixin, HelperMixin):
             type=CommandType.MOVE,
         )
         self.assertTrue(command.head_to_head_exists())
-
-    def test_head_to_head_battle_same_nation(self):
-        """
-        Two pieces from the same nation attempting to move into eachother's
-        territories does not cause a head-to-head battle.
-        """
-        self.set_piece_territory(self.second_french_army, self.burgundy)
-        command = models.Command.objects.create(
-            piece=self.french_army,
-            source=self.paris,
-            target=self.burgundy,
-            order=self.french_order,
-            type=CommandType.MOVE,
-        )
-        models.Command.objects.create(
-            piece=self.german_army,
-            source=self.burgundy,
-            target=self.paris,
-            order=self.french_order,
-            type=CommandType.MOVE,
-        )
-        self.assertFalse(command.head_to_head_exists())
 
     def test_head_to_head_battle_moving_to_different_territory(self):
         """

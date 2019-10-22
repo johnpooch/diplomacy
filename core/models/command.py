@@ -65,8 +65,6 @@ class CommandManager(models.Manager):
 
             for command in qs.exclude(illegal=True):
                 if command.paradox_exists:
-                    print('PARADOX EXISTS')
-                    print(command)
                     if command._min_attack_strength_result == command.min_attack_strength and command._max_attack_strength_result == command.max_attack_strength:
                         dependencies = command.get_attack_strength_dependencies()
                         for d in dependencies:
@@ -538,12 +536,11 @@ class Command(HygenicModel):
         if not self.target.occupied():
             return False
 
-        if self.target.piece.nation == self.nation:
-            return False
         if self.target.piece.command.target == self.source:
             if self.target.piece.command.move_path:
                 self.head_to_head_opposing_piece = self.target.piece
                 return True
+
         return False
 
     def resolve(self):
@@ -596,7 +593,7 @@ class Command(HygenicModel):
             # succeeds if...
             if self.head_to_head_exists():
                 opposing_unit = self.target.piece
-                if self.min_attack_strength > opposing_unit.max_defend_strength:
+                if self.min_attack_strength > opposing_unit.command.max_defend_strength:
                     if self.min_attack_strength > max(
                             [p.command.max_prevent_strength
                              for p in self.target.other_attacking_pieces(self.piece)]
@@ -616,7 +613,7 @@ class Command(HygenicModel):
             # fails if...
             if self.head_to_head_exists():
                 opposing_unit = self.target.piece
-                if self.max_attack_strength <= opposing_unit.min_defend_strength:
+                if self.max_attack_strength <= opposing_unit.command.min_defend_strength:
                     return self.set_fails()
             if self.max_attack_strength <= self.target.min_hold_strength:
                 return self.set_fails()
@@ -768,7 +765,7 @@ class Command(HygenicModel):
             return 0
         if self.head_to_head_exists():
             opposing_unit = self.target.piece
-            if opposing_unit.command.succeds:
+            if opposing_unit.command.succeeds:
                 return 0
         return 1 + len([c for c in self.supporting_commands if not c.fails])
 
