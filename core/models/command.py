@@ -11,10 +11,14 @@ from core.exceptions import IllegalCommandException
 
 
 def debug_command(command):
+    print('\n')
     print(command)
     if command.type == CommandType.MOVE:
         print(f'MAX ATTACK STRENGTH: {command.max_attack_strength}')
         print(f'MIN ATTACK STRENGTH: {command.min_attack_strength}')
+
+        print(f'MAX DEFEND STRENGTH: {command.max_defend_strength}')
+        print(f'MIN DEFEND STRENGTH: {command.min_defend_strength}')
 
         print(f'MAX PREVENT STRENGTH: {command.max_prevent_strength}')
         print(f'MIN PREVENT STRENGTH: {command.min_prevent_strength}')
@@ -52,6 +56,7 @@ class CommandManager(models.Manager):
     def process_commands(self):
         """
         """
+        all_convoys_resolved = False
         all_commands_resolved = False
         qs = super().get_queryset()
 
@@ -60,15 +65,32 @@ class CommandManager(models.Manager):
 
         qs = super().get_queryset()
 
+        # NOTE need to resolve all convoy commands first
+
+        # while not all_commands_resolved:
+        #     qs = qs.filter(type=CommandType.CONVOY)
+        #     # check if commands are dislodged
+        #     for command in qs:
+        #         if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
+        #             command.piece.dislodged_decision()
+        #         if command.piece.dislodged:
+        #             command.set_fails()
+        #         if command.piece.sustains:
+        #             command.set_succeeds()
+
         while not all_commands_resolved:
             qs = qs.exclude(type=CommandType.CONVOY)
 
-            for command in qs.exclude(illegal=True):
+            for command in qs.exclude(illegal=True)\
+                    .filter(state=CommandState.UNRESOLVED):
                 if command.paradox_exists:
                     if command._min_attack_strength_result == command.min_attack_strength and command._max_attack_strength_result == command.max_attack_strength:
                         dependencies = command.get_attack_strength_dependencies()
                         for d in dependencies:
-                            d.set_succeeds()
+                            # NOTE hacky af
+                            dependencies = qs.filter(id__in=[d.id for d in dependencies])
+                            dependencies.update(state=CommandState.SUCCEEDS)
+
                 else:
                     if command.type == CommandType.MOVE:
                         command._min_attack_strength_result = \
@@ -111,7 +133,6 @@ class CommandManager(models.Manager):
                 Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
             )
 
-            print
             if not qs:
                 all_commands_resolved = True
 
@@ -445,11 +466,12 @@ class Command(HygenicModel):
         self.illegal_message = message
         self.set_fails()
 
-    def set_succeeds(self):
+    def set_succeeds(self, save=True):
         """
         """
         self.state = CommandState.SUCCEEDS
-        self.save()
+        if save:
+            self.save()
 
     def set_fails(self):
         """
