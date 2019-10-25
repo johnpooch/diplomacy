@@ -52,6 +52,8 @@ class Piece(HygenicModel):
         db_table = "piece"
 
     def __str__(self):
+        # TODO Fix this up and make it iused in all the error messages. Also
+        # make fixtures use title instead of using `title()`
         return f'{self.type.title()} {self.territory} ({self.nation})'
 
     def clean(self):

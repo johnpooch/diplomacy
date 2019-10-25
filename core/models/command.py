@@ -112,7 +112,6 @@ class CommandManager(models.Manager):
                             dependencies = qs.filter(id__in=[d.id for d in dependencies])
                             dependencies.update(state=CommandState.SUCCEEDS)
 
-
             for command in qs:
                 if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
                     command.piece.dislodged_decision()
@@ -373,6 +372,12 @@ class Command(HygenicModel):
                     raise ValueError('Army command cannot specify a target coast.')
         except AttributeError:
             pass
+        try:
+            if self.piece.type == PieceType.ARMY:
+                if self.type == CommandType.CONVOY:
+                    raise ValueError('Army cannot convoy.')
+        except AttributeError:
+            pass
 
     @property
     def paradox_exists(self):
@@ -416,8 +421,8 @@ class Command(HygenicModel):
                     self._source_piece_can_reach_target(),
                     self._source_piece_can_reach_target(),
                     self._aux_occupied(),
-                    self._aux_piece_can_reach_target(),
-                    self._aux_piece_command_legal(),
+                    # self._aux_piece_can_reach_target(),
+                    self._aux_piece_move_legal(),
                 ]
             if self.type == CommandType.CONVOY:
                 [
@@ -426,7 +431,7 @@ class Command(HygenicModel):
                     self._aux_piece_is_army(),
                     self._aux_piece_can_reach_target(),
                     self._source_piece_is_at_sea(),
-                    self._aux_piece_command_legal(),
+                    self._aux_piece_move_legal(),
                 ]
             if self.type == CommandType.RETREAT:
                 [
@@ -579,6 +584,9 @@ class Command(HygenicModel):
         if not self.target.occupied():
             return False
 
+        if not self.target.piece.command.type == CommandType.MOVE:
+            return False
+
         if self.target.piece.command.target == self.source:
             if self.target.piece.command.move_path:
                 self.head_to_head_opposing_piece = self.target.piece
@@ -683,7 +691,21 @@ class Command(HygenicModel):
                 if all([p.command.max_attack_strength == 0
                         for p in self.source.attacking_pieces]):
                     self.set_succeeds()
+
             # fails if...
+            # If aux piece is not going to target of command
+            if self.aux.occupied():
+                if self.aux.piece.command.type == CommandType.MOVE \
+                        and self.aux.piece.command.target != self.target:
+                    self.set_fails()
+            # If aux piece holds and support target is not same as aux
+            if self.aux.piece.command.type in [CommandType.HOLD, CommandType.CONVOY, CommandType.SUPPORT] and self.target != self.aux:
+                self.set_fails()
+
+            if self.target.occupied():
+                if self.target != self.aux and self.target.piece.nation == self.nation:
+                    if (self.target.piece.command.type == CommandType.MOVE and self.target.piece.command.fails) or (self.target.piece.command.type in [CommandType.HOLD, CommandType.SUPPORT, CommandType.CONVOY]):
+                        self.set_fails()
             if self.source.piece.dislodged:
                 self.set_fails()
             if self.target.occupied() and self.aux.occupied():
@@ -693,9 +715,13 @@ class Command(HygenicModel):
                             for p in self.source.other_attacking_pieces
                             (self.target.piece)]):
                         self.set_fails()
+
+                    else:
+                        return
             if self.source.attacking_pieces and \
-                    all([p.command.min_attack_strength >= 1
-                         for p in self.source.attacking_pieces]):
+                    any([p.command.min_attack_strength >= 1
+                         for p in self.source.attacking_pieces
+                         if p.territory != self.aux.piece.command.target]):
                 self.set_fails()
 
         if self.type == CommandType.HOLD:
@@ -985,13 +1011,14 @@ class Command(HygenicModel):
             ))
         return True
 
-    def _aux_piece_command_legal(self):
-        self.aux.piece.command.check_illegal()
-        if self.aux.piece.command.illegal:
-            raise IllegalCommandException(_(
-                'Illegal because the command of '
-                f'{self.aux.piece.type.title()} {self.aux} is illegal.'
-            ))
+    def _aux_piece_move_legal(self):
+        if self.aux.piece.command.type == CommandType.MOVE:
+            self.aux.piece.command.check_illegal()
+            if self.aux.piece.command.illegal:
+                raise IllegalCommandException(_(
+                    'Illegal because the command of '
+                    f'{self.aux.piece.type.title()} {self.aux} is illegal.'
+                ))
         return True
 
     def _piece_has_been_dislodged(self):
