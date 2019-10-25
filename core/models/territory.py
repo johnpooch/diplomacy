@@ -154,7 +154,7 @@ class Territory(models.Model):
             if not self.piece.command.unresolved:
                 if self.piece.command.succeeds:
                     return 0
-                if self.piece.command.fails:
+                if self.piece.command.fails and not self.piece.command.illegal:
                     return 1
         # return 1 plus the number of supporting pieces that are successful or
         # unresolved
@@ -173,7 +173,7 @@ class Territory(models.Model):
         if self.piece.command.type == CommandType.MOVE:
             if not self.piece.command.fails:
                 return 0
-            else:
+            elif not self.piece.command.illegal:
                 return 1
         # return 1 plus the number of supporting pieces that are successful
         return 1 + len([c for c in self.piece.command.supporting_commands

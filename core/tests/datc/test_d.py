@@ -1147,12 +1147,6 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
             'Fleet Kiel cannot reach Munich.'
         )
 
-        self.assertTrue(army_burgundy_support.illegal)
-        self.assertEqual(
-            army_burgundy_support.illegal_message,
-            'Illegal because the command of Fleet Kiel is illegal.'
-        )
-
         self.assertTrue(fleet_kiel.dislodged)
         self.assertEqual(fleet_kiel.dislodged_by, army_munich)
 
@@ -1212,13 +1206,6 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         self.assertEqual(
             fleet_spain_nc_move.illegal_message,
             'Fleet Spain (nc) cannot reach Gulf Of Lyon.'
-        )
-
-        self.assertTrue(fleet_marseilles_support.illegal)
-        self.assertEqual(
-            fleet_marseilles_support.illegal_message,
-            ('Illegal because the command of Fleet Spain is '
-             'illegal.')
         )
 
         self.assertTrue(fleet_gulf_of_lyon_move.succeeds)
@@ -1292,15 +1279,292 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
             'Army Marseilles cannot reach Gulf Of Lyon.'
         )
 
-        self.assertTrue(fleet_spain_sc_support.illegal)
-        self.assertEqual(
-            fleet_spain_sc_support.illegal_message,
-            ('Illegal because the command of Army Marseilles is '
-             'illegal.')
-        )
-
         self.assertTrue(fleet_tyrrhenian_sea_support.succeeds)
         self.assertTrue(fleet_western_med_move.succeeds)
 
         self.assertTrue(fleet_gulf_of_lyon.dislodged)
         self.assertEqual(fleet_gulf_of_lyon.dislodged_by, fleet_western_med)
+
+    def test_failing_hold_support_can_be_supported(self):
+        """
+        If an adjudicator fails on one of the previous three test cases, then
+        the bug should be removed with care. A failing move can not be
+        supported, but a failing hold support, because of some preconditions
+        (unmatching order) can still be supported.
+
+        Germany:
+        A Berlin Supports A Prussia
+        F Kiel Supports A Berlin
+
+        Russia:
+        F Baltic Sea Supports A Prussia - Berlin
+        A Prussia - Berlin
+
+        Although the support of Berlin on Prussia fails (because of unmatching
+        orders), the support of Kiel on Berlin is still valid. So, Berlin will
+        not be dislodged.
+        """
+        army_berlin = army(self.germany, self.berlin)
+        fleet_kiel = fleet(self.germany, self.kiel)
+
+        fleet_baltic = fleet(self.russia, self.baltic_sea)
+        army_prussia = army(self.russia, self.prussia)
+
+        army_berlin_support = support(
+            self.germany_order, army_berlin, self.berlin, self.prussia,
+            self.prussia
+        )
+        fleet_kiel_support = support(
+            self.germany_order, fleet_kiel, self.kiel, self.berlin,
+            self.berlin
+        )
+        fleet_baltic_support = support(
+            self.russia_order, fleet_baltic, self.baltic_sea, self.prussia,
+            self.berlin,
+        )
+        army_prussia_move = move(
+            self.russia_order, army_prussia, self.prussia, self.berlin,
+        )
+
+        commands = [
+            army_berlin_support, fleet_kiel_support,
+            fleet_baltic_support, army_prussia_move, army_berlin
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(army_berlin_support.fails)
+        self.assertTrue(fleet_kiel_support.succeeds)
+
+        self.assertTrue(fleet_baltic_support.succeeds)
+        self.assertTrue(army_prussia_move.fails)
+
+        self.assertTrue(army_berlin.sustains)
+
+    def test_failing_move_support_can_be_supported(self):
+        """
+        Similar as the previous test case, but now with an unmatched support to
+        move.
+
+        Germany:
+        A Berlin Supports A Prussia - Silesia
+        F Kiel Supports A Berlin
+
+        Russia:
+        F Baltic Sea Supports A Prussia - Berlin
+        A Prussia - Berlin
+
+        Again, Berlin will not be dislodged.
+        """
+        army_berlin = army(self.germany, self.berlin)
+        fleet_kiel = fleet(self.germany, self.kiel)
+
+        fleet_baltic = fleet(self.russia, self.baltic_sea)
+        army_prussia = army(self.russia, self.prussia)
+
+        army_berlin_support = support(
+            self.germany_order, army_berlin, self.berlin, self.prussia,
+            self.silesia
+        )
+        fleet_kiel_support = support(
+            self.germany_order, fleet_kiel, self.kiel, self.berlin,
+            self.berlin
+        )
+        fleet_baltic_support = support(
+            self.russia_order, fleet_baltic, self.baltic_sea, self.prussia,
+            self.berlin,
+        )
+        army_prussia_move = move(
+            self.russia_order, army_prussia, self.prussia, self.berlin,
+        )
+
+        commands = [
+            army_berlin_support, fleet_kiel_support,
+            fleet_baltic_support, army_prussia_move, army_berlin
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(army_berlin_support.fails)
+        self.assertTrue(fleet_kiel_support.succeeds)
+
+        self.assertTrue(fleet_baltic_support.succeeds)
+        self.assertTrue(army_prussia_move.fails)
+
+        self.assertTrue(army_berlin.sustains)
+
+    def test_failing_convoy_can_be_supported(self):
+        """
+        Similar as the previous test case, but now with an unmatched convoy.
+
+        England:
+        F Sweden - Baltic Sea
+        F Denmark Supports F Sweden - Baltic Sea
+
+        Germany:
+        A Berlin Hold
+
+        Russia:
+        F Baltic Sea Convoys A Berlin - Livonia
+        F Prussia Supports F Baltic Sea
+
+        The convoy order in the Baltic Sea is unmatched and fails. However, the
+        support of Prussia on the Baltic Sea is still valid and the fleet in
+        the Baltic Sea is not dislodged.
+        """
+        fleet_sweden = fleet(self.england, self.sweden)
+        fleet_denmark = fleet(self.england, self.denmark)
+
+        army_berlin = army(self.germany, self.berlin)
+
+        fleet_baltic = fleet(self.russia, self.baltic_sea)
+        fleet_prussia = fleet(self.russia, self.prussia)
+
+        fleet_sweden_move = move(
+            self.england_order, fleet_sweden, self.sweden, self.baltic_sea
+        )
+        fleet_denmark_support = support(
+            self.england_order, fleet_denmark, self.denmark, self.sweden,
+            self.baltic_sea
+        )
+        army_berlin_hold = hold(
+            self.germany_order, army_berlin, self.berlin
+        )
+        fleet_baltic_convoy = convoy(
+            self.russia_order, fleet_baltic, self.baltic_sea, self.berlin,
+            self.livonia,
+        )
+        fleet_prussia_support = support(
+            self.russia_order, fleet_prussia, self.prussia, self.baltic_sea,
+            self.baltic_sea,
+        )
+
+        commands = [
+            fleet_sweden_move, fleet_denmark_support, fleet_baltic_convoy,
+            army_berlin_hold, fleet_prussia_support, fleet_baltic
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(fleet_baltic_convoy.fails)
+        self.assertTrue(fleet_prussia_support.succeeds)
+
+        self.assertTrue(fleet_baltic.sustains)
+
+    def test_impossible_move_and_support(self):
+        """
+        If a move is impossible then it can be treated as "illegal", which
+        makes a hold support possible.
+
+        Austria:
+        A Budapest Supports F Rumania
+
+        Russia:
+        F Rumania - Holland
+
+        Turkey:
+        F Black Sea - Rumania
+        A Bulgaria Supports F Black Sea - Rumania
+
+        The move of the Russian fleet is impossible. But the question is,
+        whether it is "illegal" (see issue 4.E.1). If the move is "illegal" it
+        must be ignored and that makes the hold support of the army in Budapest
+        valid and the fleet in Rumania will not be dislodged.
+
+        I prefer that the move is "illegal", which means that the fleet in the
+        Black Sea does not dislodge the supported Russian fleet.
+        """
+        army_budapest = army(self.austria, self.budapest)
+
+        fleet_rumania = fleet(self.russia, self.rumania)
+
+        fleet_black_sea = fleet(self.turkey, self.black_sea)
+        army_bulgaria = army(self.turkey, self.bulgaria)
+
+        army_budapest_support = support(
+            self.austria_order, army_budapest, self.budapest, self.rumania,
+            self.rumania
+        )
+        fleet_rumania_move = move(
+            self.russia_order, fleet_rumania, self.rumania, self.holland
+        )
+        fleet_black_sea_move = move(
+            self.turkey_order, fleet_black_sea, self.black_sea, self.rumania
+        )
+        army_bulgaria_support = support(
+            self.turkey_order, army_bulgaria, self.bulgaria, self.black_sea,
+            self.rumania
+        )
+
+        commands = [
+            army_budapest_support, fleet_rumania_move, fleet_black_sea_move,
+            army_bulgaria_support, fleet_rumania
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(fleet_rumania_move.illegal)
+        self.assertTrue(army_budapest_support.succeeds)
+        self.assertTrue(fleet_rumania_move.fails)
+        self.assertTrue(fleet_rumania.sustains)
+
+    def test_move_to_impossible_coast_and_support(self):
+        """
+        Similar to the previous test case, but now the move can be "illegal"
+        because of the wrong coast.
+
+        Austria:
+        A Budapest Supports F Rumania
+
+        Russia:
+        F Rumania - Bulgaria(sc)
+
+        Turkey:
+        F Black Sea - Rumania
+        A Bulgaria Supports F Black Sea - Rumania
+
+        Again the move of the Russian fleet is impossible. However, some people
+        might correct the coast (see issue 4.B.3). If the coast is not
+        corrected, again the question is whether it is "illegal" (see issue
+        4.E.1). If the move is "illegal" it must be ignored and that makes the
+        hold support of the army in Budapest valid and the fleet in Rumania
+        will not be dislodged.
+
+        I prefer that unambiguous orders are not changed and that the move is
+        "illegal". That means that the fleet in the Black Sea does not dislodge
+        the supported Russian fleet.
+        """
+        army_budapest = army(self.austria, self.budapest)
+
+        fleet_rumania = fleet(self.russia, self.rumania)
+
+        fleet_black_sea = fleet(self.turkey, self.black_sea)
+        army_bulgaria = army(self.turkey, self.bulgaria)
+
+        army_budapest_support = support(
+            self.austria_order, army_budapest, self.budapest, self.rumania,
+            self.rumania
+        )
+        fleet_rumania_move = move(
+            self.russia_order, fleet_rumania, self.rumania, self.bulgaria,
+            self.bulgaria_sc
+        )
+        fleet_black_sea_move = move(
+            self.turkey_order, fleet_black_sea, self.black_sea, self.rumania
+        )
+        army_bulgaria_support = support(
+            self.turkey_order, army_bulgaria, self.bulgaria, self.black_sea,
+            self.rumania
+        )
+
+        commands = [
+            army_budapest_support, fleet_rumania_move, fleet_black_sea_move,
+            army_bulgaria_support, fleet_rumania
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(fleet_rumania_move.illegal)
+        self.assertTrue(army_budapest_support.succeeds)
+        self.assertTrue(fleet_rumania_move.fails)
+        self.assertTrue(fleet_rumania.sustains)

@@ -305,6 +305,8 @@ class Command(HygenicModel):
         blank=True,
         choices=PieceType.CHOICES,
     )
+    # TODO add invalid and invlaid message fields. Also add help text to
+    # explain difference.
     illegal = models.BooleanField(
         default=False
     )
@@ -422,7 +424,7 @@ class Command(HygenicModel):
                     self._source_piece_can_reach_target(),
                     self._aux_occupied(),
                     # self._aux_piece_can_reach_target(),
-                    self._aux_piece_move_legal(),
+                    # self._aux_piece_move_legal(),
                 ]
             if self.type == CommandType.CONVOY:
                 [
@@ -431,7 +433,7 @@ class Command(HygenicModel):
                     self._aux_piece_is_army(),
                     self._aux_piece_can_reach_target(),
                     self._source_piece_is_at_sea(),
-                    self._aux_piece_move_legal(),
+                    # self._aux_piece_move_legal(),
                 ]
             if self.type == CommandType.RETREAT:
                 [
@@ -696,7 +698,8 @@ class Command(HygenicModel):
             # If aux piece is not going to target of command
             if self.aux.occupied():
                 if self.aux.piece.command.type == CommandType.MOVE \
-                        and self.aux.piece.command.target != self.target:
+                        and self.aux.piece.command.target != self.target \
+                        and not self.aux.piece.command.illegal:
                     self.set_fails()
             # If aux piece holds and support target is not same as aux
             if self.aux.piece.command.type in [CommandType.HOLD, CommandType.CONVOY, CommandType.SUPPORT] and self.target != self.aux:
@@ -731,10 +734,14 @@ class Command(HygenicModel):
                 self.set_fails()
 
         if self.type == CommandType.CONVOY:
-            if self.piece.sustains:
-                self.set_succeeds()
+            # if unmatched
+            if not self.aux.piece.command.target == self.target:
+                self.set_fails()
+            # TODO somehow set fails if not part of successful convoy path
             if self.piece.dislodged:
                 self.set_fails()
+            if self.piece.sustains:
+                self.set_succeeds()
 
     def get_attack_strength_dependencies(self, dependencies=[]):
         """
@@ -880,17 +887,17 @@ class Command(HygenicModel):
         """
         """
         if self.type == CommandType.MOVE:
-            return Command.objects.filter(
-                aux=self.source,
-                target=self.target,
-                type=CommandType.SUPPORT,
-            )
-        if self.type in [CommandType.CONVOY, CommandType.SUPPORT, CommandType.HOLD]:
-            return Command.objects.filter(
-                aux=self.source,
-                target=self.source,
-                type=CommandType.SUPPORT,
-            )
+            if not self.illegal:
+                return Command.objects.filter(
+                    aux=self.source,
+                    target=self.target,
+                    type=CommandType.SUPPORT,
+                )
+        return Command.objects.filter(
+            aux=self.source,
+            target=self.source,
+            type=CommandType.SUPPORT,
+        )
 
     @property
     def successful_supporting_commands(self):
