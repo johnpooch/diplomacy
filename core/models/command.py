@@ -27,11 +27,15 @@ def debug_command(command):
         print(f'TERRITORY MIN HOLD STRENGTH: {command.target.min_hold_strength}')
 
         print(
+            'SUPPORTING COMMANDS: '
+            f'{command.supporting_commands}'
+        )
+        print(
             'OTHER ATTACKING PIECES: '
             f'{command.target.other_attacking_pieces(command.piece)}'
         )
 
-        print(f'COMMAND OUTCOME: {command.state}')
+    print(f'COMMAND OUTCOME: {command.state}')
 
 
 class CommandQuerySet(models.QuerySet):
@@ -104,13 +108,18 @@ class CommandManager(models.Manager):
 
             for command in qs.exclude(illegal=True)\
                     .filter(state=CommandState.UNRESOLVED):
-                if command.paradox_exists:
+                if command.paradox_exists and command.order_not_changed:
                     if command._min_attack_strength_result == command.min_attack_strength and command._max_attack_strength_result == command.max_attack_strength:
                         dependencies = command.get_attack_strength_dependencies()
                         for d in dependencies:
                             # NOTE hacky af
                             dependencies = qs.filter(id__in=[d.id for d in dependencies])
                             dependencies.update(state=CommandState.SUCCEEDS)
+
+                # TODO get rid of this
+                if command.paradox_exists and not command.order_not_changed:
+                    command.order_not_changed = True
+                    command.save()
 
             for command in qs:
                 if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
@@ -305,6 +314,12 @@ class Command(HygenicModel):
         blank=True,
         choices=PieceType.CHOICES,
     )
+
+    # TODO get rid of this. should just ba an attribute on the class (if
+    # even necessary)
+    order_not_changed = models.BooleanField(
+        default=False
+    )
     # TODO add invalid and invlaid message fields. Also add help text to
     # explain difference.
     illegal = models.BooleanField(
@@ -421,8 +436,8 @@ class Command(HygenicModel):
                     self._friendly_piece_exists_in_source(),
                     self._aux_not_same_as_source(),
                     self._source_piece_can_reach_target(),
-                    self._source_piece_can_reach_target(),
                     self._aux_occupied(),
+                    self._source_is_adjacent_to_target(),
                     # self._aux_piece_can_reach_target(),
                     # self._aux_piece_move_legal(),
                 ]
@@ -969,6 +984,14 @@ class Command(HygenicModel):
         if not self.source.is_sea():
             raise IllegalCommandException(_(
                 'Cannot convoy unless piece is at sea.'
+            ))
+        return True
+
+    def _source_is_adjacent_to_target(self):
+        if not self.source.adjacent_to(self.target):
+            raise IllegalCommandException(_(
+                'Cannot support to territory that is not adjacent to the '
+                'supporting piece.'
             ))
         return True
 

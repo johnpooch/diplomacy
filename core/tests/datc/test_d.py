@@ -1568,3 +1568,138 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         self.assertTrue(army_budapest_support.succeeds)
         self.assertTrue(fleet_rumania_move.fails)
         self.assertTrue(fleet_rumania.sustains)
+
+    def test_unwanted_support_allowed(self):
+        """
+        A self stand-off can be broken by an unwanted support.
+
+        Austria:
+        A Serbia - Budapest
+        A Vienna - Budapest
+
+        Russia:
+        A Galicia Supports A Serbia - Budapest
+
+        Turkey:
+        A Bulgaria - Serbia
+
+        Due to the Russian support, the army in Serbia advances to Budapest.
+        This enables Turkey to capture Serbia with the army in Bulgaria.
+        """
+        army_serbia = army(self.austria, self.serbia)
+        army_vienna = army(self.austria, self.vienna)
+
+        army_galicia = army(self.russia, self.galicia)
+
+        army_bulgaria = army(self.turkey, self.bulgaria)
+
+        army_serbia_move = move(
+            self.austria_order, army_serbia, self.serbia, self.budapest
+        )
+        army_vienna_move = move(
+            self.austria_order, army_vienna, self.vienna, self.budapest
+        )
+        army_galicia_support = support(
+            self.russia_order, army_galicia, self.galicia, self.serbia,
+            self.budapest
+        )
+        army_bulgaria_move = move(
+            self.turkey_order, army_bulgaria, self.bulgaria, self.serbia,
+        )
+
+        commands = [
+            army_serbia_move, army_vienna_move, army_galicia_support,
+            army_bulgaria_move,
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(army_serbia_move.succeeds)
+        self.assertTrue(army_galicia_support.succeeds)
+
+        self.assertTrue(army_vienna_move.fails)
+        self.assertTrue(army_bulgaria_move.succeeds)
+
+    def test_support_targeting_own_area_not_allowed(self):
+        """
+        Support targeting the area where the supporting unit is standing, is
+        illegal.
+
+        Germany:
+        A Berlin - Prussia
+        A Silesia Supports A Berlin - Prussia
+        F Baltic Sea Supports A Berlin - Prussia
+
+        Italy:
+        A Prussia Supports Livonia - Prussia
+
+        Russia:
+        A Warsaw Supports A Livonia - Prussia
+        A Livonia - Prussia
+
+        Russia and Italy wanted to get rid of the Italian army in Prussia (to
+        build an Italian fleet somewhere else). However, they didn't want a
+        possible German attack on Prussia to succeed. They invented this odd
+        order of Italy. It was intended that the attack of the army in Livonia
+        would have strength three, so it would be capable to prevent the
+        possible German attack to succeed. However, the order of Italy is
+        illegal, because a unit may only support to an area where the unit can
+        go by itself. A unit can't go to the area it is already standing, so
+        the Italian order is illegal and the German move from Berlin succeeds.
+        Even if it would be legal, the German move from Berlin would still
+        succeed, because the support of Prussia is cut by Livonia and Berlin.
+        """
+        army_berlin = army(self.germany, self.berlin)
+        army_silesia = army(self.germany, self.silesia)
+        fleet_baltic = fleet(self.germany, self.baltic_sea)
+
+        army_prussia = army(self.italy, self.prussia)
+
+        army_warsaw = army(self.russia, self.warsaw)
+        army_livonia = army(self.russia, self.livonia)
+
+        army_berlin_move = move(
+            self.germany_order, army_berlin, self.berlin, self.prussia
+        )
+        army_silesia_support = support(
+            self.germany_order, army_silesia, self.silesia, self.berlin,
+            self.prussia
+        )
+        fleet_baltic_support = support(
+            self.germany_order, fleet_baltic, self.baltic_sea, self.berlin,
+            self.prussia
+        )
+
+        army_prussia_support = support(
+            self.italy_order, army_prussia, self.prussia, self.livonia,
+            self.prussia
+        )
+
+        army_warsaw_support = support(
+            self.russia_order, army_warsaw, self.warsaw, self.livonia,
+            self.prussia
+        )
+        army_livonia_move = move(
+            self.russia_order, army_livonia, self.livonia, self.prussia,
+        )
+        commands = [
+            army_berlin_move, army_silesia_support, fleet_baltic_support,
+            army_prussia_support, army_warsaw_support, army_livonia_move,
+            army_prussia
+        ]
+        models.Command.objects.process_commands()
+        [c.refresh_from_db() for c in commands]
+
+        self.assertTrue(army_prussia_support.illegal)
+        self.assertEqual(
+            army_prussia_support.illegal_message,
+            ('Cannot support to territory that is not adjacent to the '
+             'supporting piece.')
+        )
+
+        self.assertTrue(army_berlin_move.succeeds)
+        self.assertTrue(army_prussia.dislodged)
+        self.assertTrue(
+            army_prussia.dislodged_by,
+            army_berlin
+        )
