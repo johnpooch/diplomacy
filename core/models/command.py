@@ -35,6 +35,8 @@ def debug_command(command):
             f'{command.target.other_attacking_pieces(command.piece)}'
         )
 
+    if command.illegal:
+        print(f'COMMAND ILLEGAL MESSAGE: {command.illegal_message}')
     print(f'COMMAND OUTCOME: {command.state}')
 
 
@@ -155,7 +157,7 @@ class CommandManager(models.Manager):
 
             for command in qs:
                 command.save()
-                # debug_command(command)
+                debug_command(command)
 
             qs = qs.filter(
                 Q(state=CommandState.UNRESOLVED) |
@@ -167,7 +169,8 @@ class CommandManager(models.Manager):
 
     def get_convoying_commands(self, source, target):
         """
-        Get all commands which are convoying from ``source`` to ``target``.
+        Get all legal commands which are convoying from ``source`` to
+        ``target``.
 
         Args:
             * ``source`` - ``Territory``
@@ -180,7 +183,8 @@ class CommandManager(models.Manager):
         return qs.filter(
             type=CommandType.CONVOY,
             aux=source,
-            target=target
+            target=target,
+            illegal=False
         )
 
     def get_convoy_paths(self, source, target):
@@ -209,7 +213,8 @@ class CommandManager(models.Manager):
                 else:
                     remaining = self.__all_other_commands(commands, command)
                     paths = self.__build_chain([command], target, remaining)
-                    [convoy_paths.add(p) for p in paths]
+                    if paths:
+                        [convoy_paths.add(p) for p in paths]
         return list(convoy_paths)
 
     def __build_chain(self, initial_chain, target, commands):
@@ -313,6 +318,10 @@ class Command(HygenicModel):
         null=True,
         blank=True,
         choices=PieceType.CHOICES,
+    )
+    # TODO helptext
+    via_convoy = models.BooleanField(
+        default=False
     )
 
     # TODO get rid of this. should just ba an attribute on the class (if
@@ -606,8 +615,9 @@ class Command(HygenicModel):
 
         if self.target.piece.command.target == self.source:
             if self.target.piece.command.move_path:
-                self.head_to_head_opposing_piece = self.target.piece
-                return True
+                if not self.target.piece.command.via_convoy and not self.via_convoy:
+                    self.head_to_head_opposing_piece = self.target.piece
+                    return True
 
         return False
 
@@ -662,24 +672,29 @@ class Command(HygenicModel):
             if self.head_to_head_exists():
                 opposing_unit = self.target.piece
                 if self.min_attack_strength > opposing_unit.command.max_defend_strength:
-                    if self.min_attack_strength > max(
-                            [p.command.max_prevent_strength
-                             for p in self.target.other_attacking_pieces(self.piece)]
-                    ):
-                        return self.set_succeeds()
-            if self.target.other_attacking_pieces(self.piece):
-                if self.min_attack_strength > self.target.max_hold_strength:
-                    if self.min_attack_strength > max(
-                        [p.command.max_prevent_strength
-                         for p in self.target.other_attacking_pieces(self.piece)]
-                    ):
+                    if self.target.other_attacking_pieces(self.piece):
+                        if self.min_attack_strength > max(
+                                [p.command.max_prevent_strength
+                                 for p in self.target.other_attacking_pieces(self.piece)]
+                        ):
+                            return self.set_succeeds()
+                    else:
                         return self.set_succeeds()
             else:
-                if self.min_attack_strength > self.target.max_hold_strength:
-                    return self.set_succeeds()
+                if self.target.other_attacking_pieces(self.piece):
+                    if self.min_attack_strength > self.target.max_hold_strength:
+                        if self.min_attack_strength > max(
+                            [p.command.max_prevent_strength
+                             for p in self.target.other_attacking_pieces(self.piece)]
+                        ):
+                            return self.set_succeeds()
+                else:
+                    if self.min_attack_strength > self.target.max_hold_strength:
+                        return self.set_succeeds()
 
             # fails if...
             if self.head_to_head_exists():
+                # NOTE this is wrong. this isn't the opposing piece
                 opposing_unit = self.target.piece
                 if self.max_attack_strength <= opposing_unit.command.min_defend_strength:
                     return self.set_fails()
@@ -689,7 +704,8 @@ class Command(HygenicModel):
                 if self.max_attack_strength <= min(
                     [p.command.min_prevent_strength
                      for p in self.target.other_attacking_pieces(self.piece)]
-                ):
+                ) and [p.command.min_prevent_strength
+                       for p in self.target.other_attacking_pieces(self.piece)]:
                     return self.set_fails()
 
         if self.type == CommandType.SUPPORT:
@@ -701,10 +717,18 @@ class Command(HygenicModel):
                 if self.target.occupied() and self.aux.occupied():
                     if self.aux.piece.command.type == CommandType.MOVE and \
                             self.aux.piece.command.target == self.target:
-                        if all([p.command.max_attack_strength == 0
-                                for p in self.source.other_attacking_pieces
-                                (self.target.piece)]):
-                            self.set_succeeds()
+                        if self.target.piece.command.type == CommandType.CONVOY:
+                            convoying_command = self.target.piece.command
+                            if convoying_command.aux.occupied():
+                                if all([p.command.max_attack_strength == 0  # aaa
+                                        for p in self.source.other_attacking_pieces
+                                        (convoying_command.aux.piece)]):
+                                    self.set_succeeds()
+                        else:
+                            if all([p.command.max_attack_strength == 0  # aaa
+                                    for p in self.source.other_attacking_pieces
+                                    (self.target.piece)]):
+                                self.set_succeeds()
                 if all([p.command.max_attack_strength == 0
                         for p in self.source.attacking_pieces]):
                     self.set_succeeds()
@@ -720,22 +744,37 @@ class Command(HygenicModel):
             if self.aux.piece.command.type in [CommandType.HOLD, CommandType.CONVOY, CommandType.SUPPORT] and self.target != self.aux:
                 self.set_fails()
 
-            if self.target.occupied():
-                if self.target != self.aux and self.target.piece.nation == self.nation:
-                    if (self.target.piece.command.type == CommandType.MOVE and self.target.piece.command.fails) or (self.target.piece.command.type in [CommandType.HOLD, CommandType.SUPPORT, CommandType.CONVOY]):
-                        self.set_fails()
+            # if self.target.occupied():
+                # if supporting into own piece's territory
+
+                # if self.target != self.aux and self.target.piece.nation == self.nation:
+                #     # if that command holds, fail
+                #     # NOTE usable for hold strength
+                #     # TODO alias this to `def holds`
+                #     if (self.target.piece.command.type == CommandType.MOVE and self.target.piece.command.fails) or (self.target.piece.command.type in [CommandType.HOLD, CommandType.SUPPORT, CommandType.CONVOY]):
+                #         if self.source.name == 'serbia':
+                #             print('a')
+                #         self.usable_for_prevent = True
+                #         self.save()
+                #         self.set_fails()
             if self.source.piece.dislodged:
                 self.set_fails()
             if self.target.occupied() and self.aux.occupied():
                 if self.aux.piece.command.type == CommandType.MOVE and \
                         self.aux.piece.command.target == self.target:
-                    if any([p.command.min_attack_strength >= 1
-                            for p in self.source.other_attacking_pieces
-                            (self.target.piece)]):
-                        self.set_fails()
-
+                    if self.target.piece.command.type == CommandType.CONVOY:
+                        convoying_command = self.target.piece.command
+                        if convoying_command.aux.occupied():
+                            if any([p.command.min_attack_strength >= 1
+                                    for p in self.source.other_attacking_pieces
+                                    (convoying_command.aux.piece)]):
+                                self.set_fails()
                     else:
-                        return
+                        if any([p.command.min_attack_strength >= 1
+                                for p in self.source.other_attacking_pieces
+                                (self.target.piece)]):
+                            self.set_fails()
+                    return
             if self.source.attacking_pieces and \
                     any([p.command.min_attack_strength >= 1
                          for p in self.source.attacking_pieces
@@ -778,23 +817,31 @@ class Command(HygenicModel):
         """
         Determine the minimum attack strength of a command.
         """
+        # TODO refactor supporting commands into attack_support and prevent
+        # support
         if not self.type == CommandType.MOVE:
             raise ValueError(
                 'Attack strength should only be calculated for move commands.'
             )
         if not self.move_path:
             return 0
-        if self.target.occupied():
-            if self.head_to_head_exists() or \
-                    self.target.piece.command.type != CommandType.MOVE or \
-                    (not self.target.piece.command.succeeds):
-                if self.target.piece.nation == self.nation:
-                    return 0
-                return 1 + len([c for c in self.supporting_commands if c.succeeds and 
-                                c.nation != self.target.piece.nation])
+
+        # TODO make min_attacking_support
+        if not self.target.occupied():
+            return 1 + len([c for c in self.supporting_commands if c.succeeds])
+
+        if self.head_to_head_exists() or \
+                self.target.piece.command.type != CommandType.MOVE or \
+                (not self.target.piece.command.succeeds):
+            if self.target.piece.nation == self.nation:
+                return 0
             return 1 + len([c for c in self.supporting_commands if c.succeeds and 
                             c.nation != self.target.piece.nation])
-        return 1 + len([c for c in self.supporting_commands if c.succeeds])
+        if self.target.piece.command.succeeds and \
+                self.target.piece.command.type == CommandType.MOVE:
+            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
+        return 1 + len([c for c in self.supporting_commands if c.succeeds and 
+                        c.nation != self.target.piece.nation])
 
     @property
     def max_attack_strength(self):
@@ -806,17 +853,26 @@ class Command(HygenicModel):
             )
         if not self.move_path:
             return 0
-        if self.target.occupied():
-            if self.head_to_head_exists() or \
-                    self.target.piece.command.type != CommandType.MOVE or \
-                    self.target.piece.command.fails:
-                if self.target.piece.nation == self.nation:
-                    return 0
-                return 1 + len([c for c in self.supporting_commands if (not c.fails) and
-                                c.nation != self.target.piece.nation])
+        if not self.target.occupied():
+            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
+
+        if self.head_to_head_exists() or \
+                self.target.piece.command.type != CommandType.MOVE or \
+                self.target.piece.command.fails:
+            if self.target.piece.nation == self.nation:
+                return 0
             return 1 + len([c for c in self.supporting_commands if (not c.fails) and
                             c.nation != self.target.piece.nation])
-        return 1 + len([c for c in self.supporting_commands if (not c.fails)])
+
+        if self.target.piece.command.succeeds and \
+                self.target.piece.command.type == CommandType.MOVE:
+            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
+        if self.target.piece.command.via_convoy and \
+                self.target.piece.command.type == CommandType.MOVE and \
+                self.target.piece.command.target == self.source:
+            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
+        return 1 + len([c for c in self.supporting_commands if (not c.fails) and
+                        c.nation != self.target.piece.nation])
 
     @property
     def min_defend_strength(self):

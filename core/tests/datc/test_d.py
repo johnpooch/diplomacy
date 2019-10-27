@@ -515,7 +515,7 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         self.assertTrue(fleet_kiel_move.fails)
         self.assertTrue(army_berlin_hold.succeeds)
-        self.assertTrue(army_munich_support.fails)
+        self.assertTrue(army_munich_support.succeeds)
 
     def test_no_self_dislodgment_of_returning_unit(self):
         """
@@ -556,7 +556,7 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         self.assertTrue(fleet_kiel_move.fails)
         self.assertTrue(army_berlin_move.fails)
         self.assertTrue(army_berlin.sustains)
-        self.assertTrue(army_munich_support.fails)
+        self.assertTrue(army_munich_support.succeeds)
         self.assertTrue(army_warsaw_move.fails)
 
     def test_supporting_a_foreign_unit_to_dislodge_own_unit(self):
@@ -591,7 +591,7 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         [c.refresh_from_db() for c in commands]
 
         self.assertTrue(fleet_trieste_hold.succeeds)
-        self.assertTrue(army_vienna_support.fails)
+        self.assertTrue(army_vienna_support.succeeds)
         self.assertTrue(army_venice_move.fails)
 
     def test_supporting_a_foreign_unit_to_dislodge_returning_own_unit(self):
@@ -633,7 +633,7 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         self.assertTrue(fleet_trieste_move.fails)
         self.assertTrue(fleet_trieste.sustains)
-        self.assertTrue(army_vienna_support.fails)
+        self.assertTrue(army_vienna_support.succeeds)
         self.assertTrue(army_venice_move.fails)
         self.assertTrue(fleet_apulia_move.fails)
 
@@ -683,7 +683,7 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         self.assertTrue(army_tyrolia_support.succeeds)
         self.assertTrue(fleet_adriatic_support.succeeds)
 
-        self.assertTrue(army_vienna_support.fails)
+        self.assertTrue(army_vienna_support.succeeds)
         self.assertTrue(fleet_trieste_hold.fails)
         self.assertTrue(army_tyrolia_support.succeeds)
         self.assertTrue(fleet_adriatic_support.succeeds)
@@ -958,7 +958,7 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         self.assertTrue(fleet_constantinople_support.succeeds)
         self.assertTrue(fleet_black_sea_move.succeeds)
 
-        self.assertTrue(army_smyrna_support.fails)
+        self.assertTrue(army_smyrna_support.succeeds)
         self.assertTrue(fleet_ankara_move.fails)
         self.assertTrue(fleet_ankara.dislodged)
         self.assertTrue(

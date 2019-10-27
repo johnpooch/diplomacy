@@ -46,6 +46,11 @@ class Piece(HygenicModel):
         null=True,
         blank=True
     )
+    retreat_territories = models.ManyToManyField(
+        'Territory',
+        blank=True,
+        related_name='retreat_pieces'
+    )
     active = models.BooleanField(default=True)
 
     class Meta:

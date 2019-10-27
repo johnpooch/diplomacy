@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from core import models
+from core.utils.piece import army, fleet
 from core.models.base import CommandType
 
 
@@ -143,3 +144,38 @@ class HelperMixin:
             order=self.order,
             type=CommandType.BUILD
         )
+
+    @staticmethod
+    def refresh_all(items):
+        """
+        """
+        try:
+            [i.refresh_from_db() for i in items]
+        except AttributeError:
+            pass
+
+
+def command_and_piece(nation, piece_type, source, command_type, aux=None,
+                      target=None, target_coast=None, via_convoy=False):
+    """
+    Helper to easily create piece and command.
+    """
+    if piece_type == 'army':
+        p = army(nation, source)
+    elif piece_type == 'fleet':
+        p = fleet(nation, source)
+    else:
+        raise ValueError(f'Unrecognized piece type: {piece_type}')
+
+    order = models.Order.objects.get(nation=nation)
+    models.Command.objects.create(
+        piece=p,
+        source=source,
+        target=target,
+        target_coast=target_coast,
+        aux=aux,
+        order=order,
+        type=command_type,
+        via_convoy=via_convoy,
+    )
+    return p

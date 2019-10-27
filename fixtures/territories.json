@@ -192,7 +192,7 @@
       "model":"core.territory",
       "pk":10,
       "fields":{
-         "name":"heligoland blight",
+         "name":"helgoland bight",
          "neighbours":[
             29,
             34,
@@ -347,7 +347,7 @@
       "model":"core.territory",
       "pk":17,
       "fields":{
-         "name":"skagerrack",
+         "name":"skagerrak",
          "neighbours":[
             29,
             16,
