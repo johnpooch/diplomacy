@@ -2,6 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models import Piece
+from core.models.base import CommandType, PieceType
 
 
 class Territory(models.Model):
@@ -57,7 +58,7 @@ class Territory(models.Model):
     # TODO add validation so that sea territories can't be controlled.
 
     def __str__(self):
-        return self.name.capitalize()
+        return self.name.title()
 
     def standoff_occured_on_previous_turn(self):
         # TODO do this when phases/logs are properly handled
@@ -86,7 +87,7 @@ class Territory(models.Model):
 
     def occupied(self):
         """
-        Determine whether a piece  exists in a territory.
+        Determine whether a piece exists in a territory.
         """
         try:
             return bool(self.piece)
@@ -108,7 +109,7 @@ class Territory(models.Model):
         Armies cannot enter sea territories. Fleets cannot enter non-coastal
         land territories.
         """
-        if piece.type == piece.PieceType.ARMY:
+        if piece.type == PieceType.ARMY:
             return self.type == self.TerritoryType.LAND
         return (self.type == self.TerritoryType.SEA) or self.coastal
 
@@ -128,14 +129,96 @@ class Territory(models.Model):
         return self.is_land() and not self.coastal
 
     def is_complex(self):
-        return self.named_coasts.exists()
+        return self.named_coasts.all().exists()
 
     @property
     def attacking_pieces(self):
         """
         Helper method to get all pieces which are moving into this territory.
         """
-        return Piece.objects.filter(command__target=self)
+        return Piece.objects.filter(
+            command__target=self,
+            command__type=CommandType.MOVE
+        )
+
+    @property
+    def max_hold_strength(self):
+        """
+        Determine the maximum 'hold_strength' of a territory. It should
+        always be possible to determine this.
+        """
+        # TODO test
+        if not self.occupied():
+            return 0
+        if self.piece.command.type == CommandType.MOVE:
+            if not self.piece.command.unresolved:
+                if self.piece.command.succeeds:
+                    return 0
+                if self.piece.command.fails and not self.piece.command.illegal:
+                    return 1
+        # return 1 plus the number of supporting pieces that are successful or
+        # unresolved
+        return 1 + len([c for c in self.piece.command.supporting_commands
+                        if not c.fails])
+
+    @property
+    def min_hold_strength(self):
+        """
+        Determine the minimum 'hold_strength' of a territory. It should always be
+        possible to determine this.
+        """
+        # TODO test
+        if not self.occupied():
+            return 0
+        if self.piece.command.type == CommandType.MOVE:
+            if not self.piece.command.fails:
+                return 0
+            elif not self.piece.command.illegal:
+                return 1
+        # return 1 plus the number of supporting pieces that are successful
+        return 1 + len([c for c in self.piece.command.supporting_commands
+                        if c.succeeds])
+
+    # @property
+    # def hold_strength(self):
+    #     # TODO test
+    #     """
+    #     Unlike ``attack_strength``,  ``hold_strength`` is defined for a
+    #     territory, rather than for a command.
+
+    #     Returns 0 when the territory is empty, or when it contains a unit that
+    #     is ordered to move and for which the move succeeds.
+
+    #     Returns 1 when the area contains a unit that is ordered to move and for
+    #     which the move fails.
+
+    #     In all other cases, returns 1 plus the number of orders that
+    #     successfully support the unit to hold.
+    #     """
+    #     if not self.occupied():
+    #         return 0
+
+    #     # maybe change this to make it return a range (lowest possible, highest_possible)
+    #     # also maybe explore head to head
+    #     if self.piece.command.type == CommandType.MOVE:
+    #         # resolve if unresolved
+    #         if self.piece.command.source == self.piece.command.target:
+    #             return 0
+    #         if self.piece.command.unresolved:
+    #             self.piece.command.resolve()
+    #         if self.piece.command.succeeds:
+    #             return 0
+    #         if self.piece.command.fails:
+    #             return 1
+
+    #     return 1 + len([c for c in self.piece.command.supporting_commands
+    #                     if c.succeeds])
+
+
+    #     if not self.occupied() or \
+    #             (self.piece.command.state == CommandState.resolved and
+    #              self.target.piece.command.type == 'MOVE'):
+    #         return 1 + self.support
 
     def foreign_attacking_pieces(self, nation):
         """
@@ -143,3 +226,11 @@ class Territory(models.Model):
         who do not belong to ``nation``.
         """
         return self.attacking_pieces.exclude(nation=nation)
+
+    def other_attacking_pieces(self, piece):
+        # TODO test
+        """
+        Helper method to get all pieces which are moving into this territory
+        not including ``piece``.
+        """
+        return self.attacking_pieces.exclude(id=piece.id)

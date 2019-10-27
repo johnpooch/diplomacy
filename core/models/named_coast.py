@@ -13,8 +13,14 @@ class NamedCoast(models.Model):
     territory. This takes effect when resolving challenges and also when
     resolving supply center control.
     """
-    name = models.CharField(max_length=100, null=False)
-    map_abbreviation = models.CharField(max_length=50, null=False, unique=True)
+    name = models.CharField(
+        max_length=100,
+        null=False
+    )
+    map_abbreviation = models.CharField(
+        max_length=50,
+        null=False
+    )
     parent = models.ForeignKey(
         'Territory',
         null=False,
@@ -29,3 +35,13 @@ class NamedCoast(models.Model):
 
     class Meta:
         db_table = 'named_coast'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['parent', 'map_abbreviation'],
+                name='unique_coast_abbreviation'
+            ),
+            models.UniqueConstraint(
+                fields=['parent', 'name'],
+                name='unique_coast_name'
+            )
+        ]

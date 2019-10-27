@@ -192,7 +192,7 @@
       "model":"core.territory",
       "pk":10,
       "fields":{
-         "name":"heligoland blight",
+         "name":"helgoland bight",
          "neighbours":[
             29,
             34,
@@ -347,7 +347,7 @@
       "model":"core.territory",
       "pk":17,
       "fields":{
-         "name":"skagerrack",
+         "name":"skagerrak",
          "neighbours":[
             29,
             16,
@@ -1434,6 +1434,7 @@
             59,
             62,
             64,
+            48,
             72
          ],
          "shared_coasts":[
@@ -1539,7 +1540,9 @@
             67
          ],
          "shared_coasts":[
-
+            47,
+            33,
+            28
          ],
          "coastal":true,
          "controlled_by":null,
@@ -1560,7 +1563,11 @@
              13
          ],
          "shared_coasts":[
-
+             13,
+             32,
+             45,
+             39,
+             9
          ],
          "coastal":true,
          "controlled_by":null,
@@ -1579,7 +1586,9 @@
             42
          ],
          "shared_coasts":[
-
+             37,
+             31,
+             42
          ],
          "coastal":true,
          "controlled_by":6,
