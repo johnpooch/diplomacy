@@ -45,7 +45,6 @@ class CommandQuerySet(models.QuerySet):
     @property
     def pieces(self):
         """
-
         """
         # TODO test
         Piece = apps.get_model('core', 'Piece')
@@ -57,18 +56,92 @@ class CommandManager(models.Manager):
     """
     def get_queryset(self):
         queryset = CommandQuerySet(self.model, using=self._db)
+        queryset = queryset.select_related(
+            'order__nation',
+            'source__piece__nation',
+            'aux__piece',
+            'target__piece__nation',
+            'target_coast',
+            'piece',
+        ).prefetch_related(
+            'source__neighbours',
+            'source__shared_coasts',
+            'source__named_coasts',
+            'source__piece__named_coast__neighbours',
+            'aux__neighbours',
+            'aux__shared_coasts',
+            'aux__named_coasts',
+            'target__neighbours',
+            'target__shared_coasts',
+            'target__named_coasts',
+        )
         return queryset
+
+    def process(self):
+        # determine whether any commands are illegal
+        all_commands = self.get_queryset()
+        for command in all_commands:
+            command.check_illegal()
+
+        # remove illegal commands from list
+        legal_commands = [c for c in all_commands if not c.illegal]
+
+        unresolved_fleet_commands = [c for c in all_commands if c.piece.is_fleet()]
+
+        # determine whether any convoys are dislodged. this means resovling
+        # move and support commands of all other fleets
+        while True:
+
+            # NOTE this is weird
+            for command in unresolved_fleet_commands:
+                if command.piece.unresolved:
+                    command.piece.dislodged_decision()
+
+            # resolve all fleet commands
+            for command in unresolved_fleet_commands:
+                if command.unresolved:
+                    command.resolve()
+
+            # filter out resolved commands
+            unresolved_fleet_commands = [c for c in unresolved_fleet_commands
+                                         if c.unresolved and c.piece.unresolved]
+
+            # if there are no more unresolved convoy commands
+            if not [c for c in unresolved_fleet_commands if c.type.is_convoy]:
+                break
+
+        commands = [c for c in all_commands if not c.is_convoy]
+        print(commands)
+        unresolved_commands = [c for c in commands if c.unresolved]
+
+        while True:
+
+            for command in unresolved_commands:
+                if command.piece.unresolved:
+                    print(command)
+                    command.piece.dislodged_decision()
+
+            for command in unresolved_commands:
+                command.resolve()
+
+            unresolved_commands = [c for c in unresolved_commands
+                                   if c.unresolved and c.piece.unresolved]
+
+            # if there are no more unresolved convoy commands
+            if not unresolved_commands:
+                break
+
+        # TODO break out into separate method
+        [c.save() for c in all_commands]
 
     def process_commands(self):
         """
         """
         all_commands_resolved = False
-        qs = super().get_queryset()
+        qs = self.get_queryset()
 
         for command in qs:
             command.check_illegal()
-
-        qs = super().get_queryset()
 
         # NOTE need to resolve all convoy commands first
 
@@ -157,7 +230,7 @@ class CommandManager(models.Manager):
 
             for command in qs:
                 command.save()
-                debug_command(command)
+                # debug_command(command)
 
             qs = qs.filter(
                 Q(state=CommandState.UNRESOLVED) |
@@ -982,6 +1055,18 @@ class Command(HygenicModel):
         Helper to get the nation of a command more easily.
         """
         return self.order.nation
+
+    @property
+    def is_move(self):
+        return self.type == CommandType.MOVE
+
+    @property
+    def is_support(self):
+        return self.type == CommandType.SUPPORT
+
+    @property
+    def is_convoy(self):
+        return self.type == CommandType.CONVOY
 
     def _friendly_piece_exists_in_source(self):
         if not self.source.friendly_piece_exists(self.nation):

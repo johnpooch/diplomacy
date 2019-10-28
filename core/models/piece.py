@@ -178,6 +178,7 @@ class Piece(HygenicModel):
         """
         self.dislodged_state = DislodgedState.DISLODGED
         self.dislodged_by = piece
+        print(self.dislodged_by)
         self.save()
 
     @property
@@ -191,6 +192,12 @@ class Piece(HygenicModel):
         """
         """
         return self.dislodged_state == DislodgedState.SUSTAINS
+
+    @property
+    def unresolved(self):
+        """
+        """
+        return self.dislodged_state == DislodgedState.UNRESOLVED
 
     @property
     def command(self):

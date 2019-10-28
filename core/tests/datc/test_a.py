@@ -30,7 +30,10 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         fleet_north_sea = fleet(self.england, self.north_sea)
         c = move(self.england_order, fleet_north_sea, self.north_sea,
                  self.picardy)
-        c.check_illegal()
+
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+
         self.assertTrue(c.illegal)
         self.assertEqual(
             c.illegal_message,
@@ -49,7 +52,10 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         army_liverpool = army(self.england, self.liverpool)
         c = move(self.england_order, army_liverpool, self.liverpool,
                  self.irish_sea)
-        c.check_illegal()
+
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+
         self.assertTrue(c.illegal)
         self.assertEqual(
             c.illegal_message,
@@ -68,7 +74,10 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         fleet_kiel = fleet(self.germany, self.kiel)
         c = move(self.germany_order, fleet_kiel, self.kiel,
                  self.munich)
-        c.check_illegal()
+
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+
         self.assertTrue(c.illegal)
         self.assertEqual(
             c.illegal_message,
@@ -89,7 +98,10 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         fleet_kiel = fleet(self.germany, self.kiel)
         c = move(self.germany_order, fleet_kiel, self.kiel,
                  self.kiel)
-        c.check_illegal()
+
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+
         self.assertTrue(c.illegal)
         self.assertEqual(
             c.illegal_message,
@@ -143,9 +155,9 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.yorkshire
         )
 
-        models.Command.objects.process_commands()
-        [c.refresh_from_db() for c in (army_yorkshire_move, fleet_north_sea_convoy,
-         army_liverpool_support, army_yorkshire, fleet_london_move, army_wales_support)]
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+        print('nothing happening here')
 
     def test_ordering_a_unit_of_another_country(self):
         """
@@ -163,7 +175,10 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.germany_order, fleet_london, self.london,
             self.north_sea,
         )
-        c.check_illegal()
+
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+
         self.assertTrue(c.illegal)
         self.assertEqual(
             c.illegal_message,
@@ -191,8 +206,8 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.london, self.belgium
         )
 
-        models.Command.objects.process_commands()
-        [c.refresh_from_db() for c in (fleet_london_move, fleet_north_sea_convoy)]
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
 
         self.assertTrue(fleet_london_move.illegal)
         self.assertTrue(fleet_north_sea_convoy.illegal)
@@ -230,16 +245,18 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.trieste
         )
 
-        models.Command.objects.process_commands()
-        [c.refresh_from_db() for c in (army_venice_move, fleet_trieste_support,
-                                       fleet_trieste, army_tyrolia_support)]
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
 
         self.assertTrue(fleet_trieste_support.illegal)
         self.assertEqual(
             fleet_trieste_support.illegal_message,
             'Fleet Trieste cannot support its own territory.'
         )
-        self.assertTrue(fleet_trieste.dislodged_by == army_venice)
+        self.assertEqual(
+            fleet_trieste.dislodged_by,
+            army_venice
+        )
         self.assertTrue(army_tyrolia_support.succeeds)
 
     def test_fleet_must_follow_coast_if_not_on_sea(self):
@@ -257,7 +274,10 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         command = move(
             self.italy_order, fleet_rome, self.rome, self.venice,
         )
-        command.check_illegal()
+
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
+
         self.assertTrue(command.illegal)
         self.assertEqual(
             command.illegal_message,
@@ -293,9 +313,8 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.italy_order, army_apulia, self.apulia, self.venice
         )
 
-        models.Command.objects.process_commands()
-        [c.refresh_from_db() for c in (army_venice_hold, army_venice,
-                                       fleet_rome_support, army_apulia_move)]
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
 
         self.assertTrue(fleet_rome_support.illegal)
         self.assertEqual(
@@ -327,8 +346,8 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.italy_order, army_venice, self.venice, self.tyrolia
         )
 
-        models.Command.objects.process_commands()
-        [c.refresh_from_db() for c in (army_venice_move, army_vienna_move)]
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
 
         self.assertTrue(army_vienna_move.fails)
         self.assertFalse(army_vienna.dislodged)
@@ -367,9 +386,8 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
             self.germany_order, army_munich, self.munich, self.tyrolia
         )
 
-        models.Command.objects.process_commands()
-        [c.refresh_from_db() for c in (army_venice_move, army_vienna_move,
-                                       army_munich_move)]
+        models.Command.objects.process()
+        [v.refresh_from_db() for v in locals().values() if v != self]
 
         self.assertTrue(army_vienna_move.fails)
         self.assertFalse(army_vienna.dislodged)
