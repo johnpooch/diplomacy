@@ -318,56 +318,39 @@ class Command(HygenicModel, ChecksMixin, CommandDecisionsMixin, ResolverMixin):
             pass
 
     def set_illegal(self, message):
-        """
-        Helper to
-        """
         self.illegal = True
         self.illegal_message = message
         self.set_fails()
 
     # NOTE these two shouldn't save
     def set_succeeds(self, save=True):
-        """
-        """
         self.state = CommandState.SUCCEEDS
         if save:
             self.save()
 
     def set_fails(self):
-        """
-        """
         self.state = CommandState.FAILS
         self.save()
 
     @property
     def unresolved(self):
-        """
-        """
         return self.state == CommandState.UNRESOLVED
 
     @property
     def succeeds(self):
-        """
-        """
         return self.state == CommandState.SUCCEEDS
 
     @property
     def fails(self):
-        """
-        """
         return self.state == CommandState.FAILS
 
     @property
     def successful_support(self):
-        """
-        """
         return [c for c in self.supporting_commands if c.succeeds]
 
     @property
     def supporting_commands(self):
         # TODO test
-        """
-        """
         if self.type == CommandType.MOVE:
             if not self.illegal:
                 return Command.objects.filter(
@@ -383,15 +366,11 @@ class Command(HygenicModel, ChecksMixin, CommandDecisionsMixin, ResolverMixin):
 
     @property
     def non_failing_support(self):
-        """
-        """
         return [c for c in self.supporting_commands if not c.fails]
 
     # TODO bin this
     @property
     def successful_supporting_commands(self):
-        """
-        """
         return self.supporting_commands.filter(illegal=False)
 
     @property

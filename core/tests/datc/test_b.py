@@ -231,7 +231,6 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         [c.refresh_from_db() for c in (fleet_mid_atlantic, fleet_spain_nc_support)]
 
         self.assertEqual(fleet_mid_atlantic.dislodged_by, fleet_north_atlantic)
-        self.assertTrue(fleet_spain_nc_support.cut)
 
     def test_supporting_with_unspecified_coast(self):
         """
