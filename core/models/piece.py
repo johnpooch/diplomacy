@@ -57,27 +57,27 @@ class Piece(HygenicModel):
         db_table = "piece"
 
     def __str__(self):
-        # TODO Fix this up and make it iused in all the error messages. Also
+        # TODO Fix this up and make it used in all the error messages. Also
         # make fixtures use title instead of using `title()`
-        return f'{self.type.title()} {self.territory} ({self.nation})'
+        return f'{self.type.title()} {str(self.territory)} ({self.nation})'
 
     def clean(self):
         super().clean()
-        if self.is_fleet():
-            if self.territory.is_complex() and not self.named_coast:
+        if self.is_fleet:
+            if self.territory.is_complex and not self.named_coast:
                 raise ValidationError({
                     'territory': _(
                         'Fleet cannot be in complex territory without also '
                         'being in a named coast.'
                     ),
                 })
-            if self.territory.is_inland():
+            if self.territory.is_inland:
                 raise ValidationError({
                     'territory': _(
                         'Fleet cannot be in an inland territory.'
                     ),
                 })
-        if self.is_army():
+        if self.is_army:
             if self.named_coast:
                 raise ValidationError({
                     'territory': _(
@@ -85,9 +85,11 @@ class Piece(HygenicModel):
                     )
                 })
 
+    @property
     def is_army(self):
         return self.type == PieceType.ARMY
 
+    @property
     def is_fleet(self):
         return self.type == PieceType.FLEET
 
@@ -100,7 +102,7 @@ class Piece(HygenicModel):
         """
         # if target coast, check that it is accessible
         if target_coast:
-            if self.is_army():
+            if self.is_army:
                 raise ValueError(_(
                     'Army cannot access named coasts. This error should not be '
                     'happening!'
@@ -108,17 +110,17 @@ class Piece(HygenicModel):
             return self.territory in target_coast.neighbours.all()
 
         # Check if convoy is possible
-        if self.is_army():
+        if self.is_army:
             if self.territory.coastal and target.coastal:
                 return True
 
-        if self.is_fleet():
+        if self.is_fleet:
             # if fleet moving from one coast to another, check shared coast
             # (unless complex)
             if self.territory.coastal and target.coastal and not \
-                    self.territory.is_complex():
+                    self.territory.is_complex:
                 return target in self.territory.shared_coasts.all()
-            if self.territory.is_complex():
+            if self.territory.is_complex:
                 if target not in self.named_coast.neighbours.all():
                     return False
 
@@ -178,8 +180,19 @@ class Piece(HygenicModel):
         """
         self.dislodged_state = DislodgedState.DISLODGED
         self.dislodged_by = piece
-        print(self.dislodged_by)
         self.save()
+
+    @property
+    def moves(self):
+        """
+        """
+        return self.command.succeeds and self.command.is_move
+
+    @property
+    def stays(self):
+        """
+        """
+        return not self.command.is_move or self.command.fails
 
     @property
     def dislodged(self):

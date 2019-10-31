@@ -2,12 +2,11 @@ from copy import deepcopy
 
 from django.apps import apps
 from django.db import models
-from django.db.models import Q
-from django.utils.translation import gettext as _
 
-from core.models.base import CommandState, CommandType, DislodgedState, \
-    HygenicModel, PieceType
-from core.exceptions import IllegalCommandException
+from core.models.base import CommandState, CommandType, HygenicModel, PieceType
+from core.models.mixins.checks import ChecksMixin
+from core.models.mixins.decisions import CommandDecisionsMixin
+from core.models.mixins.resolver import ResolverMixin
 
 
 def debug_command(command):
@@ -51,6 +50,8 @@ class CommandQuerySet(models.QuerySet):
         return Piece.objects.filter(command__in=self)
 
 
+# NOTE this shouldn't be used for everything, only when processing the
+# commands.
 class CommandManager(models.Manager):
     """
     """
@@ -78,167 +79,56 @@ class CommandManager(models.Manager):
         return queryset
 
     def process(self):
+        """
+        Processes all commands in a game.
+        """
         # determine whether any commands are illegal
-        all_commands = self.get_queryset()
+        # NOTE needs to be updated to do correctgame and turn
+        all_commands = list(self.get_queryset())
         for command in all_commands:
             command.check_illegal()
 
-        # remove illegal commands from list
-        legal_commands = [c for c in all_commands if not c.illegal]
+        # resolve convoy commands first
+        unresolved_fleet_commands = [c for c in all_commands if c.piece.is_fleet]
+        self.__resolve_commands(unresolved_fleet_commands, convoys_only=True)
 
-        unresolved_fleet_commands = [c for c in all_commands if c.piece.is_fleet()]
+        # resolve all other commands
+        unresolved_commands = [c for c in all_commands if c.unresolved]
+        self.__resolve_commands(unresolved_commands)
 
+        [c.save() for c in all_commands]
+
+    def __resolve_commands(self, unresolved_commands, convoys_only=False):
+        """
+        """
         # determine whether any convoys are dislodged. this means resovling
         # move and support commands of all other fleets
+        resolved_commands = []
         while True:
 
-            # NOTE this is weird
-            for command in unresolved_fleet_commands:
+            for command in unresolved_commands:
                 if command.piece.unresolved:
                     command.piece.dislodged_decision()
 
-            # resolve all fleet commands
-            for command in unresolved_fleet_commands:
+            for command in unresolved_commands:
                 if command.unresolved:
                     command.resolve()
 
+            # get resolved_commands
+            [resolved_commands.append(c) for c in unresolved_commands
+             if not (c.unresolved and c.piece.unresolved)]
+
             # filter out resolved commands
-            unresolved_fleet_commands = [c for c in unresolved_fleet_commands
-                                         if c.unresolved and c.piece.unresolved]
+            unresolved_commands = [c for c in unresolved_commands if
+                                   c.unresolved and c.piece.unresolved]
 
-            # if there are no more unresolved convoy commands
-            if not [c for c in unresolved_fleet_commands if c.type.is_convoy]:
-                break
-
-        commands = [c for c in all_commands if not c.is_convoy]
-        print(commands)
-        unresolved_commands = [c for c in commands if c.unresolved]
-
-        while True:
-
-            for command in unresolved_commands:
-                if command.piece.unresolved:
-                    print(command)
-                    command.piece.dislodged_decision()
-
-            for command in unresolved_commands:
-                command.resolve()
-
-            unresolved_commands = [c for c in unresolved_commands
-                                   if c.unresolved and c.piece.unresolved]
-
-            # if there are no more unresolved convoy commands
-            if not unresolved_commands:
-                break
-
-        # TODO break out into separate method
-        [c.save() for c in all_commands]
-
-    def process_commands(self):
-        """
-        """
-        all_commands_resolved = False
-        qs = self.get_queryset()
-
-        for command in qs:
-            command.check_illegal()
-
-        # NOTE need to resolve all convoy commands first
-
-        all_convoys_resolved = False
-        while not all_convoys_resolved:
-            # Need to find out if any convoys are dislodged. To do this we need
-            # to resolve the moves and supports of all other fleets.
-            fleet_commands = qs.filter(piece__type=PieceType.FLEET)\
-                .exclude(illegal=True)
-            convoy_commands = fleet_commands.filter(type=CommandType.CONVOY)
-
-            for command in fleet_commands:
-                if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
-                    command.piece.dislodged_decision()
-
-            for command in fleet_commands:
-                if not command.illegal \
-                        and command.state == CommandState.UNRESOLVED:
-                    command.resolve()
-
-            for command in fleet_commands:
-                command.save()
-                # debug_command(command)
-
-            fleet_commands = fleet_commands.filter(
-                Q(state=CommandState.UNRESOLVED) |
-                Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
-            )
-            convoy_commands = convoy_commands.filter(
-                Q(state=CommandState.UNRESOLVED) |
-                Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
-            )
-
-            if not convoy_commands:
-                all_convoys_resolved = True
-
-        while not all_commands_resolved:
-            qs = qs.exclude(type=CommandType.CONVOY)
-
-            for command in qs.exclude(illegal=True)\
-                    .filter(state=CommandState.UNRESOLVED):
-                if command.paradox_exists and command.order_not_changed:
-                    if command._min_attack_strength_result == command.min_attack_strength and command._max_attack_strength_result == command.max_attack_strength:
-                        dependencies = command.get_attack_strength_dependencies()
-                        for d in dependencies:
-                            # NOTE hacky af
-                            dependencies = qs.filter(id__in=[d.id for d in dependencies])
-                            dependencies.update(state=CommandState.SUCCEEDS)
-
-                # TODO get rid of this
-                if command.paradox_exists and not command.order_not_changed:
-                    command.order_not_changed = True
-                    command.save()
-
-            for command in qs:
-                if command.piece.dislodged_state == DislodgedState.UNRESOLVED:
-                    command.piece.dislodged_decision()
-
-            for command in qs:
-                if not command.illegal \
-                        and command.state == CommandState.UNRESOLVED:
-                    command.resolve()
-
-            if command.type == CommandType.MOVE:
-                command._min_attack_strength_result = \
-                    command.min_attack_strength
-                command._max_attack_strength_result = \
-                    command.max_attack_strength
-
-                command._min_defend_strength_result = \
-                    command.min_defend_strength
-                command._max_defend_strength_result = \
-                    command.max_defend_strength
-
-                command._min_prevent_strength_result = \
-                    command.min_prevent_strength
-                command._max_prevent_strength_result = \
-                    command.max_prevent_strength
-
-                command._min_hold_strength_result = \
-                    command.target.min_hold_strength
-                command._max_hold_strength_result = \
-                    command.target.max_hold_strength
-
-            command.save()
-
-            for command in qs:
-                command.save()
-                # debug_command(command)
-
-            qs = qs.filter(
-                Q(state=CommandState.UNRESOLVED) |
-                Q(piece__dislodged_state=DislodgedState.UNRESOLVED)
-            )
-
-            if not qs:
-                all_commands_resolved = True
+            # return if there are no more unresolved commands
+            if convoys_only:
+                if not [c for c in unresolved_commands if c.is_convoy]:
+                    return
+            else:
+                if not unresolved_commands:
+                    return
 
     def get_convoying_commands(self, source, target):
         """
@@ -329,7 +219,7 @@ class CommandManager(models.Manager):
         return remaining_commands
 
 
-class Command(HygenicModel):
+class Command(HygenicModel, ChecksMixin, CommandDecisionsMixin, ResolverMixin):
     """
     """
     order = models.ForeignKey(
@@ -396,12 +286,6 @@ class Command(HygenicModel):
     via_convoy = models.BooleanField(
         default=False
     )
-
-    # TODO get rid of this. should just ba an attribute on the class (if
-    # even necessary)
-    order_not_changed = models.BooleanField(
-        default=False
-    )
     # TODO add invalid and invlaid message fields. Also add help text to
     # explain difference.
     illegal = models.BooleanField(
@@ -411,47 +295,6 @@ class Command(HygenicModel):
         max_length=500,
         null=True,
         blank=True,
-    )
-    success = models.BooleanField(default=True)
-    bounced = models.BooleanField(default=False)
-    # Outcome in human friendly terms
-    result_message = models.CharField(
-        max_length=100,
-        null=True,
-        blank=True
-    )
-    # TODO explore whether these can be made into non db values
-    _min_attack_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _max_attack_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _min_defend_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _max_defend_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _min_prevent_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _max_prevent_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _min_hold_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
-    )
-    _max_hold_strength_result = models.PositiveIntegerField(
-        null=True,
-        blank=True
     )
 
     objects = CommandManager()
@@ -466,122 +309,13 @@ class Command(HygenicModel):
         """
         """
         try:
-            if self.piece.type == PieceType.ARMY:
+            if self.piece.is_army:
                 if self.target_coast:
                     raise ValueError('Army command cannot specify a target coast.')
-        except AttributeError:
-            pass
-        try:
-            if self.piece.type == PieceType.ARMY:
                 if self.type == CommandType.CONVOY:
                     raise ValueError('Army cannot convoy.')
         except AttributeError:
             pass
-
-    @property
-    def paradox_exists(self):
-        # TODO test
-        # TODO refactor
-        """
-        Paradox exists if none of the values have changed from the previous
-        iteration of the loop.
-        """
-        if self.type == CommandType.MOVE:
-            return all([
-                self._min_attack_strength_result == self.min_attack_strength,
-                self._max_attack_strength_result == self.max_attack_strength,
-                self._min_defend_strength_result == self.min_defend_strength,
-                self._max_defend_strength_result == self.max_defend_strength,
-                self._min_prevent_strength_result == self.min_prevent_strength,
-                self._max_prevent_strength_result == self.max_prevent_strength,
-                self._min_hold_strength_result == self.target.min_hold_strength,
-                self._max_hold_strength_result == self.target.max_hold_strength,
-            ])
-
-    def check_illegal(self):
-        """
-        Checks if a given command is illegal.
-        """
-        try:
-            if self.type == CommandType.HOLD:
-                self._friendly_piece_exists_in_source(),
-
-            if self.type == CommandType.MOVE:
-                [
-                    self._friendly_piece_exists_in_source(),
-                    self._target_not_same_as_source(),
-                    self._specifies_target_named_coast_if_fleet(),
-                    self._source_piece_can_reach_target(),
-                ]
-            if self.type == CommandType.SUPPORT:
-                [
-                    self._friendly_piece_exists_in_source(),
-                    self._aux_not_same_as_source(),
-                    self._source_piece_can_reach_target(),
-                    self._aux_occupied(),
-                    self._source_is_adjacent_to_target(),
-                    # self._aux_piece_can_reach_target(),
-                    # self._aux_piece_move_legal(),
-                ]
-            if self.type == CommandType.CONVOY:
-                [
-                    self._friendly_piece_exists_in_source(),
-                    self._aux_occupied(),
-                    self._aux_piece_is_army(),
-                    self._aux_piece_can_reach_target(),
-                    self._source_piece_is_at_sea(),
-                    # self._aux_piece_move_legal(),
-                ]
-            if self.type == CommandType.RETREAT:
-                [
-                    self._friendly_piece_exists_in_source(),
-                    self._source_piece_can_reach_target(),
-                    self._specifies_target_named_coast_if_fleet(),
-                    self._piece_has_been_dislodged(),
-                    self._target_not_occupied(),
-                    self._target_not_where_attacker_came_from(),
-                    self._target_not_vacant_by_standoff_on_previous_turn(),
-                ]
-            if self.type == CommandType.DISBAND:
-                self._friendly_piece_exists_in_source()
-
-            if self.type == CommandType.BUILD:
-                if self.target.occupied():
-                    raise IllegalCommandException(_(
-                        'Cannot build in occupied territory.'
-                    ))
-                    raise IllegalCommandException(_(
-                        'Cannot build in occupied territory.'
-                    ))
-                if not self.target.has_supply_center():
-                    raise IllegalCommandException(_(
-                        'Cannot build in a territory that does not have a '
-                        'supply center.'
-                    ))
-                if not self.target.supply_center.nationality == self.nation:
-                    raise IllegalCommandException(_(
-                        'Cannot build in supply centers outside of national '
-                        'borders.'
-                    ))
-                if not self.target.controlled_by == self.nation:
-                    raise IllegalCommandException(_(
-                        'Cannot build in a supply center which is controlled '
-                        'by a foreign power.'
-                    ))
-                if self.target.is_inland() and \
-                        self.piece_type == PieceType.FLEET:
-                    raise IllegalCommandException(_(
-                        'Cannot build a fleet in an inland territory.'
-                    ))
-                if self.target.is_complex() and \
-                        self.piece_type == PieceType.FLEET and \
-                        not self.target_coast:
-                    raise IllegalCommandException(_(
-                        'Must specify a coast when building a fleet in a '
-                        'territory with named coasts.'
-                    ))
-        except IllegalCommandException as e:
-            self.set_illegal(str(e))
 
     def set_illegal(self, message):
         """
@@ -591,6 +325,7 @@ class Command(HygenicModel):
         self.illegal_message = message
         self.set_fails()
 
+    # NOTE these two shouldn't save
     def set_succeeds(self, save=True):
         """
         """
@@ -623,6 +358,64 @@ class Command(HygenicModel):
         return self.state == CommandState.FAILS
 
     @property
+    def successful_support(self):
+        """
+        """
+        return [c for c in self.supporting_commands if c.succeeds]
+
+    @property
+    def supporting_commands(self):
+        # TODO test
+        """
+        """
+        if self.type == CommandType.MOVE:
+            if not self.illegal:
+                return Command.objects.filter(
+                    aux=self.source,
+                    target=self.target,
+                    type=CommandType.SUPPORT,
+                )
+        return Command.objects.filter(
+            aux=self.source,
+            target=self.source,
+            type=CommandType.SUPPORT,
+        )
+
+    @property
+    def non_failing_support(self):
+        """
+        """
+        return [c for c in self.supporting_commands if not c.fails]
+
+    # TODO bin this
+    @property
+    def successful_supporting_commands(self):
+        """
+        """
+        return self.supporting_commands.filter(illegal=False)
+
+    @property
+    def nation(self):
+        return self.order.nation
+
+    @property
+    def is_hold(self):
+        return self.type == CommandType.HOLD
+
+    @property
+    def is_move(self):
+        return self.type == CommandType.MOVE
+
+    @property
+    def is_support(self):
+        return self.type == CommandType.SUPPORT
+
+    @property
+    def is_convoy(self):
+        return self.type == CommandType.CONVOY
+
+    # TODO move this to decisions
+    @property
     def move_path(self):
         """
         Determine whether a move command has a path to the target.
@@ -636,7 +429,7 @@ class Command(HygenicModel):
             raise ValueError(
                 '`move_path` method can only be used on move commands.'
             )
-        if self.source.piece.is_fleet():
+        if self.source.piece.is_fleet:
             # if moving from named coast, ensure target is neighbour of coast
             if self.source.piece.named_coast:
                 return self.target in self.source.piece.named_coast.neighbours.all()
@@ -651,15 +444,16 @@ class Command(HygenicModel):
             return True
 
         # if not adjacent, check for convoy
-        if self.source.piece.is_army():
+        if self.source.piece.is_army:
             if self.source.coastal and self.target.coastal:
                 return self.successful_convoy_exists
         return False
 
+    # TODO move this to decisions (becuase relates only to move path)
     @property
     def successful_convoy_exists(self):
         """
-        Determines whether a successful convoy exists between ``source`` and
+        Determine whether a successful convoy exists between ``source`` and
         ``target``.
         """
         convoy_paths = self.__class__.objects\
@@ -683,193 +477,17 @@ class Command(HygenicModel):
         if not self.target.occupied():
             return False
 
-        if not self.target.piece.command.type == CommandType.MOVE:
+        if not self.target.piece.command.is_move:
             return False
 
+        # if the target piece is moving to this space and has path
         if self.target.piece.command.target == self.source:
             if self.target.piece.command.move_path:
                 if not self.target.piece.command.via_convoy and not self.via_convoy:
-                    self.head_to_head_opposing_piece = self.target.piece
                     return True
-
         return False
 
-    def resolve(self):
-        """
-        MOVE:
-            - In case of a head-to-head battle, the move succeeds when the
-              attack strength is larger then the defend strength of the
-              opposing unit and larger than the prevent strength of any unit
-              moving to the same area. If one of the opposing strengths is
-              equal or greater, then the move fails.
-
-            - If there is no head-to-head battle, the move succeeds when the
-              attack strength is larger then the hold strength of the
-              destination and larger than the prevent strength of any unit
-              moving to the same area. If one of the opposing strengths is
-              equal or greater, then the move fails.
-
-              A MOVE decision of a unit ordered to move results in 'moves' when:
-
-            The minimum of the ATTACK STRENGTH is larger than the maximum of
-            the DEFEND STRENGTH of the opposing unit in case of a head to head
-            battle or otherwise larger than the maximum of the HOLD STRENGTH of
-            the attacked area. And in all cases the minimum of the ATTACK
-            STRENGTH is larger than the maximum of the PREVENT STRENGTH of all
-            of the units moving to the same area.
-
-            A MOVE decision of a unit ordered to move results in 'fails' when:
-
-            The maximum of the ATTACK STRENGTH is smaller than or equal to the
-            minimum of the DEFEND STRENGTH of the opposing unit in case of a
-            head to head battle or otherwise smaller than or equal to the
-            minimum of the HOLD STRENGTH of the attacked area. Or the maximum
-            of the ATTACK STRENGTH is smaller than or equal to the minimum of
-            the PREVENT STRENGTH of at least one of the units moving to the
-            same area.
-
-            In all other cases a MOVE decision of a unit ordered to move
-            remains 'undecided'.
-        """
-        if self.check_illegal():
-            self.illegal_move = True
-            return self.set_fails()
-
-        if not self.unresolved:
-            raise ValueError(
-                'Cannot call `resolve()` on a command which is already resolved.'
-            )
-
-        if self.type == CommandType.MOVE:
-            # succeeds if...
-            if self.head_to_head_exists():
-                opposing_unit = self.target.piece
-                if self.min_attack_strength > opposing_unit.command.max_defend_strength:
-                    if self.target.other_attacking_pieces(self.piece):
-                        if self.min_attack_strength > max(
-                                [p.command.max_prevent_strength
-                                 for p in self.target.other_attacking_pieces(self.piece)]
-                        ):
-                            return self.set_succeeds()
-                    else:
-                        return self.set_succeeds()
-            else:
-                if self.target.other_attacking_pieces(self.piece):
-                    if self.min_attack_strength > self.target.max_hold_strength:
-                        if self.min_attack_strength > max(
-                            [p.command.max_prevent_strength
-                             for p in self.target.other_attacking_pieces(self.piece)]
-                        ):
-                            return self.set_succeeds()
-                else:
-                    if self.min_attack_strength > self.target.max_hold_strength:
-                        return self.set_succeeds()
-
-            # fails if...
-            if self.head_to_head_exists():
-                # NOTE this is wrong. this isn't the opposing piece
-                opposing_unit = self.target.piece
-                if self.max_attack_strength <= opposing_unit.command.min_defend_strength:
-                    return self.set_fails()
-            if self.max_attack_strength <= self.target.min_hold_strength:
-                return self.set_fails()
-            if self.target.other_attacking_pieces(self.piece):
-                if self.max_attack_strength <= min(
-                    [p.command.min_prevent_strength
-                     for p in self.target.other_attacking_pieces(self.piece)]
-                ) and [p.command.min_prevent_strength
-                       for p in self.target.other_attacking_pieces(self.piece)]:
-                    return self.set_fails()
-
-        if self.type == CommandType.SUPPORT:
-            # TODO refactor
-            # succeeds if...
-            if not self.source.attacking_pieces:
-                self.set_succeeds()
-            if self.source.piece.sustains:
-                if self.target.occupied() and self.aux.occupied():
-                    if self.aux.piece.command.type == CommandType.MOVE and \
-                            self.aux.piece.command.target == self.target:
-                        if self.target.piece.command.type == CommandType.CONVOY:
-                            convoying_command = self.target.piece.command
-                            if convoying_command.aux.occupied():
-                                if all([p.command.max_attack_strength == 0  # aaa
-                                        for p in self.source.other_attacking_pieces
-                                        (convoying_command.aux.piece)]):
-                                    self.set_succeeds()
-                        else:
-                            if all([p.command.max_attack_strength == 0  # aaa
-                                    for p in self.source.other_attacking_pieces
-                                    (self.target.piece)]):
-                                self.set_succeeds()
-                if all([p.command.max_attack_strength == 0
-                        for p in self.source.attacking_pieces]):
-                    self.set_succeeds()
-
-            # fails if...
-            # If aux piece is not going to target of command
-            if self.aux.occupied():
-                if self.aux.piece.command.type == CommandType.MOVE \
-                        and self.aux.piece.command.target != self.target \
-                        and not self.aux.piece.command.illegal:
-                    self.set_fails()
-            # If aux piece holds and support target is not same as aux
-            if self.aux.piece.command.type in [CommandType.HOLD, CommandType.CONVOY, CommandType.SUPPORT] and self.target != self.aux:
-                self.set_fails()
-
-            # if self.target.occupied():
-                # if supporting into own piece's territory
-
-                # if self.target != self.aux and self.target.piece.nation == self.nation:
-                #     # if that command holds, fail
-                #     # NOTE usable for hold strength
-                #     # TODO alias this to `def holds`
-                #     if (self.target.piece.command.type == CommandType.MOVE and self.target.piece.command.fails) or (self.target.piece.command.type in [CommandType.HOLD, CommandType.SUPPORT, CommandType.CONVOY]):
-                #         if self.source.name == 'serbia':
-                #             print('a')
-                #         self.usable_for_prevent = True
-                #         self.save()
-                #         self.set_fails()
-            if self.source.piece.dislodged:
-                self.set_fails()
-            if self.target.occupied() and self.aux.occupied():
-                if self.aux.piece.command.type == CommandType.MOVE and \
-                        self.aux.piece.command.target == self.target:
-                    if self.target.piece.command.type == CommandType.CONVOY:
-                        convoying_command = self.target.piece.command
-                        if convoying_command.aux.occupied():
-                            if any([p.command.min_attack_strength >= 1
-                                    for p in self.source.other_attacking_pieces
-                                    (convoying_command.aux.piece)]):
-                                self.set_fails()
-                    else:
-                        if any([p.command.min_attack_strength >= 1
-                                for p in self.source.other_attacking_pieces
-                                (self.target.piece)]):
-                            self.set_fails()
-                    return
-            if self.source.attacking_pieces and \
-                    any([p.command.min_attack_strength >= 1
-                         for p in self.source.attacking_pieces
-                         if p.territory != self.aux.piece.command.target]):
-                self.set_fails()
-
-        if self.type == CommandType.HOLD:
-            if self.piece.sustains:
-                self.set_succeeds()
-            if self.piece.dislodged:
-                self.set_fails()
-
-        if self.type == CommandType.CONVOY:
-            # if unmatched
-            if not self.aux.piece.command.target == self.target:
-                self.set_fails()
-            # TODO somehow set fails if not part of successful convoy path
-            if self.piece.dislodged:
-                self.set_fails()
-            if self.piece.sustains:
-                self.set_succeeds()
-
+    # move to manager?
     def get_attack_strength_dependencies(self, dependencies=[]):
         """
         """
@@ -884,341 +502,3 @@ class Command(HygenicModel):
                     if c not in dependencies:
                         dependencies.append(c)
         return dependencies
-
-    @property
-    def min_attack_strength(self):
-        """
-        Determine the minimum attack strength of a command.
-        """
-        # TODO refactor supporting commands into attack_support and prevent
-        # support
-        if not self.type == CommandType.MOVE:
-            raise ValueError(
-                'Attack strength should only be calculated for move commands.'
-            )
-        if not self.move_path:
-            return 0
-
-        # TODO make min_attacking_support
-        if not self.target.occupied():
-            return 1 + len([c for c in self.supporting_commands if c.succeeds])
-
-        if self.head_to_head_exists() or \
-                self.target.piece.command.type != CommandType.MOVE or \
-                (not self.target.piece.command.succeeds):
-            if self.target.piece.nation == self.nation:
-                return 0
-            return 1 + len([c for c in self.supporting_commands if c.succeeds and 
-                            c.nation != self.target.piece.nation])
-        if self.target.piece.command.succeeds and \
-                self.target.piece.command.type == CommandType.MOVE:
-            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
-        return 1 + len([c for c in self.supporting_commands if c.succeeds and 
-                        c.nation != self.target.piece.nation])
-
-    @property
-    def max_attack_strength(self):
-        """
-        """
-        if not self.type == CommandType.MOVE:
-            raise ValueError(
-                'Attack strength should only be calculated for move commands.'
-            )
-        if not self.move_path:
-            return 0
-        if not self.target.occupied():
-            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
-
-        if self.head_to_head_exists() or \
-                self.target.piece.command.type != CommandType.MOVE or \
-                self.target.piece.command.fails:
-            if self.target.piece.nation == self.nation:
-                return 0
-            return 1 + len([c for c in self.supporting_commands if (not c.fails) and
-                            c.nation != self.target.piece.nation])
-
-        if self.target.piece.command.succeeds and \
-                self.target.piece.command.type == CommandType.MOVE:
-            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
-        if self.target.piece.command.via_convoy and \
-                self.target.piece.command.type == CommandType.MOVE and \
-                self.target.piece.command.target == self.source:
-            return 1 + len([c for c in self.supporting_commands if (not c.fails)])
-        return 1 + len([c for c in self.supporting_commands if (not c.fails) and
-                        c.nation != self.target.piece.nation])
-
-    @property
-    def min_defend_strength(self):
-        """
-        """
-        if not self.type == CommandType.MOVE:
-            raise ValueError(
-                'Defend strength should only be calculated for move commands.'
-            )
-        return 1 + len([c for c in self.supporting_commands
-                        if c.succeeds])
-
-    @property
-    def max_defend_strength(self):
-        """
-        """
-        if not self.type == CommandType.MOVE:
-            raise ValueError(
-                'Defend strength should only be calculated for move commands.'
-            )
-        return 1 + len([c for c in self.supporting_commands
-                        if not c.fails])
-
-    @property
-    def min_prevent_strength(self):
-        """
-        """
-        # NOTE need to add unresolved to path
-        if not self.move_path:
-            return 0
-        if self.head_to_head_exists():
-            opposing_unit = self.target.piece
-            if not opposing_unit.command.fails:
-                return 0
-        return 1 + len([c for c in self.supporting_commands if c.succeeds])
-
-    @property
-    def max_prevent_strength(self):
-        """
-        """
-        # NOTE need to add unresolved to path
-        if not self.move_path:
-            return 0
-        if self.head_to_head_exists():
-            opposing_unit = self.target.piece
-            if opposing_unit.command.succeeds:
-                return 0
-        return 1 + len([c for c in self.supporting_commands if not c.fails])
-
-    @property
-    def cut(self):
-        """
-        Determine whether a support command has been cut. Other types of
-        command cannot be cut.
-
-        A support order is cut when another unit is ordered to move to the area
-        of the supporting unit and the following conditions are satisfied:
-
-          - The moving unit is of a different nationality
-          - The destination of the supported unit is not the area of the unit
-            attacking the support
-          - The moving unit has a successful path
-          - A support is also cut when it is dislodged.
-        """
-        if self.type != CommandType.SUPPORT:
-            raise ValueError('Only `support` commands can be cut.')
-
-        if self.source.piece.dislodged:
-            return True
-
-        foreign_attacking_pieces = self.source\
-            .foreign_attacking_pieces(self.nation)
-
-        for attacker in foreign_attacking_pieces:
-            if attacker.command.move_path and \
-                    attacker.territory != self.aux.piece.command.target:
-                return True
-        return False
-
-    @property
-    def supporting_commands(self):
-        # TODO test
-        """
-        """
-        if self.type == CommandType.MOVE:
-            if not self.illegal:
-                return Command.objects.filter(
-                    aux=self.source,
-                    target=self.target,
-                    type=CommandType.SUPPORT,
-                )
-        return Command.objects.filter(
-            aux=self.source,
-            target=self.source,
-            type=CommandType.SUPPORT,
-        )
-
-    @property
-    def successful_supporting_commands(self):
-        """
-        """
-        return self.supporting_commands.filter(illegal=False)
-
-    @property
-    def nation(self):
-        """
-        Helper to get the nation of a command more easily.
-        """
-        return self.order.nation
-
-    @property
-    def is_move(self):
-        return self.type == CommandType.MOVE
-
-    @property
-    def is_support(self):
-        return self.type == CommandType.SUPPORT
-
-    @property
-    def is_convoy(self):
-        return self.type == CommandType.CONVOY
-
-    def _friendly_piece_exists_in_source(self):
-        if not self.source.friendly_piece_exists(self.nation):
-            raise IllegalCommandException(_(
-                f'No friendly piece exists in {self.source}.'
-            ))
-        return True
-
-    def _target_not_same_as_source(self):
-        if self.source == self.target:
-            raise IllegalCommandException(_(
-                f'{self.source.piece.type.title()} {self.source} cannot '
-                'move to its own territory.'
-            ))
-        return True
-
-    def _aux_not_same_as_source(self):
-        if self.source == self.aux:
-            raise IllegalCommandException(_(
-                f'{self.source.piece.type.title()} {self.source} cannot '
-                f'{self.type} its own territory.'
-            ))
-        return True
-
-    def _source_piece_can_reach_target(self):
-        try:
-            target_coast = self.target_coast
-        except AttributeError:
-            target_coast = None
-        # TODO refactor
-        if not self.source.piece.can_reach(self.target, target_coast):
-            if not target_coast:
-                if self.source.is_complex():
-                    raise IllegalCommandException(_(
-                        f'{self.source.piece.type.title()} {self.source} '
-                        f'({self.piece.named_coast.map_abbreviation}) cannot '
-                        f'reach {self.target}.'
-                    ))
-                else:
-                    raise IllegalCommandException(_(
-                        f'{self.source.piece.type.title()} {self.source} cannot reach '
-                        f'{self.target}.'
-                    ))
-            if self.target.is_complex() and self.target_coast:
-                raise IllegalCommandException(_(
-                    f'{self.source.piece.type.title()} {self.source} cannot reach '
-                    f'{self.target} ({self.target_coast.map_abbreviation}).'
-                ))
-                raise IllegalCommandException(_(
-                    f'{self.source.piece.type.title()} {self.source} cannot reach '
-                    f'{self.target}.'
-                ))
-        return True
-
-    def _source_piece_is_at_sea(self):
-        if not self.source.is_sea():
-            raise IllegalCommandException(_(
-                'Cannot convoy unless piece is at sea.'
-            ))
-        return True
-
-    def _source_is_adjacent_to_target(self):
-        if not self.source.adjacent_to(self.target):
-            raise IllegalCommandException(_(
-                'Cannot support to territory that is not adjacent to the '
-                'supporting piece.'
-            ))
-        return True
-
-    def _specifies_target_named_coast_if_fleet(self):
-        """
-        If the command piece is a fleet and the ``target`` is has named coasts,
-        the command must specify a ``target_coast`` unless only one of the
-        named coasts is within reach of the command piece, in which case the
-        target coast is assumed to be that coast.
-        """
-        if self.target.is_complex() \
-                and self.source.piece.is_fleet() \
-                and not self.target_coast:
-            # if more than one accessible coast there is ambiguity
-            if len([nc for nc in self.target.named_coasts.all() if self.source
-                    in nc.neighbours.all()]) > 1:
-                raise IllegalCommandException(_(
-                    'Cannot order an fleet into a territory with named coasts '
-                    'without specifying a named coast.'
-                ))
-            else:
-                self.target_coast = [nc for nc in self.target.named_coasts.all()
-                                     if self.source in nc.neighbours.all()][0]
-                self.save()
-        return True
-
-    def _aux_occupied(self):
-        if not self.aux.occupied():
-            raise IllegalCommandException(_(
-                f'No piece exists in {self.aux}.'
-            ))
-        return True
-
-    def _aux_piece_can_reach_target(self):
-        if not self.aux.piece.can_reach(self.target):
-            raise IllegalCommandException(_(
-                f'{self.aux.piece.type.title()} {self.aux} cannot '
-                f'reach {self.target}.'
-            ))
-        return True
-
-    def _aux_piece_is_army(self):
-        if not self.aux.piece.is_army():
-            raise IllegalCommandException(_(
-                f'{self.piece.type.title()} {self.source} cannot '
-                f'convoy piece at {self.aux} because it is a fleet.'
-            ))
-        return True
-
-    def _aux_piece_move_legal(self):
-        if self.aux.piece.command.type == CommandType.MOVE:
-            self.aux.piece.command.check_illegal()
-            if self.aux.piece.command.illegal:
-                raise IllegalCommandException(_(
-                    'Illegal because the command of '
-                    f'{self.aux.piece.type.title()} {self.aux} is illegal.'
-                ))
-        return True
-
-    def _piece_has_been_dislodged(self):
-        if not self.source.piece.dislodged():
-            raise IllegalCommandException(_(
-                'Only pieces which have been dislodged can retreat.'
-            ))
-        return True
-
-    def _target_not_occupied(self):
-        if self.target.occupied():
-            raise IllegalCommandException(_(
-                'Dislodged piece cannot move to occupied territory.'
-            ))
-        return True
-
-    def _target_not_where_attacker_came_from(self):
-        if self.target == self.source.piece.dislodged_by\
-                .get_previous_territory():
-            raise IllegalCommandException(_(
-                'Dislodged piece cannot move to territory from which '
-                'attacking piece came.'
-            ))
-        return True
-
-    def _target_not_vacant_by_standoff_on_previous_turn(self):
-        if self.target.standoff_occured_on_previous_turn():
-            raise IllegalCommandException(_(
-                'Dislodged piece cannot move to territory where a standoff '
-                'occured on the previous turn.'
-            ))
-        return True
