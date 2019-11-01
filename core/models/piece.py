@@ -167,28 +167,30 @@ class Piece(HygenicModel):
                 'Cannot call `dislodged_decision()` on a piece for which '
                 '`dislodged_state` has already been determined.'
             )
+        attacking_pieces = list(self.territory.attacking_pieces)
+
         # sustains if...
-        if not self.territory.attacking_pieces:
+        if not attacking_pieces:
             return self.set_sustains()
         if self.command.is_move:
             # cannot be dislodged if successfully moved
             if self.command.succeeds:
                 return self.set_sustains()
-        if [p for p in self.territory.attacking_pieces
-                if p.command.fails] and all([p.command.fails for p in self.territory.attacking_pieces]):
+        if [p for p in attacking_pieces
+                if p.command.fails] and all([p.command.fails for p in attacking_pieces]):
             return self.set_sustains()
 
         # TODO add dislodged by
 
         # dislodged if...
         if self.command.is_move:
-            if self.command.fails and any([p for p in self.territory.attacking_pieces
+            if self.command.fails and any([p for p in attacking_pieces
                                            if p.command.succeeds]):
-                piece = [p for p in self.territory.attacking_pieces if
+                piece = [p for p in attacking_pieces if
                          p.command.succeeds][0]
                 return self.set_dislodged(piece)
         else:
-            if any([p.command.succeeds for p in self.territory.attacking_pieces]):
-                piece = [p for p in self.territory.attacking_pieces
+            if any([p.command.succeeds for p in attacking_pieces]):
+                piece = [p for p in attacking_pieces
                          if p.command.succeeds][0]
                 return self.set_dislodged(piece)
