@@ -128,7 +128,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
             self.spain, self.spain_sc
         )
 
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         [c.refresh_from_db() for c in (fleet_gascony_move,
                                        fleet_western_med_move, fleet_marseilles_support)]
 
@@ -169,7 +169,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
             self.italy_order, fleet_gol, self.gulf_of_lyon,
         )
 
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         [c.refresh_from_db() for c in (fleet_marseilles_move,
                                        fleet_spain_nc_support, fleet_gol)]
 
@@ -227,11 +227,10 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
             self.spain_sc
         )
 
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         [c.refresh_from_db() for c in (fleet_mid_atlantic, fleet_spain_nc_support)]
 
         self.assertEqual(fleet_mid_atlantic.dislodged_by, fleet_north_atlantic)
-        self.assertTrue(fleet_spain_nc_support.cut)
 
     def test_supporting_with_unspecified_coast(self):
         """
@@ -279,7 +278,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
             self.spain, self.spain_sc
         )
 
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         [c.refresh_from_db() for c in (fleet_western_med,
                                        fleet_western_med_move,
                                        fleet_portugal_support)]
@@ -338,7 +337,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
             self.spain, self.spain_sc
         )
 
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         [c.refresh_from_db() for c in (fleet_western_med,
                                        fleet_western_med_move,
                                        fleet_portugal_support)]
@@ -458,7 +457,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
                                          self.constantinople, self.bulgaria,
                                          self.bulgaria_ec)
 
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         [c.refresh_from_db() for c in (fleet_bulgaria_ec_move,
                                        fleet_constantinople_move)]
 
