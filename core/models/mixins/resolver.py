@@ -71,7 +71,7 @@ class ResolverMixin:
             if max_attack_strength <= min(
                 [p.command.min_prevent_strength
                  for p in self.target.other_attacking_pieces(self.piece)]
-            ) and [p.command.min_prevent_strength
+            ) and [p.command.min_prevent_strength  # TODO this can be improved
                    for p in self.target.other_attacking_pieces(self.piece)]:
                 return self.set_fails()
 

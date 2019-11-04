@@ -908,7 +908,8 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
     def test_even_when_surviving_is_in_alternative_way(self):
         """
-        Now, the dislodgement is prevented because the supports comes from a Russian army:
+        Now, the dislodgement is prevented because the supports comes from a
+        Russian army:
 
         Russia:
         F Constantinople Supports F Black Sea - Ankara

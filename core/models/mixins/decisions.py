@@ -140,7 +140,8 @@ class HoldStrength(Decision):
         if self.piece.command.is_move:
             if not self.piece.command.fails:
                 return 0
-            return 1
+            else:
+                return 1 + len(self.piece.command.successful_hold_support)
 
         return 1 + len(self.piece.command.successful_support)
 
@@ -154,10 +155,8 @@ class HoldStrength(Decision):
 
         if self.piece.moves:
             return 0
-
         if self.piece.command.is_move:
-            if not self.piece.command.succeeds:
-                return 1
+            return 1 + len(self.piece.command.non_failing_hold_support)
 
         return 1 + len(self.piece.command.non_failing_support)
 

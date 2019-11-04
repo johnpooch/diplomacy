@@ -57,6 +57,7 @@ class CommandManager(models.Manager):
     """
     def get_queryset(self):
         queryset = CommandQuerySet(self.model, using=self._db)
+        # TODO move to QS
         queryset = queryset.select_related(
             'order__nation',
             'source__piece__nation',
@@ -96,6 +97,10 @@ class CommandManager(models.Manager):
         unresolved_commands = [c for c in all_commands if c.unresolved]
         self.__resolve_commands(unresolved_commands)
 
+        # TODO improve
+        # check all pieces dislodged decision
+        [c.piece.dislodged_decision() for c in all_commands if c.piece.unresolved]
+
         [c.save() for c in all_commands]
 
     def __resolve_commands(self, unresolved_commands, convoys_only=False):
@@ -106,6 +111,11 @@ class CommandManager(models.Manager):
         resolved_commands = []
         while True:
 
+            # NOTE I have to do this because changing an attribute on the piece
+            # doesn't get refelcted when the piece is accessed again from the
+            # command. There must be a work around for this.
+            [c.refresh_from_db() for c in unresolved_commands]
+
             for command in unresolved_commands:
                 if command.piece.unresolved:
                     command.piece.dislodged_decision()
@@ -114,13 +124,15 @@ class CommandManager(models.Manager):
                 if command.unresolved:
                     command.resolve()
 
+            # print(debug_command(command))
+
             # get resolved_commands
             [resolved_commands.append(c) for c in unresolved_commands
-             if not (c.unresolved and c.piece.unresolved)]
+             if not (c.unresolved or c.piece.unresolved)]
 
             # filter out resolved commands
             unresolved_commands = [c for c in unresolved_commands if
-                                   c.unresolved and c.piece.unresolved]
+                                   c.unresolved or c.piece.unresolved]
 
             # return if there are no more unresolved commands
             if convoys_only:
@@ -349,6 +361,18 @@ class Command(HygenicModel, ChecksMixin, CommandDecisionsMixin, ResolverMixin):
         return [c for c in self.supporting_commands if c.succeeds]
 
     @property
+    def non_failing_support(self):
+        return [c for c in self.supporting_commands if not c.fails]
+
+    @property
+    def successful_hold_support(self):
+        return [c for c in self.hold_support if c.succeeds]
+
+    @property
+    def non_failing_hold_support(self):
+        return [c for c in self.hold_support if not c.fails]
+
+    @property
     def supporting_commands(self):
         # TODO test
         if self.type == CommandType.MOVE:
@@ -365,8 +389,12 @@ class Command(HygenicModel, ChecksMixin, CommandDecisionsMixin, ResolverMixin):
         )
 
     @property
-    def non_failing_support(self):
-        return [c for c in self.supporting_commands if not c.fails]
+    def hold_support(self):
+        return Command.objects.filter(
+            aux=self.source,
+            target=self.source,
+            type=CommandType.SUPPORT,
+        )
 
     # TODO bin this
     @property
