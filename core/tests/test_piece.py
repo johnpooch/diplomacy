@@ -47,19 +47,19 @@ class TestIsPieceType(TestCase):
 
     def test_army_is_not_fleet(self):
         piece = models.Piece.objects.get(territory__name='marseilles')
-        self.assertFalse(piece.is_fleet())
+        self.assertFalse(piece.is_fleet)
 
     def test_fleet_is_not_army(self):
         piece = models.Piece.objects.get(territory__name='brest')
-        self.assertFalse(piece.is_army())
+        self.assertFalse(piece.is_army)
 
     def test_army_is_fleet(self):
         piece = models.Piece.objects.get(territory__name='marseilles')
-        self.assertTrue(piece.is_army())
+        self.assertTrue(piece.is_army)
 
     def test_fleet_is_fleet(self):
         piece = models.Piece.objects.get(territory__name='brest')
-        self.assertTrue(piece.is_fleet())
+        self.assertTrue(piece.is_fleet)
 
 
 class TestDislodged(TestCase, TerritoriesMixin, HelperMixin):
@@ -133,7 +133,7 @@ class TestDislodged(TestCase, TerritoriesMixin, HelperMixin):
             order=self.german_order,
             type=CommandType.SUPPORT,
         )
-        models.Command.objects.process_commands()
+        models.Command.objects.process()
         self.defending_army.refresh_from_db()
         self.assertTrue(self.defending_army.dislodged)
 

@@ -5,7 +5,7 @@ command is legal.
 from django.utils.translation import gettext as _
 
 from core.exceptions import IllegalCommandException
-from core.models.base import PieceType
+from core.models.base import CommandType, PieceType
 
 
 class ChecksMixin:
@@ -27,6 +27,9 @@ class ChecksMixin:
             if self.is_convoy:
                 self.check_convoy_illegal()
 
+            if self.type == CommandType.BUILD:
+                self.check_build_illegal()
+
         except IllegalCommandException as e:
             self.set_illegal(str(e))
 
@@ -43,6 +46,7 @@ class ChecksMixin:
         self._friendly_piece_exists_in_source(),
         self._aux_not_same_as_source(),
         self._source_piece_can_reach_target(),
+        self._aux_piece_can_reach_target(),
         self._aux_occupied(),
         self._source_is_adjacent_to_target(),
 
@@ -200,6 +204,8 @@ class ChecksMixin:
         return True
 
     def _aux_piece_can_reach_target(self):
+        if self.aux == self.target:
+            return
         if not self.aux.piece.can_reach(self.target):
             raise IllegalCommandException(_(
                 f'{self.aux.piece.type.title()} {self.aux} cannot '

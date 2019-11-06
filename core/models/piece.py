@@ -180,8 +180,6 @@ class Piece(HygenicModel):
                 if p.command.fails] and all([p.command.fails for p in attacking_pieces]):
             return self.set_sustains()
 
-        # TODO add dislodged by
-
         # dislodged if...
         if self.command.is_move:
             if self.command.fails and any([p for p in attacking_pieces
