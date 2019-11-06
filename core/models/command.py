@@ -106,13 +106,13 @@ class CommandManager(models.Manager):
     def __resolve_commands(self, unresolved_commands, convoys_only=False):
         """
         """
-        # determine whether any convoys are dislodged. this means resovling
+        # determine whether any convoys are dislodged. This means resolving
         # move and support commands of all other fleets
         resolved_commands = []
         while True:
 
             # NOTE I have to do this because changing an attribute on the piece
-            # doesn't get refelcted when the piece is accessed again from the
+            # doesn't get reflected when the piece is accessed again from the
             # command. There must be a work around for this.
             [c.refresh_from_db() for c in unresolved_commands]
 
