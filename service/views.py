@@ -7,6 +7,7 @@ from service import serializers
 
 class GameStateView(views.APIView):
     """
+    Provides the data necessary to render the game board at the current state.
     """
     def get(self, request, format=None, **kwargs):
 
