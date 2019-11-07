@@ -40,21 +40,23 @@ class GameStateView(views.APIView):
         piece_serializer = serializers\
             .PieceSerializer(pieces, many=True)
 
-        supply_centers = models.SupplyCenter.objects.all(turn=turn)
+        supply_centers = models.SupplyCenter.objects.all()
         supply_center_serializer = serializers\
             .SupplyCenterSerializer(supply_centers, many=True)
 
         territories = models.Territory.objects.all()
         territory_serializer = serializers\
-            .TerritorySerializer(territories, many=True)
+            .TerritoryStateSerializer(territories, many=True)
 
-        game_territories = models.GameTerritory.objects.filter(turn=turn)
+        territory_states = models.TerritoryState.objects.filter(turn=turn)
+        territory_states_serializer = serializers\
+            .TerritoryStateSerializer(territory_states, many=True)
 
         return Response(
             {
                 'pieces': piece_serializer.data,
                 'supply_centers': supply_center_serializer.data,
                 'territories': territory_serializer.data,
-                'game_territories': game_territory_serializer.data
+                'territory_states': territory_states_serializer.data
             }
         )

@@ -27,4 +27,11 @@ class TerritorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Territory
+        fields = ('id', 'name')
+
+
+class TerritoryStateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TerritoryState
         fields = ('id', 'controlled_by')
