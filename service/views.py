@@ -4,6 +4,12 @@ from rest_framework.response import Response
 from core import models
 from service import serializers
 
+from rest_framework.exceptions import NotFound
+
+
+def error404():
+    raise NotFound(detail="Error 404, page not found", code=404)
+
 
 class GameStateView(views.APIView):
     """
@@ -11,11 +17,30 @@ class GameStateView(views.APIView):
     """
     def get(self, request, format=None, **kwargs):
 
-        pieces = models.Piece.objects.all()
+        game_id = kwargs['game']
+        turn_id = kwargs.get('turn')
+
+        try:
+            game = models.Game.objects.get(id=game_id)
+        except models.Game.DoesNotExist:
+            error404()
+
+        if turn_id:
+            try:
+                turn = models.Turn.objects.get(id=turn_id)
+            except models.Turn.DoesNotExist:
+                error404()
+        else:
+            try:
+                turn = game.get_current_turn()
+            except models.Turn.DoesNotExist:
+                error404()
+
+        pieces = models.Piece.objects.filter(turn=turn)
         piece_serializer = serializers\
             .PieceSerializer(pieces, many=True)
 
-        supply_centers = models.SupplyCenter.objects.all()
+        supply_centers = models.SupplyCenter.objects.all(turn=turn)
         supply_center_serializer = serializers\
             .SupplyCenterSerializer(supply_centers, many=True)
 
@@ -23,10 +48,13 @@ class GameStateView(views.APIView):
         territory_serializer = serializers\
             .TerritorySerializer(territories, many=True)
 
+        game_territories = models.GameTerritory.objects.filter(turn=turn)
+
         return Response(
             {
                 'pieces': piece_serializer.data,
                 'supply_centers': supply_center_serializer.data,
-                'territories': territory_serializer.data
+                'territories': territory_serializer.data,
+                'game_territories': game_territory_serializer.data
             }
         )

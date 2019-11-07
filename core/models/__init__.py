@@ -4,7 +4,6 @@ from .game import Game
 from .named_coast import NamedCoast
 from .nation import Nation
 from .order import Order
-from .phase import Phase
 from .piece import Piece
 from .supply_center import SupplyCenter
 from .territory import Territory
@@ -19,7 +18,6 @@ __all__ = [
     'NamedCoast',
     'Nation',
     'Order',
-    'Phase',
     'Piece',
     'SupplyCenter',
     'Territory',

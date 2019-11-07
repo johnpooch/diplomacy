@@ -1,0 +1,9 @@
+[
+{
+   "model": "core.game",
+   "pk": 1,
+   "fields": {
+      "name": ""
+   }
+}
+]

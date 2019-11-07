@@ -27,6 +27,12 @@ class Piece(HygenicModel):
         blank=True,
         null=True
     )
+    turn = models.ForeignKey(
+        'Turn',
+        on_delete=models.CASCADE,
+        null=False,
+        related_name='pieces',
+    )
     type = models.CharField(
         max_length=50,
         null=False,
