@@ -25,13 +25,37 @@ class PieceSerializer(serializers.ModelSerializer):
 
 class TerritorySerializer(serializers.ModelSerializer):
 
+    piece = PieceSerializer()
+
     class Meta:
         model = models.Territory
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'piece')
 
 
 class TerritoryStateSerializer(serializers.ModelSerializer):
 
+    territory = TerritorySerializer()
+
     class Meta:
         model = models.TerritoryState
-        fields = ('id', 'controlled_by')
+        depth = 1
+        fields = ('territory', 'controlled_by')
+
+    def to_representation(self, obj):
+        """
+        Flatten territory state and territory.
+        """
+        representation = super().to_representation(obj)
+        territory_representation = representation.pop('territory')
+        for key in territory_representation:
+            representation[key] = territory_representation[key]
+
+        return representation
+
+
+class NationStateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.NationState
+        depth = 1
+        fields = ('nation', 'surrendered', 'surrendered_turn')

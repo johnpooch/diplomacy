@@ -36,8 +36,6 @@ class NationState(models.Model):
         related_name='+',
         on_delete=models.CASCADE,
     )
-    # NOTE a new player can take over for a previous player
-    # TODO need to record previous players
 
     # player = models.ForeignKey(
     #     '',

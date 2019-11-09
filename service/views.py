@@ -36,27 +36,17 @@ class GameStateView(views.APIView):
             except models.Turn.DoesNotExist:
                 error404()
 
-        pieces = models.Piece.objects.filter(turn=turn)
-        piece_serializer = serializers\
-            .PieceSerializer(pieces, many=True)
-
-        supply_centers = models.SupplyCenter.objects.all()
-        supply_center_serializer = serializers\
-            .SupplyCenterSerializer(supply_centers, many=True)
-
-        territories = models.Territory.objects.all()
-        territory_serializer = serializers\
-            .TerritorySerializer(territories, many=True)
-
         territory_states = models.TerritoryState.objects.filter(turn=turn)
         territory_states_serializer = serializers\
             .TerritoryStateSerializer(territory_states, many=True)
 
+        nation_states = models.NationState.objects.filter(turn=turn)
+        nation_states_serializer = serializers\
+            .NationStateSerializer(nation_states, many=True)
+
         return Response(
             {
-                'pieces': piece_serializer.data,
-                'supply_centers': supply_center_serializer.data,
-                'territories': territory_serializer.data,
-                'territory_states': territory_states_serializer.data
+                'territory_states': territory_states_serializer.data,
+                'nation_states': nation_states_serializer.data,
             }
         )
