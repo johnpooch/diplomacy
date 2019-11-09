@@ -2,7 +2,7 @@ from .command import Command
 from .community import Announcement, Message
 from .game import Game
 from .named_coast import NamedCoast
-from .nation import Nation
+from .nation import Nation, NationState
 from .order import Order
 from .piece import Piece
 from .supply_center import SupplyCenter
@@ -18,6 +18,7 @@ __all__ = [
     'Message',
     'NamedCoast',
     'Nation',
+    'NationState',
     'Order',
     'Piece',
     'SupplyCenter',

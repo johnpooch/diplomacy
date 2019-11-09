@@ -19,15 +19,15 @@ class Nation(models.Model):
         return self.name
 
 
-class GameNation(models.Model):
+class NationState(models.Model):
     """
     Through model between ``Game``, ``User``, and ``Nation``. Represents the
     state of a nation in a game.
     """
-    game = models.ForeignKey(
-        'Game',
+    turn = models.ForeignKey(
+        'Turn',
         null=False,
-        related_name='+',
+        related_name='nation_states',
         on_delete=models.CASCADE,
     )
     nation = models.ForeignKey(

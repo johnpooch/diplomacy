@@ -46,7 +46,7 @@ class GameStateView(views.APIView):
 
         territories = models.Territory.objects.all()
         territory_serializer = serializers\
-            .TerritoryStateSerializer(territories, many=True)
+            .TerritorySerializer(territories, many=True)
 
         territory_states = models.TerritoryState.objects.filter(turn=turn)
         territory_states_serializer = serializers\
