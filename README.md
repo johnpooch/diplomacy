@@ -1,6 +1,6 @@
 # Diplomacy
 
-A web browser version of the classic strategy board game.
+A web browser version of the classic strategy board game 'Diplomacy'.
 
 ### Loading fixtures for dev
 
