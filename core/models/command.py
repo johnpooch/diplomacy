@@ -406,6 +406,10 @@ class Command(HygenicModel, ChecksMixin, CommandDecisionsMixin, ResolverMixin):
         return self.order.nation
 
     @property
+    def turn(self):
+        return self.order.turn
+
+    @property
     def is_hold(self):
         return self.type == CommandType.HOLD
 

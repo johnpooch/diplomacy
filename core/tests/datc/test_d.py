@@ -35,11 +35,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The support of Tyrolia prevents that the army in Venice is dislodged.
         The army in Trieste will not move.
         """
-        fleet_adriatic = fleet(self.austria, self.adriatic_sea)
-        army_trieste = army(self.austria, self.trieste)
+        fleet_adriatic = fleet(self.turn, self.austria, self.adriatic_sea)
+        army_trieste = army(self.turn, self.austria, self.trieste)
 
-        army_venice = army(self.italy, self.venice)
-        army_tyrolia = army(self.italy, self.tyrolia)
+        army_venice = army(self.turn, self.italy, self.venice)
+        army_tyrolia = army(self.turn, self.italy, self.tyrolia)
 
         fleet_adriatic_support = support(
             self.austria_order, fleet_adriatic, self.adriatic_sea,
@@ -81,12 +81,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The support of Tyrolia is cut by the army in Vienna. That means that
         the army in Venice is dislodged by the army from Trieste.
         """
-        fleet_adriatic = fleet(self.austria, self.adriatic_sea)
-        army_trieste = army(self.austria, self.trieste)
-        army_vienna = army(self.austria, self.vienna)
+        fleet_adriatic = fleet(self.turn, self.austria, self.adriatic_sea)
+        army_trieste = army(self.turn, self.austria, self.trieste)
+        army_vienna = army(self.turn, self.austria, self.vienna)
 
-        army_venice = army(self.italy, self.venice)
-        army_tyrolia = army(self.italy, self.tyrolia)
+        army_venice = army(self.turn, self.italy, self.venice)
+        army_tyrolia = army(self.turn, self.italy, self.tyrolia)
 
         fleet_adriatic_support = support(
             self.austria_order, fleet_adriatic, self.adriatic_sea,
@@ -133,11 +133,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         the army in Venice will not be dislodged and the army in Trieste stays
         in Trieste.
         """
-        fleet_adriatic = fleet(self.austria, self.adriatic_sea)
-        army_trieste = army(self.austria, self.trieste)
+        fleet_adriatic = fleet(self.turn, self.austria, self.adriatic_sea)
+        army_trieste = army(self.turn, self.austria, self.trieste)
 
-        army_venice = army(self.italy, self.venice)
-        fleet_ionian = fleet(self.italy, self.ionian_sea)
+        army_venice = army(self.turn, self.italy, self.venice)
+        fleet_ionian = fleet(self.turn, self.italy, self.ionian_sea)
 
         fleet_adriatic_support = support(
             self.austria_order, fleet_adriatic, self.adriatic_sea,
@@ -178,11 +178,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         The Russian move from Prussia to Berlin fails.
         """
-        army_berlin = army(self.germany, self.berlin)
-        army_kiel = army(self.germany, self.kiel)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        army_kiel = army(self.turn, self.germany, self.kiel)
 
-        fleet_baltic = army(self.russia, self.baltic_sea)
-        army_prussia = army(self.russia, self.prussia)
+        fleet_baltic = army(self.turn, self.russia, self.baltic_sea)
+        army_prussia = army(self.turn, self.russia, self.prussia)
 
         army_berlin_support = support(
             self.germany_order, army_berlin, self.berlin, self.kiel, self.kiel
@@ -227,12 +227,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         The Russian move from Prussia to Berlin fails.
         """
-        army_berlin = army(self.germany, self.berlin)
-        army_kiel = army(self.germany, self.kiel)
-        army_munich = army(self.germany, self.munich)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        army_kiel = army(self.turn, self.germany, self.kiel)
+        army_munich = army(self.turn, self.germany, self.munich)
 
-        fleet_baltic = army(self.russia, self.baltic_sea)
-        army_prussia = army(self.russia, self.prussia)
+        fleet_baltic = army(self.turn, self.russia, self.baltic_sea)
+        army_prussia = army(self.turn, self.russia, self.prussia)
 
         army_berlin_support = support(
             self.germany_order, army_berlin, self.berlin, self.munich,
@@ -284,12 +284,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The Russian move from Livonia to the Baltic Sea fails. The convoy from
         Berlin to Sweden succeeds.
         """
-        army_berlin = army(self.germany, self.berlin)
-        fleet_baltic = fleet(self.germany, self.baltic_sea)
-        fleet_prussia = fleet(self.germany, self.prussia)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        fleet_baltic = fleet(self.turn, self.germany, self.baltic_sea)
+        fleet_prussia = fleet(self.turn, self.germany, self.prussia)
 
-        fleet_livonia = army(self.russia, self.livonia)
-        fleet_gulf_of_bothnia = army(self.russia, self.gulf_of_bothnia)
+        fleet_livonia = army(self.turn, self.russia, self.livonia)
+        fleet_gulf_of_bothnia = army(self.turn, self.russia, self.gulf_of_bothnia)
 
         army_berlin_move = move(
             self.germany_order, army_berlin, self.berlin, self.sweden,
@@ -340,12 +340,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         bounce on the Russian army in Finland and will be dislodged by the
         Russian fleet from Livonia when it returns to the Baltic Sea.
         """
-        fleet_baltic = fleet(self.germany, self.baltic_sea)
-        fleet_prussia = fleet(self.germany, self.prussia)
+        fleet_baltic = fleet(self.turn, self.germany, self.baltic_sea)
+        fleet_prussia = fleet(self.turn, self.germany, self.prussia)
 
-        fleet_livonia = fleet(self.russia, self.livonia)
-        fleet_gulf_of_bothnia = fleet(self.russia, self.gulf_of_bothnia)
-        army_finland = army(self.russia, self.finland)
+        fleet_livonia = fleet(self.turn, self.russia, self.livonia)
+        fleet_gulf_of_bothnia = fleet(self.turn, self.russia, self.gulf_of_bothnia)
+        army_finland = army(self.turn, self.russia, self.finland)
 
         fleet_baltic_move = move(
             self.germany_order, fleet_baltic, self.baltic_sea, self.sweden,
@@ -400,12 +400,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         VI.A). Therefore, the support in Bulgaria fails and the army in Greece
         is dislodged by the army in Albania.
         """
-        fleet_ionian = fleet(self.austria, self.ionian_sea)
-        army_serbia = army(self.austria, self.serbia)
-        army_albania = army(self.austria, self.albania)
+        fleet_ionian = fleet(self.turn, self.austria, self.ionian_sea)
+        army_serbia = army(self.turn, self.austria, self.serbia)
+        army_albania = army(self.turn, self.austria, self.albania)
 
-        army_greece = army(self.turkey, self.greece)
-        army_bulgaria = army(self.turkey, self.bulgaria)
+        army_greece = army(self.turn, self.turkey, self.greece)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
 
         fleet_ionian_hold = hold(
             self.austria_order, fleet_ionian, self.ionian_sea
@@ -452,11 +452,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The support of the army in Albania fails and the army in Trieste is
         dislodged by the army from Venice.
         """
-        army_venice = army(self.italy, self.venice)
-        army_tyrolia = army(self.italy, self.tyrolia)
+        army_venice = army(self.turn, self.italy, self.venice)
+        army_tyrolia = army(self.turn, self.italy, self.tyrolia)
 
-        army_albania = army(self.austria, self.albania)
-        army_trieste = army(self.austria, self.trieste)
+        army_albania = army(self.turn, self.austria, self.albania)
+        army_trieste = army(self.turn, self.austria, self.trieste)
 
         army_venice_move = move(self.italy_order, army_venice, self.venice,
                                 self.trieste)
@@ -495,9 +495,9 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         Move to Berlin fails.
         """
-        army_berlin = army(self.germany, self.berlin)
-        fleet_kiel = fleet(self.germany, self.kiel)
-        army_munich = army(self.germany, self.munich)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
+        army_munich = army(self.turn, self.germany, self.munich)
 
         army_berlin_hold = hold(self.germany_order, army_berlin, self.berlin)
         fleet_kiel_move = move(self.germany_order, fleet_kiel, self.kiel,
@@ -529,11 +529,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         Army in Berlin bounces, but is not dislodged by own unit.
         """
-        army_berlin = army(self.germany, self.berlin)
-        fleet_kiel = fleet(self.germany, self.kiel)
-        army_munich = army(self.germany, self.munich)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
+        army_munich = army(self.turn, self.germany, self.munich)
 
-        army_warsaw = army(self.russia, self.warsaw)
+        army_warsaw = army(self.turn, self.russia, self.warsaw)
 
         army_berlin_move = move(self.germany_order, army_berlin, self.berlin,
                                 self.prussia)
@@ -570,10 +570,10 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         No dislodgment of fleet in Trieste.
         """
-        fleet_trieste = fleet(self.austria, self.trieste)
-        army_vienna = army(self.austria, self.vienna)
+        fleet_trieste = fleet(self.turn, self.austria, self.trieste)
+        army_vienna = army(self.turn, self.austria, self.vienna)
 
-        army_venice = army(self.italy, self.venice)
+        army_venice = army(self.turn, self.italy, self.venice)
 
         fleet_trieste_hold = hold(self.austria_order, fleet_trieste,
                                   self.trieste)
@@ -606,11 +606,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         No dislodgment of fleet in Trieste.
         """
-        fleet_trieste = fleet(self.austria, self.trieste)
-        army_vienna = army(self.austria, self.vienna)
+        fleet_trieste = fleet(self.turn, self.austria, self.trieste)
+        army_vienna = army(self.turn, self.austria, self.vienna)
 
-        army_venice = army(self.italy, self.venice)
-        fleet_apulia = fleet(self.italy, self.apulia)
+        army_venice = army(self.turn, self.italy, self.venice)
+        fleet_apulia = fleet(self.turn, self.italy, self.apulia)
 
         fleet_trieste_move = move(self.austria_order, fleet_trieste,
                                   self.trieste, self.adriatic_sea)
@@ -651,12 +651,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         The fleet in Trieste is dislodged.
         """
-        fleet_trieste = fleet(self.austria, self.trieste)
-        army_vienna = army(self.austria, self.vienna)
+        fleet_trieste = fleet(self.turn, self.austria, self.trieste)
+        army_vienna = army(self.turn, self.austria, self.vienna)
 
-        army_venice = army(self.italy, self.venice)
-        army_tyrolia = army(self.italy, self.tyrolia)
-        fleet_adriatic = fleet(self.italy, self.adriatic_sea)
+        army_venice = army(self.turn, self.italy, self.venice)
+        army_tyrolia = army(self.turn, self.italy, self.tyrolia)
+        fleet_adriatic = fleet(self.turn, self.italy, self.adriatic_sea)
 
         fleet_trieste_hold = hold(self.austria_order, fleet_trieste,
                                   self.trieste)
@@ -701,10 +701,10 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The support of Constantinople is not cut and the fleet in Ankara is
         dislodged by the fleet in the Black Sea. a name="6.D.16">
         """
-        fleet_constantinople = fleet(self.russia, self.constantinople)
-        fleet_black_sea = fleet(self.russia, self.black_sea)
+        fleet_constantinople = fleet(self.turn, self.russia, self.constantinople)
+        fleet_black_sea = fleet(self.turn, self.russia, self.black_sea)
 
-        fleet_ankara = fleet(self.turkey, self.ankara)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
 
         fleet_constantinople_support = support(
             self.russia_order, fleet_constantinople, self.constantinople,
@@ -744,11 +744,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The English army in London is dislodged by the French army coming from
         Belgium.
         """
-        army_london = army(self.england, self.london)
-        fleet_north_sea = fleet(self.england, self.north_sea)
+        army_london = army(self.turn, self.england, self.london)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
 
-        fleet_english_channel = fleet(self.france, self.english_channel)
-        army_belgium = army(self.france, self.belgium)
+        fleet_english_channel = fleet(self.turn, self.france, self.english_channel)
+        army_belgium = army(self.turn, self.france, self.belgium)
 
         army_london_hold = hold(self.england_order, army_london, self.london)
         fleet_north_sea_convoy = convoy(
@@ -792,12 +792,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         to from Black Sea to Ankara. Black Sea will bounce with the army from
         Armenia.
         """
-        fleet_constantinople = fleet(self.russia, self.constantinople)
-        fleet_black_sea = fleet(self.russia, self.black_sea)
+        fleet_constantinople = fleet(self.turn, self.russia, self.constantinople)
+        fleet_black_sea = fleet(self.turn, self.russia, self.black_sea)
 
-        fleet_ankara = fleet(self.turkey, self.ankara)
-        army_smyrna = army(self.turkey, self.smyrna)
-        army_armenia = army(self.turkey, self.armenia)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
+        army_smyrna = army(self.turn, self.turkey, self.smyrna)
+        army_armenia = army(self.turn, self.turkey, self.armenia)
 
         fleet_constantinople_support = support(
             self.russia_order, fleet_constantinople, self.constantinople,
@@ -851,13 +851,13 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The Russian fleet in the Black Sea will dislodge the Turkish fleet in
         Ankara.
         """
-        fleet_constantinople = fleet(self.russia, self.constantinople)
-        fleet_black_sea = fleet(self.russia, self.black_sea)
-        army_bulgaria = army(self.russia, self.bulgaria)
+        fleet_constantinople = fleet(self.turn, self.russia, self.constantinople)
+        fleet_black_sea = fleet(self.turn, self.russia, self.black_sea)
+        army_bulgaria = army(self.turn, self.russia, self.bulgaria)
 
-        fleet_ankara = fleet(self.turkey, self.ankara)
-        army_smyrna = army(self.turkey, self.smyrna)
-        army_armenia = army(self.turkey, self.armenia)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
+        army_smyrna = army(self.turn, self.turkey, self.smyrna)
+        army_armenia = army(self.turn, self.turkey, self.armenia)
 
         fleet_constantinople_support = support(
             self.russia_order, fleet_constantinople, self.constantinople,
@@ -923,11 +923,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         the support is of Russian origin. The support from Black Sea to Ankara
         will sustain and the fleet in Ankara will be dislodged.
         """
-        fleet_constantinople = fleet(self.russia, self.constantinople)
-        fleet_black_sea = fleet(self.russia, self.black_sea)
-        army_smyrna = army(self.russia, self.smyrna)
+        fleet_constantinople = fleet(self.turn, self.russia, self.constantinople)
+        fleet_black_sea = fleet(self.turn, self.russia, self.black_sea)
+        army_smyrna = army(self.turn, self.russia, self.smyrna)
 
-        fleet_ankara = fleet(self.turkey, self.ankara)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
 
         fleet_constantinople_support = support(
             self.russia_order, fleet_constantinople, self.constantinople,
@@ -983,11 +983,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         The army in York does not cut support. This means that the fleet in the
         English Channel is dislodged by the fleet in the North Sea.
         """
-        fleet_london = fleet(self.england, self.london)
-        fleet_north_sea = fleet(self.england, self.north_sea)
-        army_yorkshire = army(self.england, self.yorkshire)
+        fleet_london = fleet(self.turn, self.england, self.london)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
+        army_yorkshire = army(self.turn, self.england, self.yorkshire)
 
-        fleet_english_channel = fleet(self.france, self.english_channel)
+        fleet_english_channel = fleet(self.turn, self.france, self.english_channel)
 
         fleet_london_support = support(
             self.england_order, fleet_london, self.london, self.north_sea,
@@ -1045,15 +1045,15 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         Although the German army is dislodged, it still cuts the Italian
         support. That means that the Austrian Fleet is not dislodged.
         """
-        fleet_trieste = fleet(self.austria, self.trieste)
+        fleet_trieste = fleet(self.turn, self.austria, self.trieste)
 
-        army_venice = army(self.italy, self.venice)
-        army_tyrolia = army(self.italy, self.tyrolia)
+        army_venice = army(self.turn, self.italy, self.venice)
+        army_tyrolia = army(self.turn, self.italy, self.tyrolia)
 
-        army_munich = army(self.germany, self.munich)
+        army_munich = army(self.turn, self.germany, self.munich)
 
-        army_silesia = army(self.russia, self.silesia)
-        army_berlin = army(self.russia, self.berlin)
+        army_silesia = army(self.turn, self.russia, self.silesia)
+        army_berlin = army(self.turn, self.russia, self.berlin)
 
         fleet_trieste_hold = hold(
             self.austria_order, fleet_trieste, self.trieste
@@ -1116,10 +1116,10 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         literally, you might conclude that the fleet in Munich is not
         dislodged, but this is an incorrect interpretation.
         """
-        fleet_kiel = fleet(self.germany, self.kiel)
-        army_burgundy = army(self.germany, self.burgundy)
-        army_munich = army(self.russia, self.munich)
-        army_berlin = army(self.russia, self.berlin)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
+        army_burgundy = army(self.turn, self.germany, self.burgundy)
+        army_munich = army(self.turn, self.russia, self.munich)
+        army_berlin = army(self.turn, self.russia, self.berlin)
 
         fleet_kiel_move = move(
             self.germany_order, fleet_kiel, self.kiel, self.munich
@@ -1171,11 +1171,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         (wrong coast). Therefore, the support from Marseilles fails and the
         fleet in Spain is dislodged.
         """
-        fleet_gulf_of_lyon = fleet(self.italy, self.gulf_of_lyon)
-        fleet_western_med = fleet(self.italy, self.western_mediterranean)
+        fleet_gulf_of_lyon = fleet(self.turn, self.italy, self.gulf_of_lyon)
+        fleet_western_med = fleet(self.turn, self.italy, self.western_mediterranean)
 
-        fleet_spain_nc = fleet(self.france, self.spain, self.spain_nc)
-        fleet_marseilles = fleet(self.france, self.marseilles)
+        fleet_spain_nc = fleet(self.turn, self.france, self.spain, self.spain_nc)
+        fleet_marseilles = fleet(self.turn, self.france, self.marseilles)
 
         fleet_gulf_of_lyon_move = move(
             self.italy_order, fleet_gulf_of_lyon, self.gulf_of_lyon,
@@ -1236,13 +1236,13 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         beleaguered garrison. The fleet in the Gulf of Lyon is dislodged by the
         Turkish fleet in the Western Mediterranean.
         """
-        army_marseilles = army(self.france, self.marseilles)
-        fleet_spain_sc = fleet(self.france, self.spain, self.spain_sc)
+        army_marseilles = army(self.turn, self.france, self.marseilles)
+        fleet_spain_sc = fleet(self.turn, self.france, self.spain, self.spain_sc)
 
-        fleet_gulf_of_lyon = fleet(self.italy, self.gulf_of_lyon)
+        fleet_gulf_of_lyon = fleet(self.turn, self.italy, self.gulf_of_lyon)
 
-        fleet_tyrrhenian_sea = fleet(self.turkey, self.tyrrhenian_sea)
-        fleet_western_med = fleet(self.turkey, self.western_mediterranean)
+        fleet_tyrrhenian_sea = fleet(self.turn, self.turkey, self.tyrrhenian_sea)
+        fleet_western_med = fleet(self.turn, self.turkey, self.western_mediterranean)
 
         army_marseilles_move = move(
             self.france_order, army_marseilles, self.marseilles,
@@ -1305,11 +1305,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         orders), the support of Kiel on Berlin is still valid. So, Berlin will
         not be dislodged.
         """
-        army_berlin = army(self.germany, self.berlin)
-        fleet_kiel = fleet(self.germany, self.kiel)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
 
-        fleet_baltic = fleet(self.russia, self.baltic_sea)
-        army_prussia = army(self.russia, self.prussia)
+        fleet_baltic = fleet(self.turn, self.russia, self.baltic_sea)
+        army_prussia = army(self.turn, self.russia, self.prussia)
 
         army_berlin_support = support(
             self.germany_order, army_berlin, self.berlin, self.prussia,
@@ -1357,11 +1357,11 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
 
         Again, Berlin will not be dislodged.
         """
-        army_berlin = army(self.germany, self.berlin)
-        fleet_kiel = fleet(self.germany, self.kiel)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
 
-        fleet_baltic = fleet(self.russia, self.baltic_sea)
-        army_prussia = army(self.russia, self.prussia)
+        fleet_baltic = fleet(self.turn, self.russia, self.baltic_sea)
+        army_prussia = army(self.turn, self.russia, self.prussia)
 
         army_berlin_support = support(
             self.germany_order, army_berlin, self.berlin, self.prussia,
@@ -1413,13 +1413,13 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         support of Prussia on the Baltic Sea is still valid and the fleet in
         the Baltic Sea is not dislodged.
         """
-        fleet_sweden = fleet(self.england, self.sweden)
-        fleet_denmark = fleet(self.england, self.denmark)
+        fleet_sweden = fleet(self.turn, self.england, self.sweden)
+        fleet_denmark = fleet(self.turn, self.england, self.denmark)
 
-        army_berlin = army(self.germany, self.berlin)
+        army_berlin = army(self.turn, self.germany, self.berlin)
 
-        fleet_baltic = fleet(self.russia, self.baltic_sea)
-        fleet_prussia = fleet(self.russia, self.prussia)
+        fleet_baltic = fleet(self.turn, self.russia, self.baltic_sea)
+        fleet_prussia = fleet(self.turn, self.russia, self.prussia)
 
         fleet_sweden_move = move(
             self.england_order, fleet_sweden, self.sweden, self.baltic_sea
@@ -1475,12 +1475,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         I prefer that the move is "illegal", which means that the fleet in the
         Black Sea does not dislodge the supported Russian fleet.
         """
-        army_budapest = army(self.austria, self.budapest)
+        army_budapest = army(self.turn, self.austria, self.budapest)
 
-        fleet_rumania = fleet(self.russia, self.rumania)
+        fleet_rumania = fleet(self.turn, self.russia, self.rumania)
 
-        fleet_black_sea = fleet(self.turkey, self.black_sea)
-        army_bulgaria = army(self.turkey, self.bulgaria)
+        fleet_black_sea = fleet(self.turn, self.turkey, self.black_sea)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
 
         army_budapest_support = support(
             self.austria_order, army_budapest, self.budapest, self.rumania,
@@ -1535,12 +1535,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         "illegal". That means that the fleet in the Black Sea does not dislodge
         the supported Russian fleet.
         """
-        army_budapest = army(self.austria, self.budapest)
+        army_budapest = army(self.turn, self.austria, self.budapest)
 
-        fleet_rumania = fleet(self.russia, self.rumania)
+        fleet_rumania = fleet(self.turn, self.russia, self.rumania)
 
-        fleet_black_sea = fleet(self.turkey, self.black_sea)
-        army_bulgaria = army(self.turkey, self.bulgaria)
+        fleet_black_sea = fleet(self.turn, self.turkey, self.black_sea)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
 
         army_budapest_support = support(
             self.austria_order, army_budapest, self.budapest, self.rumania,
@@ -1587,12 +1587,12 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         Due to the Russian support, the army in Serbia advances to Budapest.
         This enables Turkey to capture Serbia with the army in Bulgaria.
         """
-        army_serbia = army(self.austria, self.serbia)
-        army_vienna = army(self.austria, self.vienna)
+        army_serbia = army(self.turn, self.austria, self.serbia)
+        army_vienna = army(self.turn, self.austria, self.vienna)
 
-        army_galicia = army(self.russia, self.galicia)
+        army_galicia = army(self.turn, self.russia, self.galicia)
 
-        army_bulgaria = army(self.turkey, self.bulgaria)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
 
         army_serbia_move = move(
             self.austria_order, army_serbia, self.serbia, self.budapest
@@ -1650,14 +1650,14 @@ class TestSupportsAndDislodges(TestCase, HelperMixin, TerritoriesMixin):
         Even if it would be legal, the German move from Berlin would still
         succeed, because the support of Prussia is cut by Livonia and Berlin.
         """
-        army_berlin = army(self.germany, self.berlin)
-        army_silesia = army(self.germany, self.silesia)
-        fleet_baltic = fleet(self.germany, self.baltic_sea)
+        army_berlin = army(self.turn, self.germany, self.berlin)
+        army_silesia = army(self.turn, self.germany, self.silesia)
+        fleet_baltic = fleet(self.turn, self.germany, self.baltic_sea)
 
-        army_prussia = army(self.italy, self.prussia)
+        army_prussia = army(self.turn, self.italy, self.prussia)
 
-        army_warsaw = army(self.russia, self.warsaw)
-        army_livonia = army(self.russia, self.livonia)
+        army_warsaw = army(self.turn, self.russia, self.warsaw)
+        army_livonia = army(self.turn, self.russia, self.livonia)
 
         army_berlin_move = move(
             self.germany_order, army_berlin, self.berlin, self.prussia

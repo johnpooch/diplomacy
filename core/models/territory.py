@@ -55,6 +55,9 @@ class Territory(models.Model, HoldStrength):
     def __str__(self):
         return self.name.title()
 
+    def state(self, turn):
+        return self.territory_states.get(turn=turn)
+
     def standoff_occured_on_previous_turn(self):
         # TODO do this when phases/logs are properly handled
         pass
@@ -164,7 +167,7 @@ class TerritoryState(models.Model):
     territory = models.ForeignKey(
         'Territory',
         null=False,
-        related_name='+',
+        related_name='territory_states',
         on_delete=models.CASCADE,
     )
     turn = models.ForeignKey(

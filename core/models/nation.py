@@ -37,6 +37,7 @@ class NationState(models.Model):
         on_delete=models.CASCADE,
     )
 
+    # TODO Add this in once users are in
     # player = models.ForeignKey(
     #     '',
     #     null=True,
@@ -47,10 +48,4 @@ class NationState(models.Model):
     surrendered = models.BooleanField(
         null=True,
         default=False,
-    )
-    surrendered_turn = models.ForeignKey(
-        'Turn',
-        null=True,
-        related_name='+',
-        on_delete=models.CASCADE,
     )

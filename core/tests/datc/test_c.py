@@ -31,9 +31,9 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
 
         All three units will move.
         """
-        fleet_ankara = fleet(self.turkey, self.ankara)
-        army_constantinople = army(self.turkey, self.constantinople)
-        army_smyrna = army(self.turkey, self.smyrna)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
+        army_constantinople = army(self.turn, self.turkey, self.constantinople)
+        army_smyrna = army(self.turn, self.turkey, self.smyrna)
 
         fleet_ankara_move = move(
             self.turkey_order, fleet_ankara, self.ankara, self.constantinople
@@ -68,10 +68,10 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
         Of course the three units will move, but knowing how programs are
         written, this can confuse the adjudicator.
         """
-        fleet_ankara = fleet(self.turkey, self.ankara)
-        army_bulgaria = army(self.turkey, self.bulgaria)
-        army_constantinople = army(self.turkey, self.constantinople)
-        army_smyrna = army(self.turkey, self.smyrna)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
+        army_constantinople = army(self.turn, self.turkey, self.constantinople)
+        army_smyrna = army(self.turn, self.turkey, self.smyrna)
 
         fleet_ankara_move = move(
             self.turkey_order, fleet_ankara, self.ankara, self.constantinople
@@ -109,10 +109,10 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
 
         Every unit will keep its place.
         """
-        fleet_ankara = fleet(self.turkey, self.ankara)
-        army_bulgaria = army(self.turkey, self.bulgaria)
-        army_constantinople = army(self.turkey, self.constantinople)
-        army_smyrna = army(self.turkey, self.smyrna)
+        fleet_ankara = fleet(self.turn, self.turkey, self.ankara)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
+        army_constantinople = army(self.turn, self.turkey, self.constantinople)
+        army_smyrna = army(self.turn, self.turkey, self.smyrna)
 
         fleet_ankara_move = move(
             self.turkey_order, fleet_ankara, self.ankara, self.constantinople
@@ -161,15 +161,15 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
         The fleet in the Ionian Sea is attacked but not dislodged. The circular
         movement succeeds. The Austrian and Turkish armies will advance.
         """
-        army_trieste = army(self.austria, self.trieste)
-        army_serbia = army(self.austria, self.serbia)
+        army_trieste = army(self.turn, self.austria, self.trieste)
+        army_serbia = army(self.turn, self.austria, self.serbia)
 
-        army_bulgaria = army(self.turkey, self.bulgaria)
-        fleet_aegean = fleet(self.turkey, self.aegean_sea)
-        fleet_ionian = fleet(self.turkey, self.ionian_sea)
-        fleet_adriatic = fleet(self.turkey, self.adriatic_sea)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
+        fleet_aegean = fleet(self.turn, self.turkey, self.aegean_sea)
+        fleet_ionian = fleet(self.turn, self.turkey, self.ionian_sea)
+        fleet_adriatic = fleet(self.turn, self.turkey, self.adriatic_sea)
 
-        fleet_naples = fleet(self.italy, self.naples)
+        fleet_naples = fleet(self.turn, self.italy, self.naples)
 
         army_trieste_move = move(
             self.austria_order, army_trieste, self.trieste, self.serbia
@@ -232,16 +232,16 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
         Due to the dislodged convoying fleet, all Austrian and Turkish armies
         will not move.
         """
-        army_trieste = army(self.austria, self.trieste)
-        army_serbia = army(self.austria, self.serbia)
+        army_trieste = army(self.turn, self.austria, self.trieste)
+        army_serbia = army(self.turn, self.austria, self.serbia)
 
-        army_bulgaria = army(self.turkey, self.bulgaria)
-        fleet_aegean = fleet(self.turkey, self.aegean_sea)
-        fleet_ionian = fleet(self.turkey, self.ionian_sea)
-        fleet_adriatic = fleet(self.turkey, self.adriatic_sea)
+        army_bulgaria = army(self.turn, self.turkey, self.bulgaria)
+        fleet_aegean = fleet(self.turn, self.turkey, self.aegean_sea)
+        fleet_ionian = fleet(self.turn, self.turkey, self.ionian_sea)
+        fleet_adriatic = fleet(self.turn, self.turkey, self.adriatic_sea)
 
-        fleet_naples = fleet(self.italy, self.naples)
-        fleet_tunis = fleet(self.italy, self.tunis)
+        fleet_naples = fleet(self.turn, self.italy, self.naples)
+        fleet_tunis = fleet(self.turn, self.italy, self.tunis)
 
         army_trieste_move = move(
             self.austria_order, army_trieste, self.trieste, self.serbia
@@ -302,11 +302,11 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
 
         Both convoys should succeed.
         """
-        fleet_north_sea = fleet(self.england, self.north_sea)
-        army_london = army(self.england, self.london)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
+        army_london = army(self.turn, self.england, self.london)
 
-        fleet_english_channel = fleet(self.france, self.english_channel)
-        army_belgium = army(self.france, self.belgium)
+        fleet_english_channel = fleet(self.turn, self.france, self.english_channel)
+        army_belgium = army(self.turn, self.france, self.belgium)
 
         fleet_north_sea_convoy = convoy(
             self.england_order, fleet_north_sea, self.north_sea, self.london,
@@ -345,12 +345,12 @@ class TestCircularMovement(TestCase, HelperMixin, TerritoriesMixin):
 
         None of the units will succeed to move.
         """
-        fleet_north_sea = fleet(self.england, self.north_sea)
-        army_london = army(self.england, self.london)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
+        army_london = army(self.turn, self.england, self.london)
 
-        fleet_english_channel = fleet(self.france, self.english_channel)
-        army_belgium = army(self.france, self.belgium)
-        army_burgundy = army(self.france, self.burgundy)
+        fleet_english_channel = fleet(self.turn, self.france, self.english_channel)
+        army_belgium = army(self.turn, self.france, self.belgium)
+        army_burgundy = army(self.turn, self.france, self.burgundy)
 
         fleet_north_sea_convoy = convoy(
             self.england_order, fleet_north_sea, self.north_sea, self.london,

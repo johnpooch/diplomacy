@@ -41,19 +41,20 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         The convoy in Constantinople is not possible. So, the army in Greece
         will not move to Sevastopol.
         """
-        army_greece = cap(  # noqa: F841
-            self.turkey, army, self.greece, move, target=self.sevastapol
+        army_greece = cap(  # noqa: F841 self.turn, self.turkey, army,
+            self.turn, self.england, army, self.greece, move,
+            target=self.sevastapol
         )
         fleet_aegean = cap(
-            self.turkey, fleet, self.aegean_sea, convoy, self.greece,
-            self.sevastapol
+            self.turn, self.turkey, fleet, self.aegean_sea, convoy,
+            self.greece, self.sevastapol
         )
         fleet_constantinople = cap(
-            self.turkey, fleet, self.constantinople, convoy, self.greece,
-            self.sevastapol
+            self.turn, self.turkey, fleet, self.constantinople, convoy,
+            self.greece, self.sevastapol
         )
         fleet_black_sea = cap(
-            self.turkey, fleet, self.black_sea, convoy, self.greece,
+            self.turn, self.turkey, fleet, self.black_sea, convoy, self.greece,
             self.sevastapol
         )
 
@@ -87,14 +88,14 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         units do not move.
         """
         fleet_english_channel = cap(
-            self.england, fleet, self.english_channel, convoy, self.london,
-            self.brest
+            self.turn, self.england, fleet, self.english_channel, convoy,
+            self.london, self.brest
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.brest
+            self.turn, self.england, army, self.london, move, target=self.brest
         )
         army_paris = cap(
-            self.france, army, self.paris, move, target=self.brest
+            self.turn, self.france, army, self.paris, move, target=self.brest
         )
 
         models.Command.objects.process()
@@ -122,17 +123,18 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         Paris stays in Paris.
         """
         fleet_english_channel = cap(
-            self.england, fleet, self.english_channel, convoy, self.london,
-            self.brest
+            self.turn, self.england, fleet, self.english_channel, convoy,
+            self.london, self.brest
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.brest
+            self.turn, self.england, army, self.london, move, target=self.brest
         )
         fleet_mid_atlantic = cap(
-            self.england, fleet, self.mid_atlantic, support, self.london, self.brest
+            self.turn, self.england, fleet, self.mid_atlantic, support,
+            self.london, self.brest
         )
         army_paris = cap(
-            self.france, army, self.paris, move, target=self.brest
+            self.turn, self.france, army, self.paris, move, target=self.brest
         )
 
         models.Command.objects.process()
@@ -158,14 +160,16 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         The army in London will successfully convoy and end in Holland.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.holland
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.holland
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.holland
+            self.turn, self.england, army, self.london, move,
+            target=self.holland
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, move, target=self.north_sea
+            self.turn, self.germany, fleet, self.skagerrak, move,
+            target=self.north_sea
         )
 
         models.Command.objects.process()
@@ -195,26 +199,28 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         The army in London will successfully convoy and end in Holland.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.holland
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.holland
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.holland
+            self.turn, self.england, army, self.london, move,
+            target=self.holland
         )
         fleet_english_channel = cap(
-            self.france, fleet, self.english_channel, move,
+            self.turn, self.france, fleet, self.english_channel, move,
             target=self.north_sea
         )
         fleet_belgium = cap(
-            self.france, fleet, self.belgium, support, self.english_channel,
-            self.north_sea
+            self.turn, self.france, fleet, self.belgium, support,
+            self.english_channel, self.north_sea
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, move, target=self.north_sea
+            self.turn, self.germany, fleet, self.skagerrak, move,
+            target=self.north_sea
         )
         fleet_denmark = cap(
-            self.germany, fleet, self.denmark, support, self.skagerrak,
-            self.north_sea
+            self.turn, self.germany, fleet, self.denmark, support,
+            self.skagerrak, self.north_sea
         )
 
         models.Command.objects.process()
@@ -252,32 +258,35 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         be dislodged by the French in Picardy.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.holland
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.holland
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.holland
+            self.turn, self.england, army, self.london, move,
+            target=self.holland
         )
         army_holland = cap(
-            self.germany, army, self.holland, support, self.belgium,
+            self.turn, self.germany, army, self.holland, support, self.belgium,
             self.belgium
         )
         army_belgium = cap(
-            self.germany, army, self.belgium, support, self.holland,
+            self.turn, self.germany, army, self.belgium, support, self.holland,
             self.holland
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, support, self.skagerrak,
-            self.north_sea
+            self.turn, self.germany, fleet, self.helgoland_bight, support,
+            self.skagerrak, self.north_sea
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, move, target=self.north_sea
+            self.turn, self.germany, fleet, self.skagerrak, move,
+            target=self.north_sea
         )
         army_picardy = cap(
-            self.france, army, self.picardy, move, target=self.belgium
+            self.turn, self.france, army, self.picardy, move,
+            target=self.belgium
         )
         army_burgundy = cap(
-            self.france, army, self.burgundy, support, self.picardy,
+            self.turn, self.france, army, self.burgundy, support, self.picardy,
             self.belgium
         )
 
@@ -312,18 +321,20 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         The dislodged English fleet can retreat to Holland.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.holland
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.holland
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.holland
+            self.turn, self.england, army, self.london, move,
+            target=self.holland
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, support, self.skagerrak,
-            self.north_sea
+            self.turn, self.germany, fleet, self.helgoland_bight, support,
+            self.skagerrak, self.north_sea
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, move, target=self.north_sea
+            self.turn, self.germany, fleet, self.skagerrak, move,
+            target=self.north_sea
         )
 
         models.Command.objects.process()
@@ -353,21 +364,24 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         The army in Belgium will not bounce and move to Holland.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.holland
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.holland
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.holland
+            self.turn, self.england, army, self.london, move,
+            target=self.holland
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, support, self.skagerrak,
-            self.north_sea
+            self.turn, self.germany, fleet, self.helgoland_bight, support,
+            self.skagerrak, self.north_sea
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, move, target=self.north_sea
+            self.turn, self.germany, fleet, self.skagerrak, move,
+            target=self.north_sea
         )
         army_belgium = cap(
-            self.germany, army, self.belgium, move, target=self.holland
+            self.turn, self.germany, army, self.belgium, move,
+            target=self.holland
         )
 
         models.Command.objects.process()
@@ -403,22 +417,23 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         will end in Belgium.
         """
         fleet_english_channel = cap(
-            self.england, fleet, self.english_channel, convoy, self.london,
-            self.belgium
+            self.turn, self.england, fleet, self.english_channel, convoy,
+            self.london, self.belgium
         )
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.belgium
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.belgium
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.belgium
+            self.turn, self.england, army, self.london, move,
+            target=self.belgium
         )
         fleet_brest = cap(
-            self.france, fleet, self.brest, support, self.mid_atlantic,
-            self.english_channel
+            self.turn, self.france, fleet, self.brest, support,
+            self.mid_atlantic, self.english_channel
         )
         fleet_mid_atlantic = cap(
-            self.france, fleet, self.mid_atlantic, move,
+            self.turn, self.france, fleet, self.mid_atlantic, move,
             target=self.english_channel,
         )
 
@@ -461,22 +476,23 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         English army in London will end in Belgium. See also issue 4.A.1.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, convoy, self.london,
-            self.belgium
+            self.turn, self.england, fleet, self.north_sea, convoy,
+            self.london, self.belgium
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.belgium
+            self.turn, self.england, army, self.london, move,
+            target=self.belgium
         )
         fleet_english_channel = cap(
-            self.germany, fleet, self.english_channel, convoy, self.london,
-            self.belgium
+            self.turn, self.germany, fleet, self.english_channel, convoy,
+            self.london, self.belgium
         )
         fleet_brest = cap(
-            self.france, fleet, self.brest, support, self.mid_atlantic,
-            self.english_channel
+            self.turn, self.france, fleet, self.brest, support,
+            self.mid_atlantic, self.english_channel
         )
         fleet_mid_atlantic = cap(
-            self.france, fleet, self.mid_atlantic, move,
+            self.turn, self.france, fleet, self.mid_atlantic, move,
             target=self.english_channel,
         )
 
@@ -524,22 +540,23 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         will stay in London. See also issue 4.A.1.
         """
         army_london = cap(
-            self.england, army, self.london, move, target=self.belgium
+            self.turn, self.england, army, self.london, move,
+            target=self.belgium
         )
         fleet_english_channel = cap(
-            self.germany, fleet, self.english_channel, convoy, self.london,
-            self.belgium
+            self.turn, self.germany, fleet, self.english_channel, convoy,
+            self.london, self.belgium
         )
         fleet_north_sea = cap(
-            self.russia, fleet, self.north_sea, convoy, self.london,
+            self.turn, self.russia, fleet, self.north_sea, convoy, self.london,
             self.belgium
         )
         fleet_brest = cap(
-            self.france, fleet, self.brest, support, self.mid_atlantic,
-            self.english_channel
+            self.turn, self.france, fleet, self.brest, support,
+            self.mid_atlantic, self.english_channel
         )
         fleet_mid_atlantic = cap(
-            self.france, fleet, self.mid_atlantic, move,
+            self.turn, self.france, fleet, self.mid_atlantic, move,
             target=self.english_channel,
         )
 
@@ -577,22 +594,23 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         route, although it can be reached from the starting point London.
         """
         fleet_english_channel = cap(
-            self.england, fleet, self.english_channel, convoy, self.london,
-            self.belgium
+            self.turn, self.england, fleet, self.english_channel, convoy,
+            self.london, self.belgium
         )
         army_london = cap(
-            self.england, army, self.london, move, target=self.belgium
+            self.turn, self.england, army, self.london, move,
+            target=self.belgium
         )
         fleet_irish_sea = cap(
-            self.england, fleet, self.irish_sea, convoy, self.london,
-            self.belgium
+            self.turn, self.england, fleet, self.irish_sea, convoy,
+            self.london, self.belgium
         )
         fleet_north_atlantic = cap(
-            self.france, fleet, self.north_atlantic, support,
+            self.turn, self.france, fleet, self.north_atlantic, support,
             self.mid_atlantic, self.irish_sea
         )
         fleet_mid_atlantic = cap(
-            self.france, fleet, self.mid_atlantic, move,
+            self.turn, self.france, fleet, self.mid_atlantic, move,
             target=self.irish_sea,
         )
 
@@ -636,17 +654,18 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         Channel is dislodged.
         """
         fleet_london = cap(
-            self.england, fleet, self.london, support, self.wales,
+            self.turn, self.england, fleet, self.london, support, self.wales,
             self.english_channel
         )
         fleet_wales = cap(
-            self.england, fleet, self.wales, move, target=self.english_channel
+            self.turn, self.england, fleet, self.wales, move,
+            target=self.english_channel
         )
         army_brest = cap(
-            self.france, army, self.brest, move, target=self.london,
+            self.turn, self.france, army, self.brest, move, target=self.london,
         )
         fleet_english_channel = cap(
-            self.france, fleet, self.english_channel, convoy,
+            self.turn, self.france, fleet, self.english_channel, convoy,
             self.brest, self.london
         )
 
@@ -689,29 +708,31 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         the army in North Africa succeed in moving.
         """
         fleet_london = cap(
-            self.england, fleet, self.london, support, self.wales,
+            self.turn, self.england, fleet, self.london, support, self.wales,
             self.english_channel
         )
         fleet_wales = cap(
-            self.england, fleet, self.wales, move, target=self.english_channel
+            self.turn, self.england, fleet, self.wales, move,
+            target=self.english_channel
         )
         army_brest = cap(
-            self.france, army, self.brest, move, target=self.london,
+            self.turn, self.france, army, self.brest, move, target=self.london,
         )
         fleet_english_channel = cap(
-            self.france, fleet, self.english_channel, convoy,
+            self.turn, self.france, fleet, self.english_channel, convoy,
             self.brest, self.london
         )
         fleet_irish_sea = cap(
-            self.italy, fleet, self.irish_sea, convoy, self.north_africa,
-            self.wales
+            self.turn, self.italy, fleet, self.irish_sea, convoy,
+            self.north_africa, self.wales
         )
         fleet_mid_atlantic = cap(
-            self.italy, fleet, self.mid_atlantic, convoy, self.north_africa,
-            self.wales
+            self.turn, self.italy, fleet, self.mid_atlantic, convoy,
+            self.north_africa, self.wales
         )
         army_north_africa = cap(
-            self.italy, army, self.north_africa, move, target=self.wales,
+            self.turn, self.italy, army, self.north_africa, move,
+            target=self.wales,
         )
 
         models.Command.objects.process()
@@ -753,24 +774,25 @@ class TestConvoys(TestCase, HelperMixin, TerritoriesMixin):
         succeed to move.
         """
         fleet_london = cap(
-            self.england, fleet, self.london, support, self.wales,
+            self.turn, self.england, fleet, self.london, support, self.wales,
             self.english_channel
         )
         fleet_wales = cap(
-            self.england, fleet, self.wales, move, target=self.english_channel
+            self.turn, self.england, fleet, self.wales, move,
+            target=self.english_channel
         )
         army_brest = cap(
-            self.france, army, self.brest, move, target=self.london,
+            self.turn, self.france, army, self.brest, move, target=self.london,
         )
         fleet_english_channel = cap(
-            self.france, fleet, self.english_channel, convoy,
+            self.turn, self.france, fleet, self.english_channel, convoy,
             self.brest, self.london
         )
         fleet_north_sea = cap(
-            self.germany, fleet, self.north_sea, support, self.belgium,
-            self.english_channel
+            self.turn, self.germany, fleet, self.north_sea, support,
+            self.belgium, self.english_channel
         )
         fleet_belgium = cap(
-            self.germany, fleet, self.belgium, move,
+            self.turn, self.germany, fleet, self.belgium, move,
             target=self.english_channel
         )

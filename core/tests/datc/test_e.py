@@ -43,13 +43,14 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         The fleet in Kiel will move to Berlin.
         """
         army_berlin = cap(  # noqa: F841
-            self.germany, army, self.berlin, move, target=self.prussia
+            self.turn, self.germany, army, self.berlin, move,
+            target=self.prussia
         )
         fleet_kiel = cap(
-            self.germany, fleet, self.kiel, move, target=self.berlin
+            self.turn, self.germany, fleet, self.kiel, move, target=self.berlin
         )
         army_silesia = cap(  # noqa: F841
-            self.germany, army, self.silesia, support, self.berlin,
+            self.turn, self.germany, army, self.silesia, support, self.berlin,
             self.prussia
         )
 
@@ -71,13 +72,13 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         No unit will move.
         """
         army_berlin = cap(
-            self.germany, army, self.berlin, move, target=self.kiel
+            self.turn, self.germany, army, self.berlin, move, target=self.kiel
         )
         fleet_kiel = cap(
-            self.germany, fleet, self.kiel, move, target=self.berlin
+            self.turn, self.germany, fleet, self.kiel, move, target=self.berlin
         )
         army_munich = cap(
-            self.germany, army, self.munich, support, self.berlin,
+            self.turn, self.germany, army, self.munich, support, self.berlin,
             self.kiel
         )
 
@@ -103,14 +104,15 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         No unit will move.
         """
         army_berlin = cap(
-            self.germany, army, self.berlin, move, target=self.kiel
+            self.turn, self.germany, army, self.berlin, move, target=self.kiel
         )
         army_munich = cap(
-            self.germany, army, self.munich, support, self.kiel,
+            self.turn, self.germany, army, self.munich, support, self.kiel,
             self.berlin
         )
         fleet_kiel = cap(
-            self.england, fleet, self.kiel, move, target=self.berlin,
+            self.turn, self.england, fleet, self.kiel, move,
+            target=self.berlin,
         )
 
         models.Command.objects.process()
@@ -148,40 +150,45 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         move to Holland.
         """
         fleet_holland = cap(
-            self.germany, fleet, self.holland, move, target=self.north_sea,
+            self.turn, self.germany, fleet, self.holland, move,
+            target=self.north_sea,
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, support,
+            self.turn, self.germany, fleet, self.helgoland_bight, support,
             self.holland, self.north_sea
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, support, self.holland,
+            self.turn, self.germany, fleet, self.skagerrak, support,
+            self.holland,
             self.north_sea
         )
         fleet_north_sea = cap(
-            self.france, fleet, self.north_sea, move, target=self.holland,
+            self.turn, self.france, fleet, self.north_sea, move,
+            target=self.holland,
         )
         fleet_belgium = cap(
-            self.france, fleet, self.belgium, support, self.north_sea,
+            self.turn, self.france, fleet, self.belgium, support,
+            self.north_sea,
             self.holland
         )
         fleet_edinburgh = cap(
-            self.england, fleet, self.edinburgh, support,
+            self.turn, self.england, fleet, self.edinburgh, support,
             self.norwegian_sea, self.north_sea
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, support,
+            self.turn, self.england, fleet, self.yorkshire, support,
             self.norwegian_sea, self.north_sea
         )
         fleet_norwegian_sea = cap(
-            self.england, fleet, self.norwegian_sea, move,
+            self.turn, self.england, fleet, self.norwegian_sea, move,
             target=self.north_sea
         )
         army_kiel = cap(
-            self.austria, army, self.kiel, support, self.ruhr, self.holland
+            self.turn, self.austria, army, self.kiel, support, self.ruhr,
+            self.holland
         )
         army_ruhr = cap(
-            self.austria, army, self.ruhr, move, target=self.holland
+            self.turn, self.austria, army, self.ruhr, move, target=self.holland
         )
 
         models.Command.objects.process()
@@ -230,44 +237,49 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         in Ruhr fails and the German fleet in Holland is not dislodged.
         """
         fleet_holland = cap(
-            self.germany, fleet, self.holland, move, target=self.north_sea,
+            self.turn, self.germany, fleet, self.holland, move,
+            target=self.north_sea,
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, support,
+            self.turn, self.germany, fleet, self.helgoland_bight, support,
             self.holland, self.north_sea
         )
         fleet_skagerrak = cap(
-            self.germany, fleet, self.skagerrak, support, self.holland,
+            self.turn, self.germany, fleet, self.skagerrak, support,
+            self.holland,
             self.north_sea
         )
         fleet_north_sea = cap(
-            self.france, fleet, self.north_sea, move, target=self.holland,
+            self.turn, self.france, fleet, self.north_sea, move,
+            target=self.holland,
         )
         fleet_belgium = cap(
-            self.france, fleet, self.belgium, support, self.north_sea,
+            self.turn, self.france, fleet, self.belgium, support,
+            self.north_sea,
             self.holland
         )
         fleet_edinburgh = cap(
-            self.england, fleet, self.edinburgh, support,
+            self.turn, self.england, fleet, self.edinburgh, support,
             self.norwegian_sea, self.north_sea
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, support,
+            self.turn, self.england, fleet, self.yorkshire, support,
             self.norwegian_sea, self.north_sea
         )
         fleet_norwegian_sea = cap(
-            self.england, fleet, self.norwegian_sea, move,
+            self.turn, self.england, fleet, self.norwegian_sea, move,
             target=self.north_sea
         )
         fleet_london = cap(
-            self.england, fleet, self.london, support,
+            self.turn, self.england, fleet, self.london, support,
             self.norwegian_sea, self.north_sea
         )
         army_kiel = cap(
-            self.austria, army, self.kiel, support, self.ruhr, self.holland
+            self.turn, self.austria, army, self.kiel, support, self.ruhr,
+            self.holland
         )
         army_ruhr = cap(
-            self.austria, army, self.ruhr, move, target=self.holland
+            self.turn, self.austria, army, self.ruhr, move, target=self.holland
         )
 
         models.Command.objects.process()
@@ -313,26 +325,28 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         # NOTE this is very tricky to implement. Right now I'm not implementing
         # any specific functionality for this. It just seems to work out.
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, hold
+            self.turn, self.england, fleet, self.north_sea, hold
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, support, self.norway,
+            self.turn, self.england, fleet, self.yorkshire, support,
+            self.norway,
             self.north_sea
         )
         fleet_holland = cap(
-            self.germany, fleet, self.holland, support,
+            self.turn, self.germany, fleet, self.holland, support,
             self.helgoland_bight, self.north_sea
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, move,
+            self.turn, self.germany, fleet, self.helgoland_bight, move,
             target=self.north_sea
         )
         fleet_skagerrak = cap(
-            self.russia, fleet, self.skagerrak, support,
+            self.turn, self.russia, fleet, self.skagerrak, support,
             self.norway, self.north_sea
         )
         fleet_norway = cap(
-            self.russia, fleet, self.norway, move, target=self.north_sea
+            self.turn, self.russia, fleet, self.norway, move,
+            target=self.north_sea
         )
 
         models.Command.objects.process()
@@ -366,26 +380,28 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         Again, none of the fleets move.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, move, target=self.norway
+            self.turn, self.england, fleet, self.north_sea, move,
+            target=self.norway
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, support, self.norway,
-            self.north_sea
+            self.turn, self.england, fleet, self.yorkshire, support,
+            self.norway, self.north_sea
         )
         fleet_holland = cap(
-            self.germany, fleet, self.holland, support,
+            self.turn, self.germany, fleet, self.holland, support,
             self.helgoland_bight, self.north_sea
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, move,
+            self.turn, self.germany, fleet, self.helgoland_bight, move,
             target=self.north_sea
         )
         fleet_skagerrak = cap(
-            self.russia, fleet, self.skagerrak, support,
+            self.turn, self.russia, fleet, self.skagerrak, support,
             self.norway, self.north_sea
         )
         fleet_norway = cap(
-            self.russia, fleet, self.norway, move, target=self.north_sea
+            self.turn, self.russia, fleet, self.norway, move,
+            target=self.north_sea
         )
 
         models.Command.objects.process()
@@ -419,27 +435,28 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         Both the fleet in the North Sea and the fleet in Norway move.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, move,
+            self.turn, self.england, fleet, self.north_sea, move,
             target=self.norwegian_sea
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, support, self.norway,
-            self.north_sea
+            self.turn, self.england, fleet, self.yorkshire, support,
+            self.norway, self.north_sea
         )
         fleet_holland = cap(
-            self.germany, fleet, self.holland, support,
+            self.turn, self.germany, fleet, self.holland, support,
             self.helgoland_bight, self.north_sea
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, move,
+            self.turn, self.germany, fleet, self.helgoland_bight, move,
             target=self.north_sea
         )
         fleet_skagerrak = cap(
-            self.russia, fleet, self.skagerrak, support,
+            self.turn, self.russia, fleet, self.skagerrak, support,
             self.norway, self.north_sea
         )
         fleet_norway = cap(
-            self.russia, fleet, self.norway, move, target=self.north_sea
+            self.turn, self.russia, fleet, self.norway, move,
+            target=self.north_sea
         )
 
         models.Command.objects.process()
@@ -476,30 +493,32 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         There is no movement of fleets.
         """
         fleet_north_sea = cap(
-            self.england, fleet, self.north_sea, move, target=self.denmark
+            self.turn, self.england, fleet, self.north_sea, move,
+            target=self.denmark
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, support, self.norway,
-            self.north_sea
+            self.turn, self.england, fleet, self.yorkshire, support,
+            self.norway, self.north_sea
         )
         fleet_holland = cap(
-            self.germany, fleet, self.holland, support,
+            self.turn, self.germany, fleet, self.holland, support,
             self.helgoland_bight, self.north_sea
         )
         fleet_helgoland_bight = cap(
-            self.germany, fleet, self.helgoland_bight, move,
+            self.turn, self.germany, fleet, self.helgoland_bight, move,
             target=self.north_sea
         )
         fleet_denmark = cap(
-            self.germany, fleet, self.denmark, move,
+            self.turn, self.germany, fleet, self.denmark, move,
             target=self.helgoland_bight
         )
         fleet_skagerrak = cap(
-            self.russia, fleet, self.skagerrak, support,
+            self.turn, self.russia, fleet, self.skagerrak, support,
             self.norway, self.north_sea
         )
         fleet_norway = cap(
-            self.russia, fleet, self.norway, move, target=self.north_sea
+            self.turn, self.russia, fleet, self.norway, move,
+            target=self.north_sea
         )
 
         models.Command.objects.process()
@@ -539,31 +558,32 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         is no beleaguered garrison anymore.
         """
         army_spain = cap(
-            self.france, army, self.spain, move, target=self.portugal,
+            self.turn, self.france, army, self.spain, move,
+            target=self.portugal,
             via_convoy=True,
         )
         fleet_mid_atlantic = cap(
-            self.france, fleet, self.mid_atlantic, convoy, self.spain,
-            self.portugal
+            self.turn, self.france, fleet, self.mid_atlantic, convoy,
+            self.spain, self.portugal
         )
         fleet_gulf_of_lyon = cap(
-            self.france, fleet, self.gulf_of_lyon, support,
+            self.turn, self.france, fleet, self.gulf_of_lyon, support,
             self.portugal, self.spain, self.spain_sc
         )
         army_marseilles = cap(
-            self.germany, army, self.marseilles, support,
+            self.turn, self.germany, army, self.marseilles, support,
             self.gascony, self.spain
         )
         army_gascony = cap(
-            self.germany, army, self.gascony, move,
+            self.turn, self.germany, army, self.gascony, move,
             target=self.spain
         )
         fleet_portugal = cap(
-            self.italy, fleet, self.portugal, move,
+            self.turn, self.italy, fleet, self.portugal, move,
             target=self.spain, target_coast=self.spain_nc
         )
         fleet_western_med = cap(
-            self.italy, fleet, self.western_mediterranean, support,
+            self.turn, self.italy, fleet, self.western_mediterranean, support,
             self.portugal, self.spain
         )
 
@@ -600,20 +620,23 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         army in Galicia will advance. No army will move.
         """
         army_budapest = cap(
-            self.austria, army, self.budapest, move, target=self.rumania
+            self.turn, self.austria, army, self.budapest, move,
+            target=self.rumania
         )
         army_serbia = cap(
-            self.austria, army, self.serbia, support, self.vienna,
+            self.turn, self.austria, army, self.serbia, support, self.vienna,
             self.budapest
         )
         army_vienna = cap(
-            self.italy, army, self.vienna, move, target=self.budapest,
+            self.turn, self.italy, army, self.vienna, move,
+            target=self.budapest,
         )
         army_galicia = cap(
-            self.russia, army, self.galicia, move, target=self.budapest,
+            self.turn, self.russia, army, self.galicia, move,
+            target=self.budapest,
         )
         army_rumania = cap(
-            self.russia, army, self.rumania, support, self.galicia,
+            self.turn, self.russia, army, self.rumania, support, self.galicia,
             self.budapest
         )
 
@@ -650,28 +673,31 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         dislodged.
         """
         fleet_edinburgh = cap(
-            self.england, fleet, self.edinburgh, support, self.yorkshire,
-            self.north_sea
+            self.turn, self.england, fleet, self.edinburgh, support,
+            self.yorkshire, self.north_sea
         )
         fleet_yorkshire = cap(
-            self.england, fleet, self.yorkshire, move, target=self.north_sea,
+            self.turn, self.england, fleet, self.yorkshire, move,
+            target=self.north_sea,
         )
         fleet_belgium = cap(
-            self.france, fleet, self.belgium, move, target=self.north_sea
+            self.turn, self.france, fleet, self.belgium, move,
+            target=self.north_sea
         )
         fleet_english_channel = cap(
-            self.france, fleet, self.english_channel, support, self.belgium,
-            self.north_sea
+            self.turn, self.france, fleet, self.english_channel, support,
+            self.belgium, self.north_sea
         )
         fleet_north_sea = cap(
-            self.germany, fleet, self.north_sea, hold
+            self.turn, self.germany, fleet, self.north_sea, hold
         )
         fleet_norwegian_sea = cap(
-            self.russia, fleet, self.norwegian_sea, move, target=self.north_sea
+            self.turn, self.russia, fleet, self.norwegian_sea, move,
+            target=self.north_sea
         )
         fleet_norway = cap(
-            self.russia, fleet, self.norway, support, self.norwegian_sea,
-            self.north_sea
+            self.turn, self.russia, fleet, self.norway, support,
+            self.norwegian_sea, self.north_sea
         )
 
         models.Command.objects.process()
@@ -703,10 +729,12 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         English army to enter Edinburgh. So, none of the units move.
         """
         army_liverpool = cap(
-            self.england, army, self.liverpool, move, target=self.edinburgh
+            self.turn, self.england, army, self.liverpool, move,
+            target=self.edinburgh
         )
         fleet_edinburgh = cap(
-            self.russia, fleet, self.edinburgh, move, target=self.liverpool
+            self.turn, self.russia, fleet, self.edinburgh, move,
+            target=self.liverpool
         )
 
         models.Command.objects.process()
@@ -748,36 +776,41 @@ class TestHeadToHeadBattles(TestCase, HelperMixin, TerritoriesMixin):
         adjudicated). This is clearly a bug in the DPTG.
         """
         fleet_holland = cap(
-            self.england, fleet, self.holland, support, self.ruhr, self.kiel
-        )
-        army_ruhr = cap(
-            self.england, army, self.ruhr, move, target=self.kiel
-        )
-        army_kiel = cap(
-            self.france, army, self.kiel, move, target=self.berlin
-        )
-        army_munich = cap(  # noqa: F841
-            self.france, army, self.munich, support, self.kiel, self.berlin
-        )
-        army_silesia = cap(  # noqa: F841
-            self.france, army, self.silesia, support, self.kiel, self.berlin
-        )
-        army_berlin = cap(
-            self.germany, army, self.berlin, move, target=self.kiel
-        )
-        fleet_denmark = cap(  # noqa: F841
-            self.germany, fleet, self.denmark, support, self.berlin, self.kiel
-        )
-        fleet_helgoland_bight = cap(  # noqa: F841
-            self.germany, fleet, self.helgoland_bight, support, self.berlin,
+            self.turn, self.england, fleet, self.holland, support, self.ruhr,
             self.kiel
         )
-        fleet_baltic = cap(  # noqa
-            self.russia, fleet, self.baltic_sea, support, self.prussia,
+        army_ruhr = cap(
+            self.turn, self.england, army, self.ruhr, move, target=self.kiel
+        )
+        army_kiel = cap(
+            self.turn, self.france, army, self.kiel, move, target=self.berlin
+        )
+        army_munich = cap(  # noqa: F841
+            self.turn, self.france, army, self.munich, support, self.kiel,
             self.berlin
         )
+        army_silesia = cap(  # noqa: F841
+            self.turn, self.france, army, self.silesia, support, self.kiel,
+            self.berlin
+        )
+        army_berlin = cap(
+            self.turn, self.germany, army, self.berlin, move, target=self.kiel
+        )
+        fleet_denmark = cap(  # noqa: F841
+            self.turn, self.germany, fleet, self.denmark, support, self.berlin,
+            self.kiel
+        )
+        fleet_helgoland_bight = cap(  # noqa: F841
+            self.turn, self.germany, fleet, self.helgoland_bight, support,
+            self.berlin, self.kiel
+        )
+        fleet_baltic = cap(  # noqa
+            self.turn, self.russia, fleet, self.baltic_sea, support,
+            self.prussia, self.berlin
+        )
         army_prussia = cap(
-            self.russia, army, self.prussia, move, target=self.berlin
+            self.turn, self.russia, army, self.prussia, move,
+            target=self.berlin
         )
 
         models.Command.objects.process()

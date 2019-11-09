@@ -27,7 +27,7 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Order should fail.
         """
-        fleet_north_sea = fleet(self.england, self.north_sea)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
         c = move(self.england_order, fleet_north_sea, self.north_sea,
                  self.picardy)
 
@@ -49,7 +49,7 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Order should fail.
         """
-        army_liverpool = army(self.england, self.liverpool)
+        army_liverpool = army(self.turn, self.england, self.liverpool)
         c = move(self.england_order, army_liverpool, self.liverpool,
                  self.irish_sea)
 
@@ -71,7 +71,7 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Order should fail.
         """
-        fleet_kiel = fleet(self.germany, self.kiel)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
         c = move(self.germany_order, fleet_kiel, self.kiel,
                  self.munich)
 
@@ -95,7 +95,7 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Program should not crash.
         """
-        fleet_kiel = fleet(self.germany, self.kiel)
+        fleet_kiel = fleet(self.turn, self.germany, self.kiel)
         c = move(self.germany_order, fleet_kiel, self.kiel,
                  self.kiel)
 
@@ -128,12 +128,12 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         Liverpool also illegal and without the support, the Germans have a
         stronger force. The fleet in London dislodges the army in Yorkshire.
         """
-        fleet_north_sea = fleet(self.england, self.north_sea)
-        army_yorkshire = army(self.england, self.yorkshire)
-        army_liverpool = army(self.england, self.liverpool)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
+        army_yorkshire = army(self.turn, self.england, self.yorkshire)
+        army_liverpool = army(self.turn, self.england, self.liverpool)
 
-        fleet_london = fleet(self.germany, self.london)
-        army_wales = army(self.germany, self.wales)
+        fleet_london = fleet(self.turn, self.germany, self.london)
+        army_wales = army(self.turn, self.germany, self.wales)
 
         fleet_north_sea_convoy = convoy(
             self.england_order, fleet_north_sea, self.north_sea,
@@ -170,7 +170,7 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Order should fail.
         """
-        fleet_london = fleet(self.england, self.london)
+        fleet_london = fleet(self.turn, self.england, self.london)
         c = move(
             self.germany_order, fleet_london, self.london,
             self.north_sea,
@@ -195,8 +195,8 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Move from London to Belgium should fail.
         """
-        fleet_london = fleet(self.england, self.london)
-        fleet_north_sea = fleet(self.england, self.north_sea)
+        fleet_london = fleet(self.turn, self.england, self.london)
+        fleet_north_sea = fleet(self.turn, self.england, self.north_sea)
         fleet_london_move = move(
             self.england_order, fleet_london, self.london,
             self.belgium,
@@ -229,9 +229,9 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         The fleet in Trieste should be dislodged.
         """
-        army_venice = army(self.italy, self.venice)
-        army_tyrolia = army(self.italy, self.tyrolia)
-        fleet_trieste = fleet(self.austria, self.trieste)
+        army_venice = army(self.turn, self.italy, self.venice)
+        army_tyrolia = army(self.turn, self.italy, self.tyrolia)
+        fleet_trieste = fleet(self.turn, self.austria, self.trieste)
 
         army_venice_move = move(
             self.italy_order, army_venice, self.venice, self.trieste,
@@ -270,7 +270,7 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         Move fails. An army can go from Rome to Venice, but a fleet can not.
         """
-        fleet_rome = fleet(self.italy, self.rome)
+        fleet_rome = fleet(self.turn, self.italy, self.rome)
         command = move(
             self.italy_order, fleet_rome, self.rome, self.venice,
         )
@@ -299,9 +299,9 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
         The support of Rome is illegal, because Venice can not be reached from
         Rome by a fleet. Venice is not dislodged.
         """
-        army_venice = army(self.austria, self.venice)
-        fleet_rome = fleet(self.italy, self.rome)
-        army_apulia = army(self.italy, self.apulia)
+        army_venice = army(self.turn, self.austria, self.venice)
+        fleet_rome = fleet(self.turn, self.italy, self.rome)
+        army_apulia = army(self.turn, self.italy, self.apulia)
 
         army_venice_hold = hold(
             self.austria_order, army_venice, self.venice
@@ -336,8 +336,8 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         The two units bounce.
         """
-        army_vienna = army(self.austria, self.vienna)
-        army_venice = army(self.italy, self.venice)
+        army_vienna = army(self.turn, self.austria, self.vienna)
+        army_venice = army(self.turn, self.italy, self.venice)
 
         army_vienna_move = move(
             self.austria_order, army_vienna, self.vienna, self.tyrolia
@@ -372,9 +372,9 @@ class TestBasicChecks(TestCase, HelperMixin, TerritoriesMixin):
 
         The three units bounce.
         """
-        army_vienna = army(self.austria, self.vienna)
-        army_munich = army(self.germany, self.munich)
-        army_venice = army(self.italy, self.venice)
+        army_vienna = army(self.turn, self.austria, self.vienna)
+        army_munich = army(self.turn, self.germany, self.munich)
+        army_venice = army(self.turn, self.italy, self.venice)
 
         army_vienna_move = move(
             self.austria_order, army_vienna, self.vienna, self.tyrolia

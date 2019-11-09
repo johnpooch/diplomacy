@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from core import models
 from core.utils.piece import army, fleet
-from core.models.base import CommandType
+from core.models.base import CommandType, Phase, Season
 
 
 class InitialGameStateTestCase(TestCase):
@@ -13,13 +13,10 @@ class InitialGameStateTestCase(TestCase):
         self.game = models.Game.objects.create(
             name='test game',
         )
-        self.phase = models.Phase.objects.create(
-            season='S',
-            type='O',
-        )
         self.turn = models.Turn.objects.create(
             year=1900,
-            phase=self.phase,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
             game=self.game,
             current_turn=True,
         )
@@ -155,15 +152,15 @@ class HelperMixin:
             pass
 
 
-def command_and_piece(nation, piece_type, source, command_type, aux=None,
+def command_and_piece(turn, nation, piece_type, source, command_type, aux=None,
                       target=None, target_coast=None, via_convoy=False):
     """
     Helper to easily create piece and command.
     """
     if piece_type == 'army':
-        p = army(nation, source)
+        p = army(turn, nation, source)
     elif piece_type == 'fleet':
-        p = fleet(nation, source)
+        p = fleet(turn, nation, source)
     else:
         raise ValueError(f'Unrecognized piece type: {piece_type}')
 
