@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import views
 from rest_framework.response import Response
 
@@ -17,24 +18,17 @@ class GameStateView(views.APIView):
     """
     def get(self, request, format=None, **kwargs):
 
+        # TODO authentication
+
         game_id = kwargs['game']
         turn_id = kwargs.get('turn')
 
-        try:
-            game = models.Game.objects.get(id=game_id)
-        except models.Game.DoesNotExist:
-            error404()
+        game = get_object_or_404(models.Game, id=game_id)
 
-        if turn_id:
-            try:
-                turn = models.Turn.objects.get(id=turn_id)
-            except models.Turn.DoesNotExist:
-                error404()
+        if not turn_id:
+            turn = game.get_current_turn()
         else:
-            try:
-                turn = game.get_current_turn()
-            except models.Turn.DoesNotExist:
-                error404()
+            turn = get_object_or_404(models.Turn, id=turn_id)
 
         territory_states = models.TerritoryState.objects.filter(turn=turn)
         territory_states_serializer = serializers\
