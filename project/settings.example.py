@@ -84,22 +84,24 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'diplomacy',
-#         'USER': 'APP_USER',
-#         'PASSWORD': 'APP_USER',
-#         'HOST': 'diplomacy.mysql',
-#         'PORT': '3306',
-#     },
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'diplomacy',
+        'USER': 'APP_USER',
+        'PASSWORD': 'APP_USER',
+        'HOST': 'diplomacy.mysql',
+        'PORT': '3306',
+    },
 }
+
+# NOTE use the following instead if not using docker
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -140,5 +142,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 FIXTURE_DIRS = (
-    'fixtures',
+    '/code/fixtures',
 )
+# NOTE use the following instead if not using docker
+# FIXTURE_DIRS = (
+#     'fixtures',
+# )
