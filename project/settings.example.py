@@ -95,7 +95,7 @@ DATABASES = {
     },
 }
 
-# NOTE use the following instead if not using docker
+# NOTE non Docker setup
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -144,7 +144,7 @@ STATIC_URL = '/static/'
 FIXTURE_DIRS = (
     '/code/fixtures',
 )
-# NOTE use the following instead if not using docker
+# NOTE non Docker setup
 # FIXTURE_DIRS = (
 #     'fixtures',
 # )
