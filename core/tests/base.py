@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 
 from core import models
@@ -10,7 +11,9 @@ class InitialGameStateTestCase(TestCase):
     """
     def setUp(self):
         # Game State
+        user = User.objects.get_or_create(username='Test User')[0]
         self.game = models.Game.objects.create(
+            created_by=user,
             name='test game',
         )
         self.turn = models.Turn.objects.create(

@@ -6,7 +6,7 @@ from core.tests.base import InitialGameStateTestCase as TestCase
 
 class TestPieceClean(TestCase, TerritoriesMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json', 'territories.json',
                 'named_coasts.json']
 
     def setUp(self):
@@ -49,8 +49,8 @@ class TestPieceClean(TestCase, TerritoriesMixin):
 
 class TestIsPieceType(TestCase):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'pieces.json']
 
     def test_army_is_not_fleet(self):
         piece = models.Piece.objects.get(territory__name='marseilles')
@@ -71,8 +71,8 @@ class TestIsPieceType(TestCase):
 
 class TestDislodged(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'pieces.json']
 
     def setUp(self):
         self.game = models.Game.objects.get()
