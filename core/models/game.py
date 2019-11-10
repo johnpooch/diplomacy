@@ -1,10 +1,26 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
 class Game(models.Model):
     """
     """
-    name = models.CharField(max_length=50, null=False)
+    # TODO add game state, e.g. pending, live, finished
+    name = models.CharField(
+        max_length=50,
+        null=False
+    )
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='created_games',
+    )
+    participants = models.ManyToManyField(
+        User,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     class Meta:
         db_table = "game"

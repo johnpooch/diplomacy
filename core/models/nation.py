@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -36,14 +37,12 @@ class NationState(models.Model):
         related_name='+',
         on_delete=models.CASCADE,
     )
-
-    # TODO Add this in once users are in
-    # player = models.ForeignKey(
-    #     '',
-    #     null=True,
-    #     related_name='+',
-    #     on_delete=models.CASCADE,
-    # )
+    player = models.ForeignKey(
+        User,
+        null=True,
+        related_name='+',
+        on_delete=models.CASCADE,
+    )
 
     surrendered = models.BooleanField(
         null=True,

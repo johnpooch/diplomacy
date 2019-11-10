@@ -8,9 +8,9 @@ from core.tests.base import InitialGameStateTestCase as TestCase
 
 class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'territory_states.json', 'named_coasts.json',
-                'supply_centers.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'territory_states.json',
+                'named_coasts.json', 'supply_centers.json']
 
     def setUp(self):
         self.game = models.Game.objects.get()

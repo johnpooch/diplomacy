@@ -8,8 +8,8 @@ from .base import InitialGameStateTestCase as TestCase
 
 class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -128,8 +128,8 @@ class TestFleetMoveClean(TestCase, HelperMixin, TerritoriesMixin):
 
 class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -225,8 +225,8 @@ class TestArmyMoveClean(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -431,8 +431,8 @@ class TestFleetSupportClean(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -571,8 +571,8 @@ class TestArmySupportClean(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -689,9 +689,9 @@ class TestFleetConvoyClean(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'territory_states.json', 'named_coasts.json', 'pieces.json',
-                'supply_centers.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'territory_states.json',
+                'named_coasts.json', 'pieces.json', 'supply_centers.json']
 
     def setUp(self):
         self.game = models.Game.objects.get()
@@ -794,8 +794,8 @@ class TestBuildClean(TestCase, TerritoriesMixin, HelperMixin):
 class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
     """
     """
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json', 'supply_centers.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -842,8 +842,8 @@ class TestSupportCut(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -1117,8 +1117,8 @@ class TestGetConvoyPaths(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -1309,8 +1309,8 @@ class TestMovePath(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestResolveMove(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
@@ -1384,8 +1384,8 @@ class TestResolveMove(TestCase, TerritoriesMixin, HelperMixin):
 
 class TestHeadToHead(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
-                'named_coasts.json', 'pieces.json']
+    fixtures = ['user.json', 'game.json', 'turn.json', 'nations.json',
+                'territories.json', 'named_coasts.json', 'pieces.json']
 
     def setUp(self):
         super().setUp()
