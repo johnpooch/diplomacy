@@ -2,11 +2,12 @@ from core import models
 from core.models.base import PieceType
 
 
-def army(nation, territory, named_coast=None, save=True):
+def army(turn, nation, territory, named_coast=None, save=True):
     """
     Creates an army.
     """
     piece = models.Piece(
+        turn=turn,
         nation=nation,
         territory=territory,
         named_coast=named_coast,
@@ -17,11 +18,12 @@ def army(nation, territory, named_coast=None, save=True):
     return piece
 
 
-def fleet(nation, territory, named_coast=None, save=True):
+def fleet(turn, nation, territory, named_coast=None, save=True):
     """
     Creates a fleet.
     """
     piece = models.Piece(
+        turn=turn,
         nation=nation,
         territory=territory,
         named_coast=named_coast,

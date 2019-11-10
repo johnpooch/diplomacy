@@ -8,11 +8,13 @@ from core.tests.base import InitialGameStateTestCase as TestCase
 
 class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
 
-    fixtures = ['nations.json', 'territories.json', 'named_coasts.json',
+    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
+                'territory_states.json', 'named_coasts.json',
                 'supply_centers.json']
 
     def setUp(self):
-        super().setUp()
+        self.game = models.Game.objects.get()
+        self.turn = models.Turn.objects.get()
         self.initialise_territories()
         self.initialise_named_coasts()
         self.initialise_nations()
@@ -29,7 +31,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
 
         I prefer that the move fails.
         """
-        fleet_portugal = fleet(self.france, self.portugal)
+        fleet_portugal = fleet(self.turn, self.france, self.portugal)
 
         fleet_portugal_move = move(
             self.france_order, fleet_portugal, self.portugal, self.spain
@@ -59,7 +61,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         I prefer that an attempt is made to the only possible coast, the north
         coast of Spain.
         """
-        fleet_gascony = fleet(self.france, self.gascony)
+        fleet_gascony = fleet(self.turn, self.france, self.gascony)
 
         fleet_gascony_move = move(
             self.france_order, fleet_gascony, self.gascony, self.spain
@@ -81,7 +83,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
 
         I prefer that the move fails.
         """
-        fleet_gascony = fleet(self.france, self.gascony)
+        fleet_gascony = fleet(self.turn, self.france, self.gascony)
 
         fleet_gascony_move = move(
             self.france_order, fleet_gascony, self.gascony, self.spain,
@@ -111,9 +113,9 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         the move of the fleet in Gasgony succeeds and the move of the Italian
         fleet fails.
         """
-        fleet_gascony = fleet(self.france, self.gascony)
-        fleet_marseilles = fleet(self.france, self.marseilles)
-        fleet_western_med = fleet(self.italy, self.western_mediterranean)
+        fleet_gascony = fleet(self.turn, self.france, self.gascony)
+        fleet_marseilles = fleet(self.turn, self.france, self.marseilles)
+        fleet_western_med = fleet(self.turn, self.italy, self.western_mediterranean)
 
         fleet_gascony_move = move(
             self.france_order, fleet_gascony, self.gascony, self.spain,
@@ -153,9 +155,9 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         Therefore, the support of Spain is invalid and the fleet in the Gulf of
         Lyon is not dislodged.
         """
-        fleet_marseilles = fleet(self.france, self.marseilles)
-        fleet_spain_nc = fleet(self.france, self.spain, self.spain_nc)
-        fleet_gol = fleet(self.italy, self.gulf_of_lyon)
+        fleet_marseilles = fleet(self.turn, self.france, self.marseilles)
+        fleet_spain_nc = fleet(self.turn, self.france, self.spain, self.spain_nc)
+        fleet_gol = fleet(self.turn, self.italy, self.gulf_of_lyon)
 
         fleet_marseilles_move = move(
             self.france_order, fleet_marseilles, self.marseilles,
@@ -200,13 +202,13 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         That means that the French fleet in the Mid Atlantic Ocean will be
         dislodged by the English fleet in the North Atlantic Ocean.
         """
-        fleet_irish_sea = fleet(self.england, self.irish_sea)
-        fleet_north_atlantic = fleet(self.england, self.north_atlantic)
+        fleet_irish_sea = fleet(self.turn, self.england, self.irish_sea)
+        fleet_north_atlantic = fleet(self.turn, self.england, self.north_atlantic)
 
-        fleet_spain_nc = fleet(self.france, self.spain, self.spain_nc)
-        fleet_mid_atlantic = fleet(self.france, self.mid_atlantic)
+        fleet_spain_nc = fleet(self.turn, self.france, self.spain, self.spain_nc)
+        fleet_mid_atlantic = fleet(self.turn, self.france, self.mid_atlantic)
 
-        fleet_gol = fleet(self.italy, self.gulf_of_lyon)
+        fleet_gol = fleet(self.turn, self.italy, self.gulf_of_lyon)
 
         fleet_irish_sea_support = support(
             self.england_order, fleet_irish_sea, self.irish_sea,
@@ -255,11 +257,11 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         I prefer that the support succeeds and the Italian fleet in the Western
         Mediterranean bounces.
         """
-        fleet_portugal = fleet(self.france, self.portugal)
-        fleet_mid_atlantic = fleet(self.france, self.mid_atlantic)
+        fleet_portugal = fleet(self.turn, self.france, self.portugal)
+        fleet_mid_atlantic = fleet(self.turn, self.france, self.mid_atlantic)
 
-        fleet_gol = fleet(self.italy, self.gulf_of_lyon)
-        fleet_western_med = fleet(self.italy, self.western_mediterranean)
+        fleet_gol = fleet(self.turn, self.italy, self.gulf_of_lyon)
+        fleet_western_med = fleet(self.turn, self.italy, self.western_mediterranean)
 
         fleet_portugal_support = support(
             self.france_order, fleet_portugal, self.portugal,
@@ -314,11 +316,11 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         that the support of Portugal is successful and that the Italian fleet
         in the Western Mediterranean bounces.
         """
-        fleet_portugal = fleet(self.france, self.portugal)
-        fleet_gascony = fleet(self.france, self.gascony)
+        fleet_portugal = fleet(self.turn, self.france, self.portugal)
+        fleet_gascony = fleet(self.turn, self.france, self.gascony)
 
-        fleet_gol = fleet(self.italy, self.gulf_of_lyon)
-        fleet_western_med = fleet(self.italy, self.western_mediterranean)
+        fleet_gol = fleet(self.turn, self.italy, self.gulf_of_lyon)
+        fleet_western_med = fleet(self.turn, self.italy, self.western_mediterranean)
 
         fleet_portugal_support = support(
             self.france_order, fleet_portugal, self.portugal,
@@ -403,7 +405,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         The move fails.
         """
         # Not really relevant because can't specify source coast
-        fleet_spain_nc = fleet(self.france, self.spain, self.spain_nc)
+        fleet_spain_nc = fleet(self.turn, self.france, self.spain, self.spain_nc)
         command = move(self.france_order, fleet_spain_nc, self.spain,
                        self.gulf_of_lyon)
         command.check_illegal()
@@ -429,7 +431,7 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
         # In this implementation, an attempt to create a command for an army
         # which specifies target coast will raise an exception. This basically
         # satisfies the datc requirement.
-        army_gascony = army(self.france, self.gascony)
+        army_gascony = army(self.turn, self.france, self.gascony)
         with self.assertRaises(ValueError):
             move(self.france_order, army_gascony, self.gascony, self.spain,
                  self.spain_nc)
@@ -447,8 +449,8 @@ class TestCoastalIssues(TestCase, HelperMixin, TerritoriesMixin):
 
         Both moves fail.
         """
-        fleet_bulgaria_ec = fleet(self.turkey, self.bulgaria, self.bulgaria_ec)
-        fleet_constantinople = fleet(self.turkey, self.constantinople)
+        fleet_bulgaria_ec = fleet(self.turn, self.turkey, self.bulgaria, self.bulgaria_ec)
+        fleet_constantinople = fleet(self.turn, self.turkey, self.constantinople)
 
         fleet_bulgaria_ec_move = move(self.turkey_order, fleet_bulgaria_ec,
                                       self.bulgaria, self.constantinople)

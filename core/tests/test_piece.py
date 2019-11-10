@@ -6,15 +6,19 @@ from core.tests.base import InitialGameStateTestCase as TestCase
 
 class TestPieceClean(TestCase, TerritoriesMixin):
 
-    fixtures = ['nations.json', 'territories.json', 'named_coasts.json']
+    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
+                'named_coasts.json']
 
     def setUp(self):
+        self.game = models.Game.objects.get()
+        self.turn = models.Turn.objects.get()
         self.initialise_territories()
 
     def test_fleet_cannot_be_in_complex_territory_and_not_named_coast(self):
         nation = models.Nation.objects.get(name='France')
         with self.assertRaises(ValueError):
             models.Piece.objects.create(
+                turn=self.turn,
                 nation=nation,
                 territory=self.spain,
                 type=PieceType.FLEET
@@ -24,6 +28,7 @@ class TestPieceClean(TestCase, TerritoriesMixin):
         nation = models.Nation.objects.get(name='France')
         with self.assertRaises(ValueError):
             models.Piece.objects.create(
+                turn=self.turn,
                 nation=nation,
                 territory=self.paris,
                 type=PieceType.FLEET
@@ -34,6 +39,7 @@ class TestPieceClean(TestCase, TerritoriesMixin):
         spain_nc = models.NamedCoast.objects.get(name='spain north coast')
         with self.assertRaises(ValueError):
             models.Piece.objects.create(
+                turn=self.turn,
                 nation=nation,
                 territory=self.spain,
                 named_coast=spain_nc,
@@ -43,7 +49,8 @@ class TestPieceClean(TestCase, TerritoriesMixin):
 
 class TestIsPieceType(TestCase):
 
-    fixtures = ['nations.json', 'territories.json', 'pieces.json']
+    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
+                'pieces.json']
 
     def test_army_is_not_fleet(self):
         piece = models.Piece.objects.get(territory__name='marseilles')
@@ -64,19 +71,23 @@ class TestIsPieceType(TestCase):
 
 class TestDislodged(TestCase, TerritoriesMixin, HelperMixin):
 
-    fixtures = ['nations.json', 'territories.json', 'pieces.json']
+    fixtures = ['game.json', 'turn.json', 'nations.json', 'territories.json',
+                'pieces.json']
 
     def setUp(self):
-        super().setUp()
+        self.game = models.Game.objects.get()
+        self.turn = models.Turn.objects.get()
         self.initialise_territories()
         germany = models.Nation.objects.get(name='Germany')
         self.defending_army = models.Piece.objects.get(territory=self.paris)
         self.attacking_army = models.Piece.objects.create(
+            turn=self.turn,
             nation=germany,
             territory=self.burgundy,
             type=PieceType.ARMY,
         )
         self.supporting_army = models.Piece.objects.create(
+            turn=self.turn,
             nation=germany,
             territory=self.picardy,
             type=PieceType.ARMY,

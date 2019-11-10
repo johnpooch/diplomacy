@@ -1,32 +1,46 @@
-from django.contrib.auth.models import User, Group
-from rest_framework import viewsets, generics
-from core.models import *
-from .serializers import *
+from django.shortcuts import get_object_or_404
+from rest_framework import views
+from rest_framework.response import Response
+
+from core import models
+from service import serializers
+
+from rest_framework.exceptions import NotFound
 
 
-class NationViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    """
-    queryset = Nation.objects.all()
-    serializer_class = NationSerializer
+def error404():
+    raise NotFound(detail="Error 404, page not found", code=404)
 
 
-class PieceViewSet(viewsets.ReadOnlyModelViewSet):
+class GameStateView(views.APIView):
     """
+    Provides the data necessary to render the game board at the current state.
     """
-    queryset = Piece.objects.all()
-    serializer_class = PieceSerializer
+    def get(self, request, format=None, **kwargs):
 
+        # TODO authentication
 
-class SupplyCenterViewSet(viewsets.ModelViewSet):
-    """
-    """
-    queryset = SupplyCenter.objects.all()
-    serializer_class = SupplyCenterSerializer
+        game_id = kwargs['game']
+        turn_id = kwargs.get('turn')
 
+        game = get_object_or_404(models.Game, id=game_id)
 
-class TerritoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    """
-    queryset = Territory.objects.all()
-    serializer_class = TerritorySerializer
+        if not turn_id:
+            turn = game.get_current_turn()
+        else:
+            turn = get_object_or_404(models.Turn, id=turn_id)
+
+        territory_states = models.TerritoryState.objects.filter(turn=turn)
+        territory_states_serializer = serializers\
+            .TerritoryStateSerializer(territory_states, many=True)
+
+        nation_states = models.NationState.objects.filter(turn=turn)
+        nation_states_serializer = serializers\
+            .NationStateSerializer(nation_states, many=True)
+
+        return Response(
+            {
+                'territory_states': territory_states_serializer.data,
+                'nation_states': nation_states_serializer.data,
+            }
+        )

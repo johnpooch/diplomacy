@@ -87,7 +87,7 @@ class ChecksMixin:
                 'Cannot build in supply centers outside of national '
                 'borders.'
             ))
-        if not self.target.controlled_by == self.nation:
+        if not self.target.state(self.turn).controlled_by == self.nation:
             raise IllegalCommandException(_(
                 'Cannot build in a supply center which is controlled '
                 'by a foreign power.'

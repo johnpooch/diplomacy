@@ -17,19 +17,13 @@ class Territory(models.Model, HoldStrength):
             (SEA, 'Sea'),
         )
     # TODO add ForeignKey to Variant. Create Variant model.
-    # TODO territory should inherit from a model called TerritoryAbstract which has details
-    # about the representation of the territory on the front end.
-    # TODO there should be an ImpassableTerritory model which inherits from
-    # Space too.
     name = models.CharField(max_length=50, null=False, unique=True)
-    controlled_by = models.ForeignKey(
+    controlled_by_initial = models.ForeignKey(
         'Nation',
         on_delete=models.CASCADE,
         null=True,
-        related_name='controlled_territories',
+        related_name='initially_controlled_territories',
     )
-    # TODO nationality and controlled by should be synced up on game
-    # initializaition.
     nationality = models.ForeignKey(
         'Nation',
         on_delete=models.CASCADE,
@@ -60,6 +54,9 @@ class Territory(models.Model, HoldStrength):
 
     def __str__(self):
         return self.name.title()
+
+    def state(self, turn):
+        return self.territory_states.get(turn=turn)
 
     def standoff_occured_on_previous_turn(self):
         # TODO do this when phases/logs are properly handled
@@ -160,3 +157,28 @@ class Territory(models.Model, HoldStrength):
         not including ``piece``.
         """
         return self.attacking_pieces.exclude(id=piece.id)
+
+
+class TerritoryState(models.Model):
+    """
+    A through model between ``Turn`` and ``Territory``. Represents the state of
+    a territory in a given turn.
+    """
+    territory = models.ForeignKey(
+        'Territory',
+        null=False,
+        related_name='territory_states',
+        on_delete=models.CASCADE,
+    )
+    turn = models.ForeignKey(
+        'Turn',
+        null=False,
+        related_name='territory_states',
+        on_delete=models.CASCADE,
+    )
+    controlled_by = models.ForeignKey(
+        'Nation',
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='controlled_territories',
+    )

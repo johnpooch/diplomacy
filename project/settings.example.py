@@ -95,6 +95,14 @@ DATABASES = {
     },
 }
 
+# NOTE non Docker setup
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': 'mydatabase',
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -134,5 +142,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 FIXTURE_DIRS = (
-   '/code/fixtures/',
+    '/code/fixtures',
 )
+# NOTE non Docker setup
+# FIXTURE_DIRS = (
+#     'fixtures',
+# )

@@ -1,50 +1,61 @@
-from django.contrib.auth.models import User, Group
 from core import models
 from rest_framework import serializers
 
 
 class SupplyCenterSerializer(serializers.ModelSerializer):
-    controlled_by = serializers.StringRelatedField()
-    nationality = serializers.StringRelatedField()
-    territory = serializers.StringRelatedField()
 
     class Meta:
         model = models.SupplyCenter
         fields = '__all__'
 
 
-class NationSerializer(serializers.ModelSerializer):
-    pieces = serializers.StringRelatedField(many=True, read_only=True)
-    supply_centers = serializers.StringRelatedField(many=True, read_only=True,
-            source='controlled_supply_centers')
-
-    class Meta:
-        model = models.Nation
-        fields = ['name', 'supply_centers', 'pieces']
-
-
 class PieceSerializer(serializers.ModelSerializer):
-    nation = serializers.StringRelatedField()
-    territory = serializers.StringRelatedField()
+
     class Meta:
         model = models.Piece
-        fields = '__all__'
-
-
-class NeighbourSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Territory
-        fields = ('name',)
-
-    def to_representation(self, value):
-        return value.name
+        fields = (
+            'id',
+            'type',
+            'nation',
+            'territory',
+            'named_coast',
+            'retreat_territories',
+        )
 
 
 class TerritorySerializer(serializers.ModelSerializer):
+
+    piece = PieceSerializer()
+
     class Meta:
         model = models.Territory
-        depth = 1
-        fields = '__all__'
+        fields = ('id', 'name', 'piece')
 
-    neighbours = NeighbourSerializer(many=True)
-    shared_coasts = NeighbourSerializer(many=True)
+
+class TerritoryStateSerializer(serializers.ModelSerializer):
+
+    territory = TerritorySerializer()
+
+    class Meta:
+        model = models.TerritoryState
+        depth = 1
+        fields = ('territory', 'controlled_by')
+
+    def to_representation(self, obj):
+        """
+        Flatten territory state and territory.
+        """
+        representation = super().to_representation(obj)
+        territory_representation = representation.pop('territory')
+        for key in territory_representation:
+            representation[key] = territory_representation[key]
+
+        return representation
+
+
+class NationStateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.NationState
+        depth = 1
+        fields = ('nation', 'surrendered', 'surrendered_turn')

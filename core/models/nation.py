@@ -5,9 +5,9 @@ class Nation(models.Model):
     # TODO should make some sort of PerGame base model.
     """
     """
-    # TODO nation should have a color field
     name = models.CharField(max_length=15)
     active = models.BooleanField(default=True)
+    # TODO should have a foreign key to variant
 
     class Meta:
         db_table = "nation"
@@ -17,3 +17,35 @@ class Nation(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class NationState(models.Model):
+    """
+    Through model between ``Game``, ``User``, and ``Nation``. Represents the
+    state of a nation in a game.
+    """
+    turn = models.ForeignKey(
+        'Turn',
+        null=False,
+        related_name='nation_states',
+        on_delete=models.CASCADE,
+    )
+    nation = models.ForeignKey(
+        'Nation',
+        null=False,
+        related_name='+',
+        on_delete=models.CASCADE,
+    )
+
+    # TODO Add this in once users are in
+    # player = models.ForeignKey(
+    #     '',
+    #     null=True,
+    #     related_name='+',
+    #     on_delete=models.CASCADE,
+    # )
+
+    surrendered = models.BooleanField(
+        null=True,
+        default=False,
+    )

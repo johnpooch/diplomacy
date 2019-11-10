@@ -2,6 +2,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 1,
             "territory": 36,
             "type": "fleet"
@@ -12,6 +13,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 1,
             "territory": 38,
             "type": "army"
@@ -22,6 +24,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 1,
             "territory": 30,
             "type": "fleet"
@@ -32,6 +35,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 2,
             "territory": 65,
             "type": "army"
@@ -42,6 +46,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 2,
             "territory": 26,
             "type": "fleet"
@@ -52,6 +57,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 2,
             "territory": 39,
             "type": "army"
@@ -62,6 +68,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 3,
             "territory": 35,
             "type": "fleet"
@@ -72,6 +79,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 3,
             "territory": 24,
             "type": "army"
@@ -82,6 +90,7 @@
     {
         "fields": {
             "active": true,
+            "turn":1,
             "nation": 3,
             "territory": 64,
             "type": "army"

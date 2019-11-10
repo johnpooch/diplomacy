@@ -12,3 +12,7 @@ build/
 
 tags
 .DS_Store
+
+mydatabase
+virtualenv
+project/settings.py

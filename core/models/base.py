@@ -52,6 +52,26 @@ class DislodgedState:
     )
 
 
+class Phase:
+    ORDER = 'order'
+    RETREAT_AND_DISBAND = 'retreat and disband'
+    BUILD = 'build'
+    CHOICES = (
+        (ORDER, 'Order'),
+        (RETREAT_AND_DISBAND, 'Retreat and Disband'),
+        (BUILD, 'Build')
+    )
+
+
+class Season:
+    FALL = 'fall'
+    SPRING = 'spring'
+    CHOICES = (
+        (FALL, 'Fall'),
+        (SPRING, 'Spring'),
+    )
+
+
 class HygenicModel(models.Model):
     """
     Models which inherit from this base will run ``Model.full_clean()`` before

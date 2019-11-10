@@ -15,7 +15,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -27,7 +27,6 @@
          "neighbours":[
             5,
             73,
-            77,
             28,
             7,
             33,
@@ -38,7 +37,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -59,7 +58,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -71,14 +70,13 @@
          "neighbours":[
             15,
             42,
-            75,
-            80
+            75
          ],
          "shared_coasts":[
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -91,7 +89,6 @@
             21,
             23,
             73,
-            76,
             28,
             47,
             49
@@ -100,7 +97,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -121,7 +118,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -139,7 +136,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -162,7 +159,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -175,7 +172,6 @@
             39,
             44,
             74,
-            79,
             55,
             18,
             19
@@ -184,7 +180,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -203,7 +199,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -226,7 +222,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -246,7 +242,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -263,8 +259,6 @@
             40,
             14,
             74,
-            78,
-            79,
             45,
             19
          ],
@@ -272,7 +266,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -292,7 +286,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -313,7 +307,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -339,7 +333,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -358,7 +352,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -380,7 +374,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -394,7 +388,6 @@
             13,
             40,
             74,
-            79,
             54,
             18
          ],
@@ -402,7 +395,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"sea"
       }
    },
@@ -423,7 +416,7 @@
             53
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -443,7 +436,7 @@
             28
          ],
          "coastal":true,
-         "controlled_by":7,
+         "controlled_by_initial":7,
          "type":"land"
       }
    },
@@ -464,7 +457,7 @@
             56
          ],
          "coastal":true,
-         "controlled_by":5,
+         "controlled_by_initial":5,
          "type":"land"
       }
    },
@@ -485,7 +478,7 @@
             21
          ],
          "coastal":true,
-         "controlled_by":7,
+         "controlled_by_initial":7,
          "type":"land"
       }
    },
@@ -506,7 +499,7 @@
             48
          ],
          "coastal":true,
-         "controlled_by":3,
+         "controlled_by_initial":3,
          "type":"land"
       }
    },
@@ -528,7 +521,7 @@
             43
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -549,7 +542,7 @@
             43
          ],
          "coastal":true,
-         "controlled_by":2,
+         "controlled_by_initial":2,
          "type":"land"
       }
    },
@@ -570,7 +563,7 @@
             38
          ],
          "coastal":true,
-         "controlled_by":1,
+         "controlled_by_initial":1,
          "type":"land"
       }
    },
@@ -584,8 +577,6 @@
             21,
             5,
             73,
-            77,
-            76,
             50
          ],
          "shared_coasts":[
@@ -593,7 +584,7 @@
             50
          ],
          "coastal":true,
-         "controlled_by":7,
+         "controlled_by_initial":7,
          "type":"land"
       }
    },
@@ -615,7 +606,7 @@
             51
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -636,7 +627,7 @@
             58
          ],
          "coastal":true,
-         "controlled_by":1,
+         "controlled_by_initial":1,
          "type":"land"
       }
    },
@@ -649,14 +640,13 @@
             6,
             42,
             75,
-            80,
             51
          ],
          "shared_coasts":[
             51
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -671,14 +661,13 @@
             39,
             13,
             65,
-            74,
-            78
+            74
          ],
          "shared_coasts":[
             26
          ],
          "coastal":true,
-         "controlled_by":2,
+         "controlled_by_initial":2,
          "type":"land"
       }
    },
@@ -691,7 +680,6 @@
             2,
             20,
             73,
-            77,
             11,
             67
          ],
@@ -700,7 +688,7 @@
             73
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -721,7 +709,7 @@
             35
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -745,7 +733,7 @@
             34
          ],
          "coastal":true,
-         "controlled_by":3,
+         "controlled_by_initial":3,
          "type":"land"
       }
    },
@@ -765,7 +753,7 @@
             58
          ],
          "coastal":true,
-         "controlled_by":1,
+         "controlled_by_initial":1,
          "type":"land"
       }
    },
@@ -780,14 +768,13 @@
             63,
             48,
             75,
-            80,
             72
          ],
          "shared_coasts":[
             48
          ],
          "coastal":true,
-         "controlled_by":6,
+         "controlled_by_initial":6,
          "type":"land"
       }
    },
@@ -809,7 +796,7 @@
             57
          ],
          "coastal":true,
-         "controlled_by":1,
+         "controlled_by_initial":1,
          "type":"land"
       }
    },
@@ -823,14 +810,13 @@
             32,
             9,
             44,
-            74,
-            79
+            74
          ],
          "shared_coasts":[
             44
          ],
          "coastal":true,
-         "controlled_by":2,
+         "controlled_by_initial":2,
          "type":"land"
       }
    },
@@ -848,7 +834,7 @@
             54
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -868,7 +854,7 @@
             46
          ],
          "coastal":true,
-         "controlled_by":5,
+         "controlled_by_initial":5,
          "type":"land"
       }
    },
@@ -884,14 +870,13 @@
             16,
             17,
             75,
-            81,
             51
          ],
          "shared_coasts":[
             51
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -912,7 +897,7 @@
             25
          ],
          "coastal":true,
-         "controlled_by":2,
+         "controlled_by_initial":2,
          "type":"land"
       }
    },
@@ -933,7 +918,7 @@
             55
          ],
          "coastal":true,
-         "controlled_by":5,
+         "controlled_by_initial":5,
          "type":"land"
       }
    },
@@ -944,15 +929,13 @@
          "name":"portugal",
          "neighbours":[
             13,
-            74,
-            78,
-            79
+            74
          ],
          "shared_coasts":[
 
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -973,7 +956,7 @@
             55
          ],
          "coastal":true,
-         "controlled_by":5,
+         "controlled_by_initial":5,
          "type":"land"
       }
    },
@@ -986,7 +969,6 @@
             5,
             60,
             73,
-            76,
             62,
             67,
             49,
@@ -996,7 +978,7 @@
             49
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -1017,7 +999,7 @@
             37
          ],
          "coastal":true,
-         "controlled_by":3,
+         "controlled_by_initial":3,
          "type":"land"
       }
    },
@@ -1038,7 +1020,7 @@
             47
          ],
          "coastal":true,
-         "controlled_by":6,
+         "controlled_by_initial":6,
          "type":"land"
       }
    },
@@ -1060,7 +1042,7 @@
             52
          ],
          "coastal":true,
-         "controlled_by":7,
+         "controlled_by_initial":7,
          "type":"land"
       }
    },
@@ -1083,7 +1065,7 @@
             42
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -1101,7 +1083,7 @@
             50
          ],
          "coastal":true,
-         "controlled_by":7,
+         "controlled_by_initial":7,
          "type":"land"
       }
    },
@@ -1124,7 +1106,7 @@
             56
          ],
          "coastal":true,
-         "controlled_by":4,
+         "controlled_by_initial":4,
          "type":"land"
       }
    },
@@ -1143,7 +1125,7 @@
             40
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -1164,7 +1146,7 @@
             46
          ],
          "coastal":true,
-         "controlled_by":5,
+         "controlled_by_initial":5,
          "type":"land"
       }
    },
@@ -1187,7 +1169,7 @@
             53
          ],
          "coastal":true,
-         "controlled_by":5,
+         "controlled_by_initial":5,
          "type":"land"
       }
    },
@@ -1208,7 +1190,7 @@
             38
          ],
          "coastal":true,
-         "controlled_by":1,
+         "controlled_by_initial":1,
          "type":"land"
       }
    },
@@ -1229,7 +1211,7 @@
             36
          ],
          "coastal":true,
-         "controlled_by":1,
+         "controlled_by_initial":1,
          "type":"land"
       }
    },
@@ -1249,7 +1231,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":4,
+         "controlled_by_initial":4,
          "type":"land"
       }
    },
@@ -1269,7 +1251,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":4,
+         "controlled_by_initial":4,
          "type":"land"
       }
    },
@@ -1292,7 +1274,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":2,
+         "controlled_by_initial":2,
          "type":"land"
       }
    },
@@ -1314,7 +1296,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":4,
+         "controlled_by_initial":4,
          "type":"land"
       }
    },
@@ -1335,7 +1317,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":6,
+         "controlled_by_initial":6,
          "type":"land"
       }
    },
@@ -1357,7 +1339,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":3,
+         "controlled_by_initial":3,
          "type":"land"
       }
    },
@@ -1379,7 +1361,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":2,
+         "controlled_by_initial":2,
          "type":"land"
       }
    },
@@ -1399,7 +1381,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":3,
+         "controlled_by_initial":3,
          "type":"land"
       }
    },
@@ -1420,7 +1402,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -1441,7 +1423,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":3,
+         "controlled_by_initial":3,
          "type":"land"
       }
    },
@@ -1461,7 +1443,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":4,
+         "controlled_by_initial":4,
          "type":"land"
       }
    },
@@ -1481,7 +1463,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":6,
+         "controlled_by_initial":6,
          "type":"land"
       }
    },
@@ -1501,7 +1483,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":4,
+         "controlled_by_initial":4,
          "type":"land"
       }
    },
@@ -1522,7 +1504,7 @@
 
          ],
          "coastal":false,
-         "controlled_by":6,
+         "controlled_by_initial":6,
          "type":"land"
       }
    },
@@ -1545,7 +1527,7 @@
             28
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -1570,7 +1552,7 @@
              9
          ],
          "coastal":true,
-         "controlled_by":null,
+         "controlled_by_initial":null,
          "type":"land"
       }
    },
@@ -1591,7 +1573,7 @@
              42
          ],
          "coastal":true,
-         "controlled_by":6,
+         "controlled_by_initial":6,
          "type":"land"
       }
    }

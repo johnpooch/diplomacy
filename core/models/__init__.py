@@ -2,12 +2,11 @@ from .command import Command
 from .community import Announcement, Message
 from .game import Game
 from .named_coast import NamedCoast
-from .nation import Nation
+from .nation import Nation, NationState
 from .order import Order
-from .phase import Phase
 from .piece import Piece
 from .supply_center import SupplyCenter
-from .territory import Territory
+from .territory import Territory, TerritoryState
 from .turn import Turn
 
 
@@ -15,11 +14,12 @@ __all__ = [
     'Announcement',
     'Command',
     'Game',
+    'TerritoryState',
     'Message',
     'NamedCoast',
     'Nation',
+    'NationState',
     'Order',
-    'Phase',
     'Piece',
     'SupplyCenter',
     'Territory',
