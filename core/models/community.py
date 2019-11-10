@@ -12,6 +12,8 @@ class Announcement(models.Model):
     )
     text = models.CharField(max_length=1000, null=False)
 
+    # TO DO: add datetime field for created_at
+
     class Meta:
         db_table = "announcement"
 
