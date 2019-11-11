@@ -1,5 +1,3 @@
-import uuid
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
@@ -10,14 +8,6 @@ from core.models.base import HygenicModel, DislodgedState, PieceType
 class Piece(HygenicModel):
     """
     """
-    persisted_piece_id = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        help_text=_(
-            'This ID is persisted across `Piece` instances to which belong to '
-            'the same in game piece.'
-        )
-    )
     nation = models.ForeignKey(
         'Nation',
         related_name='pieces',
