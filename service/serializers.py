@@ -77,3 +77,23 @@ class GameSerializer(serializers.ModelSerializer):
             'created_by',
             'created_at',
         )
+
+
+class CommandSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'order',
+            'type',
+            'source',
+            'piece',
+            'target',
+            'target_coast',
+            'aux',
+            'piece_type',
+            'via_convoy',
+            'illegal',
+            'illegal_message',
+        )

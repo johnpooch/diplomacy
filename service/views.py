@@ -78,3 +78,20 @@ class GameList(mixins.ListModelMixin,
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+
+class CommandView(mixins.ListModelMixin,
+                  mixins.CreateModelMixin,
+                  generics.GenericAPIView):
+
+    # TODO add is participant permission
+    permission_classes = [drf_permissions.IsAuthenticated]
+
+    queryset = models.Command.objects.all()
+    serializer_class = serializers.CommandSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
