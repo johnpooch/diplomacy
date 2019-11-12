@@ -9,7 +9,7 @@ urlpatterns = [
     path('game/<int:game>', views.GameStateView.as_view()),
     # create command
     path(
-        'game/<int:game>/<int:user>/<int:order>',
+        'game/<int:game>/command',
         views.CommandView.as_view()
     ),
     # history of previous turn

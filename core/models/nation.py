@@ -37,13 +37,12 @@ class NationState(models.Model):
         related_name='+',
         on_delete=models.CASCADE,
     )
-    player = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         null=True,
         related_name='+',
         on_delete=models.CASCADE,
     )
-
     surrendered = models.BooleanField(
         null=True,
         default=False,

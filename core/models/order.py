@@ -23,6 +23,7 @@ class Order(models.Model):
     """
     """
     # TODO: use signals when all orders are submitted
+    # TODO replace with nationstate (and one to one)
     nation = models.ForeignKey(
         'Nation',
         related_name='orders',

@@ -82,7 +82,7 @@ class GameSerializer(serializers.ModelSerializer):
 class CommandSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Game
+        model = models.Command
         fields = (
             'id',
             'order',
@@ -94,6 +94,11 @@ class CommandSerializer(serializers.ModelSerializer):
             'aux',
             'piece_type',
             'via_convoy',
+            'illegal',
+            'illegal_message',
+        )
+        read_only_fields = (
+            'order',
             'illegal',
             'illegal_message',
         )

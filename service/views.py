@@ -95,3 +95,28 @@ class CommandView(mixins.ListModelMixin,
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        """
+        Override create method to save ``created_by`` field.
+        """
+        game_id = kwargs['game']
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        game = models.Game.objects.get(id=game_id)
+        turn = game.get_current_turn()
+        user_nation_state = models.NationState.objects.get(
+            turn=turn,
+            user=request.user
+        )
+        order = models.Order.objects.get_or_create(
+            nation=user_nation_state.nation,
+            turn=user_nation_state.turn,
+        )[0]
+        serializer.save(order=order)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
