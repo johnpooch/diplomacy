@@ -59,3 +59,21 @@ class NationStateSerializer(serializers.ModelSerializer):
         model = models.NationState
         depth = 1
         fields = ('nation', 'surrendered', 'surrendered_turn')
+
+
+class GameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'participants',
+            'created_by',
+            'created_at'
+        )
+        read_only_fields = (
+            'participants',
+            'created_by',
+            'created_at',
+        )
