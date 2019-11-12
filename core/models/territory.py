@@ -2,20 +2,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models import Piece
-from core.models.base import CommandType, PieceType
+from core.models.base import CommandType, PerTurnModel, PieceType, \
+    TerritoryType
 from core.models.mixins.decisions import HoldStrength
 
 
 class Territory(models.Model, HoldStrength):
     """
     """
-    class TerritoryType:
-        LAND = 'land'
-        SEA = 'sea'
-        CHOICES = (
-            (LAND, 'Land'),
-            (SEA, 'Sea'),
-        )
     # TODO add ForeignKey to Variant. Create Variant model.
     name = models.CharField(max_length=50, null=False, unique=True)
     controlled_by_initial = models.ForeignKey(
@@ -159,19 +153,13 @@ class Territory(models.Model, HoldStrength):
         return self.attacking_pieces.exclude(id=piece.id)
 
 
-class TerritoryState(models.Model):
+class TerritoryState(PerTurnModel):
     """
     A through model between ``Turn`` and ``Territory``. Represents the state of
     a territory in a given turn.
     """
     territory = models.ForeignKey(
         'Territory',
-        null=False,
-        related_name='territory_states',
-        on_delete=models.CASCADE,
-    )
-    turn = models.ForeignKey(
-        'Turn',
         null=False,
         related_name='territory_states',
         on_delete=models.CASCADE,

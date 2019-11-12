@@ -1,13 +1,18 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from core.models.base import PerTurnModel
+
 
 class Nation(models.Model):
-    # TODO should make some sort of PerGame base model.
     """
     """
-    name = models.CharField(max_length=15)
-    active = models.BooleanField(default=True)
+    name = models.CharField(
+        max_length=15
+    )
+    active = models.BooleanField(
+        default=True
+    )
     # TODO should have a foreign key to variant
 
     class Meta:
@@ -20,17 +25,11 @@ class Nation(models.Model):
         return self.name
 
 
-class NationState(models.Model):
+class NationState(PerTurnModel):
     """
     Through model between ``Game``, ``User``, and ``Nation``. Represents the
     state of a nation in a game.
     """
-    turn = models.ForeignKey(
-        'Turn',
-        null=False,
-        related_name='nation_states',
-        on_delete=models.CASCADE,
-    )
     nation = models.ForeignKey(
         'Nation',
         null=False,
@@ -40,7 +39,7 @@ class NationState(models.Model):
     user = models.ForeignKey(
         User,
         null=True,
-        related_name='+',
+        related_name='nation_states',
         on_delete=models.CASCADE,
     )
     surrendered = models.BooleanField(

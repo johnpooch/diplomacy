@@ -52,6 +52,15 @@ class DislodgedState:
     )
 
 
+class TerritoryType:
+    LAND = 'land'
+    SEA = 'sea'
+    CHOICES = (
+        (LAND, 'Land'),
+        (SEA, 'Sea'),
+    )
+
+
 class Phase:
     ORDER = 'order'
     RETREAT_AND_DISBAND = 'retreat and disband'
@@ -94,3 +103,19 @@ class HygenicModel(models.Model):
             self.full_clean()
         except ValidationError as exc:
             raise ValueError(exc) from exc
+
+
+class PerTurnModel(models.Model):
+    """
+    Models which represent an in entity which is has a potentially different
+    state every turn should inherit from this base.
+    """
+    turn = models.ForeignKey(
+        'Turn',
+        null=False,
+        related_name='%(class)s_states',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        abstract = True

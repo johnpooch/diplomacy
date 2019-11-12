@@ -2,10 +2,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.base import HygenicModel, DislodgedState, PieceType
+from core.models.base import HygenicModel, PerTurnModel, DislodgedState, \
+    PieceType
 
 
-class Piece(HygenicModel):
+class Piece(HygenicModel, PerTurnModel):
     """
     """
     nation = models.ForeignKey(
@@ -26,12 +27,6 @@ class Piece(HygenicModel):
         on_delete=models.CASCADE,
         blank=True,
         null=True
-    )
-    turn = models.ForeignKey(
-        'Turn',
-        on_delete=models.CASCADE,
-        null=False,
-        related_name='pieces',
     )
     type = models.CharField(
         max_length=50,

@@ -31,3 +31,27 @@ class SupplyCenter(models.Model):
 
     def __str__(self):
         return f'Supply Center - {self.territory.display_name}'
+
+
+class SupplyCenterState(models.Model):
+    """
+    """
+    # TODO state or per turn attribute
+    turn = models.ForeignKey(
+        'Turn',
+        related_name='supply_center_states',
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    supply_center = models.ForeignKey(
+        'SupplyCenter',
+        related_name='states',
+        on_delete=models.CASCADE,
+        null=False,
+    )
+    controlled_by = models.ForeignKey(
+        'Nation',
+        related_name='supply_center_states',
+        on_delete=models.CASCADE,
+        null=False,
+    )
