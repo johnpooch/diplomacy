@@ -59,7 +59,7 @@ class CommandManager(models.Manager):
         queryset = CommandQuerySet(self.model, using=self._db)
         # TODO move to QS
         queryset = queryset.select_related(
-            'order__nation',
+            'order__nation_state',
             'source__piece__nation',
             'aux__piece',
             'target__piece__nation',

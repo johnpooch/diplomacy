@@ -110,8 +110,7 @@ class CommandView(mixins.ListModelMixin,
             user=request.user
         )
         order = models.Order.objects.get_or_create(
-            nation=user_nation_state.nation,
-            turn=user_nation_state.turn,
+            nation_state=user_nation_state,
         )[0]
         serializer.save(order=order)
         headers = self.get_success_headers(serializer.data)

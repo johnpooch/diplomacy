@@ -24,16 +24,14 @@ class Order(models.Model):
     """
     # TODO: use signals when all orders are submitted
     # TODO replace with nationstate (and one to one)
-    nation = models.ForeignKey(
-        'Nation',
-        related_name='orders',
+    nation_state = models.OneToOneField(
+        'NationState',
+        null=True,
         on_delete=models.CASCADE,
-        db_column="nation_id",
-        null=False,
-        db_constraint=False
     )
-    turn = models.ForeignKey('Turn', on_delete=models.CASCADE, null=False)
-    finalised = models.BooleanField(default=False)
+    finalised = models.BooleanField(
+        default=False,
+    )
 
     objects = OrderManager()
 
