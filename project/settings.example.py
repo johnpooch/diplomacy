@@ -57,8 +57,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000/'
-    '127.0.0.1:3000'
+    '0.0.0.0:8000',
 )
 
 ROOT_URLCONF = 'project.urls'
