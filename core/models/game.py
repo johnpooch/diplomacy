@@ -10,13 +10,13 @@ class Game(models.Model):
         max_length=50,
         null=False
     )
+    participants = models.ManyToManyField(
+        User,
+    )
     created_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='created_games',
-    )
-    participants = models.ManyToManyField(
-        User,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
