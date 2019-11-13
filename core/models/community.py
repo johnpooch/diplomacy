@@ -12,8 +12,11 @@ class Announcement(models.Model):
     )
     text = models.CharField(max_length=1000, null=False)
 
-    class Meta:
-        db_table = "announcement"
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Meta:
+    db_table = "announcement"
 
 
 class Message(models.Model):
