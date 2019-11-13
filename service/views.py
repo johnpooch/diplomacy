@@ -15,7 +15,36 @@ def error404():
 
 
 # TODO all views need to be refactored using django rest mixins etc.
-# TODO major testing pass
+# TODO stub out all the views and urls before writing any more code. Also write
+# these views using TDD.
+
+"""
+Users
+* Register
+* Log in
+* Log out
+* User status (e.g. unread messages, pending orders)
+
+Games
+* Get games (also filters)
+* User's games
+* Create game
+* Join game
+
+Game State
+* Get game state
+* Get game history
+* Get order history
+
+Orders and commands
+* Add command to order
+* Finalize order
+
+Messages and announcements
+* Create message
+* Get messages
+"""
+
 class GameStateView(views.APIView):
     """
     Provides the data necessary to render the game board state at the given
