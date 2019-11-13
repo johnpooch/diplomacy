@@ -12,10 +12,11 @@ class Announcement(models.Model):
     )
     text = models.CharField(max_length=1000, null=False)
 
-    # TO DO: add datetime field for created_at
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = "announcement"
+
+class Meta:
+    db_table = "announcement"
 
 
 class Message(models.Model):
