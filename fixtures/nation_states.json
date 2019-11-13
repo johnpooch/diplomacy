@@ -5,8 +5,7 @@
    "fields": {
       "turn": 1,
       "nation": 1,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 },
 {
@@ -15,8 +14,7 @@
    "fields": {
       "turn": 1,
       "nation": 2,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 },
 {
@@ -25,8 +23,7 @@
    "fields": {
       "turn": 1,
       "nation": 3,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 },
 {
@@ -35,8 +32,7 @@
    "fields": {
       "turn": 1,
       "nation": 4,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 },
 {
@@ -45,8 +41,7 @@
    "fields": {
       "turn": 1,
       "nation": 5,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 },
 {
@@ -55,8 +50,7 @@
    "fields": {
       "turn": 1,
       "nation": 6,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 },
 {
@@ -65,8 +59,7 @@
    "fields": {
       "turn": 1,
       "nation": 7,
-      "surrendered": false,
-      "surrendered_turn": null
+      "surrendered": false
    }
 }
 ]
