@@ -1,5 +1,6 @@
 load_all_fixtures:
 	./manage.py loaddata \
+		fixtures/user.json \
 		fixtures/game.json \
 		fixtures/turn.json \
 		fixtures/nations.json \
