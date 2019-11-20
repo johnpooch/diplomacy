@@ -45,14 +45,14 @@ Messages and announcements
 * Get messages
 """
 
+
 class GameStateView(views.APIView):
-    """
-    Provides the data necessary to render the game board state at the given
-    turn.
-    """
 
     def get(self, request, format=None, **kwargs):
-
+        """
+        Provides the data necessary to render the game board state at the given
+        turn.
+        """
         game_id = kwargs['game']
         turn_id = kwargs.get('turn')
 
