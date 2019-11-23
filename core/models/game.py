@@ -7,6 +7,12 @@ from core.models.base import GameStatus
 class Game(models.Model):
     """
     """
+    variant = models.ForeignKey(
+        'Variant',
+        null=False,
+        on_delete=models.CASCADE,
+        related_name='games',
+    )
     name = models.CharField(
         max_length=50,
         null=False
