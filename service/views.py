@@ -15,8 +15,11 @@ def error404():
 
 
 # TODO all views need to be refactored using django rest mixins etc.
+
 # TODO stub out all the views and urls before writing any more code. Also write
 # these views using TDD.
+
+# TODO ignore permissions at first. Add them in after the basic views are done.
 
 """
 Users
