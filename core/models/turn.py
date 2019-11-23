@@ -11,10 +11,19 @@ class Turn(models.Model):
         null=False,
         related_name='turns',
     )
-    season = models.CharField(max_length=7, choices=Season.CHOICES, null=False)
-    phase = models.CharField(max_length=20, choices=Phase.CHOICES, null=False)
-    year = models.IntegerField()
-    current_turn = models.BooleanField(default=True)
+    season = models.CharField(
+        max_length=7,
+        choices=Season.CHOICES,
+        null=False,
+    )
+    phase = models.CharField(
+        max_length=20,
+        choices=Phase.CHOICES,
+        null=False,
+    )
+    year = models.PositiveIntegerField(
+        null=False,
+    )
 
     class Meta:
         db_table = "turn"
@@ -29,3 +38,26 @@ class Turn(models.Model):
 
     def pieces(self):
         pass
+
+
+class TurnEnd(models.Model):
+    """
+    Represents the future end of a turn.
+
+    When created properly (using ``TurnEnd.objects.new``), this model will
+    automatically be associated with an ``AsyncResult`` object for the
+    ``upcoming process_turn()`` task.
+    """
+    turn = models.OneToOneField(
+        'Turn',
+        related_name='end',
+        null=False,
+        on_delete=models.CASCADE,
+    )
+    datetime = models.DateTimeField(
+        null=False,
+    )
+    task_id = models.CharField(
+        max_length=255,
+        null=True,
+    )

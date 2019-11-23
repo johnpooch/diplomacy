@@ -1,17 +1,65 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from core.models.base import CountryChoiceMode, GameStatus, DeadlineFrequency
+
 
 class Game(models.Model):
     """
     """
-    # TODO add game state, e.g. pending, live, finished
+    variant = models.ForeignKey(
+        'Variant',
+        null=False,
+        on_delete=models.CASCADE,
+        related_name='games',
+    )
     name = models.CharField(
         max_length=50,
         null=False
     )
+    status = models.CharField(
+        max_length=22,
+        choices=GameStatus.CHOICES,
+        default=GameStatus.AWAITING_PARTICIPANTS,
+        null=False,
+    )
     participants = models.ManyToManyField(
         User,
+    )
+    private = models.BooleanField(
+        default=False,
+    )
+    password = models.CharField(
+        null=True,
+        blank=True,
+        max_length=100,
+    )
+    order_deadline = models.CharField(
+        null=False,
+        choices=DeadlineFrequency.CHOICES,
+        default=DeadlineFrequency.TWENTY_FOUR_HOURS,
+        max_length=100,
+    )
+    retreat_deadline = models.CharField(
+        null=False,
+        choices=DeadlineFrequency.CHOICES,
+        default=DeadlineFrequency.TWENTY_FOUR_HOURS,
+        max_length=100,
+    )
+    build_deadline = models.CharField(
+        null=False,
+        choices=DeadlineFrequency.CHOICES,
+        default=DeadlineFrequency.TWELVE_HOURS,
+        max_length=100,
+    )
+    process_on_finalized_orders = models.BooleanField(
+        default=True,
+    )
+    country_choice_mode = models.CharField(
+        null=False,
+        choices=CountryChoiceMode.CHOICES,
+        default=CountryChoiceMode.RANDOM,
+        max_length=100,
     )
     created_by = models.ForeignKey(
         User,

@@ -1,3 +1,5 @@
+import uuid
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
@@ -8,19 +10,30 @@ from core.models.base import HygenicModel, PerTurnModel, DislodgedState, \
 
 class Piece(HygenicModel, PerTurnModel):
     """
+    Represents a piece during a turn.
+
+    At the beginning of every turn a new ``Piece`` instance is created for each
+    in-game piece. ``Piece`` instances representing the same in-game piece are
+    related by their ``persisted_piece_id``.
     """
-    nation = models.ForeignKey(
-        'Nation',
+    persisted_piece_id = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        help_text=_(
+            'This ID is persisted across `Piece` instances to which belong to '
+            'the same in game piece.'
+        )
+    )
+    nation_state = models.ForeignKey(
+        'NationState',
+        null=False,
         related_name='pieces',
         on_delete=models.CASCADE,
-        db_column="nation_id",
-        null=False,
-        db_constraint=False,
     )
     territory = models.OneToOneField(
         'Territory',
-        on_delete=models.CASCADE,
         null=True,
+        on_delete=models.CASCADE,
     )
     named_coast = models.OneToOneField(
         'NamedCoast',
@@ -34,24 +47,21 @@ class Piece(HygenicModel, PerTurnModel):
         choices=PieceType.CHOICES,
         default=PieceType.ARMY,
     )
-    dislodged_state = models.CharField(
-        max_length=15,
-        null=False,
-        choices=DislodgedState.CHOICES,
-        default=DislodgedState.UNRESOLVED
+    dislodged = models.BooleanField(
+        default=False
     )
-    dislodged_by = models.ForeignKey(
-        'Piece',
-        on_delete=models.CASCADE,
+    dislodged_by = models.OneToOneField(
+        'self',
+        blank=True,
         null=True,
-        blank=True
+        on_delete=models.CASCADE,
+        related_name='piece_disloged',
     )
     retreat_territories = models.ManyToManyField(
         'Territory',
         blank=True,
         related_name='retreat_pieces'
     )
-    active = models.BooleanField(default=True)
 
     class Meta:
         db_table = "piece"

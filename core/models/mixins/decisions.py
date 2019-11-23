@@ -1,5 +1,5 @@
 """
-Mixin classes for ``Command`` and ``Territory`` which provide logic for
+Mixin classes for ``Order`` and ``Territory`` which provide logic for
 resolving decisions.
 """
 
@@ -8,13 +8,13 @@ class Decision:
 
     def _check_is_move(self):
         """
-        Attack strength should only be determined for move commands. If this
-        method if called for other types of command, something is wrong.
+        Attack strength should only be determined for move orders. If this
+        method if called for other types of order, something is wrong.
         """
         if not self.is_move:
             raise ValueError(
                 f'{self.__class.__name__} decision should only be determined '
-                'for move commands.'
+                'for move orders.'
             )
 
 
@@ -23,7 +23,7 @@ class AttackStrength(Decision):
     @property
     def min_attack_strength(self):
         """
-        Determine the minimum attack strength of a move command.
+        Determine the minimum attack strength of a move order.
         """
         self._check_is_move()
 
@@ -44,7 +44,7 @@ class AttackStrength(Decision):
     @property
     def max_attack_strength(self):
         """
-        Determine the maximum attack strength of a move command.
+        Determine the maximum attack strength of a move order.
         """
         self._check_is_move()
 
@@ -72,7 +72,7 @@ class DefendStrength(Decision):
     @property
     def min_defend_strength(self):
         """
-        Determine the minimum defend strength of a move command.
+        Determine the minimum defend strength of a move order.
         """
         self._check_is_move()
         return 1 + len(self.successful_support)
@@ -80,7 +80,7 @@ class DefendStrength(Decision):
     @property
     def max_defend_strength(self):
         """
-        Determine the maximum defend strength of a move command.
+        Determine the maximum defend strength of a move order.
         """
         self._check_is_move()
         return 1 + len(self.non_failing_support)
@@ -91,7 +91,7 @@ class PreventStrength(Decision):
     @property
     def min_prevent_strength(self):
         """
-        Determine the minimum prevent strength of a move command.
+        Determine the minimum prevent strength of a move order.
         """
         self._check_is_move()
 
@@ -100,7 +100,7 @@ class PreventStrength(Decision):
 
         if self.head_to_head_exists():
             opposing_unit = self.target.piece
-            if not opposing_unit.command.fails:
+            if not opposing_unit.order.fails:
                 return 0
 
         return 1 + len(self.successful_support)
@@ -108,7 +108,7 @@ class PreventStrength(Decision):
     @property
     def max_prevent_strength(self):
         """
-        Determine the maximum prevent strength of a move command.
+        Determine the maximum prevent strength of a move order.
         """
         self._check_is_move()
 
@@ -117,7 +117,7 @@ class PreventStrength(Decision):
 
         if self.head_to_head_exists():
             opposing_unit = self.target.piece
-            if opposing_unit.command.succeeds:
+            if opposing_unit.order.succeeds:
                 return 0
 
         return 1 + len(self.non_failing_support)
@@ -137,13 +137,13 @@ class HoldStrength(Decision):
         if not self.occupied():
             return 0
 
-        if self.piece.command.is_move:
-            if not self.piece.command.fails:
+        if self.piece.order.is_move:
+            if not self.piece.order.fails:
                 return 0
             else:
-                return 1 + len(self.piece.command.successful_hold_support)
+                return 1 + len(self.piece.order.successful_hold_support)
 
-        return 1 + len(self.piece.command.successful_support)
+        return 1 + len(self.piece.order.successful_support)
 
     @property
     def max_hold_strength(self):
@@ -155,15 +155,15 @@ class HoldStrength(Decision):
 
         if self.piece.moves:
             return 0
-        if self.piece.command.is_move:
-            return 1 + len(self.piece.command.non_failing_hold_support)
+        if self.piece.order.is_move:
+            return 1 + len(self.piece.order.non_failing_hold_support)
 
-        return 1 + len(self.piece.command.non_failing_support)
+        return 1 + len(self.piece.order.non_failing_support)
 
 
-class CommandDecisionsMixin(AttackStrength, DefendStrength, PreventStrength):
+class OrderDecisionsMixin(AttackStrength, DefendStrength, PreventStrength):
     """
-    Allows ``Command`` to inherit one class rather than inheriting from each
+    Allows ``Order`` to inherit one class rather than inheriting from each
     ``Decision`` class inidvidually.
     """
     pass

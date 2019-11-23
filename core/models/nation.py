@@ -6,14 +6,17 @@ from core.models.base import PerTurnModel
 
 class Nation(models.Model):
     """
+    Represents a playable nation in the game, e.g. 'France'.
     """
+    variant = models.ForeignKey(
+        'Variant',
+        null=False,
+        related_name='nations',
+        on_delete=models.CASCADE,
+    )
     name = models.CharField(
-        max_length=15
+        max_length=15,
     )
-    active = models.BooleanField(
-        default=True
-    )
-    # TODO should have a foreign key to variant
 
     class Meta:
         db_table = "nation"
@@ -27,8 +30,8 @@ class Nation(models.Model):
 
 class NationState(PerTurnModel):
     """
-    Through model between ``Game``, ``User``, and ``Nation``. Represents the
-    state of a nation in a game.
+    Through model between ``Turn``, ``User``, and ``Nation``. Represents the
+    state of a nation in during a turn.
     """
     nation = models.ForeignKey(
         'Nation',
@@ -42,7 +45,9 @@ class NationState(PerTurnModel):
         related_name='nation_states',
         on_delete=models.CASCADE,
     )
+    orders_finalized = models.BooleanField(
+        default=True,
+    )
     surrendered = models.BooleanField(
-        null=True,
         default=False,
     )
