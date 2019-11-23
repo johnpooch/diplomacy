@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models import Piece
-from core.models.base import CommandType, PieceType
+from core.models.base import OrderType, PieceType
 from core.models.mixins.decisions import HoldStrength
 
 
@@ -140,7 +140,7 @@ class Territory(models.Model, HoldStrength):
         """
         return Piece.objects.filter(
             command__target=self,
-            command__type=CommandType.MOVE
+            command__type=OrderType.MOVE
         )
 
     def foreign_attacking_pieces(self, nation):

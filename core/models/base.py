@@ -11,7 +11,7 @@ class PieceType:
     )
 
 
-class CommandType:
+class OrderType:
     HOLD = 'hold'
     MOVE = 'move'
     SUPPORT = 'support'
@@ -30,7 +30,22 @@ class CommandType:
     )
 
 
-class CommandState:
+class OutcomeType:
+    RESOLVED = 'resolved'
+    BOUNCED = 'bounced'
+    ILLEGAL = 'illegal'
+    AUX_FAILED = 'aux failed'
+    AUX_DOES_NOT_CORRESPOND = 'aux does not correspond'
+    CHOICES = (
+        (RESOLVED, 'Resolved'),
+        (BOUNCED, 'Bounced'),
+        (ILLEGAL, 'Illegal'),
+        (AUX_FAILED, 'Aux failed'),
+        (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
+    )
+
+
+class OrderState:
     UNRESOLVED = 'unresolved'
     SUCCEEDS = 'succeeds'
     FAILS = 'fails'

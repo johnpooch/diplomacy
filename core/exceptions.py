@@ -1,2 +1,2 @@
-class IllegalCommandException(Exception):
+class IllegalOrderException(Exception):
     pass

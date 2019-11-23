@@ -1,4 +1,3 @@
-from .command import Command
 from .community import Announcement, Message
 from .game import Game
 from .named_coast import NamedCoast
@@ -13,7 +12,6 @@ from .variant import Variant
 
 __all__ = [
     'Announcement',
-    'Command',
     'Game',
     'Message',
     'NamedCoast',

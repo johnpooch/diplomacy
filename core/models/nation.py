@@ -3,8 +3,8 @@ from django.db import models
 
 
 class Nation(models.Model):
-    # TODO should make some sort of PerGame base model.
     """
+    Represents a playable nation in the game, e.g. 'France'.
     """
     variant = models.ForeignKey(
         'Variant',
