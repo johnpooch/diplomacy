@@ -82,11 +82,9 @@ class GameStateView(views.APIView):
         )
 
 
-class GameList(mixins.ListModelMixin,
-               mixins.CreateModelMixin,
-               generics.GenericAPIView):
+class Games(generics.ListAPIView):
 
-    permission_classes = [drf_permissions.IsAuthenticatedOrReadOnly]
+    # permission_classes = [drf_permissions.IsAuthenticatedOrReadOnly]
 
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
@@ -97,19 +95,19 @@ class GameList(mixins.ListModelMixin,
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def create(self, request, *args, **kwargs):
-        """
-        Override create method to save ``created_by`` field.
-        """
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(created_by=request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
+#     def create(self, request, *args, **kwargs):
+#         """
+#         Override create method to save ``created_by`` field.
+#         """
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save(created_by=request.user)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(
+#             serializer.data,
+#             status=status.HTTP_201_CREATED,
+#             headers=headers
+#         )
 
 
 class OrderView(mixins.ListModelMixin,
