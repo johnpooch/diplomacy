@@ -20,7 +20,7 @@ class Game(models.Model):
     status = models.CharField(
         max_length=22,
         choices=GameStatus.CHOICES,
-        default=GameStatus.AWAITING_PARTICIPANTS,
+        default=GameStatus.PENDING,
         null=False,
     )
     participants = models.ManyToManyField(
@@ -60,6 +60,9 @@ class Game(models.Model):
         choices=CountryChoiceMode.CHOICES,
         default=CountryChoiceMode.RANDOM,
         max_length=100,
+    )
+    num_players = models.PositiveIntegerField(
+        null=False,
     )
     created_by = models.ForeignKey(
         User,

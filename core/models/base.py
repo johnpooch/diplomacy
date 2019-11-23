@@ -42,14 +42,12 @@ class DislodgedState:
 
 
 class GameStatus:
-    AWAITING_PARTICIPANTS = 'awaiting participants'
     PENDING = 'pending'
-    LIVE = 'live'
+    ACTIVE = 'active'
     ENDED = 'ended'
     CHOICES = (
-        (AWAITING_PARTICIPANTS, 'Awaiting Participants'),
         (PENDING, 'Pending'),
-        (LIVE, 'Live'),
+        (ACTIVE, 'Active'),
         (ENDED, 'Ended'),
     )
 
