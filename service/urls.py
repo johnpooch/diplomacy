@@ -5,7 +5,8 @@ from . import views
 
 urlpatterns = [
     path('games', views.Games.as_view(), name='all-games'),
-    path('games/<slug:filter>', views.Games.as_view(), name='games'),
+    path('games/<int:user_id>', views.Games.as_view(), name='user-games'),
+    path('games/<slug:status>', views.Games.as_view(), name='games'),
     # GET: game state of current turn
     # path('game/<int:game>', views.GameStateView.as_view()),
     # # create command

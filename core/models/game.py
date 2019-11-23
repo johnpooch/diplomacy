@@ -1,7 +1,33 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.manager import BaseManager
 
 from core.models.base import CountryChoiceMode, GameStatus, DeadlineFrequency
+
+
+class GameQuerySet(models.QuerySet):
+    """
+    """
+
+    def filter_by_joinable(self, user=None):
+        """
+        Filters games which are joinable, i.e. have fewer participants than
+        num_players and are not ended.
+
+        Args:
+            * ``[user]`` - If provided, games in which the given user is
+            participating are excluded.
+        """
+        if user:
+            self = self.exclude(participants=user)
+        return self \
+            .annotate(participant_count=models.Count('participants'))\
+            .filter(participant_count__lt=models.F('num_players'))\
+            .exclude(status=GameStatus.ENDED)
+
+
+class GameManager(BaseManager.from_queryset(GameQuerySet)):
+    pass
 
 
 class Game(models.Model):
@@ -72,6 +98,8 @@ class Game(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+
+    objects = GameManager()
 
     class Meta:
         db_table = "game"

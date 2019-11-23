@@ -1,9 +1,12 @@
+from django.db.models import Count, F
 from django.shortcuts import get_object_or_404
+
 from rest_framework import generics, mixins, status, views
 from rest_framework import permissions as drf_permissions
 from rest_framework.response import Response
 
 from core import models
+from core.models.base import GameStatus
 from service import serializers
 from service import permissions as custom_permissions
 
@@ -90,6 +93,19 @@ class Games(generics.ListAPIView):
     serializer_class = serializers.GameSerializer
 
     def get(self, request, *args, **kwargs):
+        # TODO auth
+        user = kwargs.get('user_id')
+        status = kwargs.get('status')
+
+        if user:
+            self.queryset = self.queryset.filter(participants=user)
+
+        if status:
+            if status == 'joinable':
+                self.queryset = self.queryset.filter_by_joinable(request.user)
+            else:
+                self.queryset = self.queryset.filter(status=status)
+
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):

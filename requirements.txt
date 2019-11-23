@@ -1,5 +1,6 @@
 Django==2.2.5
 django-cors-headers==2.4.0
+factory_boy
 djangorestframework==3.9.1
 mysqlclient
 django-extensions

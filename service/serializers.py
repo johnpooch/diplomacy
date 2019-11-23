@@ -66,16 +66,16 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
         fields = (
-            'id',
             'name',
             'participants',
-            'created_by',
-            'created_at'
+            'created_at',
+            'status',
         )
         read_only_fields = (
             'participants',
             'created_by',
             'created_at',
+            'status',
         )
 
 
