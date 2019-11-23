@@ -9,6 +9,10 @@ from service.serializers import GameSerializer
 
 class TestGetGames(APITestCase):
 
+    def setUp(self):
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+
     def test_get_all_games(self):
         """
         Gets all games including pending, active, and ended games.
@@ -26,6 +30,15 @@ class TestGetGames(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
+    def test_get_all_games_unauthenticated(self):
+        """
+        Cannot get all games if not authenticated.
+        """
+        self.client.logout()
+        url = reverse('all-games')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_active_includes_active_excludes_pending_and_ended(self):
         """
         Includes all active games. Excludes pending and ended games.
@@ -39,12 +52,21 @@ class TestGetGames(APITestCase):
             factories.GameFactory(status=GameStatus.ENDED),
         ]
 
-        url = reverse('games', args=[GameStatus.ACTIVE])
+        url = reverse('games-by-type', args=[GameStatus.ACTIVE])
         response = self.client.get(url, format='json')
 
         expected_data = [GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
+
+    def test_get_active_games_if_unauthenticated(self):
+        """
+        Cannot get active games if not authenticated.
+        """
+        self.client.logout()
+        url = reverse('games-by-type', args=[GameStatus.ACTIVE])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_ended_includes_ended_and_excludes_pending_and_active(self):
         """
@@ -59,12 +81,21 @@ class TestGetGames(APITestCase):
             factories.GameFactory(status=GameStatus.ACTIVE),
         ]
 
-        url = reverse('games', args=[GameStatus.ENDED])
+        url = reverse('games-by-type', args=[GameStatus.ENDED])
         response = self.client.get(url, format='json')
 
         expected_data = [GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
+
+    def test_get_ended_games_if_unauthenticated(self):
+        """
+        Cannot get ended games if not authenticated.
+        """
+        self.client.logout()
+        url = reverse('games-by-type', args=[GameStatus.ENDED])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TestGetJoinableGames(APITestCase):
@@ -90,12 +121,20 @@ class TestGetJoinableGames(APITestCase):
             factories.GameFactory(status=GameStatus.ENDED),
         ]
 
-        url = reverse('games', args=['joinable'])
+        url = reverse('games-by-type', args=['joinable'])
         response = self.client.get(url, format='json')
 
         expected_data = [GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
+
+    def test_get_joinable_games_if_unauthenticated(self):
+        """
+        Cannot get ended games if not authenticated.
+        """
+        url = reverse('games-by-type', args=['joinable'])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TestGetMyGames(APITestCase):
@@ -128,12 +167,54 @@ class TestGetMyGames(APITestCase):
             factories.GameFactory(),
         ]
 
-        url = reverse('user-games', args=[user.id, ])
+        url = reverse('user-games')
         response = self.client.get(url, format='json')
 
         expected_data = [GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
+
+    def test_get_my_active_games(self):
+        """
+        Gets all games that the user is participating in which are active.
+        """
+        credentials = {'username': 'This User', 'password': 'This Password'}
+        user = factories.UserFactory(**credentials)
+        self.client.force_authenticate(user=user)
+
+        included_games = [
+            factories.GameFactory.create(
+                participants=(user,),
+                status=GameStatus.ACTIVE,
+            ),
+        ]
+
+        excluded_games = [  # noqa: F841
+            factories.GameFactory.create(
+                participants=(user,),
+                status=GameStatus.PENDING,
+            ),
+            factories.GameFactory.create(
+                participants=(user,),
+                status=GameStatus.ENDED,
+            ),
+            factories.GameFactory(),
+        ]
+
+        url = reverse('user-games-by-type', args=[GameStatus.ACTIVE])
+        response = self.client.get(url, format='json')
+
+        expected_data = [GameSerializer(game).data for game in included_games]
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_get_my_games_if_unauthenticated(self):
+        """
+        Cannot get my games if not authenticated.
+        """
+        url = reverse('user-games')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TestGetCreateGame(APITestCase):
