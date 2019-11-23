@@ -28,7 +28,6 @@ class Game(models.Model):
     )
     private = models.BooleanField(
         default=False,
-        null=False,
     )
     password = models.CharField(
         null=True,
@@ -52,6 +51,9 @@ class Game(models.Model):
         choices=DeadlineFrequency.CHOICES,
         default=DeadlineFrequency.TWELVE_HOURS,
         max_length=100,
+    )
+    process_on_finalized_orders = models.BooleanField(
+        default=True,
     )
     created_by = models.ForeignKey(
         User,
