@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from core.models.base import GameStatus, DeadlineFrequency
+from core.models.base import CountryChoiceMode, GameStatus, DeadlineFrequency
 
 
 class Game(models.Model):
@@ -54,6 +54,12 @@ class Game(models.Model):
     )
     process_on_finalized_orders = models.BooleanField(
         default=True,
+    )
+    country_choice_mode = models.CharField(
+        null=False,
+        choices=CountryChoiceMode.CHOICES,
+        default=CountryChoiceMode.RANDOM,
+        max_length=100,
     )
     created_by = models.ForeignKey(
         User,

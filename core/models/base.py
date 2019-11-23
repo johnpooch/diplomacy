@@ -41,6 +41,34 @@ class CommandState:
     )
 
 
+class CountryChoiceMode:
+    RANDOM = 'random'
+    PREFERENCE = 'preference'
+    FIRST_COME = 'first come'
+    CHOICES = (
+        (RANDOM, 'Random'),
+        (PREFERENCE, 'Preference'),
+        (FIRST_COME, 'First come first serve')
+    )
+
+
+class DeadlineFrequency:
+    TWELVE_HOURS = 'twelve hours'
+    TWENTY_FOUR_HOURS = 'twenty four hours'
+    TWO_DAYS = 'two days'
+    THREE_DAYS = 'three days'
+    FIVE_DAYS = 'five days'
+    SEVEN_DAYS = 'seven days'
+    CHOICES = (
+        (TWELVE_HOURS, '12 hours'),
+        (TWENTY_FOUR_HOURS, '24 hours'),
+        (TWO_DAYS, '2 days'),
+        (THREE_DAYS, '3 days'),
+        (FIVE_DAYS, '5 days'),
+        (SEVEN_DAYS, '7 days'),
+    )
+
+
 class DislodgedState:
     UNRESOLVED = 'unresolved'
     SUSTAINS = 'sustains'
@@ -82,23 +110,6 @@ class Season:
     CHOICES = (
         (FALL, 'Fall'),
         (SPRING, 'Spring'),
-    )
-
-
-class DeadlineFrequency:
-    TWELVE_HOURS = 'twelve hours'
-    TWENTY_FOUR_HOURS = 'twenty four hours'
-    TWO_DAYS = 'two days'
-    THREE_DAYS = 'three days'
-    FIVE_DAYS = 'five days'
-    SEVEN_DAYS = 'seven days'
-    CHOICES = (
-        (TWELVE_HOURS, '12 hours'),
-        (TWENTY_FOUR_HOURS, '24 hours'),
-        (TWO_DAYS, '2 days'),
-        (THREE_DAYS, '3 days'),
-        (FIVE_DAYS, '5 days'),
-        (SEVEN_DAYS, '7 days'),
     )
 
 
