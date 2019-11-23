@@ -2,27 +2,29 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models import Piece
-from core.models.base import OrderType, PieceType
+from core.models.base import OrderType, PieceType, TerritoryType
 from core.models.mixins.decisions import HoldStrength
 
 
 class Territory(models.Model, HoldStrength):
     """
+    Represents an area in the game map that can be occupied.
     """
-    class TerritoryType:
-        LAND = 'land'
-        SEA = 'sea'
-        CHOICES = (
-            (LAND, 'Land'),
-            (SEA, 'Sea'),
-        )
-    # TODO add ForeignKey to Variant. Create Variant model.
-    name = models.CharField(max_length=50, null=False, unique=True)
+    name = models.CharField(
+        max_length=50,
+        null=False,
+    )
     controlled_by_initial = models.ForeignKey(
         'Nation',
         on_delete=models.CASCADE,
         null=True,
         related_name='initially_controlled_territories',
+    )
+    variant = models.ForeignKey(
+        'Variant',
+        null=False,
+        on_delete=models.CASCADE,
+        related_name='territories',
     )
     nationality = models.ForeignKey(
         'Nation',
@@ -45,7 +47,9 @@ class Territory(models.Model, HoldStrength):
         choices=TerritoryType.CHOICES,
         null=False
     )
-    coastal = models.BooleanField(default=False)
+    coastal = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         db_table = "territory"

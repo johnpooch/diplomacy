@@ -2,60 +2,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class PieceType:
-    ARMY = 'army'
-    FLEET = 'fleet'
-    CHOICES = (
-        (ARMY, 'Army'),
-        (FLEET, 'Fleet'),
-    )
-
-
-class OrderType:
-    HOLD = 'hold'
-    MOVE = 'move'
-    SUPPORT = 'support'
-    CONVOY = 'convoy'
-    RETREAT = 'retreat'
-    BUILD = 'build'
-    DISBAND = 'disband'
-    CHOICES = (
-        (HOLD, 'Hold'),
-        (MOVE, 'Move'),
-        (SUPPORT, 'Support'),
-        (CONVOY, 'Convoy'),
-        (RETREAT, 'Retreat'),
-        (BUILD, 'Build'),
-        (DISBAND, 'Disband')
-    )
-
-
-class OutcomeType:
-    RESOLVED = 'resolved'
-    BOUNCED = 'bounced'
-    ILLEGAL = 'illegal'
-    AUX_FAILED = 'aux failed'
-    AUX_DOES_NOT_CORRESPOND = 'aux does not correspond'
-    CHOICES = (
-        (RESOLVED, 'Resolved'),
-        (BOUNCED, 'Bounced'),
-        (ILLEGAL, 'Illegal'),
-        (AUX_FAILED, 'Aux failed'),
-        (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
-    )
-
-
-class OrderState:
-    UNRESOLVED = 'unresolved'
-    SUCCEEDS = 'succeeds'
-    FAILS = 'fails'
-    CHOICES = (
-        (UNRESOLVED, 'Unresolved'),
-        (SUCCEEDS, 'Succeeds'),
-        (FAILS, 'Fails')
-    )
-
-
 class CountryChoiceMode:
     RANDOM = 'random'
     PREFERENCE = 'preference'
@@ -108,6 +54,51 @@ class GameStatus:
     )
 
 
+class OrderState:
+    UNRESOLVED = 'unresolved'
+    SUCCEEDS = 'succeeds'
+    FAILS = 'fails'
+    CHOICES = (
+        (UNRESOLVED, 'Unresolved'),
+        (SUCCEEDS, 'Succeeds'),
+        (FAILS, 'Fails')
+    )
+
+
+class OrderType:
+    HOLD = 'hold'
+    MOVE = 'move'
+    SUPPORT = 'support'
+    CONVOY = 'convoy'
+    RETREAT = 'retreat'
+    BUILD = 'build'
+    DISBAND = 'disband'
+    CHOICES = (
+        (HOLD, 'Hold'),
+        (MOVE, 'Move'),
+        (SUPPORT, 'Support'),
+        (CONVOY, 'Convoy'),
+        (RETREAT, 'Retreat'),
+        (BUILD, 'Build'),
+        (DISBAND, 'Disband')
+    )
+
+
+class OutcomeType:
+    RESOLVED = 'resolved'
+    BOUNCED = 'bounced'
+    ILLEGAL = 'illegal'
+    AUX_FAILED = 'aux failed'
+    AUX_DOES_NOT_CORRESPOND = 'aux does not correspond'
+    CHOICES = (
+        (RESOLVED, 'Resolved'),
+        (BOUNCED, 'Bounced'),
+        (ILLEGAL, 'Illegal'),
+        (AUX_FAILED, 'Aux failed'),
+        (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
+    )
+
+
 class Phase:
     ORDER = 'order'
     RETREAT_AND_DISBAND = 'retreat and disband'
@@ -119,12 +110,30 @@ class Phase:
     )
 
 
+class PieceType:
+    ARMY = 'army'
+    FLEET = 'fleet'
+    CHOICES = (
+        (ARMY, 'Army'),
+        (FLEET, 'Fleet'),
+    )
+
+
 class Season:
     FALL = 'fall'
     SPRING = 'spring'
     CHOICES = (
         (FALL, 'Fall'),
         (SPRING, 'Spring'),
+    )
+
+
+class TerritoryType:
+    LAND = 'land'
+    SEA = 'sea'
+    CHOICES = (
+        (LAND, 'Land'),
+        (SEA, 'Sea'),
     )
 
 
