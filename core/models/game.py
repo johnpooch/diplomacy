@@ -26,6 +26,10 @@ class Game(models.Model):
     participants = models.ManyToManyField(
         User,
     )
+    private = models.BooleanField(
+        default=False,
+        null=False,
+    )
     created_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
