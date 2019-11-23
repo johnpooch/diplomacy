@@ -52,8 +52,9 @@ class NationState(models.Model):
         related_name='+',
         on_delete=models.CASCADE,
     )
-
+    orders_finalized = models.BooleanField(
+        default=True,
+    )
     surrendered = models.BooleanField(
-        null=True,
         default=False,
     )
