@@ -8,13 +8,13 @@ from .piece import Piece
 from .supply_center import SupplyCenter
 from .territory import Territory, TerritoryState
 from .turn import Turn
+from .variant import Variant
 
 
 __all__ = [
     'Announcement',
     'Command',
     'Game',
-    'TerritoryState',
     'Message',
     'NamedCoast',
     'Nation',
@@ -23,5 +23,7 @@ __all__ = [
     'Piece',
     'SupplyCenter',
     'Territory',
+    'TerritoryState',
     'Turn',
+    'Variant',
 ]

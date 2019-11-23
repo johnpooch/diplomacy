@@ -7,7 +7,6 @@ from core.models.base import GameStatus
 class Game(models.Model):
     """
     """
-    # TODO add game state, e.g. pending, live, finished
     name = models.CharField(
         max_length=50,
         null=False
