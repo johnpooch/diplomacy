@@ -3,12 +3,21 @@ from django.db import models
 
 
 class Nation(models.Model):
-    # TODO should make some sort of PerGame base model.
     """
+    Represents a playable nation in the game, e.g. 'France'.
     """
-    name = models.CharField(max_length=15)
-    active = models.BooleanField(default=True)
-    # TODO should have a foreign key to variant
+    variant = models.ForeignKey(
+        'Variant',
+        null=False,
+        related_name='nations',
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(
+        max_length=15,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
 
     class Meta:
         db_table = "nation"
@@ -22,8 +31,8 @@ class Nation(models.Model):
 
 class NationState(models.Model):
     """
-    Through model between ``Game``, ``User``, and ``Nation``. Represents the
-    state of a nation in a game.
+    Through model between ``Turn``, ``User``, and ``Nation``. Represents the
+    state of a nation in during a turn.
     """
     turn = models.ForeignKey(
         'Turn',
@@ -43,8 +52,9 @@ class NationState(models.Model):
         related_name='+',
         on_delete=models.CASCADE,
     )
-
+    orders_finalized = models.BooleanField(
+        default=True,
+    )
     surrendered = models.BooleanField(
-        null=True,
         default=False,
     )

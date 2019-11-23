@@ -2,16 +2,70 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class PieceType:
-    ARMY = 'army'
-    FLEET = 'fleet'
+class CountryChoiceMode:
+    RANDOM = 'random'
+    PREFERENCE = 'preference'
+    FIRST_COME = 'first come'
     CHOICES = (
-        (ARMY, 'Army'),
-        (FLEET, 'Fleet'),
+        (RANDOM, 'Random'),
+        (PREFERENCE, 'Preference'),
+        (FIRST_COME, 'First come first serve')
     )
 
 
-class CommandType:
+class DeadlineFrequency:
+    TWELVE_HOURS = 'twelve hours'
+    TWENTY_FOUR_HOURS = 'twenty four hours'
+    TWO_DAYS = 'two days'
+    THREE_DAYS = 'three days'
+    FIVE_DAYS = 'five days'
+    SEVEN_DAYS = 'seven days'
+    CHOICES = (
+        (TWELVE_HOURS, '12 hours'),
+        (TWENTY_FOUR_HOURS, '24 hours'),
+        (TWO_DAYS, '2 days'),
+        (THREE_DAYS, '3 days'),
+        (FIVE_DAYS, '5 days'),
+        (SEVEN_DAYS, '7 days'),
+    )
+
+
+class DislodgedState:
+    UNRESOLVED = 'unresolved'
+    SUSTAINS = 'sustains'
+    DISLODGED = 'dislodged'
+    CHOICES = (
+        (UNRESOLVED, 'Unresolved'),
+        (SUSTAINS, 'Sustains'),
+        (DISLODGED, 'Dislodged')
+    )
+
+
+class GameStatus:
+    AWAITING_PARTICIPANTS = 'awaiting participants'
+    PENDING = 'pending'
+    LIVE = 'live'
+    ENDED = 'ended'
+    CHOICES = (
+        (AWAITING_PARTICIPANTS, 'Awaiting Participants'),
+        (PENDING, 'Pending'),
+        (LIVE, 'Live'),
+        (ENDED, 'Ended'),
+    )
+
+
+class OrderState:
+    UNRESOLVED = 'unresolved'
+    SUCCEEDS = 'succeeds'
+    FAILS = 'fails'
+    CHOICES = (
+        (UNRESOLVED, 'Unresolved'),
+        (SUCCEEDS, 'Succeeds'),
+        (FAILS, 'Fails')
+    )
+
+
+class OrderType:
     HOLD = 'hold'
     MOVE = 'move'
     SUPPORT = 'support'
@@ -30,25 +84,18 @@ class CommandType:
     )
 
 
-class CommandState:
-    UNRESOLVED = 'unresolved'
-    SUCCEEDS = 'succeeds'
-    FAILS = 'fails'
+class OutcomeType:
+    RESOLVED = 'resolved'
+    BOUNCED = 'bounced'
+    ILLEGAL = 'illegal'
+    AUX_FAILED = 'aux failed'
+    AUX_DOES_NOT_CORRESPOND = 'aux does not correspond'
     CHOICES = (
-        (UNRESOLVED, 'Unresolved'),
-        (SUCCEEDS, 'Succeeds'),
-        (FAILS, 'Fails')
-    )
-
-
-class DislodgedState:
-    UNRESOLVED = 'unresolved'
-    SUSTAINS = 'sustains'
-    DISLODGED = 'dislodged'
-    CHOICES = (
-        (UNRESOLVED, 'Unresolved'),
-        (SUSTAINS, 'Sustains'),
-        (DISLODGED, 'Dislodged')
+        (RESOLVED, 'Resolved'),
+        (BOUNCED, 'Bounced'),
+        (ILLEGAL, 'Illegal'),
+        (AUX_FAILED, 'Aux failed'),
+        (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
     )
 
 
@@ -63,12 +110,30 @@ class Phase:
     )
 
 
+class PieceType:
+    ARMY = 'army'
+    FLEET = 'fleet'
+    CHOICES = (
+        (ARMY, 'Army'),
+        (FLEET, 'Fleet'),
+    )
+
+
 class Season:
     FALL = 'fall'
     SPRING = 'spring'
     CHOICES = (
         (FALL, 'Fall'),
         (SPRING, 'Spring'),
+    )
+
+
+class TerritoryType:
+    LAND = 'land'
+    SEA = 'sea'
+    CHOICES = (
+        (LAND, 'Land'),
+        (SEA, 'Sea'),
     )
 
 
