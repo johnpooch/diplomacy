@@ -5,6 +5,10 @@ from core.models.base import PieceType
 
 class SupplyCenter(models.Model):
     """
+    Represents a supply center on the game map.
+
+    The state of the supply center is the same as the state of the related
+    ``Territory`` so a ``SupplyCenterState`` model is not necessary.
     """
     nationality = models.ForeignKey(
         'Nation',
