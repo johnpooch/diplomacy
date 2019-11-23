@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from core.models.base import GameStatus
+
 
 class Game(models.Model):
     """
@@ -9,6 +11,12 @@ class Game(models.Model):
     name = models.CharField(
         max_length=50,
         null=False
+    )
+    status = models.CharField(
+        max_length=22,
+        choices=GameStatus.CHOICES,
+        default=GameStatus.AWAITING_PARTICIPANTS,
+        null=False,
     )
     participants = models.ManyToManyField(
         User,

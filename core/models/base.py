@@ -94,3 +94,16 @@ class HygenicModel(models.Model):
             self.full_clean()
         except ValidationError as exc:
             raise ValueError(exc) from exc
+
+
+class GameStatus:
+    AWAITING_PARTICIPANTS = 'awaiting participants'
+    PENDING = 'pending'
+    LIVE = 'live'
+    ENDED = 'ended'
+    CHOICES = (
+        (AWAITING_PARTICIPANTS, 'Awaiting Participants'),
+        (PENDING, 'Pending'),
+        (LIVE, 'Live'),
+        (ENDED, 'Ended'),
+    )
