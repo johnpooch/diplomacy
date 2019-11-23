@@ -6,9 +6,18 @@ class Nation(models.Model):
     # TODO should make some sort of PerGame base model.
     """
     """
-    name = models.CharField(max_length=15)
-    active = models.BooleanField(default=True)
-    # TODO should have a foreign key to variant
+    variant = models.ForeignKey(
+        'Variant',
+        null=False,
+        related_name='nations',
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(
+        max_length=15,
+    )
+    active = models.BooleanField(
+        default=True,
+    )
 
     class Meta:
         db_table = "nation"
