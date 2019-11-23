@@ -31,8 +31,8 @@ class Nation(models.Model):
 
 class NationState(models.Model):
     """
-    Through model between ``Game``, ``User``, and ``Nation``. Represents the
-    state of a nation in a game.
+    Through model between ``Turn``, ``User``, and ``Nation``. Represents the
+    state of a nation in during a turn.
     """
     turn = models.ForeignKey(
         'Turn',
