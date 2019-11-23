@@ -30,6 +30,11 @@ class Game(models.Model):
         default=False,
         null=False,
     )
+    password = models.CharField(
+        null=True,
+        blank=True,
+        max_length=100,
+    )
     created_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
