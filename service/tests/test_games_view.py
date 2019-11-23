@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories
+from core import models
 from core.models.base import GameStatus
 from service.serializers import GameSerializer
 
@@ -218,10 +219,111 @@ class TestGetMyGames(APITestCase):
 
 
 class TestGetCreateGame(APITestCase):
-    # gets forms
-    pass
+
+    def test_get_create_game_form(self):
+        """
+        Get create game returns a form.
+        """
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+
+        url = reverse('create-game')
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(
+            response,
+            '<form action="/api/v1/games/create" method="POST">'
+        )
+
+    def test_get_create_game_unauthenticated(self):
+        """
+        Cannot get create game when unauthenticated.
+        """
+        url = reverse('create-game')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TestPostCreateGame(APITestCase):
-    # returns x when form invalid (test form separately?)
-    pass
+
+    def test_post_invalid_game(self):
+        """
+        Posting invalid game data causes a 400 error and appropriate messages
+        appear on invalid fields.
+        """
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+
+        data = {'name': 'Test Game'}
+        url = reverse('create-game')
+        response = self.client.post(url, data, format='json')
+
+        self.assertContains(
+            response,
+            '<span class="help-block">This field is required.</span>',
+            status_code=400,
+        )
+
+    def test_post_valid_game(self):
+        """
+        Posting valid game data creates a game instance and redirects to
+        `user-games` view. The user is automatically added as a participant of
+        the game.
+        """
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+        variant = factories.VariantFactory()
+
+        data = {
+            'name': 'Test Game',
+            'variant': variant.id,
+            'num_players': 7,
+        }
+        url = reverse('create-game')
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, '/api/v1/games/mygames')
+        self.assertTrue(models.Game.objects.get(
+            name='Test Game',
+            created_by=user,
+            variant=variant,
+            participants=user,
+        ))
+
+    def test_post_unauthorized(self):
+        """
+        Cannot post when unauthorized.
+        """
+        url = reverse('create-game')
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class TestJoinGame(APITestCase):
+
+    def test_join_game_invalid(self):
+        """
+        Posting invalid game data causes a 400 error.
+        """
+        pass
+
+    def test_join_game_valid(self):
+        """
+        Posting valid data adds the user as a participant in the game and
+        redirects to `pending-game` view.
+        """
+        pass
+
+    def test_join_game_unauthorized(self):
+        """
+        Cannot join a game when unauthorized.
+        """
+        pass
+
+    def test_join_game_unjoinable(self):
+        """
+        Cannot join a game when the game is unjoinable.
+        """
+        pass

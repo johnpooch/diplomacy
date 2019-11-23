@@ -67,8 +67,18 @@ class GameSerializer(serializers.ModelSerializer):
         model = models.Game
         fields = (
             'name',
+            'variant',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'country_choice_mode',
+            'num_players',
             'participants',
             'created_at',
+            'created_by',
             'status',
         )
         read_only_fields = (

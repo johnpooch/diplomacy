@@ -6,22 +6,27 @@ from . import views
 urlpatterns = [
     path(
         'games',
-        views.Games.as_view(),
+        views.ListGames.as_view(),
         name='all-games'
     ),
     path(
         'games/mygames',
-        views.UserGames.as_view(),
+        views.ListUserGames.as_view(),
         name='user-games'
     ),
     path(
+        'games/create',
+        views.CreateGame.as_view(),
+        name='create-game'
+    ),
+    path(
         'games/mygames/<slug:status>',
-        views.UserGames.as_view(),
+        views.ListUserGames.as_view(),
         name='user-games-by-type'
     ),
     path(
         'games/<slug:status>',
-        views.Games.as_view(),
+        views.ListGames.as_view(),
         name='games-by-type'
     ),
 

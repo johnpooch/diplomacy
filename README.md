@@ -19,4 +19,5 @@ within service container. This builds the initial state of a game.
 
 ### Test Coverage
 
-To see test coverage, run `coverage run manage.py test` from within the container.
+To generate a test coverage report test coverage, run `coverage run manage.py
+test` from within the container. Then run `coverage report` to see the results.

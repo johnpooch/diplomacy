@@ -1,8 +1,8 @@
-from django.db.models import Count, F
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
 from rest_framework import permissions as drf_permissions
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from core import models
@@ -85,10 +85,9 @@ class GameStateView(views.APIView):
         )
 
 
-class Games(generics.ListAPIView):
+class ListGames(generics.ListCreateAPIView):
 
     permission_classes = [drf_permissions.IsAuthenticated]
-
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
 
@@ -104,14 +103,38 @@ class Games(generics.ListAPIView):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        # check if password is correct. check if preferred country is correct.
+        # check if preferred country is needed. check if password is needed.
+        pass
 
 
-class UserGames(Games):
+class ListUserGames(ListGames):
 
     def get(self, request, *args, **kwargs):
         self.queryset = self.queryset.filter(participants=request.user)
         return super().get(request, *args, **kwargs)
+
+
+class CreateGame(views.APIView):
+
+    permission_classes = [drf_permissions.IsAuthenticated]
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'create_game.html'
+
+    def get(self, request, *args, **kwargs):
+        serializer = serializers.GameSerializer()
+        return Response({'serializer': serializer})
+
+    def post(self, request):
+        serializer = serializers.GameSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {'serializer': serializer},
+                status.HTTP_400_BAD_REQUEST,
+            )
+        game = serializer.save(created_by=request.user)
+        game.participants.add(request.user)
+        return redirect('user-games')
 
 
 class OrderView(mixins.ListModelMixin,

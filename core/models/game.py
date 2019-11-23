@@ -43,6 +43,11 @@ class Game(models.Model):
         max_length=50,
         null=False
     )
+    description = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+    )
     status = models.CharField(
         max_length=22,
         choices=GameStatus.CHOICES,

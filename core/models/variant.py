@@ -14,3 +14,6 @@ class Variant(models.Model):
         null=False,
         default=7,
     )
+
+    def __str__(self):
+        return self.name
