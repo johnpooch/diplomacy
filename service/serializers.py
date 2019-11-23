@@ -79,14 +79,14 @@ class GameSerializer(serializers.ModelSerializer):
         )
 
 
-class CommandSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Command
+        model = models.Order
         fields = (
             'id',
-            'order',
             'type',
+            'nation_state',
             'source',
             'piece',
             'target',
@@ -98,7 +98,7 @@ class CommandSerializer(serializers.ModelSerializer):
             'illegal_message',
         )
         read_only_fields = (
-            'order',
+            'nation_state',
             'illegal',
             'illegal_message',
         )

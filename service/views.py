@@ -39,9 +39,9 @@ Game State
 * Get game history
 * Get order history
 
-Orders and commands
-* Add command to order
-* Finalize order
+Orders
+* Add order
+* Finalize orders
 
 Messages and announcements
 * Create message
@@ -112,15 +112,15 @@ class GameList(mixins.ListModelMixin,
         )
 
 
-class CommandView(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  generics.GenericAPIView):
+class OrderView(mixins.ListModelMixin,
+                mixins.CreateModelMixin,
+                generics.GenericAPIView):
 
     # TODO add is participant permission
     permission_classes = [drf_permissions.IsAuthenticated]
 
-    queryset = models.Command.objects.all()
-    serializer_class = serializers.CommandSerializer
+    queryset = models.Order.objects.all()
+    serializer_class = serializers.OrderSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
