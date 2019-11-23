@@ -52,6 +52,19 @@ class DislodgedState:
     )
 
 
+class GameStatus:
+    AWAITING_PARTICIPANTS = 'awaiting participants'
+    PENDING = 'pending'
+    LIVE = 'live'
+    ENDED = 'ended'
+    CHOICES = (
+        (AWAITING_PARTICIPANTS, 'Awaiting Participants'),
+        (PENDING, 'Pending'),
+        (LIVE, 'Live'),
+        (ENDED, 'Ended'),
+    )
+
+
 class Phase:
     ORDER = 'order'
     RETREAT_AND_DISBAND = 'retreat and disband'
@@ -69,6 +82,23 @@ class Season:
     CHOICES = (
         (FALL, 'Fall'),
         (SPRING, 'Spring'),
+    )
+
+
+class DeadlineFrequency:
+    TWELVE_HOURS = 'twelve hours'
+    TWENTY_FOUR_HOURS = 'twenty four hours'
+    TWO_DAYS = 'two days'
+    THREE_DAYS = 'three days'
+    FIVE_DAYS = 'five days'
+    SEVEN_DAYS = 'seven days'
+    CHOICES = (
+        (TWELVE_HOURS, '12 hours'),
+        (TWENTY_FOUR_HOURS, '24 hours'),
+        (TWO_DAYS, '2 days'),
+        (THREE_DAYS, '3 days'),
+        (FIVE_DAYS, '5 days'),
+        (SEVEN_DAYS, '7 days'),
     )
 
 
@@ -94,16 +124,3 @@ class HygenicModel(models.Model):
             self.full_clean()
         except ValidationError as exc:
             raise ValueError(exc) from exc
-
-
-class GameStatus:
-    AWAITING_PARTICIPANTS = 'awaiting participants'
-    PENDING = 'pending'
-    LIVE = 'live'
-    ENDED = 'ended'
-    CHOICES = (
-        (AWAITING_PARTICIPANTS, 'Awaiting Participants'),
-        (PENDING, 'Pending'),
-        (LIVE, 'Live'),
-        (ENDED, 'Ended'),
-    )

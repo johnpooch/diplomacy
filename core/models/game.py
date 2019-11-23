@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from core.models.base import GameStatus
+from core.models.base import GameStatus, DeadlineFrequency
 
 
 class Game(models.Model):
@@ -33,6 +33,24 @@ class Game(models.Model):
     password = models.CharField(
         null=True,
         blank=True,
+        max_length=100,
+    )
+    order_deadline = models.CharField(
+        null=False,
+        choices=DeadlineFrequency.CHOICES,
+        default=DeadlineFrequency.TWENTY_FOUR_HOURS,
+        max_length=100,
+    )
+    retreat_deadline = models.CharField(
+        null=False,
+        choices=DeadlineFrequency.CHOICES,
+        default=DeadlineFrequency.TWENTY_FOUR_HOURS,
+        max_length=100,
+    )
+    build_deadline = models.CharField(
+        null=False,
+        choices=DeadlineFrequency.CHOICES,
+        default=DeadlineFrequency.TWELVE_HOURS,
         max_length=100,
     )
     created_by = models.ForeignKey(
