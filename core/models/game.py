@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.manager import BaseManager
 
-from core.models.base import CountryChoiceMode, GameStatus, DeadlineFrequency
+from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
 
 
 class GameQuerySet(models.QuerySet):
@@ -86,10 +86,10 @@ class Game(models.Model):
     process_on_finalized_orders = models.BooleanField(
         default=True,
     )
-    country_choice_mode = models.CharField(
+    nation_choice_mode = models.CharField(
         null=False,
-        choices=CountryChoiceMode.CHOICES,
-        default=CountryChoiceMode.RANDOM,
+        choices=NationChoiceMode.CHOICES,
+        default=NationChoiceMode.RANDOM,
         max_length=100,
     )
     num_players = models.PositiveIntegerField(

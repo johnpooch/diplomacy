@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
@@ -6,7 +7,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import GameStatus
+from core.models.base import GameStatus, NationChoiceMode
 from service import serializers
 from service import permissions as custom_permissions
 
@@ -85,7 +86,7 @@ class GameStateView(views.APIView):
         )
 
 
-class ListGames(generics.ListCreateAPIView):
+class ListGames(generics.ListAPIView):
 
     permission_classes = [drf_permissions.IsAuthenticated]
     queryset = models.Game.objects.all()
@@ -101,11 +102,6 @@ class ListGames(generics.ListCreateAPIView):
                 self.queryset = self.queryset.filter(status=status)
 
         return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        # check if password is correct. check if preferred country is correct.
-        # check if preferred country is needed. check if password is needed.
-        pass
 
 
 class ListUserGames(ListGames):
@@ -127,12 +123,42 @@ class CreateGame(views.APIView):
 
     def post(self, request):
         serializer = serializers.GameSerializer(data=request.data)
+        print('HERE')
         if not serializer.is_valid():
+            print('INVALID???')
+            print(serializer.validated_data)
             return Response(
                 {'serializer': serializer},
                 status.HTTP_400_BAD_REQUEST,
             )
         game = serializer.save(created_by=request.user)
+        game.participants.add(request.user)
+        return redirect('user-games')
+
+
+class JoinGameForm(forms.Form):
+
+    # TODO test
+    def __init__(self, game, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # if game.private:
+        #     self.fields['password'] = forms.CharField()
+
+        # if game.nation_choice_mode == NationChoiceMode.FIRST_COME:
+        #     self.fields['country'] = forms.ModelChoiceField(
+        #         queryset=game.variant.nations.all()  # TODO filter
+        #     )
+
+
+class JoinGame(views.APIView):
+
+    permission_classes = [drf_permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        game_id = kwargs['game']
+        game = get_object_or_404(models.Game, id=game_id)
+        # join_game_form = JoinGameForm(game, data=request.POST)
         game.participants.add(request.user)
         return redirect('user-games')
 

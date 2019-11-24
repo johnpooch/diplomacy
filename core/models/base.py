@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class CountryChoiceMode:
+class NationChoiceMode:
     RANDOM = 'random'
     PREFERENCE = 'preference'
     FIRST_COME = 'first come'

@@ -29,6 +29,11 @@ urlpatterns = [
         views.ListGames.as_view(),
         name='games-by-type'
     ),
+    path(
+        'game/<int:game>/join',
+        views.JoinGame.as_view(),
+        name='join-game'
+    ),
 
     # GET: game state of current turn
     # path('game/<int:game>', views.GameStateView.as_view()),

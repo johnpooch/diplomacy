@@ -61,7 +61,16 @@ class NationStateSerializer(serializers.ModelSerializer):
         fields = ('nation', 'surrendered', 'surrendered_turn')
 
 
+class VariantSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Variant
+        fields = ('name', 'max_num_players', 'nations')
+
+
 class GameSerializer(serializers.ModelSerializer):
+
+    variant = VariantSerializer()
 
     class Meta:
         model = models.Game
@@ -74,7 +83,7 @@ class GameSerializer(serializers.ModelSerializer):
             'retreat_deadline',
             'build_deadline',
             'process_on_finalized_orders',
-            'country_choice_mode',
+            'nation_choice_mode',
             'num_players',
             'participants',
             'created_at',

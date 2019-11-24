@@ -303,22 +303,37 @@ class TestPostCreateGame(APITestCase):
 
 class TestJoinGame(APITestCase):
 
-    def test_join_game_invalid(self):
+    def test_join_game_valid_no_password_no_country_choice(self):
         """
-        Posting invalid game data causes a 400 error.
+        To join a game with no password and no country requires no post data.
+        The user is added as a participant of the game.
         """
-        pass
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+        game = factories.GameFactory()
 
-    def test_join_game_valid(self):
-        """
-        Posting valid data adds the user as a participant in the game and
-        redirects to `pending-game` view.
-        """
-        pass
+        url = reverse('join-game', args=[game.id])
+        data = {}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, '/api/v1/games/mygames')
+        game.refresh_from_db()
+        self.assertTrue(user in game.participants.all())
 
     def test_join_game_unauthorized(self):
         """
         Cannot join a game when unauthorized.
+        """
+        game = factories.GameFactory()
+        url = reverse('join-game', args=[game.id])
+        data = {}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_join_game_invalid(self):
+        """
+        Posting invalid game data causes a 400 error.
         """
         pass
 
