@@ -16,3 +16,5 @@ tags
 mydatabase
 virtualenv
 project/settings.py
+
+*.pyc
