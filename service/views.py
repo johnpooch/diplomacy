@@ -32,12 +32,6 @@ Users
 * Log out
 * User status (e.g. unread messages, pending orders)
 
-Games
-* Get games (also filters)
-* User's games
-* Create game
-* Join game
-
 Game State
 * Get game state
 * Get game history

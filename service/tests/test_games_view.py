@@ -331,14 +331,27 @@ class TestJoinGame(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_join_game_invalid(self):
+    def test_join_game_wrong_password(self):
         """
-        Posting invalid game data causes a 400 error.
+        Posting incorrect password causes bad request.
+        """
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+        game = factories.GameFactory(private=True, password='testpass')
+
+        url = reverse('join-game', args=[game.id])
+        data = {'password': 'wrongpass'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_join_game_invalid_nation_choice(self):
+        """
+        Posting invalid nation choice causes bad request.
         """
         pass
 
-    def test_join_game_unjoinable(self):
+    def test_join_game_full(self):
         """
-        Cannot join a game when the game is unjoinable.
+        Cannot join a game when the game already enough participants.
         """
         pass
