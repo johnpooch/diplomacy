@@ -1,4 +1,5 @@
 # relationships between territories. Look into observer pattern
+from .piece import Army, Fleet, Piece
 
 
 class Territory:
@@ -6,12 +7,14 @@ class Territory:
     all_territories = []
 
     def __init__(self, id, name, nationality, neighbour_ids):
+        self.__class__.all_territories.append(self)
         self.id = id
         self.name = name
         self.nationality = nationality
         self.neighbour_ids = neighbour_ids
         self._neighbours = []
-        self.__class__.all_territories.append(self)
+        self._piece = None
+        self._piece_cached = False
 
     def __str__(self):
         return self.name
@@ -35,8 +38,44 @@ class Territory:
                     self._neighbours.append(t)
         return self._neighbours
 
+    @property
+    def piece(self):
+        """
+        Gets the `Piece` instance which exists in the territory or `None` if
+        there is no piece in the territory.
+
+        Returns:
+            * `Piece` or `None`
+        """
+        if not self._piece_cached:
+            for p in Piece.all_pieces:
+                if p.territory == self:
+                    self._piece = p
+            self._piece_cached = True
+        return self._piece
+
+    @property
+    def occupied(self):
+        return bool(self.piece)
+
     def adjacent_to(self, territory):
         return territory in self.neighbours
+
+    def occupied_by(self, nation):
+        """
+        Determine whether the territory is occupied by a piece belonging to the given nation
+
+         Args:
+            * `nation` - `str`
+
+        Returns:
+            * `bool`
+
+        """
+        if self.occupied:
+            return self.piece.nation == nation
+
+        return False
 
 
 class LandTerritory(Territory):
@@ -66,9 +105,19 @@ class CoastalTerritory(LandTerritory):
                     self._shared_coasts.append(t)
         return self._shared_coasts
 
+    def shares_coast_with(self, territory):
+        return territory in self.shared_coasts
+
+    @staticmethod
+    def accessible_by_piece_type(piece):
+        return True
+
 
 class InlandTerritory(LandTerritory):
-    pass
+
+    @staticmethod
+    def accessible_by_piece_type(piece):
+        return isinstance(piece, Army)
 
 
 class ComplexTerritory(CoastalTerritory):
@@ -80,4 +129,7 @@ class ComplexTerritory(CoastalTerritory):
 
 
 class SeaTerritory(Territory):
-    pass
+
+    @staticmethod
+    def accessible_by_piece_type(piece):
+        return isinstance(piece, Fleet)

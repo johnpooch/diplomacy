@@ -1,5 +1,8 @@
 class Piece:
+    all_pieces = []
+
     def __init__(self, nation, territory):
+        self.__class__.all_pieces.append(self)
         self.nation = nation
         self.territory = territory
 
