@@ -331,19 +331,6 @@ class TestJoinGame(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_join_game_wrong_password(self):
-        """
-        Posting incorrect password causes bad request.
-        """
-        user = factories.UserFactory()
-        self.client.force_authenticate(user=user)
-        game = factories.GameFactory(private=True, password='testpass')
-
-        url = reverse('join-game', args=[game.id])
-        data = {'password': 'wrongpass'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
     def test_join_game_correct_password(self):
         """
         Posting correct password adds user correctly.
@@ -358,6 +345,23 @@ class TestJoinGame(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         game.refresh_from_db()
         self.assertTrue(user in game.participants.all())
+
+    def test_join_game_wrong_password(self):
+        """
+        Posting incorrect password causes bad request.
+        """
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+        game = factories.GameFactory(private=True, password='testpass')
+
+        url = reverse('join-game', args=[game.id])
+        data = {'password': 'wrongpass'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data['errors'],
+            {'password': ['Incorrect password.']}
+        )
 
     def test_join_game_valid_nation_choice(self):
         """
@@ -385,7 +389,7 @@ class TestJoinGame(APITestCase):
         game = factories.GameFactory(
             nation_choice_mode=NationChoiceMode.FIRST_COME
         )
-        nation = factories.NationFactory()
+        factories.NationFactory()
 
         self.client.force_authenticate(user=user)
 
@@ -393,9 +397,49 @@ class TestJoinGame(APITestCase):
         data = {'nation_id': 300}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data['errors'],
+            {'nation_id': ['Invalid nation selected.']}
+        )
 
     def test_join_game_full(self):
         """
         Cannot join a game when the game already has enough participants.
         """
-        pass
+        joined_user = factories.UserFactory()
+        joining_user = factories.UserFactory()
+        game = factories.GameFactory(
+            participants=(joined_user,),
+            num_players=1,
+        )
+
+        self.client.force_authenticate(user=joining_user)
+
+        url = reverse('join-game', args=[game.id])
+        data = {}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data['errors'],
+            {'status': ['Cannot join game.']}
+        )
+
+    def test_join_game_ended(self):
+        """
+        Cannot join a game when the game already has ended.
+        """
+        user = factories.UserFactory()
+        game = factories.GameFactory(
+            status=GameStatus.ENDED,
+        )
+
+        self.client.force_authenticate(user=user)
+
+        url = reverse('join-game', args=[game.id])
+        data = {}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.data['errors'],
+            {'status': ['Cannot join game.']}
+        )

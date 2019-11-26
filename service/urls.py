@@ -30,7 +30,7 @@ urlpatterns = [
         name='games-by-type'
     ),
     path(
-        'game/<int:game>/join',
+        'games/<int:game>/join',
         views.JoinGame.as_view(),
         name='join-game'
     ),

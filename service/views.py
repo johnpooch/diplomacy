@@ -132,10 +132,18 @@ class JoinGame(views.APIView):
         game_id = kwargs['game']
         game = get_object_or_404(models.Game, id=game_id)
         join_game_form = forms.JoinGameForm(game, data=request.data)
+        if not game.joinable:
+            return Response(
+                {'errors': {'status': ['Cannot join game.']}},
+                status.HTTP_400_BAD_REQUEST,
+            )
         if join_game_form.is_valid():
             game.participants.add(request.user)
             return redirect('user-games')
-        return Response({}, status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {'errors': join_game_form.errors},
+            status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class OrderView(mixins.ListModelMixin,

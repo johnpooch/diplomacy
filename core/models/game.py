@@ -109,6 +109,29 @@ class Game(models.Model):
     class Meta:
         db_table = "game"
 
+    @property
+    def ended(self):
+        """
+        Shortcut to determine whether the game has ended.
+
+        Returns:
+            * `bool`
+        """
+        # TODO test
+        return self.status == GameStatus.ENDED
+
+    @property
+    def joinable(self):
+        """
+        A game is joinable when the number of participants is fewer than the
+        `num_players` value.
+
+        Returns:
+            * `bool`
+        """
+        # TODO test
+        return self.participants.count() < self.num_players and not self.ended
+
     def get_current_turn(self):
         """
         Gets the related ``Turn`` where ``current_turn`` is ``True``.
