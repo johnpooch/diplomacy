@@ -15,4 +15,5 @@ tags
 
 mydatabase
 virtualenv
+venv
 project/settings.py

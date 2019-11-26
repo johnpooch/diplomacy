@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 
 from core import factories
 from core import models
-from core.models.base import GameStatus
+from core.models.base import GameStatus, NationChoiceMode
 from service.serializers import GameSerializer
 
 
@@ -99,7 +99,7 @@ class TestGetGames(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class TestGetJoinableGames(APITestCase):
+class TestJoinableGames(APITestCase):
 
     def test_joinable_gets_games_that_need_participants(self):
         """
@@ -277,7 +277,7 @@ class TestPostCreateGame(APITestCase):
 
         data = {
             'name': 'Test Game',
-            'variant': variant.id,
+            'variant_id': variant.id,
             'num_players': 7,
         }
         url = reverse('create-game')
@@ -344,14 +344,58 @@ class TestJoinGame(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_join_game_correct_password(self):
+        """
+        Posting correct password adds user correctly.
+        """
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+        game = factories.GameFactory(private=True, password='testpass')
+
+        url = reverse('join-game', args=[game.id])
+        data = {'password': 'testpass'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        game.refresh_from_db()
+        self.assertTrue(user in game.participants.all())
+
+    def test_join_game_valid_nation_choice(self):
+        """
+        Posting valid nation choice causes the user to be added correctly
+        """
+        user = factories.UserFactory()
+        game = factories.GameFactory(
+            nation_choice_mode=NationChoiceMode.FIRST_COME
+        )
+        nation = factories.NationFactory()
+        self.client.force_authenticate(user=user)
+
+        url = reverse('join-game', args=[game.id])
+        data = {'nation_id': nation.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        game.refresh_from_db()
+        self.assertTrue(user in game.participants.all())
+
     def test_join_game_invalid_nation_choice(self):
         """
         Posting invalid nation choice causes bad request.
         """
-        pass
+        user = factories.UserFactory()
+        game = factories.GameFactory(
+            nation_choice_mode=NationChoiceMode.FIRST_COME
+        )
+        nation = factories.NationFactory()
+
+        self.client.force_authenticate(user=user)
+
+        url = reverse('join-game', args=[game.id])
+        data = {'nation_id': 300}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_join_game_full(self):
         """
-        Cannot join a game when the game already enough participants.
+        Cannot join a game when the game already has enough participants.
         """
         pass

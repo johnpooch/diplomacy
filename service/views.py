@@ -1,4 +1,3 @@
-from django import forms
 from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
@@ -7,9 +6,8 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import GameStatus, NationChoiceMode
 from service import serializers
-from service import permissions as custom_permissions
+from service import forms
 
 from rest_framework.exceptions import NotFound
 
@@ -20,7 +18,7 @@ def error404():
 
 # TODO all views need to be refactored using django rest mixins etc.
 
-# TODO stub out all the views and urls before writing any more code. Also write
+# TODO stub out all the views and urls before writing any more code. Also
 # these views using TDD.
 
 # TODO ignore permissions at first. Add them in after the basic views are done.
@@ -65,11 +63,11 @@ class GameStateView(views.APIView):
             turn = get_object_or_404(models.Turn, id=turn_id)
 
         territory_states = models.TerritoryState.objects.filter(turn=turn)
-        territory_states_serializer = serializers\
+        territory_states_serializer = serializers \
             .TerritoryStateSerializer(territory_states, many=True)
 
         nation_states = models.NationState.objects.filter(turn=turn)
-        nation_states_serializer = serializers\
+        nation_states_serializer = serializers \
             .NationStateSerializer(nation_states, many=True)
 
         return Response(
@@ -81,7 +79,6 @@ class GameStateView(views.APIView):
 
 
 class ListGames(generics.ListAPIView):
-
     permission_classes = [drf_permissions.IsAuthenticated]
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
@@ -117,10 +114,7 @@ class CreateGame(views.APIView):
 
     def post(self, request):
         serializer = serializers.GameSerializer(data=request.data)
-        print('HERE')
         if not serializer.is_valid():
-            print('INVALID???')
-            print(serializer.validated_data)
             return Response(
                 {'serializer': serializer},
                 status.HTTP_400_BAD_REQUEST,
@@ -130,21 +124,6 @@ class CreateGame(views.APIView):
         return redirect('user-games')
 
 
-class JoinGameForm(forms.Form):
-
-    # TODO test
-    def __init__(self, game, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # if game.private:
-        #     self.fields['password'] = forms.CharField()
-
-        # if game.nation_choice_mode == NationChoiceMode.FIRST_COME:
-        #     self.fields['country'] = forms.ModelChoiceField(
-        #         queryset=game.variant.nations.all()  # TODO filter
-        #     )
-
-
 class JoinGame(views.APIView):
 
     permission_classes = [drf_permissions.IsAuthenticated]
@@ -152,9 +131,11 @@ class JoinGame(views.APIView):
     def post(self, request, *args, **kwargs):
         game_id = kwargs['game']
         game = get_object_or_404(models.Game, id=game_id)
-        # join_game_form = JoinGameForm(game, data=request.POST)
-        game.participants.add(request.user)
-        return redirect('user-games')
+        join_game_form = forms.JoinGameForm(game, data=request.data)
+        if join_game_form.is_valid():
+            game.participants.add(request.user)
+            return redirect('user-games')
+        return Response({}, status.HTTP_400_BAD_REQUEST)
 
 
 class OrderView(mixins.ListModelMixin,

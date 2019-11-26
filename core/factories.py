@@ -14,6 +14,15 @@ class VariantFactory(DjangoModelFactory):
     name = 'standard'
 
 
+class NationFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.Nation
+
+    name = 'Test Nation'
+    variant = factory.SubFactory(VariantFactory)
+
+
 class UserFactory(DjangoModelFactory):
 
     class Meta:

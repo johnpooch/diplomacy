@@ -70,13 +70,18 @@ class VariantSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
-    variant = VariantSerializer()
+    variant = VariantSerializer(read_only=True)
+    variant_id = serializers.PrimaryKeyRelatedField(
+        source='variant',
+        queryset=models.Variant.objects.all(),
+    )
 
     class Meta:
         model = models.Game
         fields = (
             'name',
             'variant',
+            'variant_id',
             'private',
             'password',
             'order_deadline',
