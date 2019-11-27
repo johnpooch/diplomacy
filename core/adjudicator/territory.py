@@ -1,10 +1,9 @@
 # relationships between territories. Look into observer pattern
+from . import all_territories
 from .piece import Army, Fleet, Piece
 
 
 class Territory:
-
-    all_territories = []
 
     def __init__(self, id, name, neighbour_ids):
         self.__class__.all_territories.append(self)

@@ -1,7 +1,33 @@
+from .piece import  Piece
+
 class Order:
+
+    all_orders = []
+
     def __init__(self, nation, source):
+        self.__class__.all_orders.append(self)
         self.nation = nation
         self.source = source
+        self._piece = None
+        self._piece_cached = False
+
+
+    @property
+    def piece(self):
+        """
+        Gets the `Piece` instance which exists in `self.source` or `None` if
+        there is no piece in the territory.
+
+        Returns:
+            * `Piece` or `None`
+        """
+        if not self._piece_cached:
+            for p in Piece.all_pieces:
+                if p.territory == self.source:
+                    self._piece = p
+            self._piece_cached = True
+        return self._piece
+
 
 
 class Hold(Order):

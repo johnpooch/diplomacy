@@ -1,3 +1,6 @@
+from .order import Hold, Order
+
+
 class Piece:
     all_pieces = []
 
@@ -5,6 +8,24 @@ class Piece:
         self.__class__.all_pieces.append(self)
         self.nation = nation
         self.territory = territory
+        self._order = None
+
+    @property
+    def order(self):
+        """
+        Gets the `Order` which is assigned to this piece.
+        Returns:
+            * `Order`
+        """
+
+        if not self._order:
+            for o in Order.all_orders:
+                if o.source == self.territory:
+                    self._order = o
+            if not self._order:
+                self._order = Hold(self.nation, self.territory)
+
+        return self._order
 
 
 class Army(Piece):
