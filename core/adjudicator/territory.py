@@ -6,11 +6,10 @@ class Territory:
 
     all_territories = []
 
-    def __init__(self, id, name, nationality, neighbour_ids):
+    def __init__(self, id, name, neighbour_ids):
         self.__class__.all_territories.append(self)
         self.id = id
         self.name = name
-        self.nationality = nationality
         self.neighbour_ids = neighbour_ids
         self._neighbours = []
         self._piece = None
@@ -79,7 +78,12 @@ class Territory:
 
 
 class LandTerritory(Territory):
-    pass
+
+    def __init__(self, id, name, nationality, neighbour_ids,
+                 supply_center=False):
+        super().__init__(id, name, neighbour_ids)
+        self.nationality = nationality
+        self.supply_center = supply_center
 
 
 class CoastalTerritory(LandTerritory):
