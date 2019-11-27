@@ -27,6 +27,12 @@ class Turn(models.Model):
 
     class Meta:
         db_table = "turn"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['game', 'year', 'season', 'phase'],
+                name='unique_phase_per_game,'
+            )
+        ]
 
     def __str__(self):
         return " ".join([

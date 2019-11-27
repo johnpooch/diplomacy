@@ -6,6 +6,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from core import models
+from core.models.base import GameStatus
 from service import serializers
 from service import forms
 
@@ -47,38 +48,32 @@ Messages and announcements
 
 class GameStateView(views.APIView):
 
+    permission_classes = [drf_permissions.IsAuthenticated]
+
     def get(self, request, format=None, **kwargs):
         """
-        Provides the data necessary to render the game board state at the given
-        turn.
+        Returns the state of the game for each turn that has taken place as
+        well as the current turn.
         """
         game_id = kwargs['game']
-        turn_id = kwargs.get('turn')
+        states = [GameStatus.ENDED, GameStatus.ACTIVE]
+        game = get_object_or_404(models.Game, id=game_id, status__in=states)
 
-        game = get_object_or_404(models.Game, id=game_id)
-
-        if not turn_id:
-            turn = game.get_current_turn()
-        else:
-            turn = get_object_or_404(models.Turn, id=turn_id)
-
-        territory_states = models.TerritoryState.objects.filter(turn=turn)
+        territory_states = models.TerritoryState.objects.filter(turn__game=game)
         territory_states_serializer = serializers \
             .TerritoryStateSerializer(territory_states, many=True)
 
-        nation_states = models.NationState.objects.filter(turn=turn)
+        nation_states = models.NationState.objects.filter(turn__game=game)
         nation_states_serializer = serializers \
             .NationStateSerializer(nation_states, many=True)
 
-        return Response(
-            {
-                'territory_states': territory_states_serializer.data,
-                'nation_states': nation_states_serializer.data,
-            }
-        )
+        game_state_serializer = serializers.GameStateSerializer(game)
+
+        return Response(game_state_serializer.data)
 
 
 class ListGames(generics.ListAPIView):
+
     permission_classes = [drf_permissions.IsAuthenticated]
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer

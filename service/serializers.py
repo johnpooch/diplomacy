@@ -65,7 +65,10 @@ class VariantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Variant
-        fields = ('name', 'max_num_players', 'nations')
+        fields = (
+            'id',
+            'name',
+        )
 
 
 class GameSerializer(serializers.ModelSerializer):
@@ -79,6 +82,7 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
         fields = (
+            'id',
             'name',
             'variant',
             'variant_id',
@@ -96,6 +100,7 @@ class GameSerializer(serializers.ModelSerializer):
             'status',
         )
         read_only_fields = (
+            'id',
             'participants',
             'created_by',
             'created_at',
@@ -125,4 +130,36 @@ class OrderSerializer(serializers.ModelSerializer):
             'nation_state',
             'illegal',
             'illegal_message',
+        )
+
+
+class TurnSerializer(serializers.ModelSerializer):
+
+    territories = TerritoryStateSerializer(many=True, source='territorystates')
+    nations = NationStateSerializer(many=True, source='nationstates')
+
+    class Meta:
+        model = models.Turn
+        fields = (
+            'id',
+            'year',
+            'season',
+            'phase',
+            'territories',
+            'nations',
+        )
+
+
+class GameStateSerializer(serializers.ModelSerializer):
+
+    turns = TurnSerializer(many=True)
+    variant = VariantSerializer()
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'turns',
+            'variant',
         )

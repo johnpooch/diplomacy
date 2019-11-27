@@ -176,7 +176,7 @@ class PerTurnModel(models.Model):
     turn = models.ForeignKey(
         'Turn',
         null=False,
-        related_name='%(class)s_states',
+        related_name='%(class)ss',
         on_delete=models.CASCADE,
     )
 

@@ -4,6 +4,7 @@ from factory.django import DjangoModelFactory
 from django.contrib.auth.models import User
 
 from core import models
+from core.models.base import Phase, Season
 
 
 class VariantFactory(DjangoModelFactory):
@@ -30,6 +31,33 @@ class UserFactory(DjangoModelFactory):
         django_get_or_create = ('username',)
 
     username = 'test user'
+
+
+class TerritoryFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.Territory
+
+    name = 'Test Territory'
+    controlled_by_initial = factory.SubFactory(NationFactory)
+    nationality = factory.SubFactory(NationFactory)
+    variant = factory.SubFactory(VariantFactory)
+
+
+class TerritoryStateFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.TerritoryState
+
+
+class TurnFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.Turn
+
+    year = '1900'
+    season = Season.SPRING
+    phase = Phase.ORDER
 
 
 class GameFactory(DjangoModelFactory):

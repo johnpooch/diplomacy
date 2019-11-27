@@ -34,9 +34,11 @@ urlpatterns = [
         views.JoinGame.as_view(),
         name='join-game'
     ),
-
-    # GET: game state of current turn
-    # path('game/<int:game>', views.GameStateView.as_view()),
+    path(
+        'game/<int:game>',
+        views.GameStateView.as_view(),
+        name='game-state'
+    ),
     # # create command
     # path(
     #     'game/<int:game>/command',
