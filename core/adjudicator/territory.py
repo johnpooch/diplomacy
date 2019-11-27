@@ -1,12 +1,13 @@
 # relationships between territories. Look into observer pattern
-from . import all_territories
-from .piece import Army, Fleet, Piece
+from .state import state
+
+from .piece import Army, Fleet
 
 
 class Territory:
 
     def __init__(self, id, name, neighbour_ids):
-        self.__class__.all_territories.append(self)
+        state.all_territories.append(self)
         self.id = id
         self.name = name
         self.neighbour_ids = neighbour_ids
@@ -31,7 +32,7 @@ class Territory:
             * A list of `Territory` instances.
         """
         if not self._neighbours:
-            for t in self.__class__.all_territories:
+            for t in state.all_territories:
                 if t.id in self.neighbour_ids:
                     self._neighbours.append(t)
         return self._neighbours
@@ -46,7 +47,7 @@ class Territory:
             * `Piece` or `None`
         """
         if not self._piece_cached:
-            for p in Piece.all_pieces:
+            for p in state.all_pieces:
                 if p.territory == self:
                     self._piece = p
             self._piece_cached = True
@@ -103,7 +104,7 @@ class CoastalTerritory(LandTerritory):
             * A list of `Territory` instances.
         """
         if not self._shared_coasts:
-            for t in self.__class__.all_territories:
+            for t in state.all_territories:
                 if t.id in self.shared_coast_ids:
                     self._shared_coasts.append(t)
         return self._shared_coasts

@@ -1,4 +1,5 @@
 import unittest
+from core.adjudicator.state import state
 from core.adjudicator.order import Hold, Order
 from core.adjudicator.piece import Army
 from core.adjudicator.territory import CoastalTerritory
@@ -6,7 +7,7 @@ from core.adjudicator.territory import CoastalTerritory
 
 class OrderTestCase(unittest.TestCase):
     def setUp(self):
-        Order.all_territories = []
+        state.__init__()
 
 
 class TestPiece(OrderTestCase):

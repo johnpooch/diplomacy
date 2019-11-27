@@ -1,16 +1,14 @@
-from .piece import  Piece
+from .state import state
+
 
 class Order:
 
-    all_orders = []
-
     def __init__(self, nation, source):
-        self.__class__.all_orders.append(self)
+        state.all_orders.append(self)
         self.nation = nation
         self.source = source
         self._piece = None
         self._piece_cached = False
-
 
     @property
     def piece(self):
@@ -22,12 +20,11 @@ class Order:
             * `Piece` or `None`
         """
         if not self._piece_cached:
-            for p in Piece.all_pieces:
+            for p in state.all_pieces:
                 if p.territory == self.source:
                     self._piece = p
             self._piece_cached = True
         return self._piece
-
 
 
 class Hold(Order):

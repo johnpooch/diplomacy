@@ -1,11 +1,12 @@
-from .order import Hold, Order
+from .state import state
+from .order import Hold
 
 
 class Piece:
     all_pieces = []
 
     def __init__(self, nation, territory):
-        self.__class__.all_pieces.append(self)
+        state.all_pieces.append(self)
         self.nation = nation
         self.territory = territory
         self._order = None
@@ -19,7 +20,7 @@ class Piece:
         """
 
         if not self._order:
-            for o in Order.all_orders:
+            for o in state.all_orders:
                 if o.source == self.territory:
                     self._order = o
             if not self._order:

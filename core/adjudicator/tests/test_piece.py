@@ -1,12 +1,13 @@
 import unittest
-from core.adjudicator.order import Hold, Move
+from core.adjudicator.state import state
+from core.adjudicator.order import Move
 from core.adjudicator.piece import Piece, Army
 from core.adjudicator.territory import CoastalTerritory
 
 
 class PieceTestCase(unittest.TestCase):
     def setUp(self):
-        Piece.all_orders = []
+        state.__init__()
 
 
 class TestOrder(PieceTestCase):

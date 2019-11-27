@@ -1,12 +1,13 @@
 
 import unittest
+from core.adjudicator.state import state
 from core.adjudicator.territory import CoastalTerritory, Territory, SeaTerritory, InlandTerritory
 from core.adjudicator.piece import Army, Fleet
 
 
 class TerritoryTestCase(unittest.TestCase):
     def setUp(self):
-        Territory.all_territories = []
+        state.__init__()
 
 
 class TestString(TerritoryTestCase):
