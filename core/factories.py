@@ -7,13 +7,16 @@ from django.template.defaultfilters import slugify
 
 from core import models
 from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
-from core.utils.data import get_territory_data
-
+from core.utils.data import get_fixture_data
 
 fake = Faker()
 
-class VariantFactory(DjangoModelFactory):
+nation_data = get_fixture_data('nations.json')
+piece_data = get_fixture_data('pieces.json')
+territory_data = get_fixture_data('territories.json')
 
+
+class VariantFactory(DjangoModelFactory):
     class Meta:
         model = models.Variant
 
@@ -21,7 +24,6 @@ class VariantFactory(DjangoModelFactory):
 
 
 class NationFactory(DjangoModelFactory):
-
     class Meta:
         model = models.Nation
 
@@ -30,19 +32,18 @@ class NationFactory(DjangoModelFactory):
 
 
 class UserFactory(DjangoModelFactory):
-
     class Meta:
         model = User
         django_get_or_create = ('username',)
 
     first_name = lazy_attribute(lambda o: fake.first_name())
     last_name = lazy_attribute(lambda o: fake.last_name())
-    username = lazy_attribute(lambda o: slugify(o.first_name + '.' + o.last_name))
+    username = lazy_attribute(
+        lambda o: slugify(o.first_name + '.' + o.last_name))
     email = lazy_attribute(lambda o: o.username + "@example.com")
 
 
-class ArmyFactory(DjangoModelFactory):
-
+class PieceFactory(DjangoModelFactory):
     class Meta:
         model = models.Piece
 
@@ -51,7 +52,6 @@ class ArmyFactory(DjangoModelFactory):
 
 
 class OrderFactory(DjangoModelFactory):
-
     class Meta:
         model = models.Order
 
@@ -60,7 +60,6 @@ class OrderFactory(DjangoModelFactory):
 
 
 class TerritoryFactory(DjangoModelFactory):
-
     class Meta:
         model = models.Territory
 
@@ -71,13 +70,11 @@ class TerritoryFactory(DjangoModelFactory):
 
 
 class TerritoryStateFactory(DjangoModelFactory):
-
     class Meta:
         model = models.TerritoryState
 
 
 class TurnFactory(DjangoModelFactory):
-
     class Meta:
         model = models.Turn
 
@@ -87,7 +84,6 @@ class TurnFactory(DjangoModelFactory):
 
 
 class GameFactory(DjangoModelFactory):
-
     class Meta:
         model = models.Game
 
@@ -108,32 +104,63 @@ class GameFactory(DjangoModelFactory):
                 self.participants.add(participant)
 
 
+class StandardTerritoryFactory(DjangoModelFactory):
+    class Meta:
+        model = models.Territory
+        django_get_or_create = ('name',)
+
+    name = 'Test Territory'
+    controlled_by_initial = factory.SubFactory(NationFactory)
+    nationality = factory.SubFactory(NationFactory)
+    variant = factory.SubFactory(VariantFactory)
+
+
+class StandardNationFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.Nation
+        django_get_or_create = ('name',)
+
+    name = 'Test Nation'
+
+    @post_generation
+    def territories(self, create, count, **kwargs):
+        make_territory = getattr(StandardTerritoryFactory,
+                                 'create' if create else 'build')
+        nation = [n for n in nation_data if n['fields']['name'] == self.name][0]
+        nation_territories = [t for t in territory_data
+                              if t['fields']['controlled_by_initial'] == nation['pk']]
+        territories = [make_territory(
+            variant=self.variant,
+            name=territory['fields']['name'],
+            controlled_by_initial=self,
+        ) for territory in nation_territories]
+
+        if not create:
+            self._prefetched_objects_cache = {'territories': territories}
+
+
 class StandardVariantFactory(DjangoModelFactory):
-    """
-    Creates the standard variant and the territories of that variant.
-    """
+
     class Meta:
         model = models.Variant
 
     name = 'standard'
 
     @post_generation
-    def territories(self, create, count, **kwargs):
-        make_territory = getattr(TerritoryFactory, 'create' if create else 'build')
-        territory_data = get_territory_data()
-        territories = [make_territory(
+    def nations(self, create, *args, **kwargs):
+        make_nation = getattr(StandardNationFactory, 'create' if create else 'build')
+        nations = [make_nation(
             variant=self,
-            name=territory['fields']['name'],
-        ) for territory in territory_data]
+            name=nation['fields']['name'],
+        ) for nation in nation_data]
 
         if not create:
-            self._prefetched_objects_cache = {'territories': territories}
+            self._prefetched_objects_cache = {'nations': nations}
 
 
 class StandardTurnFactory(DjangoModelFactory):
-    """
-    Creates a turn in the the standard diplomacy variant.
-    """
+
     class Meta:
         model = models.Turn
 
@@ -158,13 +185,34 @@ class StandardTurnFactory(DjangoModelFactory):
         ]
 
         if not create:
-            self._prefetched_objects_cache = {'territorystates': territorystates}
+            self._prefetched_objects_cache = {
+                'territorystates': territorystates}
+
+    @post_generation
+    def pieces(self, create, *args, **kwargs):
+        make_piece = getattr(
+            PieceFactory,
+            'create' if create else 'build',
+        )
+        pieces = []
+        for piece in piece_data:
+            territory = [t for t in territory_data
+                         if t['pk'] == piece['fields']['territory']][0]
+            p = make_piece(
+                turn=self,
+                territory=factory.SubFactory(TerritoryFactory, name=territory['fields']['name']),
+                type=piece['fields']['type'],
+            )
+            pieces.append(p)
+
+        if not create:
+            self._prefetched_objects_cache = {
+                'pieces': pieces}
+
 
 
 class StandardGameFactory(DjangoModelFactory):
-    """
-    Creates the initial state of a standard game of diplomacy.
-    """
+
     class Meta:
         model = models.Game
 
@@ -181,7 +229,8 @@ class StandardGameFactory(DjangoModelFactory):
         if count is None:
             count = 1
 
-        make_turn = getattr(StandardTurnFactory, 'create' if create else 'build')
+        make_turn = getattr(StandardTurnFactory,
+                            'create' if create else 'build')
         turns = [make_turn(game=self) for i in range(count)]
 
         if not create:

@@ -3,10 +3,13 @@ import json
 from django.conf import settings
 
 
-def get_territory_data():
+def get_fixture_data(file_name):
     """
-    Converts territory json fixture into python dict.
+    Converts json fixtures into python dict.
+
+    Args:
+        * `file_name` - `str` - the name of the file e.g. 'nation.json'
     """
-    with open(settings.BASE_DIR + '/fixtures/territories.json', 'r') as f:
+    with open(settings.BASE_DIR + '/fixtures/' + file_name, 'r') as f:
         data=f.read()
     return json.loads(data)

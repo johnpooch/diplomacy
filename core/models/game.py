@@ -44,7 +44,7 @@ class Game(models.Model):
         null=False
     )
     description = models.CharField(
-        max_length=100,
+        max_length=1000,
         null=True,
         blank=True,
     )

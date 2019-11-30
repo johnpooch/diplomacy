@@ -113,8 +113,8 @@ class Territory(models.Model, HoldStrength):
         land territories.
         """
         if piece.type == PieceType.ARMY:
-            return self.type == self.TerritoryType.LAND
-        return (self.type == self.TerritoryType.SEA) or self.coastal
+            return self.type == TerritoryType.LAND
+        return (self.type == TerritoryType.SEA) or self.coastal
 
     def has_supply_center(self):
         try:
@@ -124,11 +124,11 @@ class Territory(models.Model, HoldStrength):
 
     @property
     def is_land(self):
-        return self.type == self.TerritoryType.LAND
+        return self.type == TerritoryType.LAND
 
     @property
     def is_sea(self):
-        return self.type == self.TerritoryType.SEA
+        return self.type == TerritoryType.SEA
 
     @property
     def is_inland(self):
