@@ -16,4 +16,4 @@ tags
 mydatabase
 virtualenv
 venv
-project/settings.py
+project/settings/local.py
