@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
-from rest_framework import permissions as drf_permissions
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
@@ -9,6 +8,7 @@ from core import models
 from core.models.base import GameStatus
 from service import serializers
 from service import forms
+from service.permissions import IsAuthenticated
 
 from rest_framework.exceptions import NotFound
 
@@ -48,7 +48,7 @@ Messages and announcements
 
 class GameStateView(views.APIView):
 
-    permission_classes = [drf_permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, **kwargs):
         """
@@ -66,7 +66,7 @@ class GameStateView(views.APIView):
 
 class ListGames(generics.ListAPIView):
 
-    permission_classes = [drf_permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
 
@@ -91,7 +91,7 @@ class ListUserGames(ListGames):
 
 class CreateGame(views.APIView):
 
-    permission_classes = [drf_permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'create_game.html'
 
@@ -113,7 +113,7 @@ class CreateGame(views.APIView):
 
 class JoinGame(views.APIView):
 
-    permission_classes = [drf_permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         game_id = kwargs['game']
@@ -138,7 +138,7 @@ class OrderView(mixins.ListModelMixin,
                 generics.GenericAPIView):
 
     # TODO add is participant permission
-    permission_classes = [drf_permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
