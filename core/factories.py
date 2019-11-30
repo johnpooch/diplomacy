@@ -98,3 +98,6 @@ class GameFactory(DjangoModelFactory):
             # A list of participants were passed in, use them
             for participant in extracted:
                 self.participants.add(participant)
+
+
+class StandardGameFactory(DjangoModelFactory):
