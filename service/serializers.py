@@ -61,11 +61,14 @@ class NationStateSerializer(serializers.ModelSerializer):
 
 class VariantSerializer(serializers.ModelSerializer):
 
+    territories = TerritorySerializer(many=True)
+
     class Meta:
         model = models.Variant
         fields = (
             'id',
             'name',
+            'territories',
         )
 
 
