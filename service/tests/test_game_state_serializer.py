@@ -11,4 +11,7 @@ class TestGameStateSerializer(TestCase):
     def test_game_state(self):
         game = factories.StandardGameFactory()
         serializer = GameStateSerializer(game)
-        pprint(serializer.data)
+        # NOTE printing this here is a handy way of quickly checking what
+        # the reponse data looks like
+
+        # pprint(serializer.data)
