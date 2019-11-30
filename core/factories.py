@@ -14,6 +14,7 @@ fake = Faker()
 nation_data = get_fixture_data('nations.json')
 piece_data = get_fixture_data('pieces.json')
 territory_data = get_fixture_data('territories.json')
+supply_center_data = get_fixture_data('supply_centers.json')
 
 
 class VariantFactory(DjangoModelFactory):
@@ -69,6 +70,11 @@ class TerritoryFactory(DjangoModelFactory):
     variant = factory.SubFactory(VariantFactory)
 
 
+class NationStateFactory(DjangoModelFactory):
+    class Meta:
+        model = models.NationState
+
+
 class TerritoryStateFactory(DjangoModelFactory):
     class Meta:
         model = models.TerritoryState
@@ -99,7 +105,6 @@ class GameFactory(DjangoModelFactory):
             return
 
         if extracted:
-            # A list of participants were passed in, use them
             for participant in extracted:
                 self.participants.add(participant)
 
@@ -130,11 +135,20 @@ class StandardNationFactory(DjangoModelFactory):
         nation = [n for n in nation_data if n['fields']['name'] == self.name][0]
         nation_territories = [t for t in territory_data
                               if t['fields']['controlled_by_initial'] == nation['pk']]
-        territories = [make_territory(
-            variant=self.variant,
-            name=territory['fields']['name'],
-            controlled_by_initial=self,
-        ) for territory in nation_territories]
+        territories = []
+        for territory in nation_territories:
+            supply_pks = [s['fields']['territory'] for s in supply_center_data]
+            supply_center = territory['pk'] in supply_pks
+
+            territories.append(
+                make_territory(
+                    variant=self.variant,
+                    name=territory['fields']['name'],
+                    controlled_by_initial=self,
+                    nationality=self,
+                    supply_center=supply_center,
+                )
+            )
 
         if not create:
             self._prefetched_objects_cache = {'territories': territories}
@@ -189,6 +203,25 @@ class StandardTurnFactory(DjangoModelFactory):
                 'territorystates': territorystates}
 
     @post_generation
+    def nationstates(self, create, *args, **kwargs):
+        variant = self.game.variant
+        make_nation_state = getattr(
+            NationStateFactory,
+            'create' if create else 'build',
+        )
+        nationstates = [
+            make_nation_state(
+                turn=self,
+                nation=nation,
+            )
+            for nation in variant.nations.all()
+        ]
+
+        if not create:
+            self._prefetched_objects_cache = {
+                'nationstates': nationstates}
+
+    @post_generation
     def pieces(self, create, *args, **kwargs):
         make_piece = getattr(
             PieceFactory,
@@ -200,7 +233,10 @@ class StandardTurnFactory(DjangoModelFactory):
                          if t['pk'] == piece['fields']['territory']][0]
             p = make_piece(
                 turn=self,
-                territory=factory.SubFactory(TerritoryFactory, name=territory['fields']['name']),
+                territory=factory.SubFactory(
+                    TerritoryFactory,
+                    name=territory['fields']['name']
+                ),
                 type=piece['fields']['type'],
             )
             pieces.append(p)
@@ -208,7 +244,6 @@ class StandardTurnFactory(DjangoModelFactory):
         if not create:
             self._prefetched_objects_cache = {
                 'pieces': pieces}
-
 
 
 class StandardGameFactory(DjangoModelFactory):

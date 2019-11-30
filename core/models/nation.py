@@ -46,7 +46,7 @@ class NationState(PerTurnModel):
         on_delete=models.CASCADE,
     )
     orders_finalized = models.BooleanField(
-        default=True,
+        default=False,
     )
     surrendered = models.BooleanField(
         default=False,

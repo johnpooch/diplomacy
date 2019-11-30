@@ -51,6 +51,14 @@ class Territory(models.Model, HoldStrength):
     coastal = models.BooleanField(
         default=False,
     )
+    supply_center = models.BooleanField(
+       default=False,
+    )
+    initial_piece_type = models.CharField(
+        max_length=50,
+        null=False,
+        choices=PieceType.CHOICES,
+    )
 
     class Meta:
         db_table = "territory"

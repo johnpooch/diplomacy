@@ -2,13 +2,6 @@ from core import models
 from rest_framework import serializers
 
 
-class SupplyCenterSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.SupplyCenter
-        fields = '__all__'
-
-
 class PieceSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -27,14 +20,18 @@ class TerritorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Territory
-        fields = ('id', 'name')
+        fields = (
+            'id',
+            'name',
+            'supply_center',
+        )
 
 
 class TerritoryStateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.TerritoryState
-        fields = ('territory', 'controlled_by')
+        fields = ('territory', 'controlled_by',)
 
 
 class NationSerializer(serializers.ModelSerializer):
@@ -46,9 +43,16 @@ class NationSerializer(serializers.ModelSerializer):
 
 class NationStateSerializer(serializers.ModelSerializer):
 
+# TODO player should only see this for own nation
+
     class Meta:
         model = models.NationState
-        fields = ('nation', 'surrendered', 'surrendered_turn')
+        fields = (
+            'user',
+            'nation',
+            'surrendered',
+            'orders_finalized'
+        )
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -134,6 +138,7 @@ class TurnSerializer(serializers.ModelSerializer):
         model = models.Turn
         fields = (
             'id',
+            'current_turn',
             'year',
             'season',
             'phase',
