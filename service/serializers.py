@@ -113,21 +113,16 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'type',
-            'nation_state',
+            'nation',
             'source',
-            'piece',
             'target',
             'target_coast',
             'aux',
             'piece_type',
             'via_convoy',
-            'illegal',
-            'illegal_message',
         )
         read_only_fields = (
-            'nation_state',
-            'illegal',
-            'illegal_message',
+            'nation',
         )
 
 
