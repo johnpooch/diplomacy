@@ -2,13 +2,6 @@ from core import models
 from rest_framework import serializers
 
 
-class SupplyCenterSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.SupplyCenter
-        fields = '__all__'
-
-
 class PieceSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -27,45 +20,53 @@ class TerritorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Territory
-        fields = ('id', 'name')
+        fields = (
+            'id',
+            'name',
+            'supply_center',
+        )
 
 
 class TerritoryStateSerializer(serializers.ModelSerializer):
 
-    territory = TerritorySerializer()
-
     class Meta:
         model = models.TerritoryState
-        depth = 1
-        fields = ('territory', 'controlled_by')
+        fields = ('territory', 'controlled_by',)
 
-    def to_representation(self, obj):
-        """
-        Flatten territory state and territory.
-        """
-        representation = super().to_representation(obj)
-        territory_representation = representation.pop('territory')
-        for key in territory_representation:
-            representation[key] = territory_representation[key]
 
-        return representation
+class NationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Nation
+        fields = ('name', )
 
 
 class NationStateSerializer(serializers.ModelSerializer):
 
+# TODO player should only see this for own nation
+
     class Meta:
         model = models.NationState
-        depth = 1
-        fields = ('nation', 'surrendered', 'surrendered_turn')
+        fields = (
+            'user',
+            'nation',
+            'surrendered',
+            'orders_finalized'
+        )
 
 
 class VariantSerializer(serializers.ModelSerializer):
+
+    territories = TerritorySerializer(many=True)
+    nations = NationSerializer(many=True)
 
     class Meta:
         model = models.Variant
         fields = (
             'id',
             'name',
+            'territories',
+            'nations',
         )
 
 
@@ -128,8 +129,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class TurnSerializer(serializers.ModelSerializer):
 
-    territories = TerritoryStateSerializer(many=True, source='territorystates')
-    nations = NationStateSerializer(many=True, source='nationstates')
+    territory_states = TerritoryStateSerializer(many=True, source='territorystates')
+    nation_states = NationStateSerializer(many=True, source='nationstates')
     pieces = PieceSerializer(many=True)
     orders = OrderSerializer(many=True)
 
@@ -137,12 +138,13 @@ class TurnSerializer(serializers.ModelSerializer):
         model = models.Turn
         fields = (
             'id',
+            'current_turn',
             'year',
             'season',
             'phase',
-            'territories',
+            'territory_states',
             'pieces',
-            'nations',
+            'nation_states',
             'orders',
         )
 
