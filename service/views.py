@@ -50,7 +50,7 @@ class GameStateView(views.APIView):
 
     permission_classes = [drf_permissions.IsAuthenticated]
 
-    def get(self, request, format=None, **kwargs):
+    def get(self, request, **kwargs):
         """
         Returns the state of the game for each turn that has taken place as
         well as the current turn.
@@ -58,14 +58,6 @@ class GameStateView(views.APIView):
         game_id = kwargs['game']
         states = [GameStatus.ENDED, GameStatus.ACTIVE]
         game = get_object_or_404(models.Game, id=game_id, status__in=states)
-
-        territory_states = models.TerritoryState.objects.filter(turn__game=game)
-        territory_states_serializer = serializers \
-            .TerritoryStateSerializer(territory_states, many=True)
-
-        nation_states = models.NationState.objects.filter(turn__game=game)
-        nation_states_serializer = serializers \
-            .NationStateSerializer(nation_states, many=True)
 
         game_state_serializer = serializers.GameStateSerializer(game)
 

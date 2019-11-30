@@ -20,6 +20,14 @@ class TestGameStateSerializer(TestCase):
             variant=variant,
         )
         turn = factories.TurnFactory(game=game)
+        army = factories.ArmyFactory(
+            territory=territory,
+            turn=turn,
+        )
+        order = factories.OrderFactory(
+            turn=turn,
+            source=territory,
+        )
         territory_state = factories.TerritoryStateFactory(
             turn=turn,
             territory=territory,

@@ -24,8 +24,8 @@ class Piece(HygenicModel, PerTurnModel):
             'the same in game piece.'
         )
     )
-    nation_state = models.ForeignKey(
-        'NationState',
+    nation = models.ForeignKey(
+        'Nation',
         null=False,
         related_name='pieces',
         on_delete=models.CASCADE,
@@ -62,9 +62,6 @@ class Piece(HygenicModel, PerTurnModel):
         blank=True,
         related_name='retreat_pieces'
     )
-
-    class Meta:
-        db_table = "piece"
 
     def __str__(self):
         # TODO Fix this up and make it used in all the error messages. Also

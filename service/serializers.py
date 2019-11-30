@@ -25,11 +25,9 @@ class PieceSerializer(serializers.ModelSerializer):
 
 class TerritorySerializer(serializers.ModelSerializer):
 
-    piece = PieceSerializer()
-
     class Meta:
         model = models.Territory
-        fields = ('id', 'name', 'piece')
+        fields = ('id', 'name')
 
 
 class TerritoryStateSerializer(serializers.ModelSerializer):
@@ -137,6 +135,8 @@ class TurnSerializer(serializers.ModelSerializer):
 
     territories = TerritoryStateSerializer(many=True, source='territorystates')
     nations = NationStateSerializer(many=True, source='nationstates')
+    pieces = PieceSerializer(many=True)
+    orders = OrderSerializer(many=True)
 
     class Meta:
         model = models.Turn
@@ -146,8 +146,17 @@ class TurnSerializer(serializers.ModelSerializer):
             'season',
             'phase',
             'territories',
+            'pieces',
             'nations',
+            'orders',
         )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance:
+            if self.instance.current_turn:
+                self.fields.pop('orders')
 
 
 class GameStateSerializer(serializers.ModelSerializer):

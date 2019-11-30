@@ -4,7 +4,7 @@ from factory.django import DjangoModelFactory
 from django.contrib.auth.models import User
 
 from core import models
-from core.models.base import Phase, Season
+from core.models.base import OrderType, Phase, PieceType, Season
 
 
 class VariantFactory(DjangoModelFactory):
@@ -31,6 +31,24 @@ class UserFactory(DjangoModelFactory):
         django_get_or_create = ('username',)
 
     username = 'test user'
+
+
+class ArmyFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.Piece
+
+    nation = factory.SubFactory(NationFactory)
+    type = PieceType.ARMY
+
+
+class OrderFactory(DjangoModelFactory):
+
+    class Meta:
+        model = models.Order
+
+    type = OrderType.HOLD
+    nation = factory.SubFactory(NationFactory)
 
 
 class TerritoryFactory(DjangoModelFactory):
