@@ -1,8 +1,6 @@
 # relationships between territories. Look into observer pattern
 from .state import state
 
-from .piece import Army, Fleet
-
 
 class Territory:
 
@@ -14,6 +12,8 @@ class Territory:
         self._neighbours = []
         self._piece = None
         self._piece_cached = False
+        self._attacking_pieces = []
+        self._attacking_pieces_cached = False
 
     def __str__(self):
         return self.name
@@ -57,8 +57,41 @@ class Territory:
     def occupied(self):
         return bool(self.piece)
 
+    @property
+    def attacking_pieces(self):
+        """
+        Gets all pieces which are moving into this territory.
+
+        Returns:
+            * `list` of `Piece` instances
+        """
+        if self._attacking_pieces_cached:
+            return self._attacking_pieces
+
+        for p in state.all_pieces:
+            if p.order.__class__.__name__ == 'Move':
+                if p.order.target == self:
+                    self._attacking_pieces.append(p)
+        self._attacking_pieces_cached = True
+        return self._attacking_pieces
+
     def adjacent_to(self, territory):
         return territory in self.neighbours
+
+    def friendly_piece_exists(self, nation):
+        """
+        Determine whether a piece belonging to the given nation exists in the
+        territory.
+
+        Args:
+            * `nation` - `str`
+
+        Returns:
+            * `bool`
+        """
+        if self.piece:
+            return self.piece.nation == nation
+        return False
 
     def occupied_by(self, nation):
         """
@@ -75,6 +108,38 @@ class Territory:
             return self.piece.nation == nation
 
         return False
+
+    def foreign_attacking_pieces(self, nation):
+        """
+        Gets all pieces which are moving into this territory
+        who do not belong to the given.
+        Args:
+            * `nation` - `str`
+
+        Returns a list of piece instances
+        """
+        foreign_attacking_pieces = self.attacking_pieces
+        for p in foreign_attacking_pieces:
+            if p.nation == nation:
+                foreign_attacking_pieces.remove(p)
+        return foreign_attacking_pieces
+
+    def other_attacking_pieces(self, piece):
+        """
+        Gets all pieces which are moving into this territory excluding the
+        given piece.
+
+        Args:
+            * `piece` - `Piece`
+
+        Returns:
+            * `list` of `Piece` instances.
+        """
+        other_attacking_pieces = self.attacking_pieces
+        for p in other_attacking_pieces:
+            if p == piece:
+                other_attacking_pieces.remove(p)
+        return other_attacking_pieces
 
 
 class LandTerritory(Territory):
@@ -121,7 +186,7 @@ class InlandTerritory(LandTerritory):
 
     @staticmethod
     def accessible_by_piece_type(piece):
-        return isinstance(piece, Army)
+        return piece.__class__.__name__ == 'Army'
 
 
 class ComplexTerritory(CoastalTerritory):
@@ -136,4 +201,4 @@ class SeaTerritory(Territory):
 
     @staticmethod
     def accessible_by_piece_type(piece):
-        return isinstance(piece, Fleet)
+        return piece.__class__.__name__ == 'Fleet'

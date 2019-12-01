@@ -1,5 +1,6 @@
 
 import unittest
+from core.adjudicator.order import Move, Support
 from core.adjudicator.state import state
 from core.adjudicator.territory import CoastalTerritory, Territory, SeaTerritory, InlandTerritory
 from core.adjudicator.piece import Army, Fleet
@@ -67,6 +68,21 @@ class TestPiece(TerritoryTestCase):
         self.assertIsNone(paris.piece)
 
 
+class TestFriendlyPieceExists(TerritoryTestCase):
+
+    def test_friendly_piece_exists(self):
+        london = CoastalTerritory(1, 'London', 'England', [], [])
+        wales = CoastalTerritory(2, 'Wales', 'England', [], [])
+        paris = InlandTerritory(3, 'Paris', 'France', [])
+
+        Army('England', london)
+        Army('France', wales)
+
+        self.assertTrue(london.friendly_piece_exists('England'))
+        self.assertFalse(wales.friendly_piece_exists('England'))
+        self.assertFalse(paris.friendly_piece_exists('England'))
+
+
 class TestOccupied(TerritoryTestCase):
 
     def test_occupied(self):
@@ -123,3 +139,82 @@ class TestAccessibleByPieceType(TerritoryTestCase):
         fleet = Fleet('France', english_channel)
         self.assertFalse(irish_sea.accessible_by_piece_type(army))
         self.assertTrue(irish_sea.accessible_by_piece_type(fleet))
+
+
+class TestAttackingPieces:
+
+    def test_attacking_pieces_none(self):
+        picardy = CoastalTerritory(1, 'Picardy', 'France', [], [])
+        self.assertEqual(picardy.attacking_pieces, [])
+
+    def test_attacking_piece_exists(self):
+        picardy = CoastalTerritory(1, 'Picardy', 'France', [2], [])
+        paris = InlandTerritory(2, 'Paris', 'France', [1])
+        army_paris = Army('France', paris)
+        Move('France', paris, picardy)
+
+        self.assertEqual(picardy.attacking_pieces, [army_paris])
+
+    def test_multiple_attacking_piece_exist(self):
+        picardy = CoastalTerritory(1, 'Picardy', 'France', [2, 3], [])
+        paris = InlandTerritory(2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
+        army_paris = Army('France', paris)
+        fleet_brest = Fleet('France', brest)
+
+        Move('France', paris, picardy)
+        Move('France', brest, picardy)
+
+        self.assertEqual(len(picardy.attacking_pieces),
+                         len([army_paris, fleet_brest]))
+        self.assertTrue(army_paris in picardy.attacking_pieces)
+        self.assertTrue(fleet_brest in picardy.attacking_pieces)
+
+    def test_supporting_piece_not_included(self):
+        picardy = CoastalTerritory(1, 'Picardy', 'France', [2, 3], [])
+        paris = InlandTerritory(2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
+        fleet_brest = Fleet('France', brest)
+
+        Support('France', paris, brest, picardy)
+        Move('France', brest, picardy)
+
+        self.assertEqual(picardy.attacking_pieces, [fleet_brest])
+
+
+class TestForeignAttackingPieces(TerritoryTestCase):
+
+    def test_foeign_attacking_pieces(self):
+        picardy = CoastalTerritory(1, 'Picardy', 'France', [2], [])
+        paris = InlandTerritory(2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
+
+        army_paris = Army('England', paris)
+        Fleet('France', brest)
+
+        Move('England', paris, picardy)
+        Move('France', brest, picardy)
+
+        self.assertEqual(
+            picardy.foreign_attacking_pieces('France'),
+            [army_paris]
+        )
+
+
+class TestOtherAttackingPieces(TerritoryTestCase):
+
+    def test_other_attacking_pieces(self):
+        picardy = CoastalTerritory(1, 'Picardy', 'France', [2], [])
+        paris = InlandTerritory(2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
+
+        army_paris = Army('England', paris)
+        fleet_brest = Fleet('France', brest)
+
+        Move('England', paris, picardy)
+        Move('France', brest, picardy)
+
+        self.assertEqual(
+            picardy.other_attacking_pieces(fleet_brest),
+            [army_paris]
+        )
