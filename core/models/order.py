@@ -231,8 +231,8 @@ class Order(PerTurnModel, HygenicModel, ChecksMixin, OrderDecisionsMixin, Resolv
         'Territory',
         on_delete=models.CASCADE,
         related_name='+',
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
     target = models.ForeignKey(
         'Territory',

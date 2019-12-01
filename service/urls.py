@@ -39,11 +39,12 @@ urlpatterns = [
         views.GameStateView.as_view(),
         name='game-state'
     ),
-    # # create command
-    # path(
-    #     'game/<int:game>/command',
-    #     views.OrderView.as_view()
-    # ),
+    # create command
+    path(
+        'game/<int:game>/order',
+        views.OrderView.as_view(),
+        name='create-order'
+    ),
     # # history of previous turn
     # path('game/<int:game>/<int:turn>', views.GameStateView.as_view()),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))

@@ -68,17 +68,21 @@ class TerritoryFactory(DjangoModelFactory):
     controlled_by_initial = factory.SubFactory(NationFactory)
     nationality = factory.SubFactory(NationFactory)
     variant = factory.SubFactory(VariantFactory)
+    supply_center = True
 
 
 class NationStateFactory(DjangoModelFactory):
     class Meta:
         model = models.NationState
 
+    nation = factory.SubFactory(NationFactory)
+
 
 class TerritoryStateFactory(DjangoModelFactory):
     class Meta:
         model = models.TerritoryState
 
+    territory = factory.SubFactory(TerritoryFactory)
 
 class TurnFactory(DjangoModelFactory):
     class Meta:
@@ -107,6 +111,16 @@ class GameFactory(DjangoModelFactory):
         if extracted:
             for participant in extracted:
                 self.participants.add(participant)
+
+    @factory.post_generation
+    def turns(self, create, *args, **kwargs):
+        count = 1
+        make_turn = getattr(TurnFactory, 'create' if create else 'build')
+        turns = [make_turn(game=self) for i in range(count)]
+
+        if not create:
+            self._prefetched_objects_cache = {'turns': turns}
+
 
 
 class StandardTerritoryFactory(DjangoModelFactory):

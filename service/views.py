@@ -8,7 +8,7 @@ from core import models
 from core.models.base import GameStatus
 from service import serializers
 from service import forms
-from service.permissions import IsAuthenticated
+from service.permissions import IsAuthenticated, IsParticipant
 
 from rest_framework.exceptions import NotFound
 
@@ -31,13 +31,6 @@ Users
 * Log out
 * User status (e.g. unread messages, pending orders)
 
-Game State
-* Get game state
-* Get game history
-* Get order history
-
-Orders
-* Add order
 * Finalize orders
 
 Messages and announcements
@@ -133,42 +126,59 @@ class JoinGame(views.APIView):
         )
 
 
-class OrderView(mixins.ListModelMixin,
-                mixins.CreateModelMixin,
-                generics.GenericAPIView):
+class OrderView(mixins.CreateModelMixin, generics.GenericAPIView):
 
-    # TODO add is participant permission
     permission_classes = [IsAuthenticated]
 
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        """
-        Override create method to save ``created_by`` field.
-        """
         game_id = kwargs['game']
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        game = models.Game.objects.get(id=game_id)
+        game = get_object_or_404(models.Game, id=game_id)
+
+        if request.user not in game.participants.all():
+            return Response(
+                {'errors': {
+                    'data': ['User is not a participant in this game.']
+                }},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        if not game.status == GameStatus.ACTIVE:
+            return Response(
+                {'errors': {'data': ['Game is not active.']}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         turn = game.get_current_turn()
         user_nation_state = models.NationState.objects.get(
             turn=turn,
-            user=request.user
+            user=request.user,
         )
-        order = models.Order.objects.get_or_create(
-            nation_state=user_nation_state,
-        )[0]
-        serializer.save(order=order)
+        if not user_nation_state.orders_remaining:
+            return Response(
+                {'errors': {'data': ['Nation has no more orders to submit.']}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+        kwargs['game'] = game
+        return self.create(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        game = kwargs['game']
+        turn = game.get_current_turn()
+        user_nation_state = models.NationState.objects.get(
+            turn=turn,
+            user=request.user,
+        )
+        serializer.save(nation=user_nation_state.nation, turn=turn)
         headers = self.get_success_headers(serializer.data)
         return Response(
             serializer.data,
             status=status.HTTP_201_CREATED,
-            headers=headers
+            headers=headers,
         )
