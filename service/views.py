@@ -162,7 +162,6 @@ class OrderView(mixins.CreateModelMixin, generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-
         kwargs['game'] = game
         return self.create(request, *args, **kwargs)
 

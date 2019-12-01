@@ -98,6 +98,3 @@ class TestCreateOrder(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
-
-    def test_create_order_basic_validation(self):
-        pass

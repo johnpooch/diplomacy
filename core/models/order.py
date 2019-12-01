@@ -281,7 +281,7 @@ class Order(PerTurnModel, HygenicModel, ChecksMixin, OrderDecisionsMixin, Resolv
         """
         """
         try:
-            if self.piece.is_army:
+            if self.piece.type == PieceType.ARMY:
                 if self.target_coast:
                     raise ValueError('Army order cannot specify a target coast.')
                 if self.type == OrderType.CONVOY:
