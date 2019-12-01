@@ -59,7 +59,7 @@ class NationState(PerTurnModel):
         Gets the number of supply centers that the nation controls this turn.
 
         Returns:
-            * `QuerySet`
+            * `int`
         """
         # TODO test
         TerritoryState = apps.get_model(
