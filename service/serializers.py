@@ -2,13 +2,6 @@ from core import models
 from rest_framework import serializers
 
 
-class SupplyCenterSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.SupplyCenter
-        fields = '__all__'
-
-
 class PieceSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -25,55 +18,155 @@ class PieceSerializer(serializers.ModelSerializer):
 
 class TerritorySerializer(serializers.ModelSerializer):
 
-    piece = PieceSerializer()
-
     class Meta:
         model = models.Territory
-        fields = ('id', 'name', 'piece')
+        fields = (
+            'id',
+            'name',
+            'type',
+            'supply_center',
+        )
 
 
 class TerritoryStateSerializer(serializers.ModelSerializer):
 
-    territory = TerritorySerializer()
-
     class Meta:
         model = models.TerritoryState
-        depth = 1
-        fields = ('territory', 'controlled_by')
+        fields = ('territory', 'controlled_by',)
 
-    def to_representation(self, obj):
-        """
-        Flatten territory state and territory.
-        """
-        representation = super().to_representation(obj)
-        territory_representation = representation.pop('territory')
-        for key in territory_representation:
-            representation[key] = territory_representation[key]
 
-        return representation
+class NationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Nation
+        fields = ('id', 'name', )
 
 
 class NationStateSerializer(serializers.ModelSerializer):
 
+# TODO player should only see this for own nation
+
     class Meta:
         model = models.NationState
-        depth = 1
-        fields = ('nation', 'surrendered', 'surrendered_turn')
+        fields = (
+            'user',
+            'nation',
+            'surrendered',
+            'orders_finalized'
+        )
+
+
+class VariantSerializer(serializers.ModelSerializer):
+
+    territories = TerritorySerializer(many=True)
+    nations = NationSerializer(many=True)
+
+    class Meta:
+        model = models.Variant
+        fields = (
+            'id',
+            'name',
+            'territories',
+            'nations',
+        )
 
 
 class GameSerializer(serializers.ModelSerializer):
+
+    variant = VariantSerializer(read_only=True)
+    variant_id = serializers.PrimaryKeyRelatedField(
+        source='variant',
+        queryset=models.Variant.objects.all(),
+    )
 
     class Meta:
         model = models.Game
         fields = (
             'id',
             'name',
+            'variant',
+            'variant_id',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
             'participants',
+            'created_at',
             'created_by',
-            'created_at'
+            'status',
         )
         read_only_fields = (
+            'id',
             'participants',
             'created_by',
             'created_at',
+            'status',
+        )
+
+
+class OrderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Order
+        fields = (
+            'id',
+            'type',
+            'nation',
+            'source',
+            'target',
+            'target_coast',
+            'aux',
+            'piece_type',
+            'via_convoy',
+        )
+        read_only_fields = (
+            'nation',
+        )
+
+
+class TurnSerializer(serializers.ModelSerializer):
+
+    territory_states = TerritoryStateSerializer(many=True, source='territorystates')
+    nation_states = NationStateSerializer(many=True, source='nationstates')
+    pieces = PieceSerializer(many=True)
+    orders = OrderSerializer(many=True)
+
+    class Meta:
+        model = models.Turn
+        fields = (
+            'id',
+            'current_turn',
+            'year',
+            'season',
+            'phase',
+            'territory_states',
+            'pieces',
+            'nation_states',
+            'orders',
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance:
+            if self.instance.current_turn:
+                self.fields.pop('orders')
+
+
+class GameStateSerializer(serializers.ModelSerializer):
+
+    turns = TurnSerializer(many=True)
+    variant = VariantSerializer()
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'turns',
+            'variant',
         )

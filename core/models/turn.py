@@ -24,9 +24,17 @@ class Turn(models.Model):
     year = models.PositiveIntegerField(
         null=False,
     )
+    current_turn = models.BooleanField(
+        default=True,
+    )
 
     class Meta:
-        db_table = "turn"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['game', 'year', 'season', 'phase'],
+                name='unique_phase_per_game,'
+            )
+        ]
 
     def __str__(self):
         return " ".join([

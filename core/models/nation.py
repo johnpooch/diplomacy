@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from core.models.base import PerTurnModel
+
 
 class Nation(models.Model):
     """
@@ -15,9 +17,6 @@ class Nation(models.Model):
     name = models.CharField(
         max_length=15,
     )
-    active = models.BooleanField(
-        default=True,
-    )
 
     class Meta:
         db_table = "nation"
@@ -29,31 +28,25 @@ class Nation(models.Model):
         return self.name
 
 
-class NationState(models.Model):
+class NationState(PerTurnModel):
     """
     Through model between ``Turn``, ``User``, and ``Nation``. Represents the
     state of a nation in during a turn.
     """
-    turn = models.ForeignKey(
-        'Turn',
-        null=False,
-        related_name='nation_states',
-        on_delete=models.CASCADE,
-    )
     nation = models.ForeignKey(
         'Nation',
         null=False,
         related_name='+',
         on_delete=models.CASCADE,
     )
-    player = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         null=True,
-        related_name='+',
+        related_name='nation_states',
         on_delete=models.CASCADE,
     )
     orders_finalized = models.BooleanField(
-        default=True,
+        default=False,
     )
     surrendered = models.BooleanField(
         default=False,

@@ -2,7 +2,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models import Piece
-from core.models.base import OrderType, PieceType, TerritoryType
+from core.models.base import OrderType, PerTurnModel, PieceType, \
+    TerritoryType
 from core.models.mixins.decisions import HoldStrength
 
 
@@ -49,6 +50,14 @@ class Territory(models.Model, HoldStrength):
     )
     coastal = models.BooleanField(
         default=False,
+    )
+    supply_center = models.BooleanField(
+       default=False,
+    )
+    initial_piece_type = models.CharField(
+        max_length=50,
+        null=False,
+        choices=PieceType.CHOICES,
     )
 
     class Meta:
@@ -112,8 +121,8 @@ class Territory(models.Model, HoldStrength):
         land territories.
         """
         if piece.type == PieceType.ARMY:
-            return self.type == self.TerritoryType.LAND
-        return (self.type == self.TerritoryType.SEA) or self.coastal
+            return self.type == TerritoryType.LAND
+        return (self.type == TerritoryType.SEA) or self.coastal
 
     def has_supply_center(self):
         try:
@@ -123,11 +132,11 @@ class Territory(models.Model, HoldStrength):
 
     @property
     def is_land(self):
-        return self.type == self.TerritoryType.LAND
+        return self.type == TerritoryType.LAND
 
     @property
     def is_sea(self):
-        return self.type == self.TerritoryType.SEA
+        return self.type == TerritoryType.SEA
 
     @property
     def is_inland(self):
@@ -163,19 +172,13 @@ class Territory(models.Model, HoldStrength):
         return self.attacking_pieces.exclude(id=piece.id)
 
 
-class TerritoryState(models.Model):
+class TerritoryState(PerTurnModel):
     """
     A through model between ``Turn`` and ``Territory``. Represents the state of
     a territory in a given turn.
     """
     territory = models.ForeignKey(
         'Territory',
-        null=False,
-        related_name='territory_states',
-        on_delete=models.CASCADE,
-    )
-    turn = models.ForeignKey(
-        'Turn',
         null=False,
         related_name='territory_states',
         on_delete=models.CASCADE,

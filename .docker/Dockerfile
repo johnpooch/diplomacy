@@ -1,6 +1,8 @@
 FROM python:latest
 ENV PYTHONUNBUFFERED 1
 
+ENV PATH="$PATH:/home/app/.local/bin"
+
 WORKDIR /code
 COPY . /code
 

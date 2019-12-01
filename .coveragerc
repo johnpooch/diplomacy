@@ -1,0 +1,27 @@
+[run]
+branch = True
+include =
+    ./*
+omit =
+    */migrations/*
+[report]
+skip_covered = True
+show_missing = True
+# Regexes for lines to exclude from consideration
+exclude_lines = 
+# Any line with a comment of “pragma: no cover” is excluded. If that
+# line introduces a clause, for example, an if clause, or a function or
+# class definition, then the entire clause is also excluded.
+# e.g. `def function_name:  # pragma: no cover`
+    pragma: no cover
+# Don't complain about missing debug-only code:
+    def __repr__
+    if self\.debug
+# Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+# Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+
+ignore_errors = True

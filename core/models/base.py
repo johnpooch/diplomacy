@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
-class CountryChoiceMode:
+class NationChoiceMode:
     RANDOM = 'random'
     PREFERENCE = 'preference'
     FIRST_COME = 'first come'
@@ -42,14 +42,12 @@ class DislodgedState:
 
 
 class GameStatus:
-    AWAITING_PARTICIPANTS = 'awaiting participants'
     PENDING = 'pending'
-    LIVE = 'live'
+    ACTIVE = 'active'
     ENDED = 'ended'
     CHOICES = (
-        (AWAITING_PARTICIPANTS, 'Awaiting Participants'),
         (PENDING, 'Pending'),
-        (LIVE, 'Live'),
+        (ACTIVE, 'Active'),
         (ENDED, 'Ended'),
     )
 
@@ -96,6 +94,15 @@ class OutcomeType:
         (ILLEGAL, 'Illegal'),
         (AUX_FAILED, 'Aux failed'),
         (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
+    )
+
+
+class TerritoryType:
+    LAND = 'land'
+    SEA = 'sea'
+    CHOICES = (
+        (LAND, 'Land'),
+        (SEA, 'Sea'),
     )
 
 
@@ -159,3 +166,19 @@ class HygenicModel(models.Model):
             self.full_clean()
         except ValidationError as exc:
             raise ValueError(exc) from exc
+
+
+class PerTurnModel(models.Model):
+    """
+    Models which represent an in entity which is has a potentially different
+    state every turn should inherit from this base.
+    """
+    turn = models.ForeignKey(
+        'Turn',
+        null=False,
+        related_name='%(class)ss',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        abstract = True

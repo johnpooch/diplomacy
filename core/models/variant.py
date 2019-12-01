@@ -10,7 +10,10 @@ class Variant(models.Model):
         null=False,
         max_length=100,
     )
-    num_players = models.PositiveIntegerField(
+    max_num_players = models.PositiveIntegerField(
         null=False,
         default=7,
     )
+
+    def __str__(self):
+        return self.name
