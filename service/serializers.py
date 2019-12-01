@@ -23,6 +23,7 @@ class TerritorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'type',
             'supply_center',
         )
 
@@ -38,7 +39,7 @@ class NationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Nation
-        fields = ('name', )
+        fields = ('id', 'name', )
 
 
 class NationStateSerializer(serializers.ModelSerializer):
