@@ -3,6 +3,8 @@ from .state import state
 
 
 class Territory:
+    is_complex = False
+    is_coastal = False
 
     def __init__(self, id, name, neighbour_ids):
         state.all_territories.append(self)
@@ -35,6 +37,7 @@ class Territory:
             for t in state.all_territories:
                 if t.id in self.neighbour_ids:
                     self._neighbours.append(t)
+            self._named_coasts_cached = True
         return self._neighbours
 
     @property
@@ -153,10 +156,32 @@ class LandTerritory(Territory):
 
 class CoastalTerritory(LandTerritory):
 
+    is_coastal = True
+
     def __init__(self, id, name, nationality, neighbour_ids, shared_coast_ids):
         super().__init__(id, name, nationality, neighbour_ids)
         self.shared_coast_ids = shared_coast_ids
         self._shared_coasts = []
+        self._named_coasts_cached = False
+        self._named_coasts = []
+
+    @property
+    def named_coasts(self):
+        """
+        Gets the named coasts of the territory.
+
+        Returns:
+            * A list of `Named_Coast` instances.
+        """
+        if not self._named_coasts_cached:
+            for n in state.all_named_coasts:
+                if n.parent == self:
+                    self._named_coasts.append(n)
+        return self._named_coasts
+
+    @property
+    def is_complex(self):
+        return bool(self.named_coasts)
 
     @property
     def shared_coasts(self):
@@ -187,14 +212,6 @@ class InlandTerritory(LandTerritory):
     @staticmethod
     def accessible_by_piece_type(piece):
         return piece.__class__.__name__ == 'Army'
-
-
-class ComplexTerritory(CoastalTerritory):
-
-    def __init__(self, id, name, nationality, neighbour_ids, shared_coast_ids,
-                 named_coast_ids):
-        super().__init__(id, name, nationality, neighbour_ids, shared_coast_ids)
-        self.named_coast_ids = named_coast_ids
 
 
 class SeaTerritory(Territory):

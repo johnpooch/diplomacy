@@ -38,7 +38,7 @@ class Army(Piece):
         Returns Bool
         """
 
-        if self.territory.coastal and target.coastal:
+        if self.territory.is_coastal and target.is_coastal:
             return True
 
         return self.territory.adjacent_to(target) and \
@@ -65,13 +65,17 @@ class Fleet(Piece):
         Returns:
             * `bool`
         """
+        if target.is_complex and not named_coast:
+            raise ValueError(
+                'Must specify coast if target is complex territory.'
+            )
         if named_coast:
             return self.territory in named_coast.neighbours
 
         if self.territory.is_complex:
             return target in self.named_coast.neighbours
 
-        if self.territory.coastal and target.coastal:
+        if self.territory.is_coastal and target.is_coastal:
             return target in self.territory.shared_coasts
 
         return self.territory.adjacent_to(target) and \

@@ -1,5 +1,6 @@
 
 import unittest
+from core.adjudicator.named_coast import NamedCoast
 from core.adjudicator.order import Move, Support
 from core.adjudicator.state import state
 from core.adjudicator.territory import CoastalTerritory, Territory, SeaTerritory, InlandTerritory
@@ -218,3 +219,21 @@ class TestOtherAttackingPieces(TerritoryTestCase):
             picardy.other_attacking_pieces(fleet_brest),
             [army_paris]
         )
+
+
+class TestNamedCoasts(TerritoryTestCase):
+    def test_named_coast(self):
+        london = CoastalTerritory(1, 'London', 'England', [], [])
+        spain = CoastalTerritory(2, 'Spain', None, [], [])
+        spain_north_coast = NamedCoast(1, 'North Coast', spain, [])
+
+        self.assertEqual(spain.named_coasts, [spain_north_coast])
+        self.assertEqual(london.named_coasts, [])
+
+    def test_is_complex(self):
+        london = CoastalTerritory(1, 'London', 'England', [], [])
+        spain = CoastalTerritory(2, 'Spain', None, [], [])
+        NamedCoast(1, 'North Coast', spain, [])
+
+        self.assertTrue(spain.is_complex)
+        self.assertFalse(london.is_complex)
