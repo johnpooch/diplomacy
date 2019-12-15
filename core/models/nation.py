@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -51,3 +52,47 @@ class NationState(PerTurnModel):
     surrendered = models.BooleanField(
         default=False,
     )
+
+    @property
+    def num_supply_centers(self):
+        """
+        Gets the number of supply centers that the nation controls this turn.
+
+        Returns:
+            * `int`
+        """
+        # TODO test
+        TerritoryState = apps.get_model(
+            app_label='core',
+            model_name='TerritoryState'
+        )
+        return TerritoryState.objects.filter(
+            controlled_by=self.nation,
+            territory__supply_center=True,
+        ).count()
+
+    @property
+    def orders(self):
+        """
+        Gets the orders that the nation has submitted this turn.
+
+        Returns:
+            * `QuerySet`
+        """
+        # TODO test
+        Order = apps.get_model(app_label='core', model_name='Order')
+        return Order.objects.filter(
+            turn=self.turn,
+            nation=self.nation,
+        )
+
+    @property
+    def orders_remaining(self):
+        """
+        Gets the number of orders that the nation can still submit.
+
+        Returns:
+            * `int`
+        """
+        # TODO test
+        return self.num_supply_centers - self.orders.count()

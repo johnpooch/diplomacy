@@ -68,17 +68,21 @@ class TerritoryFactory(DjangoModelFactory):
     controlled_by_initial = factory.SubFactory(NationFactory)
     nationality = factory.SubFactory(NationFactory)
     variant = factory.SubFactory(VariantFactory)
+    supply_center = True
 
 
 class NationStateFactory(DjangoModelFactory):
     class Meta:
         model = models.NationState
 
+    nation = factory.SubFactory(NationFactory)
+
 
 class TerritoryStateFactory(DjangoModelFactory):
     class Meta:
         model = models.TerritoryState
 
+    territory = factory.SubFactory(TerritoryFactory)
 
 class TurnFactory(DjangoModelFactory):
     class Meta:
@@ -108,6 +112,16 @@ class GameFactory(DjangoModelFactory):
             for participant in extracted:
                 self.participants.add(participant)
 
+    @factory.post_generation
+    def turns(self, create, *args, **kwargs):
+        count = 1
+        make_turn = getattr(TurnFactory, 'create' if create else 'build')
+        turns = [make_turn(game=self) for i in range(count)]
+
+        if not create:
+            self._prefetched_objects_cache = {'turns': turns}
+
+
 
 class StandardTerritoryFactory(DjangoModelFactory):
     class Meta:
@@ -128,31 +142,6 @@ class StandardNationFactory(DjangoModelFactory):
 
     name = 'Test Nation'
 
-    @post_generation
-    def territories(self, create, count, **kwargs):
-        make_territory = getattr(StandardTerritoryFactory,
-                                 'create' if create else 'build')
-        nation = [n for n in nation_data if n['fields']['name'] == self.name][0]
-        nation_territories = [t for t in territory_data
-                              if t['fields']['controlled_by_initial'] == nation['pk']]
-        territories = []
-        for territory in nation_territories:
-            supply_pks = [s['fields']['territory'] for s in supply_center_data]
-            supply_center = territory['pk'] in supply_pks
-
-            territories.append(
-                make_territory(
-                    variant=self.variant,
-                    name=territory['fields']['name'],
-                    controlled_by_initial=self,
-                    nationality=self,
-                    supply_center=supply_center,
-                )
-            )
-
-        if not create:
-            self._prefetched_objects_cache = {'territories': territories}
-
 
 class StandardVariantFactory(DjangoModelFactory):
 
@@ -171,6 +160,55 @@ class StandardVariantFactory(DjangoModelFactory):
 
         if not create:
             self._prefetched_objects_cache = {'nations': nations}
+
+    @post_generation
+    def territories(self, create, count, **kwargs):
+        make_territory = getattr(StandardTerritoryFactory,
+                                 'create' if create else 'build')
+
+        supply_pks = [s['fields']['territory'] for s in supply_center_data]
+
+        territories = []
+        for territory in territory_data:
+            supply_center = territory['pk'] in supply_pks
+            controlled_by_initial_id = territory['fields']['controlled_by_initial']
+            nations = [n for n in nation_data if n['pk'] == controlled_by_initial_id]
+            if nations:
+                nation = nations[0]
+            else:
+                nation = None
+
+            if nation:
+                territories.append(
+                    make_territory(
+                        variant=self,
+                        name=territory['fields']['name'],
+                        controlled_by_initial=factory.SubFactory(
+                            StandardNationFactory,
+                            name=nations[0]['fields']['name']
+                        ),
+                        nationality=None,
+                        supply_center=supply_center,
+                        type=territory['fields']['type'],
+                        coastal=territory['fields']['coastal'],
+                    )
+                )
+            else:
+                territories.append(
+                    make_territory(
+                        variant=self,
+                        name=territory['fields']['name'],
+                        controlled_by_initial=None,
+                        nationality=None,
+                        supply_center=supply_center,
+                        type=territory['fields']['type'],
+                        coastal=territory['fields']['coastal'],
+                    )
+                )
+
+
+        if not create:
+            self._prefetched_objects_cache = {'territories': territories}
 
 
 class StandardTurnFactory(DjangoModelFactory):
@@ -234,7 +272,7 @@ class StandardTurnFactory(DjangoModelFactory):
             p = make_piece(
                 turn=self,
                 territory=factory.SubFactory(
-                    TerritoryFactory,
+                    StandardTerritoryFactory,
                     name=territory['fields']['name']
                 ),
                 type=piece['fields']['type'],

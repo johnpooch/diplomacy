@@ -25,6 +25,7 @@ class TerritorySerializer(serializers.ModelSerializer):
             'name',
             'type',
             'supply_center',
+            'coastal',
         )
 
 
