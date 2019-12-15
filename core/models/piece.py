@@ -30,16 +30,19 @@ class Piece(HygenicModel, PerTurnModel):
         related_name='pieces',
         on_delete=models.CASCADE,
     )
-    territory = models.OneToOneField(
+    # NOTE should this use TerritoryState?
+    territory = models.ForeignKey(
         'Territory',
         null=True,
         on_delete=models.CASCADE,
+        related_name='pieces',
     )
-    named_coast = models.OneToOneField(
+    named_coast = models.ForeignKey(
         'NamedCoast',
         on_delete=models.CASCADE,
         blank=True,
-        null=True
+        null=True,
+        related_name='pieces',
     )
     type = models.CharField(
         max_length=50,

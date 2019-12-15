@@ -1,8 +1,8 @@
 from .base import *
 
-
+ALLOWED_HOSTS = ['*']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 CORS_ORIGIN_WHITELIST = (
     '0.0.0.0:8000',
