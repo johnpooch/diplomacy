@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from core import models
-from core.models.base import GameStatus, OutcomeType, OrderType, Phase, Season, TerritoryType
+from core.models.base import GameStatus, OrderType, Phase, Season, TerritoryType
 
 
 class TestProcessGame(TestCase):
