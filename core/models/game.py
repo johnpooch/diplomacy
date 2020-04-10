@@ -6,8 +6,6 @@ from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
 
 
 class GameQuerySet(models.QuerySet):
-    """
-    """
 
     def filter_by_joinable(self, user=None):
         """
@@ -18,9 +16,10 @@ class GameQuerySet(models.QuerySet):
             * ``[user]`` - If provided, games in which the given user is
             participating are excluded.
         """
+        qs = self
         if user:
-            self = self.exclude(participants=user)
-        return self \
+            qs = self.exclude(participants=user)
+        return qs \
             .annotate(participant_count=models.Count('participants'))\
             .filter(participant_count__lt=models.F('num_players'))\
             .exclude(status=GameStatus.ENDED)
@@ -31,8 +30,7 @@ class GameManager(BaseManager.from_queryset(GameQuerySet)):
 
 
 class Game(models.Model):
-    """
-    """
+
     variant = models.ForeignKey(
         'Variant',
         null=False,

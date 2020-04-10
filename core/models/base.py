@@ -30,17 +30,6 @@ class DeadlineFrequency:
     )
 
 
-class DislodgedState:
-    UNRESOLVED = 'unresolved'
-    SUSTAINS = 'sustains'
-    DISLODGED = 'dislodged'
-    CHOICES = (
-        (UNRESOLVED, 'Unresolved'),
-        (SUSTAINS, 'Sustains'),
-        (DISLODGED, 'Dislodged')
-    )
-
-
 class GameStatus:
     PENDING = 'pending'
     ACTIVE = 'active'
@@ -49,17 +38,6 @@ class GameStatus:
         (PENDING, 'Pending'),
         (ACTIVE, 'Active'),
         (ENDED, 'Ended'),
-    )
-
-
-class OrderState:
-    UNRESOLVED = 'unresolved'
-    SUCCEEDS = 'succeeds'
-    FAILS = 'fails'
-    CHOICES = (
-        (UNRESOLVED, 'Unresolved'),
-        (SUCCEEDS, 'Succeeds'),
-        (FAILS, 'Fails')
     )
 
 
@@ -98,10 +76,12 @@ class OutcomeType:
 
 
 class TerritoryType:
-    LAND = 'land'
+    INLAND = 'inland'
+    COASTAL = 'coastal'
     SEA = 'sea'
     CHOICES = (
-        (LAND, 'Land'),
+        (INLAND, 'Inland'),
+        (COASTAL, 'Coastal'),
         (SEA, 'Sea'),
     )
 
@@ -135,32 +115,23 @@ class Season:
     )
 
 
-class TerritoryType:
-    LAND = 'land'
-    SEA = 'sea'
-    CHOICES = (
-        (LAND, 'Land'),
-        (SEA, 'Sea'),
-    )
-
-
-class HygenicModel(models.Model):
+class HygienicModel(models.Model):
     """
-    Models which inherit from this base will run ``Model.full_clean()`` before
-    save (on pre_save signal). Any ``ValidationError`` raised during this
-    operation will be re-raised as a ``ValueError``, causing the save operation
+    Models which inherit from this base will run `Model.full_clean()` before
+    save (on pre_save signal). Any `ValidationError` raised during this
+    operation will be re-raised as a `ValueError`, causing the save operation
     to fail.
 
-    This class relies upon the ``hygenic_model_pre_save()`` function
-    in ``core.signals`` module to work properly.
+    This class relies upon the `hygienic_model_pre_save()` function
+    in `core.signals` module to work properly.
     """
     class Meta:
         abstract = True
 
     def pre_save_clean(self, sender, **kwargs):
         """
-        Run ``full_clean()`` and raise any validation issues as a
-        ``ValueError``
+        Run `full_clean()` and raise any validation issues as a
+        `ValueError`
         """
         try:
             self.full_clean()

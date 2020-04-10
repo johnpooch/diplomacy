@@ -19,19 +19,13 @@ class Nation(models.Model):
         max_length=15,
     )
 
-    class Meta:
-        db_table = "nation"
-
-    def has_pieces_which_must_retreat(self):
-        return any([piece.must_retreat for piece in self.pieces.all()])
-
     def __str__(self):
         return self.name
 
 
 class NationState(PerTurnModel):
     """
-    Through model between ``Turn``, ``User``, and ``Nation``. Represents the
+    Through model between `Turn`, `User`, and `Nation`. Represents the
     state of a nation in during a turn.
     """
     nation = models.ForeignKey(
@@ -61,7 +55,6 @@ class NationState(PerTurnModel):
         Returns:
             * `int`
         """
-        # TODO test
         TerritoryState = apps.get_model(
             app_label='core',
             model_name='TerritoryState'
@@ -79,7 +72,6 @@ class NationState(PerTurnModel):
         Returns:
             * `QuerySet`
         """
-        # TODO test
         Order = apps.get_model(app_label='core', model_name='Order')
         return Order.objects.filter(
             turn=self.turn,
@@ -94,5 +86,4 @@ class NationState(PerTurnModel):
         Returns:
             * `int`
         """
-        # TODO test
         return self.num_supply_centers - self.orders.count()

@@ -3,8 +3,7 @@ from core.models.base import Phase, Season
 
 
 class Turn(models.Model):
-    """
-    """
+
     game = models.ForeignKey(
         'Game',
         on_delete=models.CASCADE,
@@ -44,17 +43,14 @@ class Turn(models.Model):
             'Phase'
         ])
 
-    def pieces(self):
-        pass
-
 
 class TurnEnd(models.Model):
     """
     Represents the future end of a turn.
 
-    When created properly (using ``TurnEnd.objects.new``), this model will
-    automatically be associated with an ``AsyncResult`` object for the
-    ``upcoming process_turn()`` task.
+    When created properly (using `TurnEnd.objects.new`), this model will
+    automatically be associated with an `AsyncResult` object for the
+    `upcoming process_turn()` task.
     """
     turn = models.OneToOneField(
         'Turn',

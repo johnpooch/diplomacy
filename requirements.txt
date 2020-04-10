@@ -5,3 +5,4 @@ factory_boy
 djangorestframework==3.9.1
 mysqlclient
 django-extensions
+-e git://github.com/johnpooch/diplomacy-adjudicator.git#egg=diplomacy_adjudicator
