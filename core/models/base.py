@@ -61,15 +61,15 @@ class OrderType:
 
 
 class OutcomeType:
+    MOVES = 'moves'
     RESOLVED = 'resolved'
     BOUNCED = 'bounced'
-    ILLEGAL = 'illegal'
     AUX_FAILED = 'aux failed'
     AUX_DOES_NOT_CORRESPOND = 'aux does not correspond'
     CHOICES = (
+        (MOVES, 'Moves'),
         (RESOLVED, 'Resolved'),
         (BOUNCED, 'Bounced'),
-        (ILLEGAL, 'Illegal'),
         (AUX_FAILED, 'Aux failed'),
         (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
     )

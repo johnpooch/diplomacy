@@ -43,6 +43,7 @@ class Territory(models.Model):
     type = models.CharField(
         max_length=10,
         choices=TerritoryType.CHOICES,
+        blank=False,
         null=False
     )
     supply_center = models.BooleanField(
@@ -121,3 +122,17 @@ class TerritoryState(PerTurnModel):
         null=True,
         related_name='controlled_territories',
     )
+
+    def to_dict(self):
+        territory = self.territory
+        return {
+            '_id': territory.id,
+            'type': territory.type,
+            'name': territory.name,
+            'neighbour_ids': list(territory.neighbours.all().values_list('pk', flat=True)),
+            'shared_coast_ids': list(territory.shared_coasts.all().values_list('pk', flat=True)),
+            'supply_center': territory.supply_center,
+            'nationality': territory.nationality.id,
+            'controlled_by': self.controlled_by.id,
+            'named_coasts': [n.to_dict() for n in territory.named_coasts.all()]
+        }

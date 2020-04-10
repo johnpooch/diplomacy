@@ -61,6 +61,7 @@ class Piece(HygienicModel, PerTurnModel):
     )
     attacker_territory = models.ForeignKey(
         'Territory',
+        blank=True,
         null=True,
         on_delete=models.CASCADE,
         help_text=_(
@@ -110,3 +111,14 @@ class Piece(HygienicModel, PerTurnModel):
         # TODO do this when phases/logs are properly handled
         # NOTE maybe just denormalize into a field
         return None
+
+    def to_dict(self):
+        data = {
+            '_id': self.pk,
+            'type': self.type,
+            'nation': self.nation.id,
+            'territory_id': self.territory.id,
+        }
+        if self.attacker_territory:
+            data['attacker_territory'] = self.attacker_territory.id
+        return data

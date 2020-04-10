@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.manager import BaseManager
@@ -13,7 +14,7 @@ class GameQuerySet(models.QuerySet):
         num_players and are not ended.
 
         Args:
-            * ``[user]`` - If provided, games in which the given user is
+            * `[user]` - If provided, games in which the given user is
             participating are excluded.
         """
         qs = self
@@ -132,9 +133,17 @@ class Game(models.Model):
 
     def get_current_turn(self):
         """
-        Gets the related ``Turn`` where ``current_turn`` is ``True``.
+        Gets the related `Turn` where `current_turn` is `True`.
 
         Returns:
-            * ``Turn``
+            * `Turn`
         """
         return self.turns.get(current_turn=True)
+
+    def process(self):
+        current_turn = self.get_current_turn()
+        current_turn.process()
+        turn_model = apps.get_model('core', 'Turn')
+        turn_model.objects.create_turn_from_previous_turn(current_turn)
+        current_turn.current_turn = False
+        current_turn.save()

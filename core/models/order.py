@@ -63,6 +63,14 @@ class Order(PerTurnModel, HygienicModel):
         null=True,
         blank=True,
     )
+    legal = models.BooleanField(
+        default=True,
+    )
+    illegal_message = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         string = f'{self.nation} {self.type} {self.source}'
@@ -84,3 +92,18 @@ class Order(PerTurnModel, HygienicModel):
                     'Piece type should only be specified for build orders.'
                 ),
             })
+
+    def to_dict(self):
+        data = {
+            '_id': self.pk,
+            'type': self.type,
+            'nation': self.nation.id,
+            'source_id': self.source.id,
+            'via_convoy': self.via_convoy,
+            'piece_type': self.piece_type,
+        }
+        if self.target:
+            data['target_id'] = self.target.id
+        if self.aux:
+            data['aux_id'] = self.aux.id
+        return data

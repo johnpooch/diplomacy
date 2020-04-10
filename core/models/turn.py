@@ -1,5 +1,42 @@
+from adjudicator import process_game_state
 from django.db import models
-from core.models.base import Phase, Season
+from django.utils import timezone
+
+from core.models.base import OrderType, OutcomeType, Phase, Season
+
+
+class TurnManager(models.Manager):
+
+    def create_turn_from_previous_turn(self, previous_turn):
+        season, phase, year = previous_turn.get_next_season_phase_and_year()
+        new_turn = Turn.objects.create(
+            game=previous_turn.game,
+            year=year,
+            season=season,
+            phase=phase,
+        )
+
+        # get successful move orders
+        successful_move_orders = previous_turn.orders.filter(
+            outcome=OutcomeType.MOVES,
+            type=OrderType.MOVE,
+        )
+        for piece in previous_turn.pieces.all():
+            for order in successful_move_orders:
+                if piece.territory == order.source:
+                    piece.territory = order.target
+            piece.turn = new_turn
+            piece.pk = None
+            piece.save()
+        for territory_state in previous_turn.territorystates.all():
+            # If end of fall orders process change of possesion.
+            if False:
+                pass
+
+            territory_state.turn = new_turn
+            territory_state.pk = None
+            territory_state.save()
+        return new_turn
 
 
 class Turn(models.Model):
@@ -26,6 +63,14 @@ class Turn(models.Model):
     current_turn = models.BooleanField(
         default=True,
     )
+    processed = models.BooleanField(
+        default=False,
+    )
+    processed_at = models.DateTimeField(
+        null=True,
+    )
+
+    objects = TurnManager()
 
     class Meta:
         constraints = [
@@ -42,6 +87,76 @@ class Turn(models.Model):
             self.get_phase_display(),
             'Phase'
         ])
+
+    def process(self):
+        game_state_dict = self._to_game_state_dict()
+        outcome = process_game_state(game_state_dict)
+        self.update_turn(outcome)
+
+    def update_turn(self, outcome):
+        self.processed = True
+        self.processed_at = timezone.now()
+        self.save()
+        for territory_data in outcome['territories']:
+            territory_state = self.territorystates.get(territory__id=territory_data['id'])
+            territory = territory_state
+            territory.contested = territory_data['contested']
+            territory.save()
+        for order_data in outcome['orders']:
+            order = self.orders.get(id=order_data['id'])
+            order.outcome = order_data['outcome']
+            order.legal = order_data['legal_decision'] == 'legal'
+            order.illegal_message = order_data['illegal_message']
+            order.save()
+        for piece_data in outcome['pieces']:
+            piece = self.pieces.get(id=piece_data['id'])
+            piece.dislodged = piece_data['dislodged_decision'] == 'dislodged'
+            piece.dislodged_by = piece_data['dislodged_by']
+            piece.attacker_territory = piece_data['attacker_territory']
+            piece.save()
+
+    def _to_game_state_dict(self):
+        """
+        Convert the turn and all related objects into a single game state dict
+        to be process by the adjudicator.
+
+        Returns:
+            * `dict`
+        """
+        game_state = dict()
+        territory_states = self.territorystates.all()
+        pieces = self.pieces.all()
+        orders = self.orders.all()
+        game_state['territories'] = [t.to_dict() for t in territory_states]
+        game_state['pieces'] = [p.to_dict() for p in pieces]
+        game_state['orders'] = [o.to_dict() for o in orders]
+        # un nest named_coasts
+        game_state['named_coasts'] = list()
+        for t in game_state['territories']:
+            named_coasts = t.pop('named_coasts')
+            for n in named_coasts:
+                game_state['named_coasts'].append(n)
+        game_state['phase'] = self.phase
+        game_state['variant'] = self.game.variant.name
+        return game_state
+
+    def get_next_season_phase_and_year(self):
+        # TODO finish and test
+        if not self.processed:
+            raise ValueError('Cannot get next phase until order is processed.')
+
+        if self.pieces.filter(dislodged=True).exists():
+            return self.season, Phase.RETREAT_AND_DISBAND, self.year
+
+        if self.season == Season.SPRING:
+            return Season.FALL, Phase.ORDER, self.year
+
+        if self.season == Season.FALL:
+            # if any change in supply center control
+            if False:
+                return self.season, Phase.BUILD, self.year
+            return Season.SPRING, Phase.ORDER, self.year + 1
+
 
 
 class TurnEnd(models.Model):

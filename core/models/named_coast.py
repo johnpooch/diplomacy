@@ -35,3 +35,10 @@ class NamedCoast(models.Model):
                 name='unique_coast_name'
             )
         ]
+
+    def to_dict(self):
+        return {
+            '_id': self.pk,
+            'territory_id': self.parent.id,
+            'neighbour_ids': list(self.neighbours.all().values_list('pk', flat=True)),
+        }
