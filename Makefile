@@ -4,7 +4,8 @@ load_dev_fixtures:
 		fixtures/dev/variant.json \
 		fixtures/dev/game.json \
 		fixtures/dev/nation.json \
-		fixtures/dev/territory.json
+		fixtures/dev/territory.json \
+		fixtures/dev/named_coast.json
 
 
 reset_db:

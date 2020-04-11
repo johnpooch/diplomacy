@@ -12,6 +12,8 @@
             53,
             56
          ],
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "shared_coasts":[
 
          ],
@@ -488,6 +490,8 @@
       "fields":{
          "name":"berlin",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             3,
             35,
@@ -531,6 +535,8 @@
       "fields":{
          "name":"brest",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             8,
             32,
@@ -616,6 +622,8 @@
       "fields":{
          "name":"edinburgh",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             27,
             38,
@@ -719,6 +727,8 @@
       "fields":{
          "name":"kiel",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             3,
             24,
@@ -784,6 +794,8 @@
       "fields":{
          "name":"liverpool",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             27,
             30,
@@ -806,6 +818,8 @@
       "fields":{
          "name":"marseilles",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             61,
             32,
@@ -844,6 +858,8 @@
       "fields":{
          "name":"naples",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             22,
             11,
@@ -945,6 +961,8 @@
       "fields":{
          "name":"rome",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             22,
             41,
@@ -1156,6 +1174,8 @@
       "fields":{
          "name":"venice",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             1,
             22,
@@ -1232,7 +1252,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1252,7 +1272,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1275,7 +1295,7 @@
 
          ],
          "controlled_by_initial":2,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1297,7 +1317,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1318,7 +1338,7 @@
 
          ],
          "controlled_by_initial":6,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1327,6 +1347,8 @@
       "fields":{
          "name":"munich",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             24,
             59,
@@ -1340,7 +1362,7 @@
 
          ],
          "controlled_by_initial":3,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1349,6 +1371,8 @@
       "fields":{
          "name":"paris",
          "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             26,
             61,
@@ -1362,7 +1386,7 @@
 
          ],
          "controlled_by_initial":2,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1382,7 +1406,7 @@
 
          ],
          "controlled_by_initial":3,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1403,7 +1427,7 @@
 
          ],
          "controlled_by_initial":null,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1424,7 +1448,7 @@
 
          ],
          "controlled_by_initial":3,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1444,7 +1468,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1464,7 +1488,7 @@
 
          ],
          "controlled_by_initial":6,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1484,7 +1508,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
@@ -1505,7 +1529,7 @@
 
          ],
          "controlled_by_initial":6,
-         "type":"inland"
+         "type":"land"
       }
    },
    {
