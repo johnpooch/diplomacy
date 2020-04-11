@@ -1,12 +1,16 @@
-load_all_fixtures:
-	./manage.py loaddata \
-		fixtures/user.json \
-		fixtures/game.json \
-		fixtures/turn.json \
-		fixtures/nations.json \
-		fixtures/nation_states.json \
-		fixtures/territories.json \
-		fixtures/territory_states.json \
-		fixtures/named_coasts.json \
-		fixtures/supply_centers.json \
-		fixtures/pieces.json
+load_dev_fixtures:
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
+		fixtures/dev/user.json \
+		fixtures/dev/variant.json \
+		fixtures/dev/game.json \
+		fixtures/dev/nation.json \
+		fixtures/dev/territory.json
+
+
+reset_db:
+	docker rm -vf diplomacy_diplomacy.mysql_1
+	docker-compose up -d diplomacy.mysql
+	docker exec -it diplomacy_diplomacy.service_1 .docker/deploy/wait-for-it.sh \
+		diplomacy.mysql:3306 --timeout=60 -- echo "Diplomacy DB is up."
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py migrate
+

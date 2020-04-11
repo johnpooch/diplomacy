@@ -1,0 +1,164 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "hamsayes",
+      "first_name": "Shiv",
+      "last_name": "Hayes",
+      "email": "hamsayes@diplomacy.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "johnpooch",
+      "first_name": "John",
+      "last_name": "Pooch",
+      "email": "johnpooch@smash.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "26slices",
+      "first_name": "Tim",
+      "last_name": "Boslice",
+      "email": "timboslice@wyse.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+    {
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "pk-fire",
+      "first_name": "Ness",
+      "last_name": "Lucas",
+      "email": "nesslucas@pkflash.net",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "jigglypuff",
+      "first_name": "Jiggly",
+      "last_name": "",
+      "email": "jiggly@pokemon.gov",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "epresley",
+      "first_name": "Elvis",
+      "last_name": "",
+      "email": "presley@king.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "cberry",
+      "first_name": "Chuck",
+      "last_name": "",
+      "email": "chuck@bgoode.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "rosspooch",
+      "first_name": "Ross",
+      "last_name": "McDowell",
+      "email": "rpooch@paddy.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "AlwaysLying",
+      "first_name": "Jason",
+      "last_name": "jay@emirates.com",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2019-11-10T18:24:29.646Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

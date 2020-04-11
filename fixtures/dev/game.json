@@ -1,0 +1,56 @@
+[
+  {
+    "model": "core.game",
+    "pk": 1,
+    "fields": {
+      "variant": 1,
+      "name": "The showdown",
+      "description": "A game among friends.",
+      "num_players": 7,
+      "created_by": 1,
+      "created_at": "2019-11-10T18:40:06.947Z",
+      "participants": [1, 2, 3, 4, 5, 6]
+    }
+  },
+  {
+    "model": "core.game",
+    "pk": 2,
+    "fields": {
+      "variant": 1,
+      "name": "New game",
+      "description": "Looking for a friendly game for beginners.",
+      "num_players": 7,
+      "created_by": 3,
+      "created_at": "2019-11-05T18:40:06.947Z",
+      "participants": [3]
+    }
+  },
+  {
+    "model": "core.game",
+    "pk": 3,
+    "fields": {
+      "variant": 1,
+      "name": "The Big Boy",
+      "status": "active",
+      "description": "Ultimate battle for Europe",
+      "num_players": 7,
+      "created_by": 5,
+      "created_at": "2019-11-05T18:40:06.947Z",
+      "participants": [3]
+    }
+  },
+  {
+    "model": "core.game",
+    "pk": 4,
+    "fields": {
+      "variant": 1,
+      "name": "Ancient battle",
+      "status": "ended",
+      "description": "",
+      "num_players": 7,
+      "created_by": 7,
+      "created_at": "2019-11-05T18:40:06.947Z",
+      "participants": [3, 4, 5, 6, 1, 2, 7]
+    }
+  }
+]

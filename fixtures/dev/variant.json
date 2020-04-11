@@ -1,0 +1,9 @@
+[
+  {
+    "fields": {
+      "name": "Standard"
+    },
+    "model": "core.variant",
+    "pk": 1
+  }
+]
