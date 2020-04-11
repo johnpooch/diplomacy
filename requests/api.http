@@ -1,0 +1,45 @@
+# Send Request
+GET http://127.0.0.1:8082/api/auth/user
+Authorization: Token 46ccaead3b96daf476bdc96a46a896c1ba8e2c05a8391ba5cbdc7f994f05718a
+
+###
+
+# Send Request
+POST http://127.0.0.1:8082/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "John2",
+  "email": "john2@example.com",
+  "password": "1234"
+}
+
+###
+
+# Send Request
+POST http://127.0.0.1:8082/api/auth/logout
+Authorization: Token eca071ed363467d6326e8e4ac169b440e3172e89a8ef4ecc137990fdbb10a7f0
+
+###
+
+# Send Request
+POST http://127.0.0.1:8082/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "Mary",
+    "password": "1234"
+}
+
+###
+
+# Send Request
+POST http://127.0.0.1:8082/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "John",
+    "password": "1234"
+}
+
+###
