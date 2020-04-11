@@ -1,0 +1,13 @@
+version: '3'
+services:
+  diplomacy.service:
+    volumes:
+      - .:/code
+      - diplomacy.adjudicator:/diplomacy-adjudicator
+volumes:
+  diplomacy.adjudicator:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Path/To/diplomacy-adjudicator
+      o: bind

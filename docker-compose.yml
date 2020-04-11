@@ -17,16 +17,6 @@ services:
     build: 
       context: .
       dockerfile: .docker/Dockerfile
-    volumes:
-      - .:/code
-      - diplomacy.adjudicator:/adjudicator
     ports:
       - "127.0.0.1:8082:8000"
 
-volumes:
-  diplomacy.adjudicator:
-    driver: local
-    driver_opts:
-      type: none
-      device: /Users/john/src/diplomacy-adjudicator
-      o: bind
