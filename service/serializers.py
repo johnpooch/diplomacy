@@ -12,7 +12,6 @@ class PieceSerializer(serializers.ModelSerializer):
             'nation',
             'territory',
             'named_coast',
-            'retreat_territories',
         )
 
 
@@ -25,7 +24,6 @@ class TerritorySerializer(serializers.ModelSerializer):
             'name',
             'type',
             'supply_center',
-            'coastal',
         )
 
 

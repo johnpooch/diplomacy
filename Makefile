@@ -2,10 +2,14 @@ load_dev_fixtures:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
 		fixtures/dev/user.json \
 		fixtures/dev/variant.json \
-		fixtures/dev/game.json \
 		fixtures/dev/nation.json \
 		fixtures/dev/territory.json \
-		fixtures/dev/named_coast.json
+		fixtures/dev/named_coast.json \
+		fixtures/dev/games/game_1/game.json \
+		fixtures/dev/games/game_1/turns/spring_1900/turn.json \
+		fixtures/dev/games/game_1/turns/spring_1900/pieces.json \
+		fixtures/dev/games/game_1/turns/spring_1900/territory_states.json \
+
 
 
 reset_db:

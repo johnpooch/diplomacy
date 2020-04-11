@@ -1252,7 +1252,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1272,7 +1272,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1295,7 +1295,7 @@
 
          ],
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1317,7 +1317,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1338,7 +1338,7 @@
 
          ],
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1362,7 +1362,7 @@
 
          ],
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1386,7 +1386,7 @@
 
          ],
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1406,7 +1406,7 @@
 
          ],
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1427,7 +1427,7 @@
 
          ],
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1448,7 +1448,7 @@
 
          ],
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1468,7 +1468,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1488,7 +1488,7 @@
 
          ],
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1508,7 +1508,7 @@
 
          ],
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1529,7 +1529,7 @@
 
          ],
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"inland"
       }
    },
    {

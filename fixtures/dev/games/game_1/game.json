@@ -1,0 +1,16 @@
+[
+  {
+    "model": "core.game",
+    "pk": 1,
+    "fields": {
+      "variant": 1,
+      "name": "The showdown",
+      "description": "A game among friends.",
+      "num_players": 7,
+      "created_by": 1,
+      "status": "active",
+      "created_at": "2019-11-10T18:40:06.947Z",
+      "participants": [1, 2, 3, 4, 5, 6, 7]
+    }
+  }
+]
