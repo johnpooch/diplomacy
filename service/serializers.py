@@ -20,6 +20,9 @@ class PieceStateSerializer(serializers.ModelSerializer):
         fields = (
             'territory',
             'named_coast',
+            'dislodged',
+            'dislodged_by',
+            'attacker_territory',
         )
 
 
@@ -140,7 +143,6 @@ class TurnSerializer(serializers.ModelSerializer):
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
-    pieces = PieceSerializer(many=True)
     orders = OrderSerializer(many=True)
 
     class Meta:
@@ -152,7 +154,6 @@ class TurnSerializer(serializers.ModelSerializer):
             'season',
             'phase',
             'territory_states',
-            'pieces',
             'piece_states',
             'nation_states',
             'orders',
@@ -170,6 +171,7 @@ class GameStateSerializer(serializers.ModelSerializer):
 
     turns = TurnSerializer(many=True)
     variant = VariantSerializer()
+    pieces = PieceSerializer(many=True)
 
     class Meta:
         model = models.Game
@@ -178,4 +180,5 @@ class GameStateSerializer(serializers.ModelSerializer):
             'name',
             'turns',
             'variant',
+            'pieces',
         )

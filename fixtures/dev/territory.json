@@ -4,6 +4,7 @@
       "pk":1,
       "fields":{
          "name":"adriatic sea",
+         "variant": 1,
          "neighbours":[
             20,
             22,
@@ -11,10 +12,11 @@
             53,
             56
          ],
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -24,6 +26,7 @@
       "pk":2,
       "fields":{
          "name":"aegean sea",
+         "variant": 1,
          "neighbours":[
             5,
             73,
@@ -36,7 +39,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -46,6 +48,7 @@
       "pk":3,
       "fields":{
          "name":"baltic sea",
+         "variant": 1,
          "neighbours":[
             24,
             6,
@@ -57,7 +60,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -67,6 +69,7 @@
       "pk":4,
       "fields":{
          "name":"barrents sea",
+         "variant": 1,
          "neighbours":[
             15,
             42,
@@ -75,7 +78,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -85,6 +87,7 @@
       "pk":5,
       "fields":{
          "name":"black sea",
+         "variant": 1,
          "neighbours":[
             21,
             23,
@@ -96,7 +99,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -106,6 +108,7 @@
       "pk":6,
       "fields":{
          "name":"gulf of bothnia",
+         "variant": 1,
          "neighbours":[
             3,
             31,
@@ -117,7 +120,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -127,6 +129,7 @@
       "pk":7,
       "fields":{
          "name":"eastern mediterranean",
+         "variant": 1,
          "neighbours":[
             2,
             50,
@@ -135,7 +138,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -145,6 +147,7 @@
       "pk":8,
       "fields":{
          "name":"english channel",
+         "variant": 1,
          "neighbours":[
             25,
             26,
@@ -158,7 +161,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -168,6 +170,7 @@
       "pk":9,
       "fields":{
          "name":"gulf of lyon",
+         "variant": 1,
          "neighbours":[
             39,
             44,
@@ -179,7 +182,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -189,6 +191,7 @@
       "pk":10,
       "fields":{
          "name":"helgoland bight",
+         "variant": 1,
          "neighbours":[
             29,
             34,
@@ -198,7 +201,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -208,6 +210,7 @@
       "pk":11,
       "fields":{
          "name":"ionian sea",
+         "variant": 1,
          "neighbours":[
             2,
             1,
@@ -221,7 +224,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -231,6 +233,7 @@
       "pk":12,
       "fields":{
          "name":"irish sea",
+         "variant": 1,
          "neighbours":[
             8,
             38,
@@ -241,7 +244,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -251,6 +253,7 @@
       "pk":13,
       "fields":{
          "name":"mid atlantic",
+         "variant": 1,
          "neighbours":[
             26,
             8,
@@ -265,7 +268,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -275,6 +277,7 @@
       "pk":14,
       "fields":{
          "name":"north atlantic",
+         "variant": 1,
          "neighbours":[
             27,
             12,
@@ -285,7 +288,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -295,6 +297,7 @@
       "pk":15,
       "fields":{
          "name":"norwegian sea",
+         "variant": 1,
          "neighbours":[
             4,
             27,
@@ -306,7 +309,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -316,6 +318,7 @@
       "pk":16,
       "fields":{
          "name":"north sea",
+         "variant": 1,
          "neighbours":[
             25,
             29,
@@ -332,7 +335,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -342,6 +344,7 @@
       "pk":17,
       "fields":{
          "name":"skagerrak",
+         "variant": 1,
          "neighbours":[
             29,
             16,
@@ -351,7 +354,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -361,6 +363,7 @@
       "pk":18,
       "fields":{
          "name":"tyrrhenian sea",
+         "variant": 1,
          "neighbours":[
             9,
             11,
@@ -373,7 +376,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -383,6 +385,7 @@
       "pk":19,
       "fields":{
          "name":"western mediterranean",
+         "variant": 1,
          "neighbours":[
             9,
             13,
@@ -394,7 +397,6 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
          "type":"sea"
       }
@@ -404,6 +406,7 @@
       "pk":20,
       "fields":{
          "name":"albania",
+         "variant": 1,
          "neighbours":[
             1,
             33,
@@ -415,9 +418,8 @@
             33,
             53
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -425,6 +427,7 @@
       "pk":21,
       "fields":{
          "name":"ankara",
+         "variant": 1,
          "neighbours":[
             23,
             5,
@@ -435,9 +438,8 @@
             23,
             28
          ],
-         "coastal":true,
          "controlled_by_initial":7,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -445,6 +447,7 @@
       "pk":22,
       "fields":{
          "name":"apulia",
+         "variant": 1,
          "neighbours":[
             1,
             11,
@@ -456,9 +459,8 @@
             41,
             56
          ],
-         "coastal":true,
          "controlled_by_initial":5,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -466,6 +468,7 @@
       "pk":23,
       "fields":{
          "name":"armenia",
+         "variant": 1,
          "neighbours":[
             21,
             21,
@@ -477,9 +480,8 @@
             49,
             21
          ],
-         "coastal":true,
          "controlled_by_initial":7,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -487,6 +489,9 @@
       "pk":24,
       "fields":{
          "name":"berlin",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             3,
             35,
@@ -498,9 +503,8 @@
             35,
             48
          ],
-         "coastal":true,
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -508,6 +512,7 @@
       "pk":25,
       "fields":{
          "name":"belgium",
+         "variant": 1,
          "neighbours":[
             61,
             8,
@@ -520,9 +525,8 @@
             34,
             43
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -530,6 +534,9 @@
       "pk":26,
       "fields":{
          "name":"brest",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             8,
             32,
@@ -541,9 +548,8 @@
             32,
             43
          ],
-         "coastal":true,
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -551,6 +557,7 @@
       "pk":27,
       "fields":{
          "name":"clyde",
+         "variant": 1,
          "neighbours":[
             30,
             38,
@@ -562,9 +569,8 @@
             30,
             38
          ],
-         "coastal":true,
          "controlled_by_initial":1,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -572,6 +578,7 @@
       "pk":28,
       "fields":{
          "name":"constantinople",
+         "variant": 1,
          "neighbours":[
             2,
             21,
@@ -583,9 +590,8 @@
             21,
             50
          ],
-         "coastal":true,
          "controlled_by_initial":7,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -593,6 +599,7 @@
       "pk":29,
       "fields":{
          "name":"denmark",
+         "variant": 1,
          "neighbours":[
             3,
             10,
@@ -605,9 +612,8 @@
             35,
             51
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -615,6 +621,9 @@
       "pk":30,
       "fields":{
          "name":"edinburgh",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             27,
             38,
@@ -626,9 +635,8 @@
             27,
             58
          ],
-         "coastal":true,
          "controlled_by_initial":1,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -636,6 +644,7 @@
       "pk":31,
       "fields":{
          "name":"finland",
+         "variant": 1,
          "neighbours":[
             6,
             42,
@@ -645,9 +654,8 @@
          "shared_coasts":[
             51
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -655,6 +663,7 @@
       "pk":32,
       "fields":{
          "name":"gascony",
+         "variant": 1,
          "neighbours":[
             26,
             61,
@@ -666,9 +675,8 @@
          "shared_coasts":[
             26
          ],
-         "coastal":true,
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -676,6 +684,7 @@
       "pk":33,
       "fields":{
          "name":"greece",
+         "variant": 1,
          "neighbours":[
             2,
             20,
@@ -687,9 +696,8 @@
             20,
             73
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -697,6 +705,7 @@
       "pk":34,
       "fields":{
          "name":"holland",
+         "variant": 1,
          "neighbours":[
             25,
             10,
@@ -708,9 +717,8 @@
             25,
             35
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -718,6 +726,9 @@
       "pk":35,
       "fields":{
          "name":"kiel",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             3,
             24,
@@ -732,9 +743,8 @@
             29,
             34
          ],
-         "coastal":true,
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -742,6 +752,7 @@
       "pk":36,
       "fields":{
          "name":"london",
+         "variant": 1,
          "neighbours":[
             8,
             16,
@@ -752,9 +763,8 @@
             57,
             58
          ],
-         "coastal":true,
          "controlled_by_initial":1,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -762,6 +772,7 @@
       "pk":37,
       "fields":{
          "name":"livonia",
+         "variant": 1,
          "neighbours":[
             3,
             6,
@@ -773,9 +784,8 @@
          "shared_coasts":[
             48
          ],
-         "coastal":true,
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -783,6 +793,9 @@
       "pk":38,
       "fields":{
          "name":"liverpool",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             27,
             30,
@@ -795,9 +808,8 @@
             27,
             57
          ],
-         "coastal":true,
          "controlled_by_initial":1,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -805,6 +817,9 @@
       "pk":39,
       "fields":{
          "name":"marseilles",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             61,
             32,
@@ -815,9 +830,8 @@
          "shared_coasts":[
             44
          ],
-         "coastal":true,
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -825,6 +839,7 @@
       "pk":40,
       "fields":{
          "name":"north africa",
+         "variant": 1,
          "neighbours":[
             13,
             54,
@@ -833,9 +848,8 @@
          "shared_coasts":[
             54
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -843,6 +857,9 @@
       "pk":41,
       "fields":{
          "name":"naples",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"fleet",
          "neighbours":[
             22,
             11,
@@ -853,9 +870,8 @@
             22,
             46
          ],
-         "coastal":true,
          "controlled_by_initial":5,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -863,6 +879,7 @@
       "pk":42,
       "fields":{
          "name":"norway",
+         "variant": 1,
          "neighbours":[
             4,
             31,
@@ -875,9 +892,8 @@
          "shared_coasts":[
             51
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -885,6 +901,7 @@
       "pk":43,
       "fields":{
          "name":"picardy",
+         "variant": 1,
          "neighbours":[
             26,
             25,
@@ -896,9 +913,8 @@
             26,
             25
          ],
-         "coastal":true,
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -906,6 +922,7 @@
       "pk":44,
       "fields":{
          "name":"piedmont",
+         "variant": 1,
          "neighbours":[
             9,
             39,
@@ -917,9 +934,8 @@
             39,
             55
          ],
-         "coastal":true,
          "controlled_by_initial":5,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -927,6 +943,7 @@
       "pk":45,
       "fields":{
          "name":"portugal",
+         "variant": 1,
          "neighbours":[
             13,
             74
@@ -934,9 +951,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -944,6 +960,9 @@
       "pk":46,
       "fields":{
          "name":"rome",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             22,
             41,
@@ -955,9 +974,8 @@
             41,
             55
          ],
-         "coastal":true,
          "controlled_by_initial":5,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -965,6 +983,7 @@
       "pk":47,
       "fields":{
          "name":"rumania",
+         "variant": 1,
          "neighbours":[
             5,
             60,
@@ -977,9 +996,8 @@
          "shared_coasts":[
             49
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -987,6 +1005,7 @@
       "pk":48,
       "fields":{
          "name":"prussia",
+         "variant": 1,
          "neighbours":[
             3,
             24,
@@ -998,9 +1017,8 @@
             24,
             37
          ],
-         "coastal":true,
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1008,6 +1026,7 @@
       "pk":49,
       "fields":{
          "name":"sevastapol",
+         "variant": 1,
          "neighbours":[
             23,
             5,
@@ -1019,9 +1038,8 @@
             23,
             47
          ],
-         "coastal":true,
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1029,6 +1047,7 @@
       "pk":50,
       "fields":{
          "name":"smyrna",
+         "variant": 1,
          "neighbours":[
             2,
             23,
@@ -1041,9 +1060,8 @@
             28,
             52
          ],
-         "coastal":true,
          "controlled_by_initial":7,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1051,6 +1069,7 @@
       "pk":51,
       "fields":{
          "name":"sweden",
+         "variant": 1,
          "neighbours":[
             3,
             6,
@@ -1064,9 +1083,8 @@
             31,
             42
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1074,6 +1092,7 @@
       "pk":52,
       "fields":{
          "name":"syria",
+         "variant": 1,
          "neighbours":[
             23,
             7,
@@ -1082,9 +1101,8 @@
          "shared_coasts":[
             50
          ],
-         "coastal":true,
          "controlled_by_initial":7,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1092,6 +1110,7 @@
       "pk":53,
       "fields":{
          "name":"trieste",
+         "variant": 1,
          "neighbours":[
             1,
             20,
@@ -1105,9 +1124,8 @@
             20,
             56
          ],
-         "coastal":true,
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1115,6 +1133,7 @@
       "pk":54,
       "fields":{
          "name":"tunis",
+         "variant": 1,
          "neighbours":[
             11,
             40,
@@ -1124,9 +1143,8 @@
          "shared_coasts":[
             40
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1134,6 +1152,7 @@
       "pk":55,
       "fields":{
          "name":"tuscany",
+         "variant": 1,
          "neighbours":[
             9,
             44,
@@ -1145,9 +1164,8 @@
             44,
             46
          ],
-         "coastal":true,
          "controlled_by_initial":5,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1155,6 +1173,9 @@
       "pk":56,
       "fields":{
          "name":"venice",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             1,
             22,
@@ -1168,9 +1189,8 @@
             22,
             53
          ],
-         "coastal":true,
          "controlled_by_initial":5,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1178,6 +1198,7 @@
       "pk":57,
       "fields":{
          "name":"wales",
+         "variant": 1,
          "neighbours":[
             8,
             12,
@@ -1189,9 +1210,8 @@
             36,
             38
          ],
-         "coastal":true,
          "controlled_by_initial":1,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1199,6 +1219,7 @@
       "pk":58,
       "fields":{
          "name":"yorkshire",
+         "variant": 1,
          "neighbours":[
             30,
             36,
@@ -1210,9 +1231,8 @@
             30,
             36
          ],
-         "coastal":true,
          "controlled_by_initial":1,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1220,6 +1240,7 @@
       "pk":59,
       "fields":{
          "name":"bohemia",
+         "variant": 1,
          "neighbours":[
             62,
             64,
@@ -1230,9 +1251,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1240,6 +1260,7 @@
       "pk":60,
       "fields":{
          "name":"budapest",
+         "variant": 1,
          "neighbours":[
             62,
             47,
@@ -1250,9 +1271,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1260,6 +1280,7 @@
       "pk":61,
       "fields":{
          "name":"burgundy",
+         "variant": 1,
          "neighbours":[
             26,
             25,
@@ -1273,9 +1294,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1283,6 +1303,7 @@
       "pk":62,
       "fields":{
          "name":"galicia",
+         "variant": 1,
          "neighbours":[
             59,
             60,
@@ -1295,9 +1316,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1305,6 +1325,7 @@
       "pk":63,
       "fields":{
          "name":"moscow",
+         "variant": 1,
          "neighbours":[
             37,
             47,
@@ -1316,9 +1337,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1326,6 +1346,9 @@
       "pk":64,
       "fields":{
          "name":"munich",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             24,
             59,
@@ -1338,9 +1361,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1348,6 +1370,9 @@
       "pk":65,
       "fields":{
          "name":"paris",
+         "variant": 1,
+         "supply_center":true,
+         "initial_piece_type":"army",
          "neighbours":[
             26,
             61,
@@ -1360,9 +1385,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":2,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1370,6 +1394,7 @@
       "pk":66,
       "fields":{
          "name":"ruhr",
+         "variant": 1,
          "neighbours":[
             26,
             61,
@@ -1380,9 +1405,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1390,6 +1414,7 @@
       "pk":67,
       "fields":{
          "name":"serbia",
+         "variant": 1,
          "neighbours":[
             20,
             60,
@@ -1401,9 +1426,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1411,6 +1435,7 @@
       "pk":68,
       "fields":{
          "name":"silesia",
+         "variant": 1,
          "neighbours":[
             24,
             59,
@@ -1422,9 +1447,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":3,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1432,6 +1456,7 @@
       "pk":69,
       "fields":{
          "name":"tyrolia",
+         "variant": 1,
          "neighbours":[
             59,
             64,
@@ -1442,9 +1467,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1452,6 +1476,7 @@
       "pk":70,
       "fields":{
          "name":"ukraine",
+         "variant": 1,
          "neighbours":[
             62,
             63,
@@ -1462,9 +1487,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1472,6 +1496,7 @@
       "pk":71,
       "fields":{
          "name":"vienna",
+         "variant": 1,
          "neighbours":[
             59,
             60,
@@ -1482,9 +1507,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":4,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1492,6 +1516,7 @@
       "pk":72,
       "fields":{
          "name":"warsaw",
+         "variant": 1,
          "neighbours":[
             62,
             37,
@@ -1503,9 +1528,8 @@
          "shared_coasts":[
 
          ],
-         "coastal":false,
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"inland"
       }
    },
    {
@@ -1513,6 +1537,7 @@
       "pk":73,
       "fields":{
          "name":"bulgaria",
+         "variant": 1,
          "neighbours":[
             2,
             5,
@@ -1526,9 +1551,8 @@
             33,
             28
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1536,6 +1560,7 @@
       "pk":74,
       "fields":{
          "name":"spain",
+         "variant": 1,
          "neighbours":[
              32,
              39,
@@ -1551,9 +1576,8 @@
              39,
              9
          ],
-         "coastal":true,
          "controlled_by_initial":null,
-         "type":"land"
+         "type":"coastal"
       }
    },
    {
@@ -1561,6 +1585,7 @@
       "pk":75,
       "fields":{
          "name":"st. petersburg",
+         "variant": 1,
          "neighbours":[
             31,
             37,
@@ -1572,9 +1597,8 @@
              31,
              42
          ],
-         "coastal":true,
          "controlled_by_initial":6,
-         "type":"land"
+         "type":"coastal"
       }
    }
 ]

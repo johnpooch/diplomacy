@@ -1,0 +1,15 @@
+[
+  {
+    "model": "core.turn",
+    "pk": 3,
+    "fields": {
+      "season": "fall",
+      "phase": "order",
+      "year": 1900,
+      "game": 2,
+      "current_turn": true,
+      "processed": false,
+      "processed_at": null
+    }
+  }
+]

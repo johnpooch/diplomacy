@@ -1,0 +1,83 @@
+[
+    {
+        "fields": {
+            "game": 2,
+            "nation": 1,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 1,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 1,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 2,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 2,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 2,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 3,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 3,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "game": 2,
+            "nation": 3,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 18
+    }
+]

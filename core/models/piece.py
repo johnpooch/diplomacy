@@ -8,7 +8,7 @@ from core.models.base import HygienicModel, PerTurnModel, \
     PieceType
 
 
-class Piece(HygienicModel, PerTurnModel):
+class Piece(HygienicModel):
 
     nation = models.ForeignKey(
         'Nation',
