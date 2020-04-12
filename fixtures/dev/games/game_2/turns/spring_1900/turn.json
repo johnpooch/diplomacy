@@ -7,7 +7,9 @@
       "phase": "order",
       "year": 1900,
       "game": 2,
-      "current_turn": true
+      "current_turn": true,
+      "processed": true,
+      "processed_at": "2019-11-10T18:40:06.947Z"
     }
   }
 ]

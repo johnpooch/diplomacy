@@ -1,6 +1,7 @@
 [
     {
         "fields": {
+            "persisted_piece_id": 1,
             "turn":2,
             "nation": 1,
             "territory": 36,

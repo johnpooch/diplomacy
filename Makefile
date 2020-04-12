@@ -13,6 +13,7 @@ load_dev_fixtures:
 		fixtures/dev/games/game_2/turns/spring_1900/turn.json \
 		fixtures/dev/games/game_2/turns/spring_1900/pieces.json \
 		fixtures/dev/games/game_2/turns/spring_1900/territory_states.json \
+		fixtures/dev/games/game_2/turns/spring_1900/orders.json \
 
 
 
