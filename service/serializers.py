@@ -10,9 +10,16 @@ class PieceSerializer(serializers.ModelSerializer):
             'id',
             'type',
             'nation',
+        )
+
+
+class PieceStateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.PieceState
+        fields = (
             'territory',
             'named_coast',
-            'retreat_territories',
         )
 
 
@@ -25,7 +32,6 @@ class TerritorySerializer(serializers.ModelSerializer):
             'name',
             'type',
             'supply_center',
-            'coastal',
         )
 
 
@@ -132,6 +138,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class TurnSerializer(serializers.ModelSerializer):
 
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
+    piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
     pieces = PieceSerializer(many=True)
     orders = OrderSerializer(many=True)
@@ -146,6 +153,7 @@ class TurnSerializer(serializers.ModelSerializer):
             'phase',
             'territory_states',
             'pieces',
+            'piece_states',
             'nation_states',
             'orders',
         )
