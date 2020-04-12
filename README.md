@@ -14,8 +14,8 @@ Copy the example settings file:
 
 ### Loading fixtures for dev
 
-To load the fixtures run `make load_all_fixtures` from the root directory
-within service container. This builds the initial state of a game.
+To load the fixtures run `make reset_db && make load_dev_fixtures` from the root directory
+(outside container). This builds builds two games.
 
 ### Test Coverage
 
