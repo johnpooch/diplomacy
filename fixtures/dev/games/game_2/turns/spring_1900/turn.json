@@ -1,13 +1,13 @@
 [
-{
-   "model": "core.turn",
-   "pk": 1,
-   "fields": {
+  {
+    "model": "core.turn",
+    "pk": 2,
+    "fields": {
       "season": "spring",
       "phase": "order",
       "year": 1900,
-      "game": 1,
+      "game": 2,
       "current_turn": true
-   }
-}
+    }
+  }
 ]

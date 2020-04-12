@@ -1,0 +1,13 @@
+[
+  {
+    "model": "core.order",
+    "pk": 1,
+    "fields": {
+      "nation": 1,
+      "turn": 2,
+      "source": 30,
+      "target": 16,
+      "type": "move"
+    }
+  }
+]

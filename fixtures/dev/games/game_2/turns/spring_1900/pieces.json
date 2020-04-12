@@ -1,101 +1,92 @@
 [
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 1,
             "territory": 36,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 1
+        "pk": 10
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 1,
             "territory": 38,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 2
+        "pk": 11
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 1,
             "territory": 30,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 3
+        "pk": 12
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 2,
             "territory": 65,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 4
+        "pk": 13
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 2,
             "territory": 26,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 5
+        "pk": 14
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 2,
             "territory": 39,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 6
+        "pk": 15
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 3,
             "territory": 35,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 7
+        "pk": 16
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 3,
             "territory": 24,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 8
+        "pk": 17
     },
     {
         "fields": {
-            "active": true,
-            "turn":1,
+            "turn":2,
             "nation": 3,
             "territory": 64,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 9
+        "pk": 18
     }
 ]
