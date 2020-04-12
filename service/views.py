@@ -48,7 +48,6 @@ class GameStateView(views.APIView):
         Returns the state of the game for each turn that has taken place as
         well as the current turn.
         """
-        print('AGGGHHHH')
         game_id = kwargs['game']
         states = [GameStatus.ENDED, GameStatus.ACTIVE]
         game = get_object_or_404(models.Game, id=game_id, status__in=states)
