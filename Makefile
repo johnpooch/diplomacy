@@ -6,12 +6,14 @@ load_dev_fixtures:
 		fixtures/dev/territory.json \
 		fixtures/dev/named_coast.json \
 		fixtures/dev/games/game_1/game.json \
+		fixtures/dev/games/game_1/pieces.json \
 		fixtures/dev/games/game_1/turns/spring_1900/turn.json \
-		fixtures/dev/games/game_1/turns/spring_1900/pieces.json \
+		fixtures/dev/games/game_1/turns/spring_1900/piece_states.json \
 		fixtures/dev/games/game_1/turns/spring_1900/territory_states.json \
 		fixtures/dev/games/game_2/game.json \
+		fixtures/dev/games/game_2/pieces.json \
 		fixtures/dev/games/game_2/turns/spring_1900/turn.json \
-		fixtures/dev/games/game_2/turns/spring_1900/pieces.json \
+		fixtures/dev/games/game_2/turns/spring_1900/piece_states.json \
 		fixtures/dev/games/game_2/turns/spring_1900/territory_states.json \
 		fixtures/dev/games/game_2/turns/spring_1900/orders.json \
 

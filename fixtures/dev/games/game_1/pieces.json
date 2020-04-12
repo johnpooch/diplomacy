@@ -1,93 +1,83 @@
 [
     {
         "fields": {
-            "persisted_piece_id": 1,
-            "turn":2,
+            "game":1,
             "nation": 1,
-            "territory": 36,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 10
+        "pk": 1
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 1,
-            "territory": 38,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 11
+        "pk": 2
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 1,
-            "territory": 30,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 12
+        "pk": 3
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 2,
-            "territory": 65,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 13
+        "pk": 4
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 2,
-            "territory": 26,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 14
+        "pk": 5
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 2,
-            "territory": 39,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 15
+        "pk": 6
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 3,
-            "territory": 35,
             "type": "fleet"
         },
         "model": "core.piece",
-        "pk": 16
+        "pk": 7
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 3,
-            "territory": 24,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 17
+        "pk": 8
     },
     {
         "fields": {
-            "turn":2,
+            "game":1,
             "nation": 3,
-            "territory": 64,
             "type": "army"
         },
         "model": "core.piece",
-        "pk": 18
+        "pk": 9
     }
 ]
