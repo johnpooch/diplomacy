@@ -7,15 +7,18 @@ load_dev_fixtures:
 		fixtures/dev/named_coast.json \
 		fixtures/dev/games/game_1/game.json \
 		fixtures/dev/games/game_1/pieces.json \
-		fixtures/dev/games/game_1/turns/spring_1900/turn.json \
-		fixtures/dev/games/game_1/turns/spring_1900/piece_states.json \
-		fixtures/dev/games/game_1/turns/spring_1900/territory_states.json \
+		fixtures/dev/games/game_1/turns/01_1900_spring_order/turn.json \
+		fixtures/dev/games/game_1/turns/01_1900_spring_order/piece_states.json \
+		fixtures/dev/games/game_1/turns/01_1900_spring_order/territory_states.json \
 		fixtures/dev/games/game_2/game.json \
 		fixtures/dev/games/game_2/pieces.json \
-		fixtures/dev/games/game_2/turns/spring_1900/turn.json \
-		fixtures/dev/games/game_2/turns/spring_1900/piece_states.json \
-		fixtures/dev/games/game_2/turns/spring_1900/territory_states.json \
-		fixtures/dev/games/game_2/turns/spring_1900/orders.json \
+		fixtures/dev/games/game_2/turns/01_1900_spring_order/turn.json \
+		fixtures/dev/games/game_2/turns/01_1900_spring_order/piece_states.json \
+		fixtures/dev/games/game_2/turns/01_1900_spring_order/territory_states.json \
+		fixtures/dev/games/game_2/turns/01_1900_spring_order/orders.json \
+		fixtures/dev/games/game_2/turns/02_1900_fall_order/turn.json \
+		fixtures/dev/games/game_2/turns/02_1900_fall_order/piece_states.json \
+		fixtures/dev/games/game_2/turns/02_1900_fall_order/territory_states.json \
 
 
 

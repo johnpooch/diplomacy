@@ -1,15 +1,15 @@
 [
   {
     "model": "core.turn",
-    "pk": 2,
+    "pk": 3,
     "fields": {
-      "season": "spring",
+      "season": "fall",
       "phase": "order",
       "year": 1900,
       "game": 2,
       "current_turn": true,
-      "processed": true,
-      "processed_at": "2019-11-10T18:40:06.947Z"
+      "processed": false,
+      "processed_at": null
     }
   }
 ]
