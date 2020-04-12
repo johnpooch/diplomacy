@@ -9,26 +9,52 @@ from core.models.base import HygienicModel, PerTurnModel, \
 
 
 class Piece(HygienicModel, PerTurnModel):
-    """
-    Represents a piece during a turn.
 
-    At the beginning of every turn a new `Piece` instance is created for each
-    in-game piece. `Piece` instances representing the same in-game piece are
-    related by their `persisted_piece_id`.
-    """
-    persisted_piece_id = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        help_text=_(
-            'This ID is persisted across `Piece` instances which belong to '
-            'the same in game piece.'
-        )
-    )
     nation = models.ForeignKey(
         'Nation',
         null=False,
         related_name='pieces',
         on_delete=models.CASCADE,
+    )
+    game = models.ForeignKey(
+        'Game',
+        null=False,
+        related_name='pieces',
+        on_delete=models.CASCADE,
+    )
+    type = models.CharField(
+        max_length=50,
+        null=False,
+        choices=PieceType.CHOICES,
+        default=PieceType.ARMY,
+    )
+
+    @property
+    def is_army(self):
+        return self.type == PieceType.ARMY
+
+    @property
+    def is_fleet(self):
+        return self.type == PieceType.FLEET
+
+    def get_previous_territory(self):
+        # TODO do this when phases/logs are properly handled
+        # NOTE maybe just denormalize into a field
+        return None
+
+
+class PieceState(PerTurnModel):
+    """
+    Represents a piece during a turn.
+
+    At the beginning of every turn a new `PieceState` instance is created for
+    each in-game piece.
+    """
+    piece = models.ForeignKey(
+        'Piece',
+        null=False,
+        on_delete=models.CASCADE,
+        related_name='states'
     )
     territory = models.ForeignKey(
         'Territory',
@@ -42,12 +68,6 @@ class Piece(HygienicModel, PerTurnModel):
         blank=True,
         null=True,
         related_name='pieces',
-    )
-    type = models.CharField(
-        max_length=50,
-        null=False,
-        choices=PieceType.CHOICES,
-        default=PieceType.ARMY,
     )
     dislodged = models.BooleanField(
         default=False
@@ -73,11 +93,11 @@ class Piece(HygienicModel, PerTurnModel):
     def __str__(self):
         # TODO Fix this up and make it used in all the error messages. Also
         # make fixtures use title instead of using `title()`
-        return f'{self.type} {str(self.territory)} ({self.nation})'
+        return f'{self.piece.type} {str(self.territory)} ({self.piece.nation})'
 
     def clean(self):
         super().clean()
-        if self.is_fleet:
+        if self.piece.is_fleet:
             if self.territory.is_complex and not self.named_coast:
                 raise ValidationError({
                     'territory': _(
@@ -91,7 +111,7 @@ class Piece(HygienicModel, PerTurnModel):
                         'Fleet cannot be in an inland territory.'
                     ),
                 })
-        if self.is_army:
+        if self.piece.is_army:
             if self.named_coast:
                 raise ValidationError({
                     'territory': _(
@@ -99,24 +119,11 @@ class Piece(HygienicModel, PerTurnModel):
                     )
                 })
 
-    @property
-    def is_army(self):
-        return self.type == PieceType.ARMY
-
-    @property
-    def is_fleet(self):
-        return self.type == PieceType.FLEET
-
-    def get_previous_territory(self):
-        # TODO do this when phases/logs are properly handled
-        # NOTE maybe just denormalize into a field
-        return None
-
     def to_dict(self):
         data = {
             '_id': self.pk,
-            'type': self.type,
-            'nation': self.nation.id,
+            'type': self.piece.type,
+            'nation': self.piece.nation.id,
             'territory_id': self.territory.id,
         }
         if self.attacker_territory:
