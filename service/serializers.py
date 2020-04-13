@@ -18,6 +18,7 @@ class PieceStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PieceState
         fields = (
+            'piece',
             'territory',
             'named_coast',
             'dislodged',
