@@ -1,4 +1,4 @@
-fixtures:
+dev_fixtures:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
 		fixtures/dev/user.json \
 		fixtures/dev/variant.json \
