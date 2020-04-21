@@ -79,5 +79,122 @@
         },
         "model": "core.piece",
         "pk": 9
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 4,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 10
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 4,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 11
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 4,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 12
+    },
+    {
+        "fields": {
+            "game": 1,
+            "nation": 5,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 13
+    },
+    {
+        "fields": {
+            "game": 1,
+            "nation": 5,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 14
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 5,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 15
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 6,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 16
+    },
+    {
+        "fields": {
+            "game": 1,
+            "nation": 6,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 17
+    },
+    {
+        "fields": {
+            "game": 1,
+            "nation": 6,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 18
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 6,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 19
+    },
+    {
+        "fields": {
+            "game": 1,
+            "nation": 7,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 20
+    },
+    {
+        "fields": {
+            "game": 1,
+            "nation": 7,
+            "type": "army"
+        },
+        "model": "core.piece",
+        "pk": 21
+    },
+    {
+        "fields": {
+            "game":1,
+            "nation": 7,
+            "type": "fleet"
+        },
+        "model": "core.piece",
+        "pk": 22
     }
 ]
