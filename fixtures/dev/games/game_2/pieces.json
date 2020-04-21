@@ -109,7 +109,7 @@
     },
     {
         "fields": {
-            "game": 1,
+            "game": 2,
             "nation": 5,
             "type": "fleet"
         },
@@ -118,7 +118,7 @@
     },
     {
         "fields": {
-            "game": 1,
+            "game": 2,
             "nation": 5,
             "type": "army"
         },
@@ -145,7 +145,7 @@
     },
     {
         "fields": {
-            "game": 1,
+            "game": 2,
             "nation": 6,
             "type": "army"
         },
@@ -154,7 +154,7 @@
     },
     {
         "fields": {
-            "game": 1,
+            "game": 2,
             "nation": 6,
             "type": "army"
         },
@@ -172,7 +172,7 @@
     },
     {
         "fields": {
-            "game": 1,
+            "game": 2,
             "nation": 7,
             "type": "army"
         },
@@ -181,7 +181,7 @@
     },
     {
         "fields": {
-            "game": 1,
+            "game": 2,
             "nation": 7,
             "type": "army"
         },

@@ -2,7 +2,7 @@
   {
     "fields": {
       "piece": 23,
-      "turn":3,
+      "turn": 3,
       "territory": 8
     },
     "model": "core.piecestate",
@@ -11,7 +11,7 @@
   {
     "fields": {
       "piece": 24,
-      "turn":3,
+      "turn": 3,
       "territory": 58
     },
     "model": "core.piecestate",
@@ -20,7 +20,7 @@
   {
     "fields": {
       "piece": 25,
-      "turn":3,
+      "turn": 3,
       "territory": 16
     },
     "model": "core.piecestate",
@@ -29,7 +29,7 @@
   {
     "fields": {
       "piece": 26,
-      "turn":3,
+      "turn": 3,
       "territory": 43
     },
     "model": "core.piecestate",
@@ -38,7 +38,7 @@
   {
     "fields": {
       "piece": 27,
-      "turn":3,
+      "turn": 3,
       "territory": 13
     },
     "model": "core.piecestate",
@@ -47,7 +47,7 @@
   {
     "fields": {
       "piece": 28,
-      "turn":3,
+      "turn": 3,
       "territory": 74
     },
     "model": "core.piecestate",
@@ -56,7 +56,7 @@
   {
     "fields": {
       "piece": 29,
-      "turn":3,
+      "turn": 3,
       "territory": 35
     },
     "model": "core.piecestate",
@@ -65,7 +65,7 @@
   {
     "fields": {
       "piece": 30,
-      "turn":3,
+      "turn": 3,
       "territory": 29
     },
     "model": "core.piecestate",
@@ -74,10 +74,128 @@
   {
     "fields": {
       "piece": 31,
-      "turn":3,
+      "turn": 3,
       "territory": 61
     },
     "model": "core.piecestate",
     "pk": 53
+  },
+  {
+    "fields": {
+      "piece": 32,
+      "turn": 3,
+      "territory": 53
+    },
+    "model": "core.piecestate",
+    "pk": 54
+  },
+  {
+    "fields": {
+      "piece": 33,
+      "turn": 3,
+      "territory": 71
+    },
+    "model": "core.piecestate",
+    "pk": 55
+  },
+  {
+    "fields": {
+      "piece": 34,
+      "turn": 3,
+      "territory": 60
+    },
+    "model": "core.piecestate",
+    "pk": 56
+  },
+  {
+    "fields": {
+      "piece": 35,
+      "turn": 3,
+      "territory": 41
+    },
+    "model": "core.piecestate",
+    "pk": 57
+  },
+  {
+    "fields": {
+      "piece": 36,
+      "turn": 3,
+      "territory": 46
+    },
+    "model": "core.piecestate",
+    "pk": 58
+  },
+  {
+    "fields": {
+      "piece": 37,
+      "turn": 3,
+      "territory": 56
+    },
+    "model": "core.piecestate",
+    "pk": 59
+  },
+  {
+    "fields": {
+      "piece": 38,
+      "turn": 3,
+      "territory": 75,
+      "named_coast": 6
+    },
+    "model": "core.piecestate",
+    "pk": 60
+  },
+  {
+    "fields": {
+      "piece": 39,
+      "turn": 3,
+      "territory": 63
+    },
+    "model": "core.piecestate",
+    "pk": 61
+  },
+  {
+    "fields": {
+      "piece": 40,
+      "turn": 3,
+      "territory": 72
+    },
+    "model": "core.piecestate",
+    "pk": 62
+  },
+  {
+    "fields": {
+      "piece": 41,
+      "turn": 3,
+      "territory": 49
+    },
+    "model": "core.piecestate",
+    "pk": 63
+  },
+  {
+    "fields": {
+      "piece": 42,
+      "turn": 3,
+      "territory": 28
+    },
+    "model": "core.piecestate",
+    "pk": 64
+  },
+  {
+    "fields": {
+      "piece": 43,
+      "turn": 3,
+      "territory": 50
+    },
+    "model": "core.piecestate",
+    "pk": 65
+  },
+  {
+    "fields": {
+      "piece": 44,
+      "turn": 3,
+      "territory": 21
+    },
+    "model": "core.piecestate",
+    "pk": 66
   }
 ]

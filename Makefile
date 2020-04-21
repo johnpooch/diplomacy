@@ -1,4 +1,4 @@
-load_dev_fixtures:
+fixtures:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
 		fixtures/dev/user.json \
 		fixtures/dev/variant.json \
@@ -20,8 +20,6 @@ load_dev_fixtures:
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/piece_states.json \
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/territory_states.json \
 
-
-
 reset_db:
 	docker rm -vf diplomacy_diplomacy.mysql_1
 	docker-compose up -d diplomacy.mysql
@@ -29,3 +27,7 @@ reset_db:
 		diplomacy.mysql:3306 --timeout=60 -- echo "Diplomacy DB is up."
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py migrate
 
+superuser:
+	docker exec -it diplomacy_diplomacy.service_1 \
+		./manage.py shell -c "from django.contrib.auth.models import User; \
+		User.objects.create_superuser('admin', 'admin@example.com', 'admin')"

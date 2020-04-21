@@ -2,7 +2,7 @@
     {
         "fields": {
             "piece": 23,
-            "turn":1,
+            "turn":2,
             "territory": 36
         },
         "model": "core.piecestate",
@@ -11,7 +11,7 @@
     {
         "fields": {
             "piece": 24,
-            "turn":1,
+            "turn":2,
             "territory": 38
         },
         "model": "core.piecestate",
@@ -20,7 +20,7 @@
     {
         "fields": {
             "piece": 25,
-            "turn":1,
+            "turn":2,
             "territory": 30
         },
         "model": "core.piecestate",
@@ -29,7 +29,7 @@
     {
         "fields": {
             "piece": 26,
-            "turn":1,
+            "turn":2,
             "territory": 65
         },
         "model": "core.piecestate",
@@ -38,7 +38,7 @@
     {
         "fields": {
             "piece": 27,
-            "turn":1,
+            "turn":2,
             "territory": 26
         },
         "model": "core.piecestate",
@@ -47,7 +47,7 @@
     {
         "fields": {
             "piece": 28,
-            "turn":1,
+            "turn":2,
             "territory": 39
         },
         "model": "core.piecestate",
@@ -56,7 +56,7 @@
     {
         "fields": {
             "piece": 29,
-            "turn":1,
+            "turn":2,
             "territory": 35
         },
         "model": "core.piecestate",
@@ -65,7 +65,7 @@
     {
         "fields": {
             "piece": 30,
-            "turn":1,
+            "turn":2,
             "territory": 24
         },
         "model": "core.piecestate",
@@ -74,7 +74,7 @@
     {
         "fields": {
             "piece": 31,
-            "turn":1,
+            "turn":2,
             "territory": 64
         },
         "model": "core.piecestate",
@@ -83,7 +83,7 @@
     {
         "fields": {
             "piece": 32,
-            "turn":1,
+            "turn":2,
             "territory": 53
         },
         "model": "core.piecestate",
@@ -92,7 +92,7 @@
     {
         "fields": {
             "piece": 33,
-            "turn":1,
+            "turn":2,
             "territory": 71
         },
         "model": "core.piecestate",
@@ -101,7 +101,7 @@
     {
         "fields": {
             "piece": 34,
-            "turn":1,
+            "turn":2,
             "territory": 60
         },
         "model": "core.piecestate",
@@ -110,7 +110,7 @@
     {
         "fields": {
             "piece": 35,
-            "turn":1,
+            "turn":2,
             "territory": 41
         },
         "model": "core.piecestate",
@@ -119,7 +119,7 @@
     {
         "fields": {
             "piece": 36,
-            "turn":1,
+            "turn":2,
             "territory": 46
         },
         "model": "core.piecestate",
@@ -128,7 +128,7 @@
     {
         "fields": {
             "piece": 37,
-            "turn":1,
+            "turn":2,
             "territory": 56
         },
         "model": "core.piecestate",
@@ -137,7 +137,7 @@
     {
         "fields": {
             "piece": 38,
-            "turn":1,
+            "turn":2,
             "territory": 75,
             "named_coast": 6
         },
@@ -147,7 +147,7 @@
     {
         "fields": {
             "piece": 39,
-            "turn":1,
+            "turn":2,
             "territory": 63
         },
         "model": "core.piecestate",
@@ -156,7 +156,7 @@
     {
         "fields": {
             "piece": 40,
-            "turn":1,
+            "turn":2,
             "territory": 72
         },
         "model": "core.piecestate",
@@ -165,7 +165,7 @@
     {
         "fields": {
             "piece": 41,
-            "turn":1,
+            "turn":2,
             "territory": 49
         },
         "model": "core.piecestate",
@@ -174,7 +174,7 @@
     {
         "fields": {
             "piece": 42,
-            "turn":1,
+            "turn":2,
             "territory": 28
         },
         "model": "core.piecestate",
@@ -183,7 +183,7 @@
     {
         "fields": {
             "piece": 43,
-            "turn":1,
+            "turn":2,
             "territory": 50
         },
         "model": "core.piecestate",
@@ -192,7 +192,7 @@
     {
         "fields": {
             "piece": 44,
-            "turn":1,
+            "turn":2,
             "territory": 21
         },
         "model": "core.piecestate",
