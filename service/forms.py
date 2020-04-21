@@ -43,3 +43,22 @@ class JoinGameForm(forms.Form):
         except models.Nation.DoesNotExist:
             raise ValidationError('Invalid nation selected.')
         return nation_id
+
+
+class CreateGameForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'name',
+            'description',
+            'variant',
+            'private',
+            'password',
+            'num_players',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+        )

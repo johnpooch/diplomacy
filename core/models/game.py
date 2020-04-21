@@ -52,6 +52,7 @@ class Game(models.Model):
         choices=GameStatus.CHOICES,
         default=GameStatus.PENDING,
         null=False,
+        editable=False,
     )
     participants = models.ManyToManyField(
         User,

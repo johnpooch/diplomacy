@@ -1,16 +1,15 @@
 from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
-from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import GameStatus
-from service import serializers
-from service import forms
+from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode
+from service import forms, serializers
 from service.permissions import IsAuthenticated, IsParticipant
+from service.utils import form_to_data
 
-from rest_framework.exceptions import NotFound
 
 
 def error404():
@@ -85,18 +84,17 @@ class ListUserGames(ListGames):
 class CreateGame(views.APIView):
 
     permission_classes = [IsAuthenticated]
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'create_game.html'
 
     def get(self, request, *args, **kwargs):
-        serializer = serializers.GameSerializer()
-        return Response({'serializer': serializer})
+        form = forms.CreateGameForm()
+        data = form_to_data(form)
+        return Response(data)
 
     def post(self, request):
         serializer = serializers.GameSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
-                {'serializer': serializer},
+                {'errors': serializer.errors},
                 status.HTTP_400_BAD_REQUEST,
             )
         game = serializer.save(created_by=request.user)
