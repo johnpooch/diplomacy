@@ -1,0 +1,2 @@
+class IllegalOrderException(Exception):
+    pass
