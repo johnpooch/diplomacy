@@ -48,8 +48,7 @@ class GameStateView(views.APIView):
         well as the current turn.
         """
         game_id = kwargs['game']
-        states = [GameStatus.ENDED, GameStatus.ACTIVE]
-        game = get_object_or_404(models.Game, id=game_id, status__in=states)
+        game = get_object_or_404(models.Game, id=game_id)
 
         game_state_serializer = serializers.GameStateSerializer(game)
 

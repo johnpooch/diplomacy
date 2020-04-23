@@ -19,6 +19,7 @@ dev_fixtures:
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/turn.json \
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/piece_states.json \
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/territory_states.json \
+		fixtures/dev/games/game_3/game.json
 
 reset_db:
 	docker rm -vf diplomacy_diplomacy.mysql_1

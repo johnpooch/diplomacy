@@ -1,0 +1,25 @@
+{
+  "phase": "retreat",
+  "pieces": [
+    {
+      "type": "fleet",
+      "nation": 1,
+      "terrtitory_id": 1
+    }
+  ],
+  "territories": [
+    {
+      "type": "sea",
+      "id": 1,
+      "name": "Adriatic Sea",
+      "neighbour_ids": [20, 22, 11, 53, 56]
+    }
+  ],
+  "orders": [
+    {
+      "nation": 1,
+      "type": "move",
+      "source": 1
+    }
+  ]
+}

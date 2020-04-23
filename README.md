@@ -14,8 +14,8 @@ Copy the example settings file:
 
 ### Loading fixtures for dev
 
-To load the fixtures run `make reset_db && make load_dev_fixtures` from the root directory
-(outside container). This builds builds two games.
+To load the fixtures run `make reset_db && make dev_fixtures && superuser` from the root directory
+(outside container).
 
 ### Test Coverage
 

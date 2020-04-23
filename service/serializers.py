@@ -1,5 +1,7 @@
-from core import models
+from django.contrib.auth.models import User
 from rest_framework import serializers
+
+from core import models
 
 
 class PieceSerializer(serializers.ModelSerializer):
@@ -168,11 +170,19 @@ class TurnSerializer(serializers.ModelSerializer):
                 self.fields.pop('orders')
 
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'id')
+
+
 class GameStateSerializer(serializers.ModelSerializer):
 
     turns = TurnSerializer(many=True)
     variant = VariantSerializer()
     pieces = PieceSerializer(many=True)
+    participants = UserSerializer(many=True)
 
     class Meta:
         model = models.Game
@@ -182,4 +192,6 @@ class GameStateSerializer(serializers.ModelSerializer):
             'turns',
             'variant',
             'pieces',
+            'status',
+            'participants',
         )
