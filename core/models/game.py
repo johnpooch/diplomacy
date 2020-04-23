@@ -1,7 +1,7 @@
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.manager import BaseManager
+from django.db.models.manager import Manager
 
 from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
 
@@ -26,7 +26,7 @@ class GameQuerySet(models.QuerySet):
             .exclude(status=GameStatus.ENDED)
 
 
-class GameManager(BaseManager.from_queryset(GameQuerySet)):
+class GameManager(Manager.from_queryset(GameQuerySet)):
     pass
 
 
