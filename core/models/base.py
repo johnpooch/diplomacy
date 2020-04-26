@@ -5,7 +5,7 @@ from django.db import models
 class NationChoiceMode:
     RANDOM = 'random'
     PREFERENCE = 'preference'
-    FIRST_COME = 'first come'
+    FIRST_COME = 'first_come'
     CHOICES = (
         (RANDOM, 'Random'),
         (PREFERENCE, 'Preference'),
@@ -14,12 +14,12 @@ class NationChoiceMode:
 
 
 class DeadlineFrequency:
-    TWELVE_HOURS = 'twelve hours'
-    TWENTY_FOUR_HOURS = 'twenty four hours'
-    TWO_DAYS = 'two days'
-    THREE_DAYS = 'three days'
-    FIVE_DAYS = 'five days'
-    SEVEN_DAYS = 'seven days'
+    TWELVE_HOURS = 'twelve_hours'
+    TWENTY_FOUR_HOURS = 'twenty_four_hours'
+    TWO_DAYS = 'two_days'
+    THREE_DAYS = 'three_days'
+    FIVE_DAYS = 'five_days'
+    SEVEN_DAYS = 'seven_days'
     CHOICES = (
         (TWELVE_HOURS, '12 hours'),
         (TWENTY_FOUR_HOURS, '24 hours'),
@@ -64,8 +64,8 @@ class OutcomeType:
     MOVES = 'moves'
     RESOLVED = 'resolved'
     BOUNCED = 'bounced'
-    AUX_FAILED = 'aux failed'
-    AUX_DOES_NOT_CORRESPOND = 'aux does not correspond'
+    AUX_FAILED = 'aux_failed'
+    AUX_DOES_NOT_CORRESPOND = 'aux_does_not_correspond'
     CHOICES = (
         (MOVES, 'Moves'),
         (RESOLVED, 'Resolved'),
@@ -88,7 +88,7 @@ class TerritoryType:
 
 class Phase:
     ORDER = 'order'
-    RETREAT_AND_DISBAND = 'retreat and disband'
+    RETREAT_AND_DISBAND = 'retreat_and_disband'
     BUILD = 'build'
     CHOICES = (
         (ORDER, 'Order'),

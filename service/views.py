@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 
 from rest_framework import generics, mixins, status, views
 from rest_framework.exceptions import NotFound
@@ -37,6 +38,63 @@ Messages and announcements
 * Get messages
 """
 
+def get_filter_choices(self, *args):
+    return {
+        'game_statuses': models.base.GameStatus.CHOICES,
+        'nation_choice_modes': models.base.NationChoiceMode.CHOICES,
+        'deadlines': models.base.DeadlineFrequency.CHOICES,
+        'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
+    }
+
+
+def get_game_filter_choices():
+    return {
+        'game_statuses': models.base.GameStatus.CHOICES,
+        'nation_choice_modes': models.base.NationChoiceMode.CHOICES,
+        'deadlines': models.base.DeadlineFrequency.CHOICES,
+        'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
+    }
+
+
+def filter_games(request):
+    qs = models.Game.objects.all()
+
+    search = request.GET.get('search')
+    variant = request.GET.get('variant')
+    status = request.GET.get('status')
+    nation_choice_mode = request.GET.get('nation_choice_mode')
+    order_deadline = request.GET.get('order_deadline')
+    retreat_deadline = request.GET.get('retreat_deadline')
+    build_deadline = request.GET.get('build_deadline')
+    num_players = request.GET.get('num_players')
+    if search:
+        q1 = Q(name__icontains=search)
+        q2 = Q(created_by__username__icontains=search)
+        qs = qs.filter(q1 | q2).distinct()
+
+    if variant and variant != 'Choose...':
+        qs = qs.filter(variant=variant)
+
+    if status and status != 'Choose...':
+        qs = qs.filter(status=status)
+
+    if num_players:
+        qs = qs.filter(num_players=num_players)
+
+    if nation_choice_mode and nation_choice_mode != 'Choose...':
+        qs = qs.filter(nation_choice_mode=nation_choice_mode)
+
+    if order_deadline and order_deadline != 'Choose...':
+        qs = qs.filter(order_deadline=order_deadline)
+
+    if retreat_deadline and retreat_deadline != 'Choose...':
+        qs = qs.filter(retreat_deadline=retreat_deadline)
+
+    if build_deadline and build_deadline != 'Choose...':
+        qs = qs.filter(build_deadline=build_deadline)
+
+    return qs
+
 
 class GameStateView(views.APIView):
 
@@ -55,11 +113,22 @@ class GameStateView(views.APIView):
         return Response(game_state_serializer.data)
 
 
+class GameFilterChoicesView(views.APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        return Response(get_game_filter_choices())
+
+
 class ListGames(generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
+
+    def get_queryset(self):
+        return filter_games(self.request)
 
     def get(self, request, *args, **kwargs):
         status = kwargs.get('status')
@@ -69,8 +138,8 @@ class ListGames(generics.ListAPIView):
                 self.queryset = self.queryset.filter_by_joinable(request.user)
             else:
                 self.queryset = self.queryset.filter(status=status)
-
-        return self.list(request, *args, **kwargs)
+        response = self.list(request, *args, **kwargs)
+        return Response(response.data)
 
 
 class ListUserGames(ListGames):

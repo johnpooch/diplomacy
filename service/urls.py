@@ -5,6 +5,11 @@ from . import views
 
 urlpatterns = [
     path(
+        'game-filter-choices',
+        views.GameFilterChoicesView.as_view(),
+        name='game-filter-choices'
+    ),
+    path(
         'games',
         views.ListGames.as_view(),
         name='all-games'
