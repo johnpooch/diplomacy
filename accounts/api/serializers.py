@@ -35,4 +35,7 @@ class LoginSerializer(serializers.Serializer):
         user = authenticate(**data)
         if user and user.is_active:
             return user
-        raise serializers.ValidationError("Incorrect Credentials")
+        raise serializers.ValidationError(
+            'The username or password you entered do not match an account. '
+            'Please try again.'
+        )

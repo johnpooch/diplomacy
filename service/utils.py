@@ -6,8 +6,6 @@ def form_to_data(form):
 
 
 def field_to_dict(field):
-    from pprint import pprint
-    pprint(field.__dict__)
     data = {
         "type": field.__class__.__name__,
         "widget_type": field.widget.__class__.__name__,
