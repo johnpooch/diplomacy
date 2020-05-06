@@ -36,9 +36,7 @@ def get_game_filter_choices():
     }
 
 
-def filter_games(request):
-    qs = models.Game.objects.all()
-
+def filter_games(qs, request):
     search = request.GET.get('search')
     variant = request.GET.get('variant')
     status = request.GET.get('status')
@@ -87,9 +85,7 @@ class GameStateView(views.APIView):
         """
         game_id = kwargs['game']
         game = get_object_or_404(models.Game, id=game_id)
-
         game_state_serializer = serializers.GameStateSerializer(game)
-
         return Response(game_state_serializer.data)
 
 
@@ -107,12 +103,9 @@ class ListGames(generics.ListAPIView):
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
 
-    def get_queryset(self):
-        return filter_games(self.request)
-
     def get(self, request, *args, **kwargs):
+        self.queryset = filter_games(self.queryset, self.request)
         status = kwargs.get('status')
-
         if status:
             if status == 'joinable':
                 self.queryset = self.queryset.filter_by_joinable(request.user)
@@ -133,11 +126,6 @@ class CreateGame(views.APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, *args, **kwargs):
-        form = forms.CreateGameForm()
-        data = form_to_data(form)
-        return Response(data)
-
     def post(self, request):
         request.data['variant_id'] = 1
         request.data['num_players'] = 7
@@ -156,22 +144,16 @@ class JoinGame(views.APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         game_id = kwargs['game']
         game = get_object_or_404(models.Game, id=game_id)
-        join_game_form = forms.JoinGameForm(game, data=request.data)
         if not game.joinable:
             return Response(
                 {'errors': {'status': ['Cannot join game.']}},
                 status.HTTP_400_BAD_REQUEST,
             )
-        if join_game_form.is_valid():
-            game.participants.add(request.user)
-            return redirect('user-games')
-        return Response(
-            {'errors': join_game_form.errors},
-            status.HTTP_400_BAD_REQUEST,
-        )
+        game.participants.add(request.user)
+        return Response(status=status.HTTP_200_OK)
 
 
 class OrderView(mixins.CreateModelMixin, generics.GenericAPIView):
