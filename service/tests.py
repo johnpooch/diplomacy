@@ -1,4 +1,4 @@
-import json
+from unittest.mock import patch
 
 from django.urls import reverse
 from rest_framework import status
@@ -7,112 +7,6 @@ from rest_framework.test import APITestCase
 from core import factories, models
 from core.models.base import GameStatus, NationChoiceMode, OrderType, Phase, Season
 from service import serializers
-
-
-class TestCreateOrder(APITestCase):
-
-    def setUp(self):
-        self.user = factories.UserFactory()
-        self.client.force_authenticate(user=self.user)
-
-        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
-        self.game.participants.add(self.user)
-
-        nation_state = factories.NationStateFactory(
-            turn=self.game.get_current_turn(),
-            user=self.user,
-        )
-        territory_state = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-            controlled_by=nation_state.nation,
-        )
-        self.territory = territory_state.territory
-        self.data = {
-            'source': self.territory.id,
-        }
-        self.url = reverse('create-order', args=[self.game.id])
-
-    def test_get(self):
-        response = self.client.get(self.url, self.data, format='json')
-        self.assertEqual(
-            response.status_code,
-            status.HTTP_405_METHOD_NOT_ALLOWED,
-        )
-
-    def test_create_order_unauthorized(self):
-        self.client.logout()
-        response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_create_order_not_participant(self):
-        self.game.participants.remove(self.user)
-        response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertTrue('User is not a participant in this game.' in
-                        response.data['errors']['data'])
-
-    def test_create_order_game_pending(self):
-        self.game.status = GameStatus.PENDING
-        self.game.save()
-
-        response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue(
-            'Game is not active.' in response.data['errors']['data']
-        )
-
-    def test_create_order_game_ended(self):
-        self.game.status = GameStatus.ENDED
-        self.game.save()
-
-        response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_order_no_orders_left(self):
-
-        self.territory.supply_center = False
-        self.territory.save()
-        response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue(
-            'Nation has no more orders to submit.' in
-            response.data['errors']['data']
-        )
-
-    def test_create_order_valid(self):
-        response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(models.Order.objects.get())  # object created
-
-    def test_create_order_hold_during_retreat(self):
-        models.Turn.objects.create(
-            game=self.game,
-            season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
-            year=1900,
-            current_turn=True,
-        )
-        nation_state = factories.NationStateFactory(
-            turn=self.game.get_current_turn(),
-            user=self.user,
-        )
-        territory_state = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-            controlled_by=nation_state.nation,
-        )
-        self.territory = territory_state.territory
-        response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_build_during_order(self):
-        self.data['type'] = OrderType.BUILD
-        response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestGetGames(APITestCase):
@@ -408,7 +302,26 @@ class TestJoinGame(APITestCase):
 
         url = reverse('join-game', args=[game.id])
         response = self.client.get(url, format='json')
+        self.assertTrue(user in game.participants.all())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @patch('core.models.Game.initialize')
+    def test_join_game_initialise_game(self, mock_initialize):
+        user = factories.UserFactory()
+        variant = models.Variant.objects.create(name='standard')
+        game = models.Game.objects.create(
+            variant=variant,
+            name='Test game',
+            status=GameStatus.ACTIVE,
+            num_players=1,
+            created_by=user,
+        )
+        self.client.force_authenticate(user=user)
+
+        url = reverse('join-game', args=[game.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        mock_initialize.assert_called()
 
 
 class TestGetGameState(APITestCase):
@@ -444,3 +357,233 @@ class TestGetGameState(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
+class TestCreateOrder(APITestCase):
+
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.client.force_authenticate(user=self.user)
+
+        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
+        self.game.participants.add(self.user)
+
+        nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=nation_state.nation,
+        )
+        self.territory = territory_state.territory
+        self.data = {
+            'source': self.territory.id,
+        }
+        self.url = reverse('create-order', args=[self.game.id])
+
+    def test_get(self):
+        response = self.client.get(self.url, self.data, format='json')
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_405_METHOD_NOT_ALLOWED,
+        )
+
+    def test_create_order_unauthorized(self):
+        self.client.logout()
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_order_not_participant(self):
+        self.game.participants.remove(self.user)
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue('User is not a participant in this game.' in
+                        response.data['errors']['data'])
+
+    def test_create_order_game_pending(self):
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(
+            'Game is not active.' in response.data['errors']['data']
+        )
+
+    def test_create_order_game_ended(self):
+        self.game.status = GameStatus.ENDED
+        self.game.save()
+
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_order_no_orders_left(self):
+
+        self.territory.supply_center = False
+        self.territory.save()
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(
+            'Nation has no more orders to submit.' in
+            response.data['errors']['data']
+        )
+
+    def test_create_order_valid(self):
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(models.Order.objects.get())  # object created
+
+    def test_create_order_hold_during_retreat(self):
+        models.Turn.objects.create(
+            game=self.game,
+            season=Season.SPRING,
+            phase=Phase.RETREAT_AND_DISBAND,
+            year=1900,
+            current_turn=True,
+        )
+        nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=nation_state.nation,
+        )
+        self.territory = territory_state.territory
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_build_during_order(self):
+        self.data['type'] = OrderType.BUILD
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class TestEditOrder(APITestCase):
+    pass
+
+
+class TestFinalizeOrders(APITestCase):
+
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
+        self.game.participants.add(self.user)
+        self.nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=self.nation_state.nation,
+        )
+        self.territory = territory_state.territory
+        self.url = reverse('finalize-orders', args=[self.game.id])
+
+    def test_finalize_when_not_participant(self):
+        self.game.participants.all().delete()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_finalize_when_game_not_active(self):
+        self.client.force_authenticate(user=self.user)
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @patch('core.models.Turn.process')
+    def test_can_finalize_orders_with_no_orders(self, mock_process):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertTrue(self.nation_state.orders_finalized)
+
+    @patch('core.models.Turn.process')
+    def test_can_finalize_orders_with_orders(self, mock_process):
+        self.client.force_authenticate(user=self.user)
+        models.Order.objects.create(
+            turn=self.game.get_current_turn(),
+            nation=self.nation_state.nation,
+            source=self.territory
+        )
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertTrue(self.nation_state.orders_finalized)
+
+    @patch('core.models.Turn.process')
+    def test_once_all_orders_finalized_turn_advances(self, mock_process):
+        self.client.force_authenticate(user=self.user)
+        turn = self.game.get_current_turn()
+        turn.nationstates.set([self.nation_state])
+        response = self.client.get(self.url, format='json')
+        mock_process.assert_called()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertTrue(self.nation_state.orders_finalized)
+
+
+class TestUnfinalizeOrders(APITestCase):
+
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
+        self.game.participants.add(self.user)
+        self.nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+            orders_finalized=True,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=self.nation_state.nation,
+        )
+        self.territory = territory_state.territory
+        self.url = reverse('unfinalize-orders', args=[self.game.id])
+
+    def test_unfinalize_when_not_participant(self):
+        self.game.participants.all().delete()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_unfinalize_when_game_not_active(self):
+        self.client.force_authenticate(user=self.user)
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_can_unfinalize_orders_with_no_orders(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertFalse(self.nation_state.orders_finalized)
+
+    def test_can_unfinalize_orders_with_orders(self):
+        self.client.force_authenticate(user=self.user)
+        models.Order.objects.create(
+            turn=self.game.get_current_turn(),
+            nation=self.nation_state.nation,
+            source=self.territory
+        )
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertFalse(self.nation_state.orders_finalized)
+
+    def test_if_not_finalized_error(self):
+        self.client.force_authenticate(user=self.user)
+        self.nation_state.orders_finalized = False
+        self.nation_state.save()
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

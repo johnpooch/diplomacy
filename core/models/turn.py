@@ -99,6 +99,10 @@ class Turn(models.Model):
     def possible_order_types(self):
         return possible_orders[self.phase]
 
+    @property
+    def ready_to_process(self):
+        return not self.nationstates.filter(orders_finalized=False).exists()
+
     def process(self):
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)

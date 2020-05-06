@@ -132,6 +132,18 @@ class Game(models.Model):
         # TODO test
         return self.participants.count() < self.num_players and not self.ended
 
+    @property
+    def ready_to_initialize(self):
+        """
+        True when the correct number of players have joined and the game hasn't
+        been initialized.
+        """
+        return self.participants.count() == self.num_players \
+            and not self.turns.all().exists()
+
+    def initialize(self):
+        print('SDFHGSHF')
+
     def get_current_turn(self):
         """
         Gets the related `Turn` where `current_turn` is `True`.

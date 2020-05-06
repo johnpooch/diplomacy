@@ -1,17 +1,14 @@
-from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode, \
-    OrderType
-from service import forms, serializers
-from service.permissions import IsAuthenticated, IsParticipant
-from service.utils import form_to_data
+from core.models.base import DeadlineFrequency, GameStatus, OrderType
+from service import serializers
+from service.permissions import IsAuthenticated
 
 
 def error404():
@@ -153,6 +150,8 @@ class JoinGame(views.APIView):
                 status.HTTP_400_BAD_REQUEST,
             )
         game.participants.add(request.user)
+        if game.ready_to_initialize:
+            game.initialize()
         return Response(status=status.HTTP_200_OK)
 
 
@@ -217,3 +216,70 @@ class OrderView(mixins.CreateModelMixin, generics.GenericAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
+
+
+class FinalizeOrdersView(views.APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs['game']
+        game = get_object_or_404(models.Game, id=game_id)
+
+        if request.user not in game.participants.all():
+            return Response(
+                {'errors': {
+                    'data': ['User is not a participant in this game.']
+                }},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        if not game.status == GameStatus.ACTIVE:
+            return Response(
+                {'errors': {'data': ['Game is not active.']}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        turn = game.get_current_turn()
+        user_nation_state = models.NationState.objects.get(
+            turn=turn,
+            user=request.user,
+        )
+        user_nation_state.orders_finalized = True
+        user_nation_state.save()
+        if turn.ready_to_process:
+            turn.process()
+        return Response(status=status.HTTP_200_OK)
+
+
+class UnfinalizeOrdersView(views.APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs['game']
+        game = get_object_or_404(models.Game, id=game_id)
+
+        if request.user not in game.participants.all():
+            return Response(
+                {'errors': {
+                    'data': ['User is not a participant in this game.']
+                }},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        if not game.status == GameStatus.ACTIVE:
+            return Response(
+                {'errors': {'data': ['Game is not active.']}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        turn = game.get_current_turn()
+        user_nation_state = models.NationState.objects.get(
+            turn=turn,
+            user=request.user,
+        )
+        if not user_nation_state.orders_finalized:
+            return Response(
+                {'errors': {'data': ['Orders are not finalized.']}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        user_nation_state.orders_finalized = False
+        user_nation_state.save()
+        return Response(status=status.HTTP_200_OK)
