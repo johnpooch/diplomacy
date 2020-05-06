@@ -2,10 +2,115 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from core import factories
-from core import models
-from core.models.base import GameStatus, NationChoiceMode
-from service.serializers import GameSerializer
+from core import factories, models
+from core.models.base import GameStatus, NationChoiceMode, OrderType, Phase, Season
+from service import serializers
+
+
+class TestCreateOrder(APITestCase):
+
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.client.force_authenticate(user=self.user)
+
+        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
+        self.game.participants.add(self.user)
+
+        nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=nation_state.nation,
+        )
+        self.territory = territory_state.territory
+        self.data = {
+            'source': self.territory.id,
+        }
+        self.url = reverse('create-order', args=[self.game.id])
+
+    def test_get(self):
+        response = self.client.get(self.url, self.data, format='json')
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_405_METHOD_NOT_ALLOWED,
+        )
+
+    def test_create_order_unauthorized(self):
+        self.client.logout()
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_order_not_participant(self):
+        self.game.participants.remove(self.user)
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue('User is not a participant in this game.' in
+                        response.data['errors']['data'])
+
+    def test_create_order_game_pending(self):
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(
+            'Game is not active.' in response.data['errors']['data']
+        )
+
+    def test_create_order_game_ended(self):
+        self.game.status = GameStatus.ENDED
+        self.game.save()
+
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_order_no_orders_left(self):
+
+        self.territory.supply_center = False
+        self.territory.save()
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(
+            'Nation has no more orders to submit.' in
+            response.data['errors']['data']
+        )
+
+    def test_create_order_valid(self):
+        response = self.client.post(self.url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(models.Order.objects.get())  # object created
+
+    def test_create_order_hold_during_retreat(self):
+        models.Turn.objects.create(
+            game=self.game,
+            season=Season.SPRING,
+            phase=Phase.RETREAT_AND_DISBAND,
+            year=1900,
+            current_turn=True,
+        )
+        nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=nation_state.nation,
+        )
+        self.territory = territory_state.territory
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_build_during_order(self):
+        self.data['type'] = OrderType.BUILD
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestGetGames(APITestCase):
@@ -27,7 +132,7 @@ class TestGetGames(APITestCase):
         url = reverse('all-games')
         response = self.client.get(url, format='json')
 
-        expected_data = [GameSerializer(game).data for game in games]
+        expected_data = [serializers.GameSerializer(game).data for game in games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
@@ -56,7 +161,7 @@ class TestGetGames(APITestCase):
         url = reverse('games-by-type', args=[GameStatus.ACTIVE])
         response = self.client.get(url, format='json')
 
-        expected_data = [GameSerializer(game).data for game in included_games]
+        expected_data = [serializers.GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
@@ -85,7 +190,7 @@ class TestGetGames(APITestCase):
         url = reverse('games-by-type', args=[GameStatus.ENDED])
         response = self.client.get(url, format='json')
 
-        expected_data = [GameSerializer(game).data for game in included_games]
+        expected_data = [serializers.GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
@@ -125,7 +230,7 @@ class TestJoinableGames(APITestCase):
         url = reverse('games-by-type', args=['joinable'])
         response = self.client.get(url, format='json')
 
-        expected_data = [GameSerializer(game).data for game in included_games]
+        expected_data = [serializers.GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
@@ -171,7 +276,7 @@ class TestGetMyGames(APITestCase):
         url = reverse('user-games')
         response = self.client.get(url, format='json')
 
-        expected_data = [GameSerializer(game).data for game in included_games]
+        expected_data = [serializers.GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
@@ -205,7 +310,7 @@ class TestGetMyGames(APITestCase):
         url = reverse('user-games-by-type', args=[GameStatus.ACTIVE])
         response = self.client.get(url, format='json')
 
-        expected_data = [GameSerializer(game).data for game in included_games]
+        expected_data = [serializers.GameSerializer(game).data for game in included_games]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected_data)
 
@@ -443,3 +548,38 @@ class TestJoinGame(APITestCase):
             response.data['errors'],
             {'status': ['Cannot join game.']}
         )
+
+
+class TestGetGameState(APITestCase):
+
+    def setUp(self):
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+
+    def test_get_game_state_unauthorized(self):
+        self.client.logout()
+        game = factories.GameFactory(status=GameStatus.ACTIVE)
+
+        url = reverse('game-state', args=[game.id])
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_game_state_live_game(self):
+        game = factories.GameFactory(status=GameStatus.ACTIVE)
+        url = reverse('game-state', args=[game.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_game_state_pending_game(self):
+        game = factories.GameFactory(status=GameStatus.PENDING)
+        url = reverse('game-state', args=[game.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_game_state_ended_game(self):
+        game = factories.GameFactory(status=GameStatus.ENDED)
+        url = reverse('game-state', args=[game.id])
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+

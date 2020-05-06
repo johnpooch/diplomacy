@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -6,37 +7,16 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode
+from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode, \
+    OrderType
 from service import forms, serializers
 from service.permissions import IsAuthenticated, IsParticipant
 from service.utils import form_to_data
 
 
-
 def error404():
     raise NotFound(detail="Error 404, page not found", code=404)
 
-
-# TODO all views need to be refactored using django rest mixins etc.
-
-# TODO stub out all the views and urls before writing any more code. Also
-# these views using TDD.
-
-# TODO ignore permissions at first. Add them in after the basic views are done.
-
-"""
-Users
-* Register
-* Log in
-* Log out
-* User status (e.g. unread messages, pending orders)
-
-* Finalize orders
-
-Messages and announcements
-* Create message
-* Get messages
-"""
 
 def get_filter_choices(self, *args):
     return {
@@ -234,10 +214,16 @@ class OrderView(mixins.CreateModelMixin, generics.GenericAPIView):
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         game = kwargs['game']
         turn = game.get_current_turn()
+        order_type = request.data.get('type', OrderType.HOLD)
+        if order_type not in turn.possible_order_types:
+            return Response(
+                {'errors': {'data': 'This order type is not possible during this turn.'}},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         user_nation_state = models.NationState.objects.get(
             turn=turn,
             user=request.user,

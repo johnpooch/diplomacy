@@ -5,7 +5,7 @@ from core.models.base import OrderType, OutcomeType, \
     HygienicModel, PerTurnModel, PieceType
 
 
-class Order(PerTurnModel, HygienicModel):
+class Order(PerTurnModel):
 
     nation = models.ForeignKey(
         'Nation',
@@ -90,6 +90,13 @@ class Order(PerTurnModel, HygienicModel):
             raise ValidationError({
                 'piece_type': (
                     'Piece type should only be specified for build orders.'
+                ),
+            })
+        print('HAHFSDFJGSHDFG')
+        if self.type not in self.turn.possible_order_types:
+            raise ValidationError({
+                'type': (
+                    'This order type is not possible during this turn.'
                 ),
             })
 

@@ -1,8 +1,8 @@
 coverage
-Django==2.2.10
-django-cors-headers==2.4.0
+Django
+django-cors-headers
 factory_boy
-djangorestframework==3.9.1
+djangorestframework
 mysqlclient
 django-extensions
 django-rest-knox

@@ -21,3 +21,5 @@ project/settings/local.py
 *.pyc
 
 docker-compose.override.yml
+
+/env/

@@ -5,6 +5,13 @@ from django.utils import timezone
 from core.models.base import OrderType, OutcomeType, Phase, Season
 
 
+possible_orders = {
+    Phase.ORDER: [OrderType.MOVE, OrderType.CONVOY, OrderType.HOLD, OrderType.SUPPORT],
+    Phase.RETREAT_AND_DISBAND: [OrderType.RETREAT, OrderType.DISBAND],
+    Phase.BUILD: [OrderType.BUILD, OrderType.DISBAND],
+}
+
+
 class TurnManager(models.Manager):
 
     def create_turn_from_previous_turn(self, previous_turn):
@@ -87,6 +94,10 @@ class Turn(models.Model):
             self.get_phase_display(),
             'Phase'
         ])
+
+    @property
+    def possible_order_types(self):
+        return possible_orders[self.phase]
 
     def process(self):
         game_state_dict = self._to_game_state_dict()

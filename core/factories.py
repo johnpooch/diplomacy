@@ -11,10 +11,9 @@ from core.utils.data import get_fixture_data
 
 fake = Faker()
 
-nation_data = get_fixture_data('nations.json')
-piece_data = get_fixture_data('pieces.json')
-territory_data = get_fixture_data('territories.json')
-supply_center_data = get_fixture_data('supply_centers.json')
+nation_data = get_fixture_data('dev/nation.json')
+piece_data = get_fixture_data('dev/games/game_1/pieces.json')
+territory_data = get_fixture_data('dev/territory.json')
 
 
 class VariantFactory(DjangoModelFactory):
