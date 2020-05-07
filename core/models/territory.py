@@ -51,7 +51,7 @@ class Territory(models.Model):
     )
     initial_piece_type = models.CharField(
         max_length=50,
-        null=False,
+        null=True,
         choices=PieceType.CHOICES,
     )
 

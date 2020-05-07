@@ -148,12 +148,10 @@ class Game(models.Model):
         """
         When all players have joined a game, the game is initialized.
         """
-        # Assign players to nation randomly
-        # Create pieces
-        # Create piece states
-        # Create nation states
-        # Create territory states
-        pass
+        self.create_initial_turn()
+        self.create_initial_nation_states()
+        self.create_initial_territory_states()
+        self.create_initial_pieces()
 
     def create_initial_turn(self):
         """
@@ -187,6 +185,40 @@ class Game(models.Model):
                 nation=nation,
                 user=participant,
             )
+
+    def create_initial_territory_states(self):
+        """
+        Creates the initial territory states.
+        """
+        territories = list(self.variant.territories.all())
+        territory_state = apps.get_model('core', 'TerritoryState')
+        for territory in territories:
+            territory_state.objects.create(
+                turn=self.get_current_turn(),
+                territory=territory,
+                controlled_by=territory.controlled_by_initial,
+            )
+
+    def create_initial_pieces(self):
+        """
+        Create a piece on every territory that has a starting piece.
+        """
+        territories = list(self.variant.territories.all())
+        piece_model = apps.get_model('core', 'Piece')
+        piece_state_model = apps.get_model('core', 'PieceState')
+        for territory in territories:
+            if territory.initial_piece_type:
+                piece = piece_model.objects.create(
+                    game=self,
+                    type=territory.initial_piece_type,
+                    nation=territory.controlled_by_initial,
+                )
+                piece_state_model.objects.create(
+                    turn=self.get_current_turn(),
+                    piece=piece,
+                    territory=territory,
+
+                )
 
     def get_current_turn(self):
         """

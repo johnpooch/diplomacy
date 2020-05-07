@@ -160,50 +160,48 @@ class StandardVariantFactory(DjangoModelFactory):
         if not create:
             self._prefetched_objects_cache = {'nations': nations}
 
-    # @post_generation
-    # def territories(self, create, count, **kwargs):
-    #     make_territory = getattr(StandardTerritoryFactory,
-    #                              'create' if create else 'build')
-    #
-    #     supply_pks = [s['fields']['territory'] for s in supply_center_data]
-    #
-    #     territories = []
-    #     for territory in territory_data:
-    #         supply_center = territory['pk'] in supply_pks
-    #         controlled_by_initial_id = territory['fields']['controlled_by_initial']
-    #         nations = [n for n in nation_data if n['pk'] == controlled_by_initial_id]
-    #         if nations:
-    #             nation = nations[0]
-    #         else:
-    #             nation = None
-    #
-    #         if nation:
-    #             territories.append(
-    #                 make_territory(
-    #                     variant=self,
-    #                     name=territory['fields']['name'],
-    #                     controlled_by_initial=factory.SubFactory(
-    #                         StandardNationFactory,
-    #                         name=nations[0]['fields']['name']
-    #                     ),
-    #                     nationality=None,
-    #                     supply_center=supply_center,
-    #                     type=territory['fields']['type'],
-    #                     coastal=territory['fields']['coastal'],
-    #                 )
-    #             )
-    #         else:
-    #             territories.append(
-    #                 make_territory(
-    #                     variant=self,
-    #                     name=territory['fields']['name'],
-    #                     controlled_by_initial=None,
-    #                     nationality=None,
-    #                     supply_center=supply_center,
-    #                     type=territory['fields']['type'],
-    #                     coastal=territory['fields']['coastal'],
-    #                 )
-    #             )
+    @post_generation
+    def territories(self, create, count, **kwargs):
+        make_territory = getattr(StandardTerritoryFactory,
+                                 'create' if create else 'build')
+
+        territories = []
+        for territory in territory_data:
+            controlled_by_initial_id = territory['fields']['controlled_by_initial']
+
+            nations = [n for n in nation_data if n['pk'] == controlled_by_initial_id]
+            if nations:
+                nation = nations[0]
+            else:
+                nation = None
+
+            if nation:
+                territories.append(
+                    make_territory(
+                        variant=self,
+                        name=territory['fields']['name'],
+                        controlled_by_initial=factory.SubFactory(
+                            StandardNationFactory,
+                            name=nations[0]['fields']['name']
+                        ),
+                        nationality=None,
+                        supply_center=territory['fields'].get('supply_center', False),
+                        type=territory['fields']['type'],
+                        initial_piece_type=territory['fields'].get('initial_piece_type'),
+                    )
+                )
+            else:
+                territories.append(
+                    make_territory(
+                        variant=self,
+                        name=territory['fields']['name'],
+                        controlled_by_initial=None,
+                        nationality=None,
+                        supply_center=territory['fields'].get('supply_center', False),
+                        type=territory['fields']['type'],
+                        initial_piece_type=territory['fields'].get('initial_piece_type'),
+                    )
+                )
     #
     #
     #     if not create:
