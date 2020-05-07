@@ -1,5 +1,7 @@
 from django.db import models
 
+from .base import Phase, Season
+
 
 class Variant(models.Model):
     """
@@ -13,6 +15,22 @@ class Variant(models.Model):
     max_num_players = models.PositiveIntegerField(
         null=False,
         default=7,
+    )
+    starting_year = models.PositiveIntegerField(
+        null=False,
+        default=1900,
+    )
+    starting_season = models.CharField(
+        null=False,
+        default=Season.SPRING,
+        choices=Season.CHOICES,
+        max_length=100,
+    )
+    starting_phase = models.CharField(
+        null=False,
+        default=Phase.ORDER,
+        choices=Phase.CHOICES,
+        max_length=100,
     )
 
     def __str__(self):

@@ -37,11 +37,6 @@ class Piece(HygienicModel):
     def is_fleet(self):
         return self.type == PieceType.FLEET
 
-    def get_previous_territory(self):
-        # TODO do this when phases/logs are properly handled
-        # NOTE maybe just denormalize into a field
-        return None
-
 
 class PieceState(PerTurnModel):
     """

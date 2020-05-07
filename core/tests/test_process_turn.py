@@ -52,9 +52,13 @@ class TestProcessTurn(TestCase):
             controlled_by=france,
         )
         army_paris = models.Piece.objects.create(
+            game=game,
             nation=france,
-            territory=paris,
+        )
+        models.PieceState.objects.create(
+            piece=army_paris,
             turn=turn,
+            territory=paris,
         )
         paris.neighbours.add(picardy)
         order = models.Order.objects.create(

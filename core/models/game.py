@@ -1,3 +1,5 @@
+import random
+
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
@@ -54,6 +56,7 @@ class Game(models.Model):
         null=False,
         editable=False,
     )
+    # TODO needs to use a through model so we can record: joined at, etc.
     participants = models.ManyToManyField(
         User,
     )
@@ -142,7 +145,48 @@ class Game(models.Model):
             and not self.turns.all().exists()
 
     def initialize(self):
-        print('SDFHGSHF')
+        """
+        When all players have joined a game, the game is initialized.
+        """
+        # Assign players to nation randomly
+        # Create pieces
+        # Create piece states
+        # Create nation states
+        # Create territory states
+        pass
+
+    def create_initial_turn(self):
+        """
+        Creates the first turn of the game.
+
+        Returns:
+            * `Turn`
+        """
+        variant = self.variant
+        turn_model = apps.get_model('core', 'Turn')
+        return turn_model.objects.create(
+            game=self,
+            year=variant.starting_year,
+            season=variant.starting_season,
+            phase=variant.starting_phase,
+            current_turn=True,
+        )
+
+    def create_initial_nation_states(self):
+        """
+        Creates the initial nation states and assigns each participant to a
+        nation state randomly.
+        """
+        participants = list(self.participants.all())
+        nations = list(self.variant.nations.all())
+        random.shuffle(participants)
+        nation_state = apps.get_model('core', 'NationState')
+        for participant, nation in zip(participants, nations):
+            nation_state.objects.create(
+                turn=self.get_current_turn(),
+                nation=nation,
+                user=participant,
+            )
 
     def get_current_turn(self):
         """
@@ -158,5 +202,3 @@ class Game(models.Model):
         current_turn.process()
         turn_model = apps.get_model('core', 'Turn')
         turn_model.objects.create_turn_from_previous_turn(current_turn)
-        current_turn.current_turn = False
-        current_turn.save()

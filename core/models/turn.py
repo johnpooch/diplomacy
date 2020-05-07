@@ -1,6 +1,8 @@
-from adjudicator import process_game_state
+from django.apps import apps
 from django.db import models
 from django.utils import timezone
+
+from adjudicator import process_game_state
 
 from core.models.base import OrderType, OutcomeType, Phase, Season
 
@@ -21,6 +23,7 @@ class TurnManager(models.Manager):
             year=year,
             season=season,
             phase=phase,
+            current_turn=True,
         )
 
         # get successful move orders
@@ -28,18 +31,20 @@ class TurnManager(models.Manager):
             outcome=OutcomeType.MOVES,
             type=OrderType.MOVE,
         )
-        for piece in previous_turn.pieces.all():
+        for piece_state in previous_turn.piecestates.all():
+            piece_data = {
+                'piece': piece_state.piece,
+                'turn': new_turn,
+                'territory': piece_state.territory,
+            }
             for order in successful_move_orders:
-                if piece.territory == order.source:
-                    piece.territory = order.target
-            piece.turn = new_turn
-            piece.pk = None
-            piece.save()
-        for territory_state in previous_turn.territorystates.all():
-            # If end of fall orders process change of possesion.
-            if False:
-                pass
+                if piece_state.territory == order.source:
+                    piece_data['territory'] = order.target
 
+            piece_state_model = apps.get_model('core', 'PieceState')
+            piece_state_model.objects.create(**piece_data)
+        for territory_state in previous_turn.territorystates.all():
+            # If end of fall orders process change of possession.
             territory_state.turn = new_turn
             territory_state.pk = None
             territory_state.save()
@@ -75,6 +80,9 @@ class Turn(models.Model):
     )
     processed_at = models.DateTimeField(
         null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
     )
 
     objects = TurnManager()
@@ -124,7 +132,7 @@ class Turn(models.Model):
             order.illegal_message = order_data['illegal_message']
             order.save()
         for piece_data in outcome['pieces']:
-            piece = self.pieces.get(id=piece_data['id'])
+            piece = self.piecestates.get(id=piece_data['id'])
             piece.dislodged = piece_data['dislodged_decision'] == 'dislodged'
             piece.dislodged_by = piece_data['dislodged_by']
             piece.attacker_territory = piece_data['attacker_territory']
@@ -140,10 +148,10 @@ class Turn(models.Model):
         """
         game_state = dict()
         territory_states = self.territorystates.all()
-        pieces = self.pieces.all()
+        piece_states = self.piecestates.all()
         orders = self.orders.all()
         game_state['territories'] = [t.to_dict() for t in territory_states]
-        game_state['pieces'] = [p.to_dict() for p in pieces]
+        game_state['pieces'] = [p.to_dict() for p in piece_states]
         game_state['orders'] = [o.to_dict() for o in orders]
         # un nest named_coasts
         game_state['named_coasts'] = list()
@@ -160,7 +168,7 @@ class Turn(models.Model):
         if not self.processed:
             raise ValueError('Cannot get next phase until order is processed.')
 
-        if self.pieces.filter(dislodged=True).exists():
+        if self.piecestates.filter(dislodged=True).exists():
             return self.season, Phase.RETREAT_AND_DISBAND, self.year
 
         if self.season == Season.SPRING:
