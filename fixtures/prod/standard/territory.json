@@ -1036,7 +1036,7 @@
       "model":"core.territory",
       "pk":49,
       "fields":{
-         "name":"sevastapol",
+         "name":"sevastopol",
          "supply_center": true,
          "initial_piece_type": "fleet",
          "variant": 1,

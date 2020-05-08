@@ -77,6 +77,7 @@ class Order(PerTurnModel):
             string += f' - {self.target}'
         if self.type in [OrderType.SUPPORT, OrderType.CONVOY]:
             string += f' - {self.aux} - {self.target}'
+        return string
 
     def clean(self):
         if self.via_convoy and self.type != OrderType.MOVE:

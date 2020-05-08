@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories, models
-from core.models.base import GameStatus, NationChoiceMode, OrderType, Phase, Season
+from core.models.base import GameStatus, OrderType, PieceType, Phase, Season
 from service import serializers
 
 
@@ -223,14 +223,15 @@ class TestPostCreateGame(APITestCase):
         url = reverse('create-game')
         response = self.client.post(url, data, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertRedirects(response, '/api/v1/games/mygames')
-        self.assertTrue(models.Game.objects.get(
-            name='Test Game',
-            created_by=user,
-            variant=variant,
-            participants=user,
-        ))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(
+            models.Game.objects.get(
+                name='Test Game',
+                created_by=user,
+                variant=variant,
+                participants=user,
+            )
+        )
 
     def test_post_unauthorized(self):
         """
@@ -367,13 +368,15 @@ class TestCreateOrder(APITestCase):
         self.game = factories.GameFactory(status=GameStatus.ACTIVE)
         self.game.participants.add(self.user)
 
-        nation_state = factories.NationStateFactory(
-            turn=self.game.get_current_turn(),
+        self.turn = self.game.get_current_turn()
+
+        self.nation_state = factories.NationStateFactory(
+            turn=self.turn,
             user=self.user,
         )
         territory_state = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-            controlled_by=nation_state.nation,
+            turn=self.turn,
+            controlled_by=self.nation_state.nation,
         )
         self.territory = territory_state.territory
         self.data = {
@@ -458,6 +461,114 @@ class TestCreateOrder(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_multiple_orders(self):
+        territory_state_1 = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+        )
+        territory_state_2 = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+        )
+        piece = models.Piece.objects.create(
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+            game=self.game,
+        )
+        models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=territory_state_1.territory
+        )
+        piece = models.Piece.objects.create(
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+            game=self.game,
+        )
+        models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=territory_state_1.territory
+        )
+        data = [
+            {
+                'source': territory_state_1.territory.id,
+            },
+            {
+                'source': territory_state_2.territory.id,
+            },
+        ]
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(models.Order.objects.all().count(), 2)
+
+    def test_create_too_many_orders(self):
+        territory_state_1 = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+        )
+        territory_state_2 = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+        )
+        piece = models.Piece.objects.create(
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+            game=self.game,
+        )
+        models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=territory_state_1.territory
+        )
+
+        data = [
+            {
+                'source': territory_state_1.territory.id,
+            },
+            {
+                'source': territory_state_2.territory.id,
+            },
+        ]
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_multiple_requests_replace(self):
+        territory_state_1 = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+        )
+        territory_state_2 = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+        )
+        piece = models.Piece.objects.create(
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+            game=self.game,
+        )
+        models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=territory_state_1.territory
+        )
+        piece = models.Piece.objects.create(
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+            game=self.game,
+        )
+        models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=territory_state_1.territory
+        )
+        data = [
+            {
+                'source': territory_state_1.territory.id,
+            },
+            {
+                'source': territory_state_2.territory.id,
+            },
+        ]
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(models.Order.objects.all().count(), 2)
 
 class TestEditOrder(APITestCase):
 

@@ -122,5 +122,26 @@ class TestEndToEnd(APITestCase):
             cleaned_orders = []
             for order in orders:
                 order_data = copy(order['order'])
+                source = order_data.get('source')
+                target = order_data.get('target')
+                if source:
+                    order_data['source'] = models.Territory.objects.get(name=source).id
+                if target:
+                    order_data['target'] = models.Territory.objects.get(name=target).id
                 order_data.pop('nation')
                 cleaned_orders.append(order_data)
+
+            self.client.force_authenticate(user=nation_state.user)
+            response = self.client.post(create_order_url, cleaned_orders, format='json')
+            self.assertEqual(response.status_code, 201)
+
+        self.assertEqual(models.Order.objects.count(), 22)
+        orders = models.Order.objects.all()
+
+        # no orders have outcomes
+
+        # each player finalizes orders
+
+        # orders have outcomes
+
+        # new turn

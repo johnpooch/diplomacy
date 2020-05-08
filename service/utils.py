@@ -52,6 +52,9 @@ def text_to_order_data(text):
     nation_dict = {
         'Austria': 'Austria-Hungary'
     }
+    territory_dict = {
+        'st. petersburg (south coast)': 'st. petersburg',
+    }
     regex_dict = {
         OrderType.HOLD: hold_regex,
         OrderType.MOVE: move_regex,
@@ -80,6 +83,13 @@ def text_to_order_data(text):
             m = re.search(regex, line)
             data = _lower_groups(m.groupdict())
             data['nation'] = nation
+            data['source'] = territory_dict.get(data['source'], data['source'])
+            target = data.get('target')
+            if target:
+                data['target'] = territory_dict.get(data['target'], data['target'])
+            aux = data.get('aux')
+            if aux:
+                data['aux'] = territory_dict.get(data['aux'], data['aux'])
             outcome = data.pop('outcome')
             orders.append(
                 {

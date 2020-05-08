@@ -207,12 +207,52 @@ class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
         self.set_up()
         return self.create(request, *args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        is_many = isinstance(request.data, list)
+        if not is_many:
+            return super().create(request, *args, **kwargs)
+        else:
+            serializer = self.get_serializer(data=request.data, many=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create_multiple(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     def perform_create(self, serializer):
         self._validate_request()
         serializer.save(
             nation=self.user_nation_state.nation,
             turn=self.turn,
         )
+
+    def perform_create_multiple(self, serializer):
+        self._validate_multiple()
+        models.Order.objects.filter(
+            nation=self.user_nation_state.nation,
+        ).delete()
+        serializer.save(
+            nation=self.user_nation_state.nation,
+            turn=self.turn,
+        )
+
+    def _validate_multiple(self):
+        if not self.game.status == GameStatus.ACTIVE:
+            raise ValidationError(
+                'Game is not active.',
+                status.HTTP_400_BAD_REQUEST,
+            )
+        if len(self.request.data) > self.user_nation_state.num_orders:
+            raise ValidationError(
+                'Nation has submitted too many orders.',
+                status.HTTP_400_BAD_REQUEST,
+            )
+        for order in self.request.data:
+            type = order.get('type', OrderType.HOLD)
+            if type not in self.turn.possible_order_types:
+                raise ValidationError(
+                    'This order type is not possible during this turn.',
+                    status.HTTP_400_BAD_REQUEST,
+                )
 
 
 class UpdateOrderView(BaseOrderView, mixins.UpdateModelMixin):
