@@ -1,0 +1,35 @@
+ENGLAND
+Edinburgh MOVE Norwegian Sea -> resolved
+Liverpool MOVE Yorkshire -> resolved
+London MOVE North Sea -> resolved
+
+FRANCE
+Marseilles HOLD -> resolved
+Paris MOVE Picardy -> resolved
+Brest MOVE English Channel -> resolved
+
+ITALY
+Venice MOVE Tyrolia -> resolved
+Rome MOVE Tuscany -> resolved
+Naples MOVE Ionian Sea -> resolved
+
+GERMANY
+Munich MOVE Burgundy -> resolved
+Berlin MOVE Kiel -> resolved
+Kiel MOVE Holland -> resolved
+
+AUSTRIA
+Vienna MOVE Trieste -> resolved
+Trieste MOVE Albania -> resolved
+Budapest MOVE Rumania -> resolved
+
+TURKEY
+Constantinople MOVE Bulgaria -> resolved
+Ankara MOVE Black Sea -> Bounced
+Smyrna MOVE Constantinople -> resolved
+
+RUSSIA
+Moscow MOVE St. Petersburg -> resolved
+St. Petersburg (South Coast) MOVE Gulf of Bothnia -> resolved
+Warsaw MOVE Ukraine -> resolved
+Sevastopol MOVE Black Sea -> Bounced
