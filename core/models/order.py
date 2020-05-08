@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from core.models.base import OrderType, OutcomeType, \
-    HygienicModel, PerTurnModel, PieceType
+from core.models.base import OrderType, OutcomeType, PerTurnModel, PieceType
 
 
 class Order(PerTurnModel):

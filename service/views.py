@@ -134,7 +134,7 @@ class CreateGame(views.APIView):
             )
         game = serializer.save(created_by=request.user)
         game.participants.add(request.user)
-        return redirect('user-games')
+        return Response(status=status.HTTP_200_OK)
 
 
 class JoinGame(views.APIView):
@@ -169,7 +169,13 @@ class BaseOrderView(generics.GenericAPIView):
                 'User is not a participant in this game.',
                 status.HTTP_403_FORBIDDEN
             )
-        self.turn = self.game.get_current_turn()
+        try:
+            self.turn = self.game.get_current_turn()
+        except models.Turn.DoesNotExist:
+            raise ValidationError(
+                'Game is not active.',
+                status.HTTP_400_BAD_REQUEST
+            )
         self.user_nation_state = models.NationState.objects.get(
             turn=self.turn,
             user=self.request.user,

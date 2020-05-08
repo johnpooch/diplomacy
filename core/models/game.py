@@ -4,6 +4,7 @@ from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.manager import Manager
+from django.utils.timezone import now
 
 from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
 
@@ -59,6 +60,7 @@ class Game(models.Model):
     # TODO needs to use a through model so we can record: joined at, etc.
     participants = models.ManyToManyField(
         User,
+        through='Participation',
     )
     private = models.BooleanField(
         default=False,
@@ -106,6 +108,9 @@ class Game(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+    initialized_at = models.DateTimeField(
+        null=True,
+    )
 
     objects = GameManager()
 
@@ -141,7 +146,7 @@ class Game(models.Model):
         True when the correct number of players have joined and the game hasn't
         been initialized.
         """
-        return self.participants.count() == self.num_players \
+        return self.participants.all().count() == self.num_players \
             and not self.turns.all().exists()
 
     def initialize(self):
@@ -152,6 +157,9 @@ class Game(models.Model):
         self.create_initial_nation_states()
         self.create_initial_territory_states()
         self.create_initial_pieces()
+        self.status = GameStatus.ACTIVE
+        self.initialized_at = now()
+        self.save()
 
     def create_initial_turn(self):
         """
