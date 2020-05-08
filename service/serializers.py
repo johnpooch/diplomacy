@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from core import models
+from core.models.base import OrderType
 
 
 class PieceSerializer(serializers.ModelSerializer):

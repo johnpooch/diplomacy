@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 
 from rest_framework import generics, mixins, status, views
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 
 from core import models
@@ -155,67 +155,51 @@ class JoinGame(views.APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class OrderView(mixins.CreateModelMixin, generics.GenericAPIView):
+class OrderView(generics.GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
 
     permission_classes = [IsAuthenticated]
-
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
     def post(self, request, *args, **kwargs):
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-
-        if request.user not in game.participants.all():
-            return Response(
-                {'errors': {
-                    'data': ['User is not a participant in this game.']
-                }},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        if not game.status == GameStatus.ACTIVE:
-            return Response(
-                {'errors': {'data': ['Game is not active.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        turn = game.get_current_turn()
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=request.user,
+        self.game = get_object_or_404(models.Game, id=self.kwargs['game'])
+        self.turn = self.game.get_current_turn()
+        self.user_nation_state = models.NationState.objects.get(
+            turn=self.turn,
+            user=self.request.user,
         )
-        if not user_nation_state.orders_remaining:
-            return Response(
-                {'errors': {'data': ['Nation has no more orders to submit.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        kwargs['game'] = game
         return self.create(request, *args, **kwargs)
 
-    def create(self, request, *args, **kwargs):
-        game = kwargs['game']
-        turn = game.get_current_turn()
-        order_type = request.data.get('type', OrderType.HOLD)
-        if order_type not in turn.possible_order_types:
-            return Response(
-                {'errors': {'data': 'This order type is not possible during this turn.'}},
-                status=status.HTTP_400_BAD_REQUEST,
+    def perform_create(self, serializer):
+        self._validate_request()
+        serializer.save(
+            nation=self.user_nation_state.nation,
+            turn=self.turn,
+        )
+
+    # NOTE might be cleaner to move these to the `Serializer.validate` method.
+    def _validate_request(self):
+        if self.request.user not in self.game.participants.all():
+            raise ValidationError(
+                'User is not a participant in this game.',
+                status.HTTP_403_FORBIDDEN
             )
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=request.user,
-        )
-        serializer.save(nation=user_nation_state.nation, turn=turn)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers,
-        )
+        if not self.game.status == GameStatus.ACTIVE:
+            raise ValidationError(
+                'Game is not active.',
+                status.HTTP_400_BAD_REQUEST,
+            )
+        if not self.user_nation_state.orders_remaining:
+            raise ValidationError(
+                'Nation has no more orders to submit.',
+                status.HTTP_400_BAD_REQUEST,
+            )
+        type = self.request.data.get('type', OrderType.HOLD)
+        if type not in self.turn.possible_order_types:
+            raise ValidationError(
+                'This order type is not possible during this turn.',
+                status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class FinalizeOrdersView(views.APIView):

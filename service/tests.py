@@ -396,10 +396,11 @@ class TestCreateOrder(APITestCase):
     def test_create_order_not_participant(self):
         self.game.participants.remove(self.user)
         response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertTrue('User is not a participant in this game.' in
-                        response.data['errors']['data'])
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            'User is not a participant in this game.',
+            str(response.data[0])
+        )
 
     def test_create_order_game_pending(self):
         self.game.status = GameStatus.PENDING
@@ -408,9 +409,7 @@ class TestCreateOrder(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue(
-            'Game is not active.' in response.data['errors']['data']
-        )
+        self.assertEqual('Game is not active.', str(response.data[0]))
 
     def test_create_order_game_ended(self):
         self.game.status = GameStatus.ENDED
@@ -427,14 +426,10 @@ class TestCreateOrder(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertTrue(
-            'Nation has no more orders to submit.' in
-            response.data['errors']['data']
-        )
+        self.assertEqual('Nation has no more orders to submit.', str(response.data[0]))
 
     def test_create_order_valid(self):
         response = self.client.post(self.url, self.data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
 
