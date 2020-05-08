@@ -92,7 +92,6 @@ class Order(PerTurnModel):
                     'Piece type should only be specified for build orders.'
                 ),
             })
-        print('HAHFSDFJGSHDFG')
         if self.type not in self.turn.possible_order_types:
             raise ValidationError({
                 'type': (
