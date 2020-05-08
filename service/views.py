@@ -155,35 +155,28 @@ class JoinGame(views.APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class OrderView(generics.GenericAPIView, mixins.CreateModelMixin, mixins.UpdateModelMixin):
+# TODO refactor these into a view set
+class BaseOrderView(generics.GenericAPIView):
 
     permission_classes = [IsAuthenticated]
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
-    def post(self, request, *args, **kwargs):
+    def set_up(self):
         self.game = get_object_or_404(models.Game, id=self.kwargs['game'])
-        self.turn = self.game.get_current_turn()
-        self.user_nation_state = models.NationState.objects.get(
-            turn=self.turn,
-            user=self.request.user,
-        )
-        return self.create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        self._validate_request()
-        serializer.save(
-            nation=self.user_nation_state.nation,
-            turn=self.turn,
-        )
-
-    # NOTE might be cleaner to move these to the `Serializer.validate` method.
-    def _validate_request(self):
         if self.request.user not in self.game.participants.all():
             raise ValidationError(
                 'User is not a participant in this game.',
                 status.HTTP_403_FORBIDDEN
             )
+        self.turn = self.game.get_current_turn()
+        self.user_nation_state = models.NationState.objects.get(
+            turn=self.turn,
+            user=self.request.user,
+        )
+
+    # NOTE might be cleaner to move these to the `Serializer.validate` method.
+    def _validate_request(self):
         if not self.game.status == GameStatus.ACTIVE:
             raise ValidationError(
                 'Game is not active.',
@@ -200,6 +193,41 @@ class OrderView(generics.GenericAPIView, mixins.CreateModelMixin, mixins.UpdateM
                 'This order type is not possible during this turn.',
                 status.HTTP_400_BAD_REQUEST,
             )
+
+
+class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
+
+    def post(self, request, *args, **kwargs):
+        self.set_up()
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        self._validate_request()
+        serializer.save(
+            nation=self.user_nation_state.nation,
+            turn=self.turn,
+        )
+
+
+class UpdateOrderView(BaseOrderView, mixins.UpdateModelMixin):
+
+    def get_object(self):
+        return get_object_or_404(
+            models.Order,
+            pk=self.kwargs['pk'],
+            nation=self.user_nation_state.nation,
+        )
+
+    def put(self, request, *args, **kwargs):
+        self.set_up()
+        return self.update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        self._validate_request()
+        serializer.save(
+            nation=self.user_nation_state.nation,
+            turn=self.turn,
+        )
 
 
 class FinalizeOrdersView(views.APIView):

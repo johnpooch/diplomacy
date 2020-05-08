@@ -56,8 +56,13 @@ urlpatterns = [
     ),
     path(
         'game/<int:game>/order',
-        views.OrderView.as_view(),
+        views.CreateOrderView.as_view(),
         name='create-order'
+    ),
+    path(
+        'game/<int:game>/order/<int:pk>',
+        views.UpdateOrderView.as_view(),
+        name='update-order'
     ),
     path(
         'api-auth/',
