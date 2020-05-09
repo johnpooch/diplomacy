@@ -63,10 +63,6 @@ class Territory(models.Model):
     def state(self, turn):
         return self.territory_states.get(turn=turn)
 
-    def standoff_occured_on_previous_turn(self):
-        # TODO do this when phases/logs are properly handled
-        pass
-
     def adjacent_to(self, territory):
         return territory in self.neighbours.all()
 
@@ -136,3 +132,52 @@ class TerritoryState(PerTurnModel):
             'controlled_by': self.controlled_by.id,
             'named_coasts': [n.to_dict() for n in territory.named_coasts.all()]
         }
+
+
+class TerritoryMapData(models.Model):
+    """
+    How the territory should be displayed on the map.
+    """
+    # impassable territories like Switzerland do not specify a territory.
+    territory = models.ForeignKey(
+        'Territory',
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='map_data',
+    )
+    name = models.CharField(
+        max_length=100,
+        null=True,
+    )
+    abbreviation = models.CharField(
+        max_length=100,
+        null=True,
+    )
+    path = models.TextField(
+        null=False,
+    )
+    text_x = models.FloatField(
+        null=True
+    )
+    text_y = models.FloatField(
+        null=True
+    )
+    piece_x = models.FloatField(
+        null=True
+    )
+    piece_y = models.FloatField(
+        null=True
+    )
+    dislodged_piece_x = models.FloatField(
+        null=True
+    )
+    dislodged_piece_y = models.FloatField(
+        null=True
+    )
+    supply_center_x = models.FloatField(
+        null=True
+    )
+    supply_center_y = models.FloatField(
+        null=True
+    )
+    # TODO named coast map data

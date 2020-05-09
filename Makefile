@@ -5,6 +5,7 @@ dev_fixtures:
 		fixtures/dev/nation.json \
 		fixtures/dev/territory.json \
 		fixtures/dev/named_coast.json \
+		fixtures/dev/map_data.json \
 		fixtures/dev/games/game_1/game.json \
 		fixtures/dev/games/game_1/pieces.json \
 		fixtures/dev/games/game_1/turns/01_1900_spring_order/turn.json \
