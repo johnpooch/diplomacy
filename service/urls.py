@@ -35,17 +35,17 @@ urlpatterns = [
         name='games-by-type'
     ),
     path(
-        'games/<int:game>/join',
+        'game/<int:game>/join',
         views.JoinGame.as_view(),
         name='join-game'
     ),
     path(
-        'games/<int:game>/finalize',
+        'game/<int:game>/finalize',
         views.FinalizeOrdersView.as_view(),
         name='finalize-orders'
     ),
     path(
-        'games/<int:game>/unfinalize',
+        'game/<int:game>/unfinalize',
         views.UnfinalizeOrdersView.as_view(),
         name='unfinalize-orders'
     ),
