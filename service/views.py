@@ -263,27 +263,6 @@ class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
                 )
 
 
-class UpdateOrderView(BaseOrderView, mixins.UpdateModelMixin):
-
-    def get_object(self):
-        return get_object_or_404(
-            models.Order,
-            pk=self.kwargs['pk'],
-            nation=self.user_nation_state.nation,
-        )
-
-    def put(self, request, *args, **kwargs):
-        self.set_up()
-        return self.update(request, *args, **kwargs)
-
-    def perform_update(self, serializer):
-        self._validate_request()
-        serializer.save(
-            nation=self.user_nation_state.nation,
-            turn=self.turn,
-        )
-
-
 class FinalizeOrdersView(views.APIView):
 
     permission_classes = [IsAuthenticated]

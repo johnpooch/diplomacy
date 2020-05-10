@@ -60,11 +60,6 @@ urlpatterns = [
         name='create-order'
     ),
     path(
-        'game/<int:game>/order/<int:pk>',
-        views.UpdateOrderView.as_view(),
-        name='update-order'
-    ),
-    path(
         'api-auth/',
         include('rest_framework.urls', namespace='rest_framework')
     )
