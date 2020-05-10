@@ -9,7 +9,8 @@
       "game": 2,
       "current_turn": false,
       "processed": true,
-      "processed_at": "2019-11-10T18:40:06.947Z"
+      "processed_at": "2019-11-10T18:40:06.947Z",
+      "created_at": "2019-11-10T18:40:06.947Z"
     }
   }
 ]

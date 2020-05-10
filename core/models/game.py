@@ -1,7 +1,10 @@
+import random
+
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.manager import Manager
+from django.utils.timezone import now
 
 from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
 
@@ -54,8 +57,10 @@ class Game(models.Model):
         null=False,
         editable=False,
     )
+    # TODO needs to use a through model so we can record: joined at, etc.
     participants = models.ManyToManyField(
         User,
+        through='Participation',
     )
     private = models.BooleanField(
         default=False,
@@ -103,6 +108,9 @@ class Game(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+    initialized_at = models.DateTimeField(
+        null=True,
+    )
 
     objects = GameManager()
 
@@ -132,6 +140,94 @@ class Game(models.Model):
         # TODO test
         return self.participants.count() < self.num_players and not self.ended
 
+    @property
+    def ready_to_initialize(self):
+        """
+        True when the correct number of players have joined and the game hasn't
+        been initialized.
+        """
+        return self.participants.all().count() == self.num_players \
+            and not self.turns.all().exists()
+
+    def initialize(self):
+        """
+        When all players have joined a game, the game is initialized.
+        """
+        self.create_initial_turn()
+        self.create_initial_nation_states()
+        self.create_initial_territory_states()
+        self.create_initial_pieces()
+        self.status = GameStatus.ACTIVE
+        self.initialized_at = now()
+        self.save()
+
+    def create_initial_turn(self):
+        """
+        Creates the first turn of the game.
+
+        Returns:
+            * `Turn`
+        """
+        variant = self.variant
+        turn_model = apps.get_model('core', 'Turn')
+        return turn_model.objects.create(
+            game=self,
+            year=variant.starting_year,
+            season=variant.starting_season,
+            phase=variant.starting_phase,
+            current_turn=True,
+        )
+
+    def create_initial_nation_states(self):
+        """
+        Creates the initial nation states and assigns each participant to a
+        nation state randomly.
+        """
+        participants = list(self.participants.all())
+        nations = list(self.variant.nations.all())
+        random.shuffle(participants)
+        nation_state = apps.get_model('core', 'NationState')
+        for participant, nation in zip(participants, nations):
+            nation_state.objects.create(
+                turn=self.get_current_turn(),
+                nation=nation,
+                user=participant,
+            )
+
+    def create_initial_territory_states(self):
+        """
+        Creates the initial territory states.
+        """
+        territories = list(self.variant.territories.all())
+        territory_state = apps.get_model('core', 'TerritoryState')
+        for territory in territories:
+            territory_state.objects.create(
+                turn=self.get_current_turn(),
+                territory=territory,
+                controlled_by=territory.controlled_by_initial,
+            )
+
+    def create_initial_pieces(self):
+        """
+        Create a piece on every territory that has a starting piece.
+        """
+        territories = list(self.variant.territories.all())
+        piece_model = apps.get_model('core', 'Piece')
+        piece_state_model = apps.get_model('core', 'PieceState')
+        for territory in territories:
+            if territory.initial_piece_type:
+                piece = piece_model.objects.create(
+                    game=self,
+                    type=territory.initial_piece_type,
+                    nation=territory.controlled_by_initial,
+                )
+                piece_state_model.objects.create(
+                    turn=self.get_current_turn(),
+                    piece=piece,
+                    territory=territory,
+
+                )
+
     def get_current_turn(self):
         """
         Gets the related `Turn` where `current_turn` is `True`.
@@ -146,5 +242,3 @@ class Game(models.Model):
         current_turn.process()
         turn_model = apps.get_model('core', 'Turn')
         turn_model.objects.create_turn_from_previous_turn(current_turn)
-        current_turn.current_turn = False
-        current_turn.save()

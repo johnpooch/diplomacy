@@ -1,3 +1,12 @@
+import json
+import re
+
+from core.models.base import OrderType
+
+hold_regex = r'^(?P<source>[\w.() \-]+?(?= HOLD)) (?P<type>HOLD) -> (?P<outcome>[\w.() \-]+)'
+move_regex = r'^(?P<source>[\w.() \-]+?(?= MOVE| RETREAT)) (?P<type>MOVE|RETREAT) (?P<target>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
+aux_regex = r'^(?P<source>[\w.() \-]+?(?= MOVE| HOLD| CONVOY| SUPPORT| RETREAT)) (?P<type>MOVE|HOLD|SUPPORT|CONVOY|RETREAT) (?P<aux>[\w.() \-]+?(?= to)) to (?P<target>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
+
 def form_to_data(form):
     result = {}
     for name, field in form.fields.items():
@@ -6,8 +15,6 @@ def form_to_data(form):
 
 
 def field_to_dict(field):
-    from pprint import pprint
-    pprint(field.__dict__)
     data = {
         "type": field.__class__.__name__,
         "widget_type": field.widget.__class__.__name__,
@@ -35,3 +42,60 @@ def field_to_dict(field):
     if max_length:
         data['max_length'] = max_length
     return data
+
+
+def text_to_order_data(text):
+    """
+    Tool to convert order history from Play Diplomacy to json data.
+    """
+    orders = []
+    nation_dict = {
+        'Austria': 'Austria-Hungary'
+    }
+    territory_dict = {
+        'st. petersburg (south coast)': 'st. petersburg',
+    }
+    regex_dict = {
+        OrderType.HOLD: hold_regex,
+        OrderType.MOVE: move_regex,
+        OrderType.RETREAT: move_regex,
+    }
+
+    def _lower_groups(groups):
+        for k, v in groups.items():
+            if v:
+                groups[k] = v.lower()
+        return groups
+
+    order_blocks = text.split('\n\n')
+    for block in order_blocks:
+        lines = block.split('\n')
+        nation = lines[0].lower()
+        nation = nation.title()
+        nation = nation_dict.get(nation, nation)
+
+        for line in lines[1:]:
+            m = re.search('MOVE|HOLD', line)
+            if not m:
+                break
+            order = m.group(0)
+            regex = regex_dict[order.lower()]
+            m = re.search(regex, line)
+            data = _lower_groups(m.groupdict())
+            data['nation'] = nation
+            data['source'] = territory_dict.get(data['source'], data['source'])
+            target = data.get('target')
+            if target:
+                data['target'] = territory_dict.get(data['target'], data['target'])
+            aux = data.get('aux')
+            if aux:
+                data['aux'] = territory_dict.get(data['aux'], data['aux'])
+            outcome = data.pop('outcome')
+            orders.append(
+                {
+                    'outcome': outcome,
+                    'order': data
+                }
+            )
+
+    return json.dumps(orders)

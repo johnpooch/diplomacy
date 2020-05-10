@@ -5,6 +5,11 @@ from . import views
 
 urlpatterns = [
     path(
+        'game-filter-choices',
+        views.GameFilterChoicesView.as_view(),
+        name='game-filter-choices'
+    ),
+    path(
         'games',
         views.ListGames.as_view(),
         name='all-games'
@@ -35,17 +40,32 @@ urlpatterns = [
         name='join-game'
     ),
     path(
+        'games/<int:game>/finalize',
+        views.FinalizeOrdersView.as_view(),
+        name='finalize-orders'
+    ),
+    path(
+        'games/<int:game>/unfinalize',
+        views.UnfinalizeOrdersView.as_view(),
+        name='unfinalize-orders'
+    ),
+    path(
         'game/<int:game>',
         views.GameStateView.as_view(),
         name='game-state'
     ),
-    # create command
     path(
         'game/<int:game>/order',
-        views.OrderView.as_view(),
+        views.CreateOrderView.as_view(),
         name='create-order'
     ),
-    # # history of previous turn
-    # path('game/<int:game>/<int:turn>', views.GameStateView.as_view()),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path(
+        'game/<int:game>/order/<int:pk>',
+        views.UpdateOrderView.as_view(),
+        name='update-order'
+    ),
+    path(
+        'api-auth/',
+        include('rest_framework.urls', namespace='rest_framework')
+    )
 ]

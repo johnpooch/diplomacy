@@ -51,7 +51,7 @@ class Territory(models.Model):
     )
     initial_piece_type = models.CharField(
         max_length=50,
-        null=False,
+        null=True,
         choices=PieceType.CHOICES,
     )
 
@@ -62,10 +62,6 @@ class Territory(models.Model):
 
     def state(self, turn):
         return self.territory_states.get(turn=turn)
-
-    def standoff_occured_on_previous_turn(self):
-        # TODO do this when phases/logs are properly handled
-        pass
 
     def adjacent_to(self, territory):
         return territory in self.neighbours.all()

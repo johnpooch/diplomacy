@@ -55,12 +55,16 @@ class TestProcessGame(TestCase):
             controlled_by=france,
         )
         army_paris = models.Piece.objects.create(
+            game=self.game,
             nation=france,
-            territory=paris,
+        )
+        models.PieceState.objects.create(
+            piece=army_paris,
             turn=turn,
+            territory=paris,
         )
         paris.neighbours.add(picardy)
-        order = models.Order.objects.create(
+        models.Order.objects.create(
             turn=turn,
             nation=france,
             type=OrderType.MOVE,
@@ -72,5 +76,5 @@ class TestProcessGame(TestCase):
         self.assertEqual(new_turn.year, 1900)
         self.assertEqual(new_turn.phase, Phase.ORDER)
         self.assertEqual(new_turn.season, Season.FALL)
-        piece = new_turn.pieces.get()
-        self.assertEqual(piece.territory, picardy)
+        piece_state = new_turn.piecestates.get()
+        self.assertEqual(piece_state.territory, picardy)

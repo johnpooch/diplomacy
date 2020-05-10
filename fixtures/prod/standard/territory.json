@@ -66,7 +66,7 @@
       "model":"core.territory",
       "pk":4,
       "fields":{
-         "name":"barrents sea",
+         "name":"barents sea",
          "variant": 1,
          "neighbours":[
             15,
@@ -250,7 +250,7 @@
       "model":"core.territory",
       "pk":13,
       "fields":{
-         "name":"mid atlantic",
+         "name":"mid-atlantic ocean",
          "variant": 1,
          "neighbours":[
             26,
@@ -274,7 +274,7 @@
       "model":"core.territory",
       "pk":14,
       "fields":{
-         "name":"north atlantic",
+         "name":"north atlantic ocean",
          "variant": 1,
          "neighbours":[
             27,
@@ -1036,7 +1036,7 @@
       "model":"core.territory",
       "pk":49,
       "fields":{
-         "name":"sevastapol",
+         "name":"sevastopol",
          "supply_center": true,
          "initial_piece_type": "fleet",
          "variant": 1,

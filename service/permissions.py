@@ -13,16 +13,6 @@ class IsAuthenticated(permissions.IsAuthenticated):
         return bool(request.user and request.user.is_authenticated)
 
 
-class IsParticipant(permissions.BasePermission):
-    """
-    Custom permission to allow only a participant of a game to access a view.
-    """
-    def has_permission(self, request, view):
-        if not settings.TESTING and settings.DEBUG:
-            return True
-        return bool(request.user and request.user.is_authenticated)
-
-
 class IsCreatedByOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow the user which created an object to edit

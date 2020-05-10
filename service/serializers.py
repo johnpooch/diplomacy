@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from core import models
+from core.models.base import OrderType
 
 
 class PieceSerializer(serializers.ModelSerializer):
@@ -41,6 +42,42 @@ class TerritorySerializer(serializers.ModelSerializer):
         )
 
 
+class TerritoryMapDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TerritoryMapData
+        fields = (
+            'pk',
+            'territory',
+            'name',
+            'abbreviation',
+            'path',
+            'text_x',
+            'text_y',
+            'piece_x',
+            'piece_y',
+            'dislodged_piece_x',
+            'dislodged_piece_y',
+            'supply_center_x',
+            'supply_center_y',
+        )
+
+
+class MapDataSerializer(serializers.ModelSerializer):
+
+    territory_data = TerritoryMapDataSerializer(many=True)
+
+    class Meta:
+        model = models.MapData
+        fields = (
+            'id',
+            'identifier',
+            'width',
+            'height',
+            'territory_data',
+        )
+
+
 class TerritoryStateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -73,6 +110,7 @@ class VariantSerializer(serializers.ModelSerializer):
 
     territories = TerritorySerializer(many=True)
     nations = NationSerializer(many=True)
+    map_data = MapDataSerializer(many=True)
 
     class Meta:
         model = models.Variant
@@ -80,17 +118,12 @@ class VariantSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'territories',
+            'map_data',
             'nations',
         )
 
 
 class GameSerializer(serializers.ModelSerializer):
-
-    variant = VariantSerializer(read_only=True)
-    variant_id = serializers.PrimaryKeyRelatedField(
-        source='variant',
-        queryset=models.Variant.objects.all(),
-    )
 
     class Meta:
         model = models.Game

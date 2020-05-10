@@ -11,10 +11,9 @@ from core.utils.data import get_fixture_data
 
 fake = Faker()
 
-nation_data = get_fixture_data('nations.json')
-piece_data = get_fixture_data('pieces.json')
-territory_data = get_fixture_data('territories.json')
-supply_center_data = get_fixture_data('supply_centers.json')
+nation_data = get_fixture_data('dev/nation.json')
+piece_data = get_fixture_data('dev/games/game_1/pieces.json')
+territory_data = get_fixture_data('dev/territory.json')
 
 
 class VariantFactory(DjangoModelFactory):
@@ -166,12 +165,10 @@ class StandardVariantFactory(DjangoModelFactory):
         make_territory = getattr(StandardTerritoryFactory,
                                  'create' if create else 'build')
 
-        supply_pks = [s['fields']['territory'] for s in supply_center_data]
-
         territories = []
         for territory in territory_data:
-            supply_center = territory['pk'] in supply_pks
             controlled_by_initial_id = territory['fields']['controlled_by_initial']
+
             nations = [n for n in nation_data if n['pk'] == controlled_by_initial_id]
             if nations:
                 nation = nations[0]
@@ -188,9 +185,9 @@ class StandardVariantFactory(DjangoModelFactory):
                             name=nations[0]['fields']['name']
                         ),
                         nationality=None,
-                        supply_center=supply_center,
+                        supply_center=territory['fields'].get('supply_center', False),
                         type=territory['fields']['type'],
-                        coastal=territory['fields']['coastal'],
+                        initial_piece_type=territory['fields'].get('initial_piece_type'),
                     )
                 )
             else:
@@ -200,15 +197,15 @@ class StandardVariantFactory(DjangoModelFactory):
                         name=territory['fields']['name'],
                         controlled_by_initial=None,
                         nationality=None,
-                        supply_center=supply_center,
+                        supply_center=territory['fields'].get('supply_center', False),
                         type=territory['fields']['type'],
-                        coastal=territory['fields']['coastal'],
+                        initial_piece_type=territory['fields'].get('initial_piece_type'),
                     )
                 )
-
-
-        if not create:
-            self._prefetched_objects_cache = {'territories': territories}
+    #
+    #
+    #     if not create:
+    #         self._prefetched_objects_cache = {'territories': territories}
 
 
 class StandardTurnFactory(DjangoModelFactory):

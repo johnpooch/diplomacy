@@ -79,6 +79,23 @@ class NationState(PerTurnModel):
         )
 
     @property
+    def num_orders(self):
+        """
+        Gets the number of orders that the nation can submit this turn.
+
+        Returns:
+            * `int`
+        """
+        PieceState = apps.get_model(
+            app_label='core',
+            model_name='PieceState'
+        )
+        return PieceState.objects \
+            .filter(turn=self.turn, piece__nation=self.nation).count()
+
+
+    # TODO wrong
+    @property
     def orders_remaining(self):
         """
         Gets the number of orders that the nation can still submit.
