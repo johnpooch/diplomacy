@@ -180,6 +180,7 @@ class BaseOrderView(generics.GenericAPIView):
             turn=self.turn,
             user=self.request.user,
         )
+        self.source = self.request.data['source']
 
     # NOTE might be cleaner to move these to the `Serializer.validate` method.
     def _validate_request(self):
@@ -220,6 +221,12 @@ class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
 
     def perform_create(self, serializer):
         self._validate_request()
+        # delete existing order if it exists
+        models.Order.objects.filter(
+            source=self.source,
+            turn=self.turn,
+            nation=self.user_nation_state.nation,
+        ).delete()
         serializer.save(
             nation=self.user_nation_state.nation,
             turn=self.turn,
@@ -228,6 +235,7 @@ class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
     def perform_create_multiple(self, serializer):
         self._validate_multiple()
         models.Order.objects.filter(
+            turn=self.turn,
             nation=self.user_nation_state.nation,
         ).delete()
         serializer.save(

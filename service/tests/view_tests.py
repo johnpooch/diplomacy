@@ -436,6 +436,27 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
 
+    def test_create_order_valid_over_writes(self):
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(models.Order.objects.get())  # object created
+
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.turn,
+            controlled_by=self.nation_state.nation,
+        )
+        territory = territory_state.territory
+        self.data = {
+            'source': self.territory.id,
+            'target': territory.id,
+            'type': OrderType.MOVE,
+        }
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        order = models.Order.objects.get()
+        self.assertEqual(order.type, OrderType.MOVE)
+        self.assertEqual(order.target, territory)
+
     def test_create_order_hold_during_retreat(self):
         models.Turn.objects.create(
             game=self.game,
@@ -569,6 +590,7 @@ class TestCreateOrder(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(models.Order.objects.all().count(), 2)
+
 
 class TestEditOrder(APITestCase):
 
