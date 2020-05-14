@@ -44,10 +44,16 @@ class TurnManager(models.Manager):
             piece_state_model = apps.get_model('core', 'PieceState')
             piece_state_model.objects.create(**piece_data)
         for territory_state in previous_turn.territorystates.all():
-            # If end of fall orders process change of possession.
+            # TODO If end of fall orders process change of possession.
             territory_state.turn = new_turn
             territory_state.pk = None
             territory_state.save()
+        for nation_state in previous_turn.nationstates.all():
+            # TODO account for nations which have been eliminated?
+            nation_state.turn = new_turn
+            nation_state.orders_finalized = False
+            nation_state.pk = None
+            nation_state.save()
         return new_turn
 
 
@@ -164,7 +170,6 @@ class Turn(models.Model):
         return game_state
 
     def get_next_season_phase_and_year(self):
-        # TODO finish and test
         if not self.processed:
             raise ValueError('Cannot get next phase until order is processed.')
 

@@ -32,11 +32,17 @@ class TestEndToEnd(APITestCase):
 
     def setUp(self):
         game_dir = 'game_1/'
-        file_to_open = data_folder + game_dir + 'spring_1900.txt'
+        file_to_open = data_folder + game_dir + 'spring_1901.txt'
         with open(file_to_open) as f:
             text = f.read()
         jason = text_to_order_data(text)
-        self.order_data = json.loads(jason)
+        self.order_data_1 = json.loads(jason)
+
+        file_to_open = data_folder + game_dir + 'fall_1901.txt'
+        with open(file_to_open) as f:
+            text = f.read()
+        jason = text_to_order_data(text)
+        self.order_data_2 = json.loads(jason)
 
     def test_end_to_end(self):
         register_url = reverse('register')
@@ -119,7 +125,7 @@ class TestEndToEnd(APITestCase):
 
         # each player submits orders
         for nation_state in nation_states:
-            orders = [o for o in self.order_data
+            orders = [o for o in self.order_data_1
                       if o['order']['nation'] == nation_state.nation.name]
             cleaned_orders = []
             for order in orders:
@@ -168,8 +174,131 @@ class TestEndToEnd(APITestCase):
 
         # new turn
         new_turn = game.get_current_turn()
-        self.assertEqual(new_turn.year, 1900)
+        self.assertEqual(new_turn.year, 1901)
         self.assertEqual(new_turn.season, base.Season.FALL)
         self.assertEqual(new_turn.phase, base.Phase.ORDER)
 
+        # new nation states are created
+        nation_states = models.NationState.objects.filter(turn=new_turn)
+        self.assertEqual(nation_states.count(), 7)
+
+        # new territory states are created
+        new_territory_states = models.TerritoryState.objects.filter(turn=new_turn)
+        self.assertEqual(new_territory_states.count(), 75)
+
+        # new piece states are created
+        new_piece_states = models.PieceState.objects.filter(turn=new_turn)
+        self.assertEqual(new_piece_states.count(), 22)
+
         # check piece positions are correct
+        for order_data in self.order_data_1:
+            if order_data['outcome'] == 'resolved':
+                # check piece exists in target
+                if order_data['order']['type'] == 'hold':
+                    models.PieceState.objects.get(
+                        turn=new_turn,
+                        territory__name=order_data['order']['source']
+                    )
+                else:
+                    models.PieceState.objects.get(
+                        turn=new_turn,
+                        territory__name=order_data['order']['target']
+                    )
+            if order_data['outcome'] == 'bounced':
+                # check piece exists in source
+                models.TerritoryState.objects.get(
+                    turn=new_turn,
+                    territory__name=order_data['order']['source']
+                )
+
+        # players issue second set of orders.
+        for nation_state in nation_states:
+            orders = [o for o in self.order_data_2
+                      if o['order']['nation'] == nation_state.nation.name]
+            cleaned_orders = []
+            for order in orders:
+                order_data = copy(order['order'])
+                source = order_data.get('source')
+                target = order_data.get('target')
+                aux = order_data.get('aux')
+                if source:
+                    order_data['source'] = models.Territory.objects.get(name=source).id
+                if aux:
+                    order_data['aux'] = models.Territory.objects.get(name=source).id
+                if target:
+                    order_data['target'] = models.Territory.objects.get(name=target).id
+                order_data.pop('nation')
+                cleaned_orders.append(order_data)
+
+            self.client.force_authenticate(user=nation_state.user)
+            for order in cleaned_orders:
+                response = self.client.post(
+                    create_order_url,
+                    order,
+                    format='json',
+                )
+                self.assertEqual(response.status_code, 201)
+
+        self.assertEqual(models.Order.objects.count(), 44)
+        orders = new_turn.orders.all()
+        self.assertEqual(orders.count(), 22)
+
+        for order in orders:
+            self.assertEqual(order.outcome, None)
+
+        # each player finalizes orders
+        for user in game.participants.all():
+            self.client.force_authenticate(user=user)
+            response = self.client.get(finalize_orders_url)
+            self.assertEqual(response.status_code, 200)
+
+        turn = new_turn
+        # turn is processed
+        turn.refresh_from_db()
+        self.assertTrue(turn.processed)
+        self.assertTrue(turn.processed_at)
+        self.assertFalse(turn.current_turn)
+
+        # orders have outcomes
+        orders = turn.orders.all()
+        for order in orders:
+            self.assertTrue(order.outcome)
+
+        # new turn
+        new_turn = game.get_current_turn()
+        self.assertEqual(new_turn.year, 1901)
+        self.assertEqual(new_turn.season, base.Season.FALL)
+        self.assertEqual(new_turn.phase, base.Phase.RETREAT)
+
+        # new nation states are created
+        nation_states = models.NationState.objects.filter(turn=new_turn)
+        self.assertEqual(nation_states.count(), 7)
+
+        # new territory states are created
+        new_territory_states = models.TerritoryState.objects.filter(turn=new_turn)
+        self.assertEqual(new_territory_states.count(), 75)
+
+        # new piece states are created
+        new_piece_states = models.PieceState.objects.filter(turn=new_turn)
+        self.assertEqual(new_piece_states.count(), 22)
+
+        # check piece positions are correct
+        for order_data in self.order_data_1:
+            if order_data['outcome'] == 'resolved':
+                # check piece exists in target
+                if order_data['order']['type'] == 'hold':
+                    models.PieceState.objects.get(
+                        turn=new_turn,
+                        territory__name=order_data['order']['source']
+                    )
+                else:
+                    models.PieceState.objects.get(
+                        turn=new_turn,
+                        territory__name=order_data['order']['target']
+                    )
+            if order_data['outcome'] == 'bounced':
+                # check piece exists in source
+                models.TerritoryState.objects.get(
+                    turn=new_turn,
+                    territory__name=order_data['order']['source']
+                )

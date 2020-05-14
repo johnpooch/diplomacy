@@ -59,6 +59,8 @@ def text_to_order_data(text):
         OrderType.HOLD: hold_regex,
         OrderType.MOVE: move_regex,
         OrderType.RETREAT: move_regex,
+        OrderType.SUPPORT: aux_regex,
+        OrderType.CONVOY: aux_regex,
     }
 
     def _lower_groups(groups):
@@ -75,7 +77,7 @@ def text_to_order_data(text):
         nation = nation_dict.get(nation, nation)
 
         for line in lines[1:]:
-            m = re.search('MOVE|HOLD', line)
+            m = re.search('MOVE|HOLD|SUPPORT|CONVOY', line)
             if not m:
                 break
             order = m.group(0)

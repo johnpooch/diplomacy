@@ -18,7 +18,7 @@ class Order:
 
     def __getattr__(self, name):
         """
-        Adds the ability to ask an order what type it is using the syntax
+        Adds the ability to determine the type of an order using the syntax
         `order.is_<order_subclass>`.
         """
         subclasses = Order.__subclasses__()
