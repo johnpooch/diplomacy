@@ -124,7 +124,7 @@ class CreateGame(views.APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.data['variant_id'] = 1
+        request.data['variant'] = 1
         request.data['num_players'] = 7
         serializer = serializers.GameSerializer(data=request.data)
         if not serializer.is_valid():
@@ -231,36 +231,6 @@ class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
             nation=self.user_nation_state.nation,
             turn=self.turn,
         )
-
-    def perform_create_multiple(self, serializer):
-        self._validate_multiple()
-        models.Order.objects.filter(
-            turn=self.turn,
-            nation=self.user_nation_state.nation,
-        ).delete()
-        serializer.save(
-            nation=self.user_nation_state.nation,
-            turn=self.turn,
-        )
-
-    def _validate_multiple(self):
-        if not self.game.status == GameStatus.ACTIVE:
-            raise ValidationError(
-                'Game is not active.',
-                status.HTTP_400_BAD_REQUEST,
-            )
-        if len(self.request.data) > self.user_nation_state.num_orders:
-            raise ValidationError(
-                'Nation has submitted too many orders.',
-                status.HTTP_400_BAD_REQUEST,
-            )
-        for order in self.request.data:
-            type = order.get('type', OrderType.HOLD)
-            if type not in self.turn.possible_order_types:
-                raise ValidationError(
-                    'This order type is not possible during this turn.',
-                    status.HTTP_400_BAD_REQUEST,
-                )
 
 
 class FinalizeOrdersView(views.APIView):

@@ -89,8 +89,10 @@ class TestEndToEnd(APITestCase):
             participation = models.Participation.objects.get(user=user, game=game)
             self.assertTrue(participation.joined_at)
 
+        turn = game.get_current_turn()
+
         nation_states = \
-            models.NationState.objects.filter(turn=game.get_current_turn())
+            models.NationState.objects.filter(turn=turn)
 
         # game is now active and has been initialised
         game.refresh_from_db()
@@ -132,16 +134,37 @@ class TestEndToEnd(APITestCase):
                 cleaned_orders.append(order_data)
 
             self.client.force_authenticate(user=nation_state.user)
-            response = self.client.post(create_order_url, cleaned_orders, format='json')
-            self.assertEqual(response.status_code, 201)
+            for order in cleaned_orders:
+                response = self.client.post(
+                    create_order_url,
+                    order,
+                    format='json',
+                )
+                self.assertEqual(response.status_code, 201)
 
         self.assertEqual(models.Order.objects.count(), 22)
         orders = models.Order.objects.all()
 
-        # no orders have outcomes
+        for order in orders:
+            self.assertEqual(order.outcome, None)
 
+        finalize_orders_url = reverse('finalize-orders', args=[game.id])
         # each player finalizes orders
+        for user in game.participants.all():
+            self.client.force_authenticate(user=user)
+            response = self.client.get(finalize_orders_url)
+            self.assertEqual(response.status_code, 200)
+
+        # turn is processed
+        turn.refresh_from_db()
+        self.assertTrue(turn.processed)
+        self.assertTrue(turn.processed_at)
 
         # orders have outcomes
+        orders = turn.orders.all()
+        for order in orders:
+            self.assertTrue(order.outcome)
 
         # new turn
+        new_turn = game.get_current_turn()
+        print(new_turn)

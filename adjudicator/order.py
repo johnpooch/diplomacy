@@ -45,11 +45,18 @@ class Order:
                 s.support_decision in args and s.legal_decision in legal_decisions]
 
     def to_dict(self):
+        if self.piece:
+            if self.piece.dislodged_decision == Outcomes.DISLODGED:
+                outcome = Outcomes.FAILS
+            else:
+                outcome = Outcomes.SUCCEEDS
         return {
             'id': self.id,
             'legal_decision': self.legal_decision,
             'illegal_message': self.illegal_message,
+            'outcome': outcome,
         }
+
 
 class Hold(Order):
     pass

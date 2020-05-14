@@ -180,7 +180,6 @@ class TestGetCreateGame(APITestCase):
             status.HTTP_405_METHOD_NOT_ALLOWED,
         )
 
-
     def test_get_create_game_unauthenticated(self):
         """
         Cannot get create game when unauthenticated.
@@ -217,8 +216,6 @@ class TestPostCreateGame(APITestCase):
 
         data = {
             'name': 'Test Game',
-            'variant_id': variant.id,
-            'num_players': 7,
         }
         url = reverse('create-game')
         response = self.client.post(url, data, format='json')
@@ -481,115 +478,6 @@ class TestCreateOrder(APITestCase):
         self.data['type'] = OrderType.BUILD
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_multiple_orders(self):
-        territory_state_1 = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-        )
-        territory_state_2 = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-        )
-        piece = models.Piece.objects.create(
-            nation=self.nation_state.nation,
-            type=PieceType.ARMY,
-            game=self.game,
-        )
-        models.PieceState.objects.create(
-            turn=self.turn,
-            piece=piece,
-            territory=territory_state_1.territory
-        )
-        piece = models.Piece.objects.create(
-            nation=self.nation_state.nation,
-            type=PieceType.ARMY,
-            game=self.game,
-        )
-        models.PieceState.objects.create(
-            turn=self.turn,
-            piece=piece,
-            territory=territory_state_1.territory
-        )
-        data = [
-            {
-                'source': territory_state_1.territory.id,
-            },
-            {
-                'source': territory_state_2.territory.id,
-            },
-        ]
-        response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(models.Order.objects.all().count(), 2)
-
-    def test_create_too_many_orders(self):
-        territory_state_1 = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-        )
-        territory_state_2 = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-        )
-        piece = models.Piece.objects.create(
-            nation=self.nation_state.nation,
-            type=PieceType.ARMY,
-            game=self.game,
-        )
-        models.PieceState.objects.create(
-            turn=self.turn,
-            piece=piece,
-            territory=territory_state_1.territory
-        )
-
-        data = [
-            {
-                'source': territory_state_1.territory.id,
-            },
-            {
-                'source': territory_state_2.territory.id,
-            },
-        ]
-        response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_multiple_requests_replace(self):
-        territory_state_1 = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-        )
-        territory_state_2 = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-        )
-        piece = models.Piece.objects.create(
-            nation=self.nation_state.nation,
-            type=PieceType.ARMY,
-            game=self.game,
-        )
-        models.PieceState.objects.create(
-            turn=self.turn,
-            piece=piece,
-            territory=territory_state_1.territory
-        )
-        piece = models.Piece.objects.create(
-            nation=self.nation_state.nation,
-            type=PieceType.ARMY,
-            game=self.game,
-        )
-        models.PieceState.objects.create(
-            turn=self.turn,
-            piece=piece,
-            territory=territory_state_1.territory
-        )
-        data = [
-            {
-                'source': territory_state_1.territory.id,
-            },
-            {
-                'source': territory_state_2.territory.id,
-            },
-        ]
-        response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        response = self.client.post(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(models.Order.objects.all().count(), 2)
 
 
 class TestFinalizeOrders(APITestCase):

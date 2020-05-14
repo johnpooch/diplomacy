@@ -47,7 +47,7 @@ class Territory(models.Model):
         null=False
     )
     supply_center = models.BooleanField(
-       default=False,
+        default=False,
     )
     initial_piece_type = models.CharField(
         max_length=50,
@@ -128,7 +128,7 @@ class TerritoryState(PerTurnModel):
             'neighbour_ids': list(territory.neighbours.all().values_list('pk', flat=True)),
             'shared_coast_ids': list(territory.shared_coasts.all().values_list('pk', flat=True)),
             'supply_center': territory.supply_center,
-            'nationality': territory.nationality.id,
-            'controlled_by': self.controlled_by.id,
+            'nationality': getattr(territory.nationality, 'id', None),
+            'controlled_by': getattr(territory.nationality, 'id', None),
             'named_coasts': [n.to_dict() for n in territory.named_coasts.all()]
         }
