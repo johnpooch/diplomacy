@@ -261,7 +261,7 @@ class FinalizeOrdersView(views.APIView):
         user_nation_state.orders_finalized = True
         user_nation_state.save()
         if turn.ready_to_process:
-            turn.process()
+            game.process()
         return Response(status=status.HTTP_200_OK)
 
 

@@ -159,6 +159,7 @@ class TestEndToEnd(APITestCase):
         turn.refresh_from_db()
         self.assertTrue(turn.processed)
         self.assertTrue(turn.processed_at)
+        self.assertFalse(turn.current_turn)
 
         # orders have outcomes
         orders = turn.orders.all()
@@ -167,4 +168,8 @@ class TestEndToEnd(APITestCase):
 
         # new turn
         new_turn = game.get_current_turn()
-        print(new_turn)
+        self.assertEqual(new_turn.year, 1900)
+        self.assertEqual(new_turn.season, base.Season.FALL)
+        self.assertEqual(new_turn.phase, base.Phase.ORDER)
+
+        # check piece positions are correct

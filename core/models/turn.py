@@ -48,7 +48,6 @@ class TurnManager(models.Manager):
             territory_state.turn = new_turn
             territory_state.pk = None
             territory_state.save()
-        previous_turn.current_turn = False
         return new_turn
 
 
@@ -132,7 +131,6 @@ class Turn(models.Model):
             order.legal = order_data['legal_decision'] == 'legal'
             order.illegal_message = order_data['illegal_message']
             order.save()
-            print(order)
         for piece_data in outcome['pieces']:
             piece = self.piecestates.get(id=piece_data['id'])
             piece.dislodged = piece_data['dislodged_decision'] == 'dislodged'
@@ -181,7 +179,6 @@ class Turn(models.Model):
             if False:
                 return self.season, Phase.BUILD, self.year
             return Season.SPRING, Phase.ORDER, self.year + 1
-
 
 
 class TurnEnd(models.Model):
