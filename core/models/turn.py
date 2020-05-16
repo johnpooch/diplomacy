@@ -44,6 +44,9 @@ class TurnManager(models.Manager):
             type=OrderType.MOVE,
         )
         for piece_state in previous_turn.piecestates.all():
+            # If piece disbanded do not create a new piece state
+            if piece_state.piece.turn_disbanded:
+                continue
             piece_data = {
                 'piece': piece_state.piece,
                 'turn': new_turn,
@@ -149,7 +152,6 @@ class Turn(models.Model):
         self.update_turn(outcome)
 
     def update_turn(self, outcome):
-        print(outcome)
         self.processed = True
         self.processed_at = timezone.now()
         self.save()
@@ -157,7 +159,7 @@ class Turn(models.Model):
             for order_data in outcome['orders']:
                 order = self.orders.get(id=order_data['id'])
                 if order.type == OrderType.DISBAND:
-                    piece = order.source.pieces.get(must_retreat=True)
+                    piece = order.source.pieces.get(must_retreat=True).piece
                     piece.turn_disbanded = self
                 piece.save()
             return

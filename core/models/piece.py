@@ -28,18 +28,20 @@ class Piece(HygienicModel):
     )
     turn_created = models.ForeignKey(
         'Turn',
-        null=False,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name='+',
         help_text=_(
             'The turn during which this piece was created. Will always '
-            'be a build phase unless the piece was one of the starting '
-            'pieces.'
+            'be a build phase. If null, piece was created at the beginning '
+            'of the game.'
         )
     )
     turn_disbanded = models.ForeignKey(
         'Turn',
         null=True,
+        blank=True,
         on_delete=models.CASCADE,
         related_name='+',
         help_text=_(

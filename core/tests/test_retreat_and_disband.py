@@ -89,6 +89,12 @@ class TestRetreatAndDisband(TestCase):
             ]
         }
         self.retreat_turn.update_turn(outcome)
+        piece.refresh_from_db()
+        self.assertEqual(piece.turn_disbanded, self.retreat_turn)
+        new_turn = models.Turn.objects.create_turn_from_previous_turn(
+            self.retreat_turn
+        )
+        self.assertEqual(new_turn.piecestates.count(), 0)
 
     def test_pieces_which_are_dislodged_must_retreat_next_turn(self):
         pass
