@@ -26,6 +26,27 @@ class Piece(HygienicModel):
         choices=PieceType.CHOICES,
         default=PieceType.ARMY,
     )
+    turn_created = models.ForeignKey(
+        'Turn',
+        null=False,
+        on_delete=models.CASCADE,
+        related_name='+',
+        help_text=_(
+            'The turn during which this piece was created. Will always '
+            'be a build phase unless the piece was one of the starting '
+            'pieces.'
+        )
+    )
+    turn_disbanded = models.ForeignKey(
+        'Turn',
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='+',
+        help_text=_(
+            'The turn during which this piece was disbanded. Will always '
+            'be a retreat/disband phase or a build/disband phase.'
+        )
+    )
 
     @property
     def is_army(self):

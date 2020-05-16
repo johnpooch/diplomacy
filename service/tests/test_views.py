@@ -556,9 +556,6 @@ class TestFinalizeOrders(APITestCase):
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
 
-    def test_nation_states_with_no_orders_to_give_dont_need_to_finalize(self):
-        pass
-
 
 class TestUnfinalizeOrders(APITestCase):
 

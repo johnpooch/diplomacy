@@ -53,7 +53,42 @@ class TestRetreatAndDisband(TestCase):
         self.assertEqual(nation_state.pieces_to_order.count(), 1)
 
     def test_pieces_which_are_disbanded_are_removed_from_the_game(self):
-        pass
+        france = self.variant.nations.get(name='France')
+        paris = self.variant.territories.get(name='paris')
+        nation_state = models.NationState.objects.create(
+            turn=self.retreat_turn,
+            nation=france,
+            user=self.user
+        )
+        self.assertEqual(nation_state.pieces_to_order.count(), 0)
+        piece = models.Piece.objects.create(
+            game=self.game,
+            nation=france,
+            type=PieceType.ARMY,
+        )
+        piece_state = models.PieceState.objects.create(
+            piece=piece,
+            turn=self.retreat_turn,
+            must_retreat=True,
+            territory=paris,
+        )
+        order = models.Order.objects.create(
+            turn=self.retreat_turn,
+            nation=france,
+            type=OrderType.DISBAND,
+            source=piece_state.territory,
+        )
+        outcome = {
+            'orders': [
+                {
+                    'id': order.id,
+                    'legal_decision': 'legal',
+                    'illegal_message': None,
+                    'outcome': 'succeeds'
+                }
+            ]
+        }
+        self.retreat_turn.update_turn(outcome)
 
     def test_pieces_which_are_dislodged_must_retreat_next_turn(self):
         pass

@@ -134,6 +134,9 @@ class Turn(models.Model):
         """
         Determine whether all nations which need to finalize their orders have
         finalized.
+
+        Returns:
+            * `bool`
         """
         for ns in self.nationstates.all():
             if ns.pieces_to_order and not ns.orders_finalized:
@@ -146,9 +149,18 @@ class Turn(models.Model):
         self.update_turn(outcome)
 
     def update_turn(self, outcome):
+        print(outcome)
         self.processed = True
         self.processed_at = timezone.now()
         self.save()
+        if self.phase == Phase.RETREAT_AND_DISBAND:
+            for order_data in outcome['orders']:
+                order = self.orders.get(id=order_data['id'])
+                if order.type == OrderType.DISBAND:
+                    piece = order.source.pieces.get(must_retreat=True)
+                    piece.turn_disbanded = self
+                piece.save()
+            return
         for territory_data in outcome['territories']:
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
             territory = territory_state
