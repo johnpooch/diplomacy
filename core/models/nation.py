@@ -2,7 +2,7 @@ from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 
-from core.models.base import PerTurnModel
+from core.models.base import PerTurnModel, Phase
 
 
 class Nation(models.Model):
@@ -92,6 +92,32 @@ class NationState(PerTurnModel):
         )
         return PieceState.objects \
             .filter(turn=self.turn, piece__nation=self.nation).count()
+
+    @property
+    def pieces_to_order(self):
+        """
+        Get all pieces which a nation can order this turn.
+
+        Returns:
+            * Queryset of `PieceState` instances.
+        """
+        PieceState = apps.get_model(
+            app_label='core',
+            model_name='PieceState'
+        )
+        # Can only order pieces which must retreat during retreat phase
+        if self.turn.phase == Phase.RETREAT_AND_DISBAND:
+            return PieceState.objects.filter(
+                turn=self.turn,
+                piece__nation=self.nation,
+                must_retreat=True,
+            )
+        if self.turn.phase == Phase.BUILD:
+            raise Exception('Should not be called during build phase')
+        return PieceState.objects.filter(
+            turn=self.turn,
+            piece__nation=self.nation,
+        )
 
 
     # TODO wrong

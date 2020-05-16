@@ -8,9 +8,20 @@ from core.models.base import OrderType, OutcomeType, Phase, Season
 
 
 possible_orders = {
-    Phase.ORDER: [OrderType.MOVE, OrderType.CONVOY, OrderType.HOLD, OrderType.SUPPORT],
-    Phase.RETREAT_AND_DISBAND: [OrderType.RETREAT, OrderType.DISBAND],
-    Phase.BUILD: [OrderType.BUILD, OrderType.DISBAND],
+    Phase.ORDER: [
+        OrderType.MOVE,
+        OrderType.CONVOY,
+        OrderType.HOLD,
+        OrderType.SUPPORT
+    ],
+    Phase.RETREAT_AND_DISBAND: [
+        OrderType.RETREAT,
+        OrderType.DISBAND
+    ],
+    Phase.BUILD: [
+        OrderType.BUILD,
+        OrderType.DISBAND
+    ],
 }
 
 
