@@ -29,7 +29,3 @@ B003 = ('B003', 'Cannot build in supply centers outside of national borders.')
 B004 = ('B004', 'Cannot build in a supply center which is controlled by a foreign power.')
 B005 = ('B005', 'Cannot build a fleet in an inland territory.')
 B006 = ('B006', 'Must specify a coast when building a fleet in a territory with named coasts.')
-
-
-
-

@@ -22,6 +22,9 @@ class NamedCoast(models.Model):
         blank=True,
         related_name='named_coast_neighbours',
     )
+    piece_starts_here = models.BooleanField(
+        default=False,
+    )
 
     class Meta:
         db_table = 'named_coast'
@@ -39,6 +42,7 @@ class NamedCoast(models.Model):
     def to_dict(self):
         return {
             '_id': self.pk,
+            'name': self.name,
             'territory_id': self.parent.id,
             'neighbour_ids': list(self.neighbours.all().values_list('pk', flat=True)),
         }

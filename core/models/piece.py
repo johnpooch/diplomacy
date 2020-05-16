@@ -1,5 +1,3 @@
-import uuid
-
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
@@ -120,6 +118,7 @@ class PieceState(PerTurnModel):
             'type': self.piece.type,
             'nation': self.piece.nation.id,
             'territory_id': self.territory.id,
+            'named_coast_id': getattr(self.named_coast, 'id', None),
         }
         if self.attacker_territory:
             data['attacker_territory'] = self.attacker_territory.id

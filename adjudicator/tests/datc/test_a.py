@@ -224,7 +224,7 @@ class TestBasicChecks(unittest.TestCase):
         fleet = Fleet(0, Nations.ITALY, self.territories.ROME, self.territories.VENICE)
         order = Move(0, Nations.ITALY, self.territories.ROME, self.territories.VENICE)
 
-        self.state.register(order, fleet)
+        self.state.register(fleet, order)
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)

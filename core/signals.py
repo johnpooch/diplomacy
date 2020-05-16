@@ -22,7 +22,7 @@ def set_to_current_turn(sender, instance, **kwargs):
     try:
         old_turn = instance.game.get_current_turn()
         if not old_turn == instance:
-            old_turn.current_turn=False
+            old_turn.current_turn = False
             old_turn.save()
     except models.Turn.DoesNotExist:
         pass

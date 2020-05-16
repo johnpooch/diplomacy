@@ -20,25 +20,55 @@ class Piece:
         self.dislodged_by = None
         self.attacker_territory = attacker_territory
 
-    # TODO test
     def __str__(self):
         return f'{self.__class__.__name__} {self.territory}'
 
-    # TODO test
     def __repr__(self):
         return f'{self.__class__.__name__} {self.territory}'
 
     @property
     def moves(self):
+        """
+        Whether the piece's order is a successful move.
+
+        Returns:
+            * `bool`
+        """
         if self.order.is_move:
             return self.order.move_decision == Outcomes.MOVES
         return False
 
     @property
     def stays(self):
+        """
+        Whether the piece's order is a failing move or any other type of order,
+        i.e. the piece does not move.
+
+        Returns:
+            * `bool`
+        """
         if self.order.is_move:
             return self.order.move_decision == Outcomes.FAILS
         return True
+
+    @property
+    def all_attacking_pieces_fail(self):
+        """
+        Whether every piece attacking this piece's territory fails. True if
+        there are no attacking pieces.
+        """
+        attacking_pieces = list(self.territory.attacking_pieces)
+        return all(
+            [p.order.move_decision == Outcomes.FAILS for p in attacking_pieces]
+        )
+
+    @property
+    def successful_attacking_pieces(self):
+        """
+        Whether any piece attacking this piece's territory moves.
+        """
+        attacking_pieces = list(self.territory.attacking_pieces)
+        return [p for p in attacking_pieces if p.order.move_decision == Outcomes.MOVES]
 
     def set_dislodged_decision(self, outcome, dislodged_by=None):
         self.dislodged_decision = outcome
@@ -49,31 +79,18 @@ class Piece:
         return self.dislodged_decision
 
     def update_dislodged_decision(self):
-        attacking_pieces = list(self.territory.attacking_pieces)
+        """
+        Determine whether the piece is dislodged.
 
-        # sustains if...
-        if not attacking_pieces:
+        Returns:
+            * `str` - dislodged decision
+        """
+        if self.moves or self.all_attacking_pieces_fail:
             return self.set_dislodged_decision(Outcomes.SUSTAINS)
-        if self.order.is_move:
-            # cannot be dislodged if successfully moved
-            if self.order.move_decision == Outcomes.MOVES:
-                return self.set_dislodged_decision(Outcomes.SUSTAINS)
-        # TODO this is messy
-        if [p for p in attacking_pieces if p.order.move_decision == Outcomes.FAILS] \
-                and all([p.order.move_decision == Outcomes.FAILS for p in attacking_pieces]):
-            return self.set_dislodged_decision(Outcomes.SUSTAINS)
-
-        # dislodged if...
-        if self.order.is_move:
-            if self.order.move_decision == Outcomes.FAILS and \
-                    any([p for p in attacking_pieces if p.order.move_decision == Outcomes.MOVES]):
-                piece = [p for p in attacking_pieces if p.order.move_decision == Outcomes.MOVES][0]
-                return self.set_dislodged_decision(Outcomes.DISLODGED, piece)
-        else:
-            if any([p.order.move_decision == Outcomes.MOVES for p in attacking_pieces]):
-                piece = [p for p in attacking_pieces
-                         if p.order.move_decision == Outcomes.MOVES][0]
-                return self.set_dislodged_decision(Outcomes.DISLODGED, piece)
+        if self.successful_attacking_pieces:
+            piece = self.successful_attacking_pieces[0]
+            return self.set_dislodged_decision(Outcomes.DISLODGED, piece)
+        return Outcomes.UNRESOLVED
 
     def to_dict(self):
         data = {
@@ -98,7 +115,7 @@ class Army(Piece):
         Determines whether the army can reach the given territory, regardless
         of whether the necessary convoying fleets exist or not.
 
-        * Args:
+        Args:
             * `target` - `territory`
 
         Returns:
@@ -123,9 +140,7 @@ class Army(Piece):
             * `bool`
         """
         return self.territory.adjacent_to(target) and \
-               target.accessible_by_piece_type(self)
-
-    # TODO move to decisions
+            target.accessible_by_piece_type(self)
 
 
 class Fleet(Piece):

@@ -40,7 +40,6 @@ class State:
             if isinstance(observer, Move):
                 self._update_territory_attacking_pieces(observer)
 
-
             if isinstance(observer, Retreat):
                 self._update_territory_retreating_pieces(observer)
 
@@ -56,6 +55,10 @@ class State:
     @property
     def territories(self):
         return [s for s in self.subscribers if isinstance(s, Territory)]
+
+    @property
+    def coastal_territories(self):
+        return [s for s in self.subscribers if isinstance(s, CoastalTerritory)]
 
     @property
     def named_coasts(self):
@@ -98,7 +101,7 @@ class State:
         """
         Update the shared coasts of all coastal territories in the state.
         """
-        for t in self.territories:
+        for t in self.coastal_territories:
             if t.id in observer.shared_coast_ids:
                 observer.shared_coasts.add(t)
                 t.shared_coasts.add(observer)
@@ -163,8 +166,8 @@ def validate_json(data):
     json_data = json.loads(data)
     try:
         phase = json_data['phase']
-        pieces = json_data['pieces']
-        territories = json_data['territories']
+        json_data['pieces']
+        json_data['territories']
         orders = json_data['orders']
     except KeyError:
         raise ValueError(
@@ -210,22 +213,30 @@ def data_to_state(data):
         territory_class = terrtitory_type_dict[type]
         if not type == 'coastal':
             territory_data.pop('shared_coast_ids')
+        if type == 'sea':
+            territory_data.pop('supply_center', None)
+            territory_data.pop('nationality', None)
+            territory_data.pop('controlled_by', None)
         territory = territory_class(**territory_data)
-
         state.register(territory)
     # instantiate and register named coasts
     for named_coast_data in data['named_coasts']:
         t_id = named_coast_data.pop('territory_id')
         named_coast_data['parent'] = [t for t in state.territories if t.id == t_id][0]
         n_ids = named_coast_data.pop('neighbour_ids')
-        named_coast_data['neighbours'] = [t for t in state.territories if t.id == n_ids]
+        named_coast_data['neighbours'] = [t for t in state.territories if t.id in n_ids]
         named_coast = NamedCoast(**named_coast_data)
         state.register(named_coast)
     # instantiate and register pieces
     for piece_data in data['pieces']:
         t_id = piece_data.pop('territory_id')
+        n_id = piece_data.pop('named_coast_id', None)
         type = piece_data.pop('type')
         piece_data['territory'] = [t for t in state.territories if t.id == t_id][0]
+        if type == 'fleet':
+            named_coasts = [n for n in state.named_coasts if n.id == n_id]
+            if named_coasts:
+                piece_data['named_coast'] = named_coasts[0]
         piece_class = piece_type_dict[type]
         piece = piece_class(**piece_data)
         state.register(piece)
@@ -242,6 +253,8 @@ def data_to_state(data):
             order_data['aux'] = [t for t in state.territories if t.id == aux_id][0]
         if not type == 'build':
             order_data.pop('piece_type')
+        if not type == 'move':
+            order_data.pop('via_convoy', None)
         order_class = order_type_dict[type]
         order = order_class(**order_data)
         state.register(order)

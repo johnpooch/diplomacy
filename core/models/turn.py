@@ -44,10 +44,16 @@ class TurnManager(models.Manager):
             piece_state_model = apps.get_model('core', 'PieceState')
             piece_state_model.objects.create(**piece_data)
         for territory_state in previous_turn.territorystates.all():
-            # If end of fall orders process change of possession.
+            # TODO If end of fall orders process change of possession.
             territory_state.turn = new_turn
             territory_state.pk = None
             territory_state.save()
+        for nation_state in previous_turn.nationstates.all():
+            # TODO account for nations which have been eliminated?
+            nation_state.turn = new_turn
+            nation_state.orders_finalized = False
+            nation_state.pk = None
+            nation_state.save()
         return new_turn
 
 
@@ -127,15 +133,22 @@ class Turn(models.Model):
             territory.save()
         for order_data in outcome['orders']:
             order = self.orders.get(id=order_data['id'])
-            order.outcome = order_data['outcome']
+            order.outcome = order_data.get('outcome')
             order.legal = order_data['legal_decision'] == 'legal'
             order.illegal_message = order_data['illegal_message']
             order.save()
         for piece_data in outcome['pieces']:
             piece = self.piecestates.get(id=piece_data['id'])
-            piece.dislodged = piece_data['dislodged_decision'] == 'dislodged'
-            piece.dislodged_by = piece_data['dislodged_by']
-            piece.attacker_territory = piece_data['attacker_territory']
+            dislodged = piece_data['dislodged_decision'] == 'dislodged'
+            piece.dislodged = dislodged
+            if dislodged:
+                _id = piece_data['dislodged_by']
+                piece.dislodged_by = self.piecestates.get(id=_id)
+            attacker_territory = piece_data['attacker_territory']
+            if attacker_territory:
+                territory_model = apps.get_model('core', 'Territory')
+                _id = attacker_territory
+                piece.attacker_territory = territory_model.objects.get(id=_id)
             piece.save()
 
     def _to_game_state_dict(self):
@@ -164,7 +177,6 @@ class Turn(models.Model):
         return game_state
 
     def get_next_season_phase_and_year(self):
-        # TODO finish and test
         if not self.processed:
             raise ValueError('Cannot get next phase until order is processed.')
 
@@ -179,7 +191,6 @@ class Turn(models.Model):
             if False:
                 return self.season, Phase.BUILD, self.year
             return Season.SPRING, Phase.ORDER, self.year + 1
-
 
 
 class TurnEnd(models.Model):

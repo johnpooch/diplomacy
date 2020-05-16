@@ -2,6 +2,7 @@ import random
 
 from django.apps import apps
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.manager import Manager
 from django.utils.timezone import now
@@ -221,12 +222,19 @@ class Game(models.Model):
                     type=territory.initial_piece_type,
                     nation=territory.controlled_by_initial,
                 )
-                piece_state_model.objects.create(
+                piece_state = piece_state_model.objects.create(
                     turn=self.get_current_turn(),
                     piece=piece,
                     territory=territory,
-
                 )
+                try:
+                    starting_coast = territory.named_coasts.get(
+                        piece_starts_here=True
+                    )
+                    piece_state.named_coast = starting_coast
+                    piece_state.save()
+                except ObjectDoesNotExist:
+                    pass
 
     def get_current_turn(self):
         """

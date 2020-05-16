@@ -18,7 +18,7 @@ class Variant(models.Model):
     )
     starting_year = models.PositiveIntegerField(
         null=False,
-        default=1900,
+        default=1901,
     )
     starting_season = models.CharField(
         null=False,
