@@ -494,6 +494,24 @@ class TestCreateOrder(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_build_valid(self):
+        pass
+
+    def test_create_build_no_builds(self):
+        pass
+
+    def test_create_build_no_disbands(self):
+        pass
+
+    def test_create_disband_valid(self):
+        pass
+
+    def test_create_disband_no_disbands(self):
+        pass
+
+    def test_create_disband_no_builds(self):
+        pass
+
 
 class TestFinalizeOrders(APITestCase):
 
