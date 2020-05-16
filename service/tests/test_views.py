@@ -434,6 +434,9 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual('Nation has no more orders to submit.', str(response.data[0]))
 
+    def test_create_order_no_orders_left_retreat_and_disband(self):
+        pass
+
     def test_create_order_valid(self):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -479,6 +482,12 @@ class TestCreateOrder(APITestCase):
         self.territory = territory_state.territory
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_retreat_for_must_retreat_piece(self):
+        pass
+
+    def test_create_retreat_for_non_must_retreat_piece(self):
+        pass
 
     def test_create_build_during_order(self):
         self.data['type'] = OrderType.BUILD

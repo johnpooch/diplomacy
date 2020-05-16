@@ -282,13 +282,6 @@ class TestEndToEnd(APITestCase):
         new_piece_states = models.PieceState.objects.filter(turn=new_turn)
         self.assertEqual(new_piece_states.count(), 22)
 
-        for p in new_turn.piecestates.all():
-            print(p)
-            print(p.piece)
-            print('DISLODGED BY')
-            print(p.dislodged)
-            print(p.dislodged_by)
-
         # check piece positions are correct
         for order_data in self.order_data_2:
             if order_data['outcome'] == 'resolved':
@@ -301,7 +294,8 @@ class TestEndToEnd(APITestCase):
                 else:
                     models.PieceState.objects.get(
                         turn=new_turn,
-                        territory__name=order_data['order']['target']
+                        territory__name=order_data['order']['target'],
+                        must_retreat=False,
                     )
             if order_data['outcome'] == 'bounced':
                 # check piece exists in source
@@ -309,3 +303,7 @@ class TestEndToEnd(APITestCase):
                     turn=new_turn,
                     territory__name=order_data['order']['source']
                 )
+
+        # check that only army in rumania has to retreat
+        retreating_piece = new_turn.piecestates.get(must_retreat=True)
+        self.assertEqual(retreating_piece.territory.name, 'rumania')

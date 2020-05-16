@@ -8,14 +8,26 @@ from core.models.base import OrderType, OutcomeType, Phase, Season
 
 
 possible_orders = {
-    Phase.ORDER: [OrderType.MOVE, OrderType.CONVOY, OrderType.HOLD, OrderType.SUPPORT],
-    Phase.RETREAT_AND_DISBAND: [OrderType.RETREAT, OrderType.DISBAND],
-    Phase.BUILD: [OrderType.BUILD, OrderType.DISBAND],
+    Phase.ORDER: [
+        OrderType.MOVE,
+        OrderType.CONVOY,
+        OrderType.HOLD,
+        OrderType.SUPPORT
+    ],
+    Phase.RETREAT_AND_DISBAND: [
+        OrderType.RETREAT,
+        OrderType.DISBAND
+    ],
+    Phase.BUILD: [
+        OrderType.BUILD,
+        OrderType.DISBAND
+    ],
 }
 
 
 class TurnManager(models.Manager):
 
+    # TODO move this method outside manager
     def create_turn_from_previous_turn(self, previous_turn):
         season, phase, year = previous_turn.get_next_season_phase_and_year()
         new_turn = Turn.objects.create(
@@ -32,6 +44,9 @@ class TurnManager(models.Manager):
             type=OrderType.MOVE,
         )
         for piece_state in previous_turn.piecestates.all():
+            # If piece disbanded do not create a new piece state
+            if piece_state.piece.turn_disbanded:
+                continue
             piece_data = {
                 'piece': piece_state.piece,
                 'turn': new_turn,
@@ -40,6 +55,10 @@ class TurnManager(models.Manager):
             for order in successful_move_orders:
                 if piece_state.territory == order.source:
                     piece_data['territory'] = order.target
+
+            # if piece dislodged set next piece to must_retreat
+            if piece_state.dislodged:
+                piece_data['must_retreat'] = True
 
             piece_state_model = apps.get_model('core', 'PieceState')
             piece_state_model.objects.create(**piece_data)
@@ -115,7 +134,17 @@ class Turn(models.Model):
 
     @property
     def ready_to_process(self):
-        return not self.nationstates.filter(orders_finalized=False).exists()
+        """
+        Determine whether all nations which need to finalize their orders have
+        finalized.
+
+        Returns:
+            * `bool`
+        """
+        for ns in self.nationstates.all():
+            if ns.pieces_to_order and not ns.orders_finalized:
+                return False
+        return True
 
     def process(self):
         game_state_dict = self._to_game_state_dict()
@@ -126,6 +155,14 @@ class Turn(models.Model):
         self.processed = True
         self.processed_at = timezone.now()
         self.save()
+        if self.phase == Phase.RETREAT_AND_DISBAND:
+            for order_data in outcome['orders']:
+                order = self.orders.get(id=order_data['id'])
+                if order.type == OrderType.DISBAND:
+                    piece = order.source.pieces.get(must_retreat=True).piece
+                    piece.turn_disbanded = self
+                piece.save()
+            return
         for territory_data in outcome['territories']:
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
             territory = territory_state
