@@ -47,6 +47,9 @@ class NationState(PerTurnModel):
         default=False,
     )
 
+    def __str__(self):
+        return ' - '.join([str(self.turn), str(self.nation)])
+
     @property
     def num_supply_centers(self):
         """

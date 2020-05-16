@@ -131,7 +131,14 @@ class Turn(models.Model):
 
     @property
     def ready_to_process(self):
-        return not self.nationstates.filter(orders_finalized=False).exists()
+        """
+        Determine whether all nations which need to finalize their orders have
+        finalized.
+        """
+        for ns in self.nationstates.all():
+            if ns.pieces_to_order and not ns.orders_finalized:
+                return False
+        return True
 
     def process(self):
         game_state_dict = self._to_game_state_dict()
