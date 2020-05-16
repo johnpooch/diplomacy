@@ -16,6 +16,7 @@ possible_orders = {
 
 class TurnManager(models.Manager):
 
+    # TODO move this method outside manager
     def create_turn_from_previous_turn(self, previous_turn):
         season, phase, year = previous_turn.get_next_season_phase_and_year()
         new_turn = Turn.objects.create(
@@ -40,6 +41,10 @@ class TurnManager(models.Manager):
             for order in successful_move_orders:
                 if piece_state.territory == order.source:
                     piece_data['territory'] = order.target
+
+            # if piece dislodged set next piece to must_retreat
+            if piece_state.dislodged:
+                piece_data['must_retreat'] = True
 
             piece_state_model = apps.get_model('core', 'PieceState')
             piece_state_model.objects.create(**piece_data)

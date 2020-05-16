@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from core.models.base import PerTurnModel, PieceType, \
@@ -70,18 +71,16 @@ class Territory(models.Model):
     def get_piece(self):
         """
         Return the piece if it exists in the territory. If no piece exists
-        in the territory, return False. If more than one piece exists in the
-        territory, throw an error.
+        in the territory, return `None`. If there is are two pieces in a
+        territory, gets the non-retreating piece.
+
+        Returns:
+            * `PieceState` or `None` if there is no piece in the territory.
         """
-        # TODO use must retreat field to ensure only one
-        if self.pieces.all().count() == 1:
-            return self.pieces.all()[0]
-        if self.pieces.all().count() > 1:
-            raise ValueError((
-                f'More than one piece exists in {self}. There should never be '
-                'more than one piece in a territory except when retreating or '
-                'disbanding.'))
-        return False
+        try:
+            return self.pieces.get(must_retreat=False)
+        except ObjectDoesNotExist:
+            return None
 
     @property
     def is_coastal(self):

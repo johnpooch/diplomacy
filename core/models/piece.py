@@ -70,7 +70,14 @@ class PieceState(PerTurnModel):
         blank=True,
         null=True,
         on_delete=models.CASCADE,
-        related_name='piece_disloged',
+        related_name='piece_dislodged',
+    )
+    must_retreat = models.BooleanField(
+        default=False,
+        help_text=_(
+            'Signifies that the piece was dislodged in the previous turn and '
+            'now must retreat.'
+        )
     )
     attacker_territory = models.ForeignKey(
         'Territory',
