@@ -55,8 +55,6 @@ class Territory(models.Model):
         choices=PieceType.CHOICES,
     )
 
-    # TODO add validation so that sea territories can't be controlled.
-
     def __str__(self):
         return self.name
 
@@ -75,6 +73,7 @@ class Territory(models.Model):
         in the territory, return False. If more than one piece exists in the
         territory, throw an error.
         """
+        # TODO use must retreat field to ensure only one
         if self.pieces.all().count() == 1:
             return self.pieces.all()[0]
         if self.pieces.all().count() > 1:

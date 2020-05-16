@@ -115,7 +115,7 @@ class Army(Piece):
         Determines whether the army can reach the given territory, regardless
         of whether the necessary convoying fleets exist or not.
 
-        * Args:
+        Args:
             * `target` - `territory`
 
         Returns:

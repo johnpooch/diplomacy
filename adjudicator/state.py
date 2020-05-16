@@ -40,7 +40,6 @@ class State:
             if isinstance(observer, Move):
                 self._update_territory_attacking_pieces(observer)
 
-
             if isinstance(observer, Retreat):
                 self._update_territory_retreating_pieces(observer)
 

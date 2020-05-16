@@ -91,7 +91,7 @@ def text_to_order_data(text):
                 data['target'] = territory_dict.get(data['target'], data['target'])
             aux = data.get('aux')
             if aux:
-                data['aux'] = territory_dict.get(data['aux'], data['aux'])
+                data['aux'] = territory_dict.get(aux, data['aux'])
             outcome = data.pop('outcome')
             orders.append(
                 {

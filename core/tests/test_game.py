@@ -27,7 +27,7 @@ class TestGame(TestCase):
             self.assertFalse(self.game.get_current_turn())
         self.game.create_initial_turn()
         current_turn = self.game.get_current_turn()
-        self.assertEqual(current_turn.year, 1900)
+        self.assertEqual(current_turn.year, 1901)
         self.assertEqual(current_turn.season, Season.SPRING)
         self.assertEqual(current_turn.phase, Phase.ORDER)
         self.assertEqual(models.Turn.objects.count(), 1)
@@ -76,7 +76,7 @@ class TestGame(TestCase):
         self.game.initialize()
 
         current_turn = self.game.get_current_turn()
-        self.assertEqual(current_turn.year, 1900)
+        self.assertEqual(current_turn.year, 1901)
         self.assertEqual(current_turn.season, Season.SPRING)
         self.assertEqual(current_turn.phase, Phase.ORDER)
         self.assertEqual(models.Turn.objects.count(), 1)

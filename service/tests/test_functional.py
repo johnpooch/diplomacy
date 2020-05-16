@@ -224,7 +224,7 @@ class TestEndToEnd(APITestCase):
                 if source:
                     order_data['source'] = models.Territory.objects.get(name=source).id
                 if aux:
-                    order_data['aux'] = models.Territory.objects.get(name=source).id
+                    order_data['aux'] = models.Territory.objects.get(name=aux).id
                 if target:
                     order_data['target'] = models.Territory.objects.get(name=target).id
                 order_data.pop('nation')
@@ -268,7 +268,7 @@ class TestEndToEnd(APITestCase):
         new_turn = game.get_current_turn()
         self.assertEqual(new_turn.year, 1901)
         self.assertEqual(new_turn.season, base.Season.FALL)
-        self.assertEqual(new_turn.phase, base.Phase.RETREAT)
+        self.assertEqual(new_turn.phase, base.Phase.RETREAT_AND_DISBAND)
 
         # new nation states are created
         nation_states = models.NationState.objects.filter(turn=new_turn)
@@ -282,8 +282,15 @@ class TestEndToEnd(APITestCase):
         new_piece_states = models.PieceState.objects.filter(turn=new_turn)
         self.assertEqual(new_piece_states.count(), 22)
 
+        for p in new_turn.piecestates.all():
+            print(p)
+            print(p.piece)
+            print('DISLODGED BY')
+            print(p.dislodged)
+            print(p.dislodged_by)
+
         # check piece positions are correct
-        for order_data in self.order_data_1:
+        for order_data in self.order_data_2:
             if order_data['outcome'] == 'resolved':
                 # check piece exists in target
                 if order_data['order']['type'] == 'hold':

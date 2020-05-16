@@ -1,3 +1,4 @@
+from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
@@ -5,8 +6,13 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories, models
-from core.models.base import GameStatus, OrderType, PieceType, Phase, Season
+from core.models.base import GameStatus, OrderType, Phase, Season
 from service import serializers
+
+
+def set_processed(self):
+    self.processed = True
+    self.save()
 
 
 class TestGetGames(APITestCase):
@@ -510,34 +516,33 @@ class TestFinalizeOrders(APITestCase):
         response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @patch('core.models.Turn.process')
-    def test_can_finalize_orders_with_no_orders(self, mock_process):
+    def test_can_finalize_orders_with_no_orders(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.get(self.url, format='json')
+        with mock.patch('core.models.Turn.process', set_processed):
+            response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
 
-    @patch('core.models.Turn.process')
-    def test_can_finalize_orders_with_orders(self, mock_process):
+    def test_can_finalize_orders_with_orders(self):
         self.client.force_authenticate(user=self.user)
         models.Order.objects.create(
             turn=self.game.get_current_turn(),
             nation=self.nation_state.nation,
             source=self.territory
         )
-        response = self.client.get(self.url, format='json')
+        with mock.patch('core.models.Turn.process', set_processed):
+            response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
 
-    @patch('core.models.Turn.process')
-    def test_once_all_orders_finalized_turn_advances(self, mock_process):
+    def test_once_all_orders_finalized_turn_advances(self):
         self.client.force_authenticate(user=self.user)
         turn = self.game.get_current_turn()
         turn.nationstates.set([self.nation_state])
-        response = self.client.get(self.url, format='json')
-        mock_process.assert_called()
+        with mock.patch('core.models.Turn.process', set_processed):
+            response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)

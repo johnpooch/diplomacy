@@ -139,9 +139,16 @@ class Turn(models.Model):
             order.save()
         for piece_data in outcome['pieces']:
             piece = self.piecestates.get(id=piece_data['id'])
-            piece.dislodged = piece_data['dislodged_decision'] == 'dislodged'
-            piece.dislodged_by = piece_data['dislodged_by']
-            piece.attacker_territory = piece_data['attacker_territory']
+            dislodged = piece_data['dislodged_decision'] == 'dislodged'
+            piece.dislodged = dislodged
+            if dislodged:
+                _id = piece_data['dislodged_by']
+                piece.dislodged_by = self.piecestates.get(id=_id)
+            attacker_territory = piece_data['attacker_territory']
+            if attacker_territory:
+                territory_model = apps.get_model('core', 'Territory')
+                _id = attacker_territory
+                piece.attacker_territory = territory_model.objects.get(id=_id)
             piece.save()
 
     def _to_game_state_dict(self):
