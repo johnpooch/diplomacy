@@ -1,4 +1,4 @@
-from unittest import mock
+from unittest import mock, skip
 from unittest.mock import patch
 
 from django.urls import reverse
@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories, models
-from core.models.base import GameStatus, OrderType, Phase, Season
+from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
 from service import serializers
 
 
@@ -382,6 +382,16 @@ class TestCreateOrder(APITestCase):
             controlled_by=self.nation_state.nation,
         )
         self.territory = territory_state.territory
+        piece = models.Piece.objects.create(
+            game=self.game,
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+        )
+        self.piece_state = models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=self.territory,
+        )
         self.data = {
             'source': self.territory.id,
         }
@@ -425,23 +435,30 @@ class TestCreateOrder(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    @skip
     def test_create_order_no_orders_left(self):
-
-        self.territory.supply_center = False
-        self.territory.save()
+        models.Order.objects.create(
+            nation=self.nation_state.nation,
+            turn=self.turn,
+            source=self.territory
+        )
         response = self.client.post(self.url, self.data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual('Nation has no more orders to submit.', str(response.data[0]))
+        self.assertEqual(
+            'Nation has no more orders to submit.',
+            str(response.data[0])
+        )
 
     def test_create_order_no_orders_left_retreat_and_disband(self):
         pass
 
     def test_create_order_valid(self):
+
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
 
+    @skip
     def test_create_order_valid_over_writes(self):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -510,6 +527,9 @@ class TestCreateOrder(APITestCase):
         pass
 
     def test_create_disband_no_builds(self):
+        pass
+
+    def test_create_build_occupied_territory(self):
         pass
 
 

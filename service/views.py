@@ -189,11 +189,6 @@ class BaseOrderView(generics.GenericAPIView):
                 'Game is not active.',
                 status.HTTP_400_BAD_REQUEST,
             )
-        if not self.user_nation_state.orders_remaining:
-            raise ValidationError(
-                'Nation has no more orders to submit.',
-                status.HTTP_400_BAD_REQUEST,
-            )
         type = self.request.data.get('type', OrderType.HOLD)
         if type not in self.turn.possible_order_types:
             raise ValidationError(

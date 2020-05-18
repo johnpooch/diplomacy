@@ -142,8 +142,13 @@ class Turn(models.Model):
             * `bool`
         """
         for ns in self.nationstates.all():
-            if ns.pieces_to_order and not ns.orders_finalized:
-                return False
+            if not ns.orders_finalized:
+                if self.phase == Phase.BUILD:
+                    if (ns.num_builds or ns.num_disbands):
+                        return False
+                else:
+                    if ns.pieces_to_order:
+                        return False
         return True
 
     def process(self):

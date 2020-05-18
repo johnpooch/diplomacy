@@ -1,5 +1,3 @@
-
-from django.contrib.auth.models import User
 from django.test import TestCase
 
 from core import factories, models
@@ -18,25 +16,25 @@ class TestTurn(TestCase):
             created_by=self.user,
         )
         self.game.participants.add(self.user)
-        self.retreat_turn = models.Turn.objects.create(
+
+    def test_ready_to_process_retreat(self):
+        retreat_turn = models.Turn.objects.create(
             game=self.game,
             phase=Phase.RETREAT_AND_DISBAND,
             season=Season.FALL,
             year=1901,
         )
-
-    def test_ready_to_process_retreat(self):
         england = self.variant.nations.get(name='England')
         france = self.variant.nations.get(name='France')
         other_user = factories.UserFactory()
         self.game.participants.add(other_user)
-        england_state = models.NationState.objects.create(
-            turn=self.retreat_turn,
+        models.NationState.objects.create(
+            turn=retreat_turn,
             nation=england,
             user=other_user
         )
         france_state = models.NationState.objects.create(
-            turn=self.retreat_turn,
+            turn=retreat_turn,
             nation=france,
             user=self.user
         )
@@ -47,11 +45,49 @@ class TestTurn(TestCase):
         )
         models.PieceState.objects.create(
             piece=piece,
-            turn=self.retreat_turn,
+            turn=retreat_turn,
             must_retreat=True,
         )
-        self.assertFalse(self.retreat_turn.ready_to_process)
+        self.assertFalse(retreat_turn.ready_to_process)
         # only nation states which have orders to submit must finalize
         france_state.orders_finalized = True
         france_state.save()
-        self.assertTrue(self.retreat_turn.ready_to_process)
+        self.assertTrue(retreat_turn.ready_to_process)
+
+    def test_ready_to_process_build(self):
+        build_turn = models.Turn.objects.create(
+            game=self.game,
+            phase=Phase.BUILD,
+            season=Season.FALL,
+            year=1901,
+        )
+        england = self.variant.nations.get(name='England')
+        france = self.variant.nations.get(name='France')
+        other_user = factories.UserFactory()
+        self.game.participants.add(other_user)
+        models.NationState.objects.create(
+            turn=build_turn,
+            nation=england,
+            user=other_user
+        )
+        france_state = models.NationState.objects.create(
+            turn=build_turn,
+            nation=france,
+            user=self.user
+        )
+        territory = models.Territory.objects.create(
+            variant=self.variant,
+            name='Marseilles',
+            nationality=france,
+            supply_center=True,
+        )
+        models.TerritoryState.objects.create(
+            turn=build_turn,
+            territory=territory,
+            controlled_by=france,
+        )
+        self.assertFalse(build_turn.ready_to_process)
+        # only nation states which have orders to submit must finalize
+        france_state.orders_finalized = True
+        france_state.save()
+        self.assertTrue(build_turn.ready_to_process)
