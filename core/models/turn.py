@@ -30,6 +30,7 @@ class TurnManager(models.Manager):
     # TODO move this method outside manager
     def create_turn_from_previous_turn(self, previous_turn):
         season, phase, year = previous_turn.get_next_season_phase_and_year()
+        piece_state_model = apps.get_model('core', 'PieceState')
         new_turn = Turn.objects.create(
             game=previous_turn.game,
             year=year,
@@ -43,6 +44,7 @@ class TurnManager(models.Manager):
             outcome=OutcomeType.MOVES,
             type=OrderType.MOVE,
         )
+
         for piece_state in previous_turn.piecestates.all():
             # If piece disbanded do not create a new piece state
             if piece_state.piece.turn_disbanded:
@@ -60,7 +62,6 @@ class TurnManager(models.Manager):
             if piece_state.dislodged:
                 piece_data['must_retreat'] = True
 
-            piece_state_model = apps.get_model('core', 'PieceState')
             piece_state_model.objects.create(**piece_data)
         for territory_state in previous_turn.territorystates.all():
             # TODO If end of fall orders process change of possession.
@@ -157,16 +158,30 @@ class Turn(models.Model):
         self.update_turn(outcome)
 
     def update_turn(self, outcome):
+        piece_state_model = apps.get_model('core', 'PieceState')
+        piece_model = apps.get_model('core', 'Piece')
         self.processed = True
         self.processed_at = timezone.now()
         self.save()
-        if self.phase == Phase.RETREAT_AND_DISBAND:
+        if self.phase in [Phase.RETREAT_AND_DISBAND, Phase.BUILD]:
             for order_data in outcome['orders']:
                 order = self.orders.get(id=order_data['id'])
                 if order.type == OrderType.DISBAND:
                     piece = order.source.pieces.get(must_retreat=True).piece
                     piece.turn_disbanded = self
-                piece.save()
+                    piece.save()
+                if order.type == OrderType.BUILD:
+                    piece = piece_model.objects.create(
+                        game=self.game,
+                        turn_created=self,
+                        nation=order.nation,
+                        type=order.piece_type,
+                    )
+                    piece_state_model.objects.create(
+                        turn=self,
+                        piece=piece,
+                        territory=order.source,
+                    )
             return
         for territory_data in outcome['territories']:
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
