@@ -267,7 +267,48 @@ class TestBuild(TestCase):
         self.assertEqual(piece_state.territory, territory)
 
     def test_invalid_build_does_not_create(self):
-        pass
+        territory = models.Territory.objects.create(
+            variant=self.variant,
+            name='Paris',
+            nationality=self.nation,
+            supply_center=True,
+        )
+        models.TerritoryState.objects.create(
+            turn=self.turn,
+            territory=territory,
+            controlled_by=None
+        )
+        piece = models.Piece.objects.create(
+            game=self.game,
+            nation=self.nation,
+            type=PieceType.ARMY,
+        )
+        models.PieceState.objects.create(
+            turn=self.turn,
+            piece=piece,
+            territory=territory,
+        )
+        order = models.Order.objects.create(
+            turn=self.turn,
+            nation=self.nation,
+            type=OrderType.BUILD,
+            source=territory,
+            piece_type=PieceType.ARMY,
+        )
+        outcome = {
+            'orders': [
+                {
+                    'id': order.id,
+                    'legal_decision': 'illegal',
+                    'illegal_message': None,
+                    'outcome': 'fails'
+                }
+            ]
+        }
+        self.turn.update_turn(outcome)
+        # only one piece exists, i.e. new one not created
+        retrieved_piece = models.Piece.objects.get()
+        self.assertEqual(retrieved_piece, piece)
 
     def test_disband_removes_piece(self):
         pass

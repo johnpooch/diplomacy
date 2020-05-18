@@ -170,7 +170,8 @@ class Turn(models.Model):
                     piece = order.source.pieces.get(must_retreat=True).piece
                     piece.turn_disbanded = self
                     piece.save()
-                if order.type == OrderType.BUILD:
+                if order.type == OrderType.BUILD and \
+                        order_data['outcome'] == 'succeeds':
                     piece = piece_model.objects.create(
                         game=self.game,
                         turn_created=self,
