@@ -167,7 +167,10 @@ class Turn(models.Model):
             for order_data in outcome['orders']:
                 order = self.orders.get(id=order_data['id'])
                 if order.type == OrderType.DISBAND:
-                    piece = order.source.pieces.get(must_retreat=True).piece
+                    if self.phase == Phase.RETREAT_AND_DISBAND:
+                        piece = order.source.pieces.get(must_retreat=True).piece
+                    else:
+                        piece = order.source.pieces.get().piece
                     piece.turn_disbanded = self
                     piece.save()
                 if order.type == OrderType.BUILD and \
