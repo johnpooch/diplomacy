@@ -6,7 +6,7 @@ from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import DeadlineFrequency, GameStatus, OrderType
+from core.models.base import DeadlineFrequency, GameStatus, OrderType, Phase
 from service import serializers
 from service.permissions import IsAuthenticated
 
@@ -198,12 +198,22 @@ class BaseOrderView(generics.GenericAPIView):
         territory = models.Territory.objects.get(
             id=self.request.data.get('source')
         )
-        pieces_to_order = self.user_nation_state.pieces_to_order
-        if territory not in [p.territory for p in pieces_to_order]:
-            raise ValidationError(
-                'Cannot create an order for this territory.',
-                status.HTTP_400_BAD_REQUEST,
-            )
+        if self.turn.phase == Phase.BUILD:
+            order_type = self.request.data.get('type')
+            if order_type == OrderType.BUILD:
+                if territory not in \
+                        [ts.territory for ts in self.user_nation_state.unoccupied_controlled_home_supply_centers]:
+                    raise ValidationError(
+                        'Cannot create an order for this territory.',
+                        status.HTTP_400_BAD_REQUEST,
+                    )
+        else:
+            pieces_to_order = self.user_nation_state.pieces_to_order
+            if territory not in [p.territory for p in pieces_to_order]:
+                raise ValidationError(
+                    'Cannot create an order for this territory.',
+                    status.HTTP_400_BAD_REQUEST,
+                )
 
 
 class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
