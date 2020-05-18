@@ -465,6 +465,7 @@ class TestCreateOrder(APITestCase):
             turn=self.game.get_current_turn(),
             controlled_by=nation_state.nation,
         )
+        models.PieceState.objects.all().delete()
         territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
@@ -523,10 +524,55 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_retreat_for_must_retreat_piece(self):
-        pass
+        turn = models.Turn.objects.create(
+            game=self.game,
+            season=Season.SPRING,
+            phase=Phase.RETREAT_AND_DISBAND,
+            year=1900,
+            current_turn=True,
+        )
+        self.nation_state.turn = turn
+        self.nation_state.save()
+        territory_state = factories.TerritoryStateFactory(
+            turn=turn,
+            controlled_by=self.nation_state.nation,
+        )
+        self.piece_state.turn = turn
+        self.piece_state.must_retreat = True
+        self.piece_state.save()
+        territory = territory_state.territory
+        self.data = {
+            'source': self.territory.id,
+            'target': territory.id,
+            'type': OrderType.RETREAT,
+        }
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_retreat_for_non_must_retreat_piece(self):
-        pass
+        turn = models.Turn.objects.create(
+            game=self.game,
+            season=Season.SPRING,
+            phase=Phase.RETREAT_AND_DISBAND,
+            year=1900,
+            current_turn=True,
+        )
+        self.nation_state.turn = turn
+        self.nation_state.save()
+        territory_state = factories.TerritoryStateFactory(
+            turn=turn,
+            controlled_by=self.nation_state.nation,
+        )
+        self.piece_state.turn = turn
+        self.piece_state.save()
+        territory = territory_state.territory
+        self.data = {
+            'source': self.territory.id,
+            'target': territory.id,
+            'type': OrderType.RETREAT,
+        }
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_build_during_order(self):
         self.data['type'] = OrderType.BUILD
