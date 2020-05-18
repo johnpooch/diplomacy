@@ -195,6 +195,15 @@ class BaseOrderView(generics.GenericAPIView):
                 'This order type is not possible during this turn.',
                 status.HTTP_400_BAD_REQUEST,
             )
+        territory = models.Territory.objects.get(
+            id=self.request.data.get('source')
+        )
+        pieces_to_order = self.user_nation_state.pieces_to_order
+        if territory not in [p.territory for p in pieces_to_order]:
+            raise ValidationError(
+                'Cannot create an order for this territory.',
+                status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):

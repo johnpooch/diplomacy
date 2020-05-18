@@ -171,4 +171,4 @@ class NationState(PerTurnModel):
 
     @property
     def num_orders_remaining(self):
-        pass
+        return self.pieces_to_order.count() - self.orders.count()

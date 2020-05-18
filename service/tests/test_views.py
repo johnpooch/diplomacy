@@ -450,7 +450,29 @@ class TestCreateOrder(APITestCase):
         )
 
     def test_create_order_no_orders_left_retreat_and_disband(self):
-        pass
+        models.Turn.objects.create(
+            game=self.game,
+            season=Season.SPRING,
+            phase=Phase.RETREAT_AND_DISBAND,
+            year=1900,
+            current_turn=True,
+        )
+        nation_state = factories.NationStateFactory(
+            turn=self.game.get_current_turn(),
+            user=self.user,
+        )
+        territory_state = factories.TerritoryStateFactory(
+            turn=self.game.get_current_turn(),
+            controlled_by=nation_state.nation,
+        )
+        territory = territory_state.territory
+        self.data = {
+            'source': self.territory.id,
+            'target': territory.id,
+            'type': OrderType.RETREAT,
+        }
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_order_valid(self):
 
