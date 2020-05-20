@@ -155,8 +155,7 @@ class JoinGame(views.APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# TODO refactor these into a view set
-class BaseOrderView(generics.GenericAPIView):
+class CreateOrderView(generics.GenericAPIView, mixins.CreateModelMixin):
 
     permission_classes = [IsAuthenticated]
     queryset = models.Order.objects.all()
@@ -221,23 +220,9 @@ class BaseOrderView(generics.GenericAPIView):
                     status.HTTP_400_BAD_REQUEST,
                 )
 
-
-class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
-
     def post(self, request, *args, **kwargs):
         self.set_up()
         return self.create(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        is_many = isinstance(request.data, list)
-        if not is_many:
-            return super().create(request, *args, **kwargs)
-        else:
-            serializer = self.get_serializer(data=request.data, many=True)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create_multiple(serializer)
-            headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         self._validate_request()
@@ -251,6 +236,39 @@ class CreateOrderView(BaseOrderView, mixins.CreateModelMixin):
             nation=self.user_nation_state.nation,
             turn=self.turn,
         )
+
+
+class DestroyOrderView(mixins.DestroyModelMixin, generics.GenericAPIView):
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def get_object(self):
+        # TODO dry this validation
+        game = get_object_or_404(models.Game, id=self.kwargs['game'])
+        if self.request.user not in game.participants.all():
+            raise ValidationError(
+                'User is not a participant in this game.',
+                status.HTTP_403_FORBIDDEN
+            )
+        try:
+            turn = game.get_current_turn()
+        except models.Turn.DoesNotExist:
+            raise ValidationError(
+                'Game is not active.',
+                status.HTTP_400_BAD_REQUEST
+            )
+        order = get_object_or_404(models.Order, pk=self.kwargs['pk'])
+        user_nation_state = models.NationState.objects.get(
+            turn=turn,
+            user=self.request.user,
+        )
+        if not order.nation == user_nation_state.nation:
+            raise ValidationError(
+                'User cannot delete this order.',
+                status.HTTP_400_BAD_REQUEST
+            )
+        return order
 
 
 class FinalizeOrdersView(views.APIView):

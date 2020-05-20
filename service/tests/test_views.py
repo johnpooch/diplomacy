@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 
 from core import factories, models
 from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
-from service import serializers
+from service import serializers, views
 
 
 def set_processed(self):
@@ -417,7 +417,7 @@ class TestCreateOrder(APITestCase):
         self.data = {
             'source': self.territory.id,
         }
-        self.url = reverse('create-order', args=[self.game.id])
+        self.url = reverse('order', args=[self.game.id])
 
     def test_get(self):
         response = self.client.get(self.url, self.data, format='json')
@@ -791,7 +791,101 @@ class TestCreateOrder(APITestCase):
             'piece_type': PieceType.ARMY,
         }
         response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class TestDeleteOrder(APITestCase):
+
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.client.force_authenticate(user=self.user)
+
+        self.variant = factories.VariantFactory()
+        self.game = models.Game.objects.create(
+            status=GameStatus.ACTIVE,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
+        self.game.participants.add(self.user)
+        self.turn = models.Turn.objects.create(
+            game=self.game,
+            year=1901,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+        )
+        self.nation = models.Nation.objects.create(
+            variant=self.variant,
+            name='Test Nation',
+        )
+        self.nation_state = models.NationState.objects.create(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.territory = models.Territory.objects.create(
+            variant=self.variant,
+            name='Paris',
+            nationality=self.nation,
+            supply_center=True,
+        )
+        self.territory_state = models.TerritoryState.objects.create(
+            territory=self.territory,
+            turn=self.turn,
+            controlled_by=self.nation_state.nation,
+        )
+        self.territory = self.territory_state.territory
+        self.piece = models.Piece.objects.create(
+            game=self.game,
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+        )
+        self.piece_state = models.PieceState.objects.create(
+            turn=self.turn,
+            piece=self.piece,
+            territory=self.territory,
+        )
+
+    def test_delete_order_valid(self):
+        order = models.Order.objects.create(
+            turn=self.turn,
+            source=self.territory,
+            nation=self.nation
+        )
+        url = reverse('order', args=[self.game.id, order.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        with self.assertRaises(models.Order.DoesNotExist):
+            self.assertTrue(models.Order.objects.get())
+
+    def test_delete_order_no_order(self):
+        url = reverse('order', args=[self.game.id, 1])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_other_players_order(self):
+        order = models.Order.objects.create(
+            turn=self.turn,
+            source=self.territory,
+            nation=self.nation
+        )
+        other_user = factories.UserFactory()
+        self.game.participants.add(other_user)
+        self.client.force_authenticate(user=other_user)
+        nation = models.Nation.objects.create(
+            variant=self.variant,
+            name='Test Nation',
+        )
+        models.NationState.objects.create(
+            nation=nation,
+            turn=self.turn,
+            user=other_user,
+        )
+        url = reverse('order', args=[self.game.id, order.id])
+        response = self.client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertTrue(models.Order.objects.get())
 
 
 class TestFinalizeOrders(APITestCase):
@@ -800,12 +894,13 @@ class TestFinalizeOrders(APITestCase):
         self.user = factories.UserFactory()
         self.game = factories.GameFactory(status=GameStatus.ACTIVE)
         self.game.participants.add(self.user)
+        self.turn = self.game.get_current_turn()
         self.nation_state = factories.NationStateFactory(
-            turn=self.game.get_current_turn(),
+            turn=self.turn,
             user=self.user,
         )
         territory_state = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
+            turn=self.turn,
             controlled_by=self.nation_state.nation,
         )
         self.territory = territory_state.territory
