@@ -103,7 +103,7 @@ class NationState(PerTurnModel):
             turn=self.turn,
             territory__nationality=self.nation,
             territory__supply_center=True,
-            territory__pieces__isnull=True,
+            territory__pieces__turn=self.turn,
         )
 
     @property
@@ -171,4 +171,7 @@ class NationState(PerTurnModel):
 
     @property
     def num_orders_remaining(self):
+        if self.turn.phase == Phase.BUILD:
+            num_orders = max(self.num_builds, self.num_disbands)
+            return max(0, num_orders - self.orders.count())
         return self.pieces_to_order.count() - self.orders.count()

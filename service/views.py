@@ -207,6 +207,12 @@ class BaseOrderView(generics.GenericAPIView):
                         'Cannot create an order for this territory.',
                         status.HTTP_400_BAD_REQUEST,
                     )
+            if order_type == OrderType.DISBAND:
+                if not self.user_nation_state.num_orders_remaining:
+                    raise ValidationError(
+                        'Cannot issue any more disband orders.',
+                        status.HTTP_400_BAD_REQUEST,
+                    )
         else:
             pieces_to_order = self.user_nation_state.pieces_to_order
             if territory not in [p.territory for p in pieces_to_order]:

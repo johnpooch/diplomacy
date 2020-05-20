@@ -404,14 +404,14 @@ class TestCreateOrder(APITestCase):
             controlled_by=self.nation_state.nation,
         )
         self.territory = self.territory_state.territory
-        piece = models.Piece.objects.create(
+        self.piece = models.Piece.objects.create(
             game=self.game,
             nation=self.nation_state.nation,
             type=PieceType.ARMY,
         )
         self.piece_state = models.PieceState.objects.create(
             turn=self.turn,
-            piece=piece,
+            piece=self.piece,
             territory=self.territory,
         )
         self.data = {
@@ -690,16 +690,108 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_disband_no_disbands(self):
-        pass
+        turn = models.Turn.objects.create(
+            game=self.game,
+            season=Season.FALL,
+            phase=Phase.BUILD,
+            year=1901,
+            current_turn=True,
+        )
+        self.nation_state.turn = turn
+        self.nation_state.save()
+        self.territory_state.turn = turn
+        self.territory_state.territory.save()
+        self.territory_state.save()
+        self.piece_state.turn = turn
+        self.piece_state.save()
+        self.data = {
+            'source': self.piece_state.territory.id,
+            'type': OrderType.DISBAND,
+        }
+        self.assertEqual(self.nation_state.supply_delta, 0)
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_too_many_disbands(self):
-        pass
-
-    def test_create_disband_no_builds(self):
-        pass
+        turn = models.Turn.objects.create(
+            game=self.game,
+            season=Season.FALL,
+            phase=Phase.BUILD,
+            year=1901,
+            current_turn=True,
+        )
+        territory = models.Territory.objects.create(
+            variant=self.variant,
+            nationality=self.nation,
+            name='Picardy',
+        )
+        models.TerritoryState.objects.create(
+            territory=territory,
+            turn=turn,
+        )
+        self.nation_state.turn = turn
+        self.nation_state.save()
+        self.territory_state.turn = turn
+        self.territory_state.territory.supply_center = False
+        self.territory_state.territory.save()
+        self.territory_state.save()
+        self.piece_state.turn = turn
+        self.piece_state.save()
+        self.assertEqual(self.nation_state.supply_delta, -1)
+        self.assertEqual(self.nation_state.num_orders_remaining, 1)
+        data = {
+            'source': self.piece_state.territory.id,
+            'type': OrderType.DISBAND,
+        }
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(self.nation_state.num_orders_remaining, 0)
+        data = {
+            'source': territory.id,
+            'type': OrderType.DISBAND,
+        }
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(
+            'Cannot issue any more disband orders.',
+            str(response.data[0])
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_build_occupied_territory(self):
-        pass
+        turn = models.Turn.objects.create(
+            game=self.game,
+            season=Season.FALL,
+            phase=Phase.BUILD,
+            year=1901,
+            current_turn=True,
+        )
+        self.nation_state.turn = turn
+        self.nation_state.save()
+        self.territory_state.turn = turn
+        self.territory_state.save()
+        models.PieceState.objects.create(
+            piece=self.piece,
+            turn=turn,
+            territory=self.territory,
+        )
+        territory = models.Territory.objects.create(
+            variant=self.variant,
+            nationality=self.nation,
+            name='Picardy',
+            supply_center=True,
+        )
+        models.TerritoryState.objects.create(
+            territory=territory,
+            controlled_by=self.nation,
+            turn=turn,
+        )
+        self.data = {
+            'source': self.territory.id,
+            'type': OrderType.BUILD,
+            'piece_type': PieceType.ARMY,
+        }
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
 class TestFinalizeOrders(APITestCase):
