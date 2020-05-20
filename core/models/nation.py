@@ -103,6 +103,7 @@ class NationState(PerTurnModel):
             turn=self.turn,
             territory__nationality=self.nation,
             territory__supply_center=True,
+        ).exclude(
             territory__pieces__turn=self.turn,
         )
 
