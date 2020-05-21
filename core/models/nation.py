@@ -19,6 +19,8 @@ class Nation(models.Model):
         max_length=15,
     )
 
+    # TODO add unique together for variant and name
+
     def __str__(self):
         return self.name
 
@@ -47,25 +49,10 @@ class NationState(PerTurnModel):
         default=False,
     )
 
+    # TODO add unique together for turn and name
+
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
-
-    @property
-    def num_supply_centers(self):
-        """
-        Gets the number of supply centers that the nation controls this turn.
-
-        Returns:
-            * `int`
-        """
-        TerritoryState = apps.get_model(
-            app_label='core',
-            model_name='TerritoryState'
-        )
-        return TerritoryState.objects.filter(
-            controlled_by=self.nation,
-            territory__supply_center=True,
-        ).count()
 
     @property
     def orders(self):
@@ -75,26 +62,87 @@ class NationState(PerTurnModel):
         Returns:
             * `QuerySet`
         """
-        Order = apps.get_model(app_label='core', model_name='Order')
-        return Order.objects.filter(
+        return self.nation.orders.filter(turn=self.turn)
+
+    @property
+    def pieces(self):
+        """
+        Gets the pieces that the nation has this turn.
+
+        Returns:
+            * QuerySet of `PieceState` instances.
+        """
+        PieceState = apps.get_model('core', 'PieceState')
+        return PieceState.objects.filter(turn=self.turn, piece__nation=self.nation)
+
+    @property
+    def supply_centers(self):
+        """
+        Gets the territories with supply centers that the nation controls this
+        turn.
+
+        Returns:
+            * Queryset of `TerritoryState` instances
+        """
+        return self.nation.controlled_territories.filter(
             turn=self.turn,
-            nation=self.nation,
+            territory__supply_center=True
         )
 
     @property
-    def num_orders(self):
+    def unoccupied_controlled_home_supply_centers(self):
         """
-        Gets the number of orders that the nation can submit this turn.
+        Get supply centers inside national borders that are under the control
+        of the nation and are not occupied. Used for determining where to
+        build.
+
+        Returns:
+            * Queryset of `TerritoryState` instances
+        """
+        return self.nation.controlled_territories.filter(
+            turn=self.turn,
+            territory__nationality=self.nation,
+            territory__supply_center=True,
+        ).exclude(
+            territory__pieces__turn=self.turn,
+        )
+
+    @property
+    def supply_delta(self):
+        """
+        Gets the difference between the number of supply centers a nation
+        controls and the number of pieces it has.
 
         Returns:
             * `int`
         """
-        PieceState = apps.get_model(
-            app_label='core',
-            model_name='PieceState'
+        return self.supply_centers.count() - self.pieces.count()
+
+    @property
+    def num_builds(self):
+        """
+        Gets the number of builds that a nation can issue during a build phase.
+
+        Returns:
+            * `int`
+        """
+        num = min(
+            self.supply_delta,
+            self.unoccupied_controlled_home_supply_centers.count()
         )
-        return PieceState.objects \
-            .filter(turn=self.turn, piece__nation=self.nation).count()
+        return max(0, num)
+
+    @property
+    def num_disbands(self):
+        """
+        Gets the number of disbands that a nation can issue during a build
+        phase.
+
+        Returns:
+            * `int`
+        """
+        num = min(0, self.supply_delta)
+        return abs(num)
 
     @property
     def pieces_to_order(self):
@@ -122,14 +170,9 @@ class NationState(PerTurnModel):
             piece__nation=self.nation,
         )
 
-
-    # TODO wrong
     @property
-    def orders_remaining(self):
-        """
-        Gets the number of orders that the nation can still submit.
-
-        Returns:
-            * `int`
-        """
-        return self.num_supply_centers - self.orders.count()
+    def num_orders_remaining(self):
+        if self.turn.phase == Phase.BUILD:
+            num_orders = max(self.num_builds, self.num_disbands)
+            return max(0, num_orders - self.orders.count())
+        return self.pieces_to_order.count() - self.orders.count()

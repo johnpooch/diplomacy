@@ -78,7 +78,7 @@ class TestEndToEnd(APITestCase):
 
         # john tries to create order before game has started
         data = {'source': 1}
-        create_order_url = reverse('create-order', args=[game.id])
+        create_order_url = reverse('order', args=[game.id])
         response = self.client.post(create_order_url, data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual('Game is not active.', str(response.data[0]))

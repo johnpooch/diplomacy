@@ -66,12 +66,16 @@ class OutcomeType:
     BOUNCED = 'bounced'
     AUX_FAILED = 'aux_failed'
     AUX_DOES_NOT_CORRESPOND = 'aux_does_not_correspond'
+    SUCCEEDS = 'succeeds'
+    FAILS = 'fails'
     CHOICES = (
         (MOVES, 'Moves'),
         (RESOLVED, 'Resolved'),
         (BOUNCED, 'Bounced'),
         (AUX_FAILED, 'Aux failed'),
         (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
+        (SUCCEEDS, 'Succeeds'),
+        (FAILS, 'Fails'),
     )
 
 
