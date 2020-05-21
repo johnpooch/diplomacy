@@ -90,6 +90,15 @@ class TerritoryType:
     )
 
 
+class TerritoryDisplayType:
+    LAND = 'land'
+    SEA = 'sea'
+    CHOICES = (
+        (LAND, 'Land'),
+        (SEA, 'Sea'),
+    )
+
+
 class Phase:
     ORDER = 'order'
     RETREAT_AND_DISBAND = 'retreat_and_disband'

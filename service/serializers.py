@@ -49,6 +49,7 @@ class TerritoryMapDataSerializer(serializers.ModelSerializer):
         fields = (
             'pk',
             'territory',
+            'type',
             'name',
             'abbreviation',
             'path',
