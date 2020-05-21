@@ -1,4 +1,4 @@
-from unittest import mock, skip
+from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
@@ -457,20 +457,6 @@ class TestCreateOrder(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @skip
-    def test_create_order_no_orders_left(self):
-        models.Order.objects.create(
-            nation=self.nation_state.nation,
-            turn=self.turn,
-            source=self.territory
-        )
-        response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            'Nation has no more orders to submit.',
-            str(response.data[0])
-        )
-
     def test_create_order_no_orders_left_retreat_and_disband(self):
         models.Turn.objects.create(
             game=self.game,
@@ -503,7 +489,6 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
 
-    @skip
     def test_create_order_valid_over_writes(self):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
