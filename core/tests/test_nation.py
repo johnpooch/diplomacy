@@ -165,3 +165,46 @@ class TestNation(TestCase):
         )
         result = france_build_state.unoccupied_controlled_home_supply_centers
         self.assertFalse(paris_build_state in result)
+
+    def test_meets_victory_conditions(self):
+        france = models.Nation.objects.create(
+            variant=self.variant,
+            name='France',
+        )
+        turn = models.Turn.objects.create(
+            game=self.game,
+            phase=Phase.ORDER,
+            season=Season.FALL,
+            year=1901,
+        )
+        france_state = models.NationState.objects.create(
+            turn=turn,
+            nation=france,
+        )
+        for i in range(17):
+            territory = models.Territory.objects.create(
+                name='Territory Name ' + str(i),
+                variant=self.variant,
+                nationality=france,
+                supply_center=True,
+            )
+            models.TerritoryState.objects.create(
+                territory=territory,
+                turn=turn,
+                controlled_by=france,
+            )
+        self.assertEqual(france_state.supply_centers.count(), 17)
+        self.assertFalse(france_state.meets_victory_conditions)
+        territory = models.Territory.objects.create(
+            name='Winning territory',
+            variant=self.variant,
+            nationality=france,
+            supply_center=True,
+        )
+        models.TerritoryState.objects.create(
+            territory=territory,
+            turn=turn,
+            controlled_by=france,
+        )
+        self.assertEqual(france_state.supply_centers.count(), 18)
+        self.assertTrue(france_state.meets_victory_conditions)
