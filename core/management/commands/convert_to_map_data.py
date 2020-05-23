@@ -79,9 +79,16 @@ class Command(BaseCommand):
         ]
         for i, territory_data in enumerate(data['territories'].values()):
             name = territory_data.get('name')
+            typ = territory_data['type']
+            # convert to our terminology
+            if typ == 'water':
+                typ = 'sea'
+            if typ == 'neutral':
+                typ = 'land'
             fields = {
                 'map_data': 1,
                 'name': name,
+                'type': typ,
                 'abbreviation': territory_data.get('abbreviation'),
                 'path': territory_data['path'],
                 'text_x': territory_data.get('text', {}).get('x'),
