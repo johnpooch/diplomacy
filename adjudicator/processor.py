@@ -21,10 +21,6 @@ def process(state):
     for r in illegal_retreats:
         r.move_decision = Outcomes.FAILS
 
-    unresolved_retreats = [r for r in retreats if r.move_decision == Outcomes.UNRESOLVED]
-    for r in unresolved_retreats:
-        r.update_move_decision()
-
     illegal_moves = [m for m in moves if m.legal_decision == Outcomes.ILLEGAL]
     # set illegal moves to fail.
     for m in illegal_moves:
@@ -50,7 +46,12 @@ def process(state):
     unresolved_moves = [m for m in moves if m.move_decision == Outcomes.UNRESOLVED]
 
     depth = 0
-    while unresolved_moves or unresolved_pieces or unresolved_supports:
+    unresolved_retreats = [r for r in retreats if r.move_decision == Outcomes.UNRESOLVED]
+    while unresolved_moves or unresolved_pieces or unresolved_supports or unresolved_retreats:
+        unresolved_retreats = [r for r in retreats if r.move_decision == Outcomes.UNRESOLVED]
+        for r in unresolved_retreats:
+            r.update_move_decision()
+
         if depth == 10:
             circular_movements = find_circular_movements(moves)
             for l in circular_movements:

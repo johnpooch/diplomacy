@@ -149,6 +149,7 @@ class PieceState(PerTurnModel):
             'nation': self.piece.nation.id,
             'territory_id': self.territory.id,
             'named_coast_id': getattr(self.named_coast, 'id', None),
+            'retreating': self.must_retreat,
         }
         if self.attacker_territory:
             data['attacker_territory'] = self.attacker_territory.id

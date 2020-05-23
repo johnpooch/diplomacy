@@ -29,13 +29,13 @@ class TurnManager(models.Manager):
 
     # TODO move this method outside manager
     def create_turn_from_previous_turn(self, previous_turn):
-        season, phase, year = previous_turn.get_next_season_phase_and_year()
+        # NOTE how about we make the turn have 0 year until finished
         piece_state_model = apps.get_model('core', 'PieceState')
         new_turn = Turn.objects.create(
             game=previous_turn.game,
-            year=year,
-            season=season,
-            phase=phase,
+            year=0,
+            season=Season.SPRING,
+            phase=Phase.ORDER,
             current_turn=True,
         )
 
@@ -64,9 +64,16 @@ class TurnManager(models.Manager):
 
             piece_state_model.objects.create(**piece_data)
         for territory_state in previous_turn.territorystates.all():
-            # TODO If end of fall orders process change of possession.
             territory_state.turn = new_turn
             territory_state.pk = None
+            # if end of fall orders process change of possession.
+            if previous_turn.phase == Phase.ORDER and previous_turn.season == Season.FALL:
+                try:
+                    occupying_piece = previous_turn.piecestates.get(territory=territory_state.territory)
+                    territory_state.controlled_by = occupying_piece.piece.nation
+                except piece_state_model.DoesNotExist:
+                    pass
+
             territory_state.save()
         for nation_state in previous_turn.nationstates.all():
             # TODO account for nations which have been eliminated?
@@ -74,6 +81,10 @@ class TurnManager(models.Manager):
             nation_state.orders_finalized = False
             nation_state.pk = None
             nation_state.save()
+        new_turn.season, new_turn.phase, new_turn.year = \
+            previous_turn.get_next_season_phase_and_year(new_turn)
+        new_turn.save()
+
         return new_turn
 
 
@@ -167,9 +178,26 @@ class Turn(models.Model):
         return None
 
     def process(self):
+        self.create_default_hold_orders()
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)
         self.update_turn(outcome)
+
+    def create_default_hold_orders(self):
+        """
+        Creates a hold order for any piece which does not have an order.
+        """
+        for piece_state in self.piecestates.all():
+            nation = piece_state.piece.nation
+            territory = piece_state.territory
+            orders = self.orders.filter(source=territory, nation=nation)
+            if not orders:
+                order_model = apps.get_model('core', 'Order')
+                order_model.objects.create(
+                    source=territory,
+                    nation=nation,
+                    turn=self,
+                )
 
     def update_turn(self, outcome):
         piece_state_model = apps.get_model('core', 'PieceState')
@@ -200,7 +228,6 @@ class Turn(models.Model):
                         piece=piece,
                         territory=order.source,
                     )
-            return
         for territory_data in outcome['territories']:
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
             territory = territory_state
@@ -251,7 +278,7 @@ class Turn(models.Model):
         game_state['variant'] = self.game.variant.name
         return game_state
 
-    def get_next_season_phase_and_year(self):
+    def get_next_season_phase_and_year(self, new_turn):
         if not self.processed:
             raise ValueError('Cannot get next phase until order is processed.')
 
@@ -262,9 +289,9 @@ class Turn(models.Model):
             return Season.FALL, Phase.ORDER, self.year
 
         if self.season == Season.FALL:
-            # if any change in supply center control
-            if False:
-                return self.season, Phase.BUILD, self.year
+            for nation_state in new_turn.nationstates.all():
+                if abs(nation_state.supply_delta):
+                    return self.season, Phase.BUILD, self.year
             return Season.SPRING, Phase.ORDER, self.year + 1
 
 

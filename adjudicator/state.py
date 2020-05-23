@@ -32,7 +32,7 @@ class State:
                 self._update_territory_named_coasts(observer)
 
             if isinstance(observer, Piece):
-                self._update_territory_piece(observer)
+                self._update_territory_pieces(observer)
 
             if isinstance(observer, Order):
                 self._update_piece_order(observer)
@@ -80,13 +80,13 @@ class State:
     def convoys(self):
         return [s for s in self.subscribers if isinstance(s, Convoy)]
 
-    def _update_territory_piece(self, observer):
+    def _update_territory_pieces(self, observer):
         """
-        Update the piece attribute of all territories.
+        Update the pieces attribute of all territories.
         """
         for t in self.territories:
             if observer.territory == t:
-                t.piece = observer
+                t.pieces.add(observer)
 
     def _update_neighbours(self, observer):
         """
