@@ -407,7 +407,8 @@ class Retreat(Order):
 
         if other_retreating_pieces:
             self.set_move_decision(Outcomes.FAILS)
-        self.set_move_decision(Outcomes.SUCCEEDS)
+        else:
+            self.set_move_decision(Outcomes.SUCCEEDS)
 
     def to_dict(self):
         data = super().to_dict()

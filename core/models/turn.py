@@ -228,7 +228,7 @@ class Turn(models.Model):
                         piece=piece,
                         territory=order.source,
                     )
-        for territory_data in outcome['territories']:
+        for territory_data in outcome.get('territories', []):
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
             territory = territory_state
             territory.contested = territory_data['contested']
@@ -239,7 +239,7 @@ class Turn(models.Model):
             order.legal = order_data['legal_decision'] == 'legal'
             order.illegal_message = order_data['illegal_message']
             order.save()
-        for piece_data in outcome['pieces']:
+        for piece_data in outcome.get('pieces', []):
             piece = self.piecestates.get(id=piece_data['id'])
             dislodged = piece_data['dislodged_decision'] == 'dislodged'
             piece.dislodged = dislodged
