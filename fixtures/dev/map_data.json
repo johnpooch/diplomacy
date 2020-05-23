@@ -1442,5 +1442,101 @@
             "dislodged_piece_y": 997.5,
             "territory": 5
         }
+    },
+    {
+        "model": "core.namedcoastmapdata",
+        "pk": 1,
+        "fields": {
+            "map_data": 1,
+            "name": "Bulgaria East Coast",
+            "abbreviation": "EC",
+            "text_x": 1021.7999877929688,
+            "text_y": 1109.0999755859375,
+            "piece_x": 1127,
+            "piece_y": 1067,
+            "dislodged_piece_x": 1114.5,
+            "dislodged_piece_y": 1054.5,
+            "named_coast": 1
+        }
+    },
+    {
+        "model": "core.namedcoastmapdata",
+        "pk": 2,
+        "fields": {
+            "map_data": 1,
+            "name": "Bulgaria South Coast",
+            "abbreviation": "SC",
+            "text_x": 1021.7999877929688,
+            "text_y": 1109.0999755859375,
+            "piece_x": 1070,
+            "piece_y": 1140,
+            "dislodged_piece_x": 1057.5,
+            "dislodged_piece_y": 1127.5,
+            "named_coast": 2
+        }
+    },
+    {
+        "model": "core.namedcoastmapdata",
+        "pk": 3,
+        "fields": {
+            "map_data": 1,
+            "name": "Spain North Coast",
+            "abbreviation": "NC",
+            "text_x": 302.29998779296875,
+            "text_y": 1119.699951171875,
+            "piece_x": 289,
+            "piece_y": 965,
+            "dislodged_piece_x": 276.5,
+            "dislodged_piece_y": 952.5,
+            "named_coast": 3
+        }
+    },
+    {
+        "model": "core.namedcoastmapdata",
+        "pk": 4,
+        "fields": {
+            "map_data": 1,
+            "name": "Spain South Coast",
+            "abbreviation": "SC",
+            "text_x": 302.29998779296875,
+            "text_y": 1119.699951171875,
+            "piece_x": 291,
+            "piece_y": 1166,
+            "dislodged_piece_x": 278.5,
+            "dislodged_piece_y": 1153.5,
+            "named_coast": 4
+        }
+    },
+    {
+        "model": "core.namedcoastmapdata",
+        "pk": 5,
+        "fields": {
+            "map_data": 1,
+            "name": "St. Petersburg North Coast",
+            "abbreviation": "NC",
+            "text_x": 302.29998779296875,
+            "text_y": 1119.699951171875,
+            "piece_x": 1218,
+            "piece_y": 222,
+            "dislodged_piece_x": 1205.5,
+            "dislodged_piece_y": 209.5,
+            "named_coast": 5
+        }
+    },
+    {
+        "model": "core.namedcoastmapdata",
+        "pk": 6,
+        "fields": {
+            "map_data": 1,
+            "name": "St. Petersburg South Coast",
+            "abbreviation": "SC",
+            "text_x": 302.29998779296875,
+            "text_y": 1119.699951171875,
+            "piece_x": 1066,
+            "piece_y": 487,
+            "dislodged_piece_x": 1053.5,
+            "dislodged_piece_y": 474.5,
+            "named_coast": 6
+        }
     }
 ]
