@@ -15,7 +15,6 @@ class Migration(migrations.Migration):
             name='NamedCoastMapData',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(choices=[('land', 'Land'), ('sea', 'Sea')], max_length=100)),
                 ('name', models.CharField(max_length=100)),
                 ('abbreviation', models.CharField(max_length=100)),
                 ('text_x', models.FloatField(null=True)),

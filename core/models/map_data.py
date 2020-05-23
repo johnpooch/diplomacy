@@ -90,11 +90,6 @@ class NamedCoastMapData(models.Model):
         null=False,
         related_name='map_data',
     )
-    type = models.CharField(
-        max_length=100,
-        null=False,
-        choices=TerritoryDisplayType.CHOICES,
-    )
     name = models.CharField(
         max_length=100,
         null=False,
