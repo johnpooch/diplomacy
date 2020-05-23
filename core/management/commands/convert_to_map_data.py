@@ -66,17 +66,7 @@ class Command(BaseCommand):
                     'Territories in territories file that do not have a '
                     'corresponding territory in the infile.'
                 )
-        out_data = [
-            {
-                'model': 'core.mapdata',
-                'pk': 1,
-                'fields': {
-                    'variant': 1,
-                    'width': data['width'],
-                    'height': data['height'],
-                }
-            }
-        ]
+        out_data = []
         for i, territory_data in enumerate(data['territories'].values()):
             name = territory_data.get('name')
             typ = territory_data['type']
@@ -95,6 +85,8 @@ class Command(BaseCommand):
                 'text_y': territory_data.get('text', {}).get('y'),
                 'piece_x': territory_data.get('piece', {}).get('x'),
                 'piece_y': territory_data.get('piece', {}).get('y'),
+                'supply_center_x': territory_data.get('supplyCenter', {}).get('x'),
+                'supply_center_y': territory_data.get('supplyCenter', {}).get('y'),
                 'dislodged_piece_x': territory_data.get('dislodgedPiece', {}).get('x'),
                 'dislodged_piece_y': territory_data.get('dislodgedPiece', {}).get('y'),
             }
