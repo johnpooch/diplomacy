@@ -30,40 +30,6 @@ class PieceStateSerializer(serializers.ModelSerializer):
         )
 
 
-class TerritorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Territory
-        fields = (
-            'id',
-            'name',
-            'type',
-            'supply_center',
-        )
-
-
-class TerritoryMapDataSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.TerritoryMapData
-        fields = (
-            'pk',
-            'territory',
-            'type',
-            'name',
-            'abbreviation',
-            'path',
-            'text_x',
-            'text_y',
-            'piece_x',
-            'piece_y',
-            'dislodged_piece_x',
-            'dislodged_piece_y',
-            'supply_center_x',
-            'supply_center_y',
-        )
-
-
 class NamedCoastSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -90,6 +56,43 @@ class NamedCoastMapDataSerializer(serializers.ModelSerializer):
             'piece_y',
             'dislodged_piece_x',
             'dislodged_piece_y',
+        )
+
+
+class TerritorySerializer(serializers.ModelSerializer):
+
+    named_coasts = NamedCoastSerializer(many=True)
+
+    class Meta:
+        model = models.Territory
+        fields = (
+            'id',
+            'name',
+            'type',
+            'supply_center',
+            'named_coasts',
+        )
+
+
+class TerritoryMapDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TerritoryMapData
+        fields = (
+            'pk',
+            'territory',
+            'type',
+            'name',
+            'abbreviation',
+            'path',
+            'text_x',
+            'text_y',
+            'piece_x',
+            'piece_y',
+            'dislodged_piece_x',
+            'dislodged_piece_y',
+            'supply_center_x',
+            'supply_center_y',
         )
 
 
@@ -141,7 +144,6 @@ class NationStateSerializer(serializers.ModelSerializer):
 class VariantSerializer(serializers.ModelSerializer):
 
     territories = TerritorySerializer(many=True)
-    named_coasts = NamedCoastSerializer(many=True)
     nations = NationSerializer(many=True)
     map_data = MapDataSerializer(many=True)
 
@@ -151,7 +153,6 @@ class VariantSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'territories',
-            'named_coasts',
             'map_data',
             'nations',
         )
