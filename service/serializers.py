@@ -126,7 +126,7 @@ class NationSerializer(serializers.ModelSerializer):
 
 class NationStateSerializer(serializers.ModelSerializer):
 
-# TODO player should only see this for own nation
+    # TODO player should only see this for own nation
 
     class Meta:
         model = models.NationState
