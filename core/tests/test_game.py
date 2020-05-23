@@ -2,23 +2,23 @@ from django.test import TestCase
 
 from core import models
 from core import factories
-from core.models.base import Phase, Season
+from core.models.base import GameStatus, Phase, Season
 
 
 class TestGame(TestCase):
 
     def setUp(self):
-        variant = factories.StandardVariantFactory()
-        users = []
+        self.variant = factories.StandardVariantFactory()
+        self.users = []
         for i in range(7):
-            users.append(factories.UserFactory())
+            self.users.append(factories.UserFactory())
         self.game = models.Game.objects.create(
             name='Test game',
-            variant=variant,
+            variant=self.variant,
             num_players=7,
-            created_by=users[0],
+            created_by=self.users[0],
         )
-        self.game.participants.add(*users)
+        self.game.participants.add(*self.users)
 
     def test_create_initial_turn(self):
         self.assertFalse(self.game.turns.all())
@@ -105,3 +105,22 @@ class TestGame(TestCase):
         self.assertEqual(piece_states.filter(piece__nation__name='Germany').count(), 3)
         self.assertEqual(piece_states.filter(piece__nation__name='Turkey').count(), 3)
         self.assertEqual(piece_states.filter(piece__nation__name='Russia').count(), 4)
+
+    def test_set_winner(self):
+        self.game.status = GameStatus.ACTIVE
+        self.game.save()
+        turn = models.Turn.objects.create(
+            game=self.game,
+            phase=Phase.ORDER,
+            season=Season.FALL,
+            year=1901,
+        )
+        france = self.variant.nations.get(name='France')
+        france_state = models.NationState.objects.create(
+            turn=turn,
+            nation=france,
+            user=self.users[0]
+        )
+        self.game.set_winner(france_state)
+        self.assertTrue(france_state in self.game.winners.all())
+        self.assertEqual(self.game.status, GameStatus.ENDED)

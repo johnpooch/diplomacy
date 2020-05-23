@@ -167,8 +167,8 @@ class VariantSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
-    participants = UserSerializer(many=True)
-    winners = NationStateSerializer(many=True)
+    participants = UserSerializer(many=True, read_only=True)
+    winners = NationStateSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Game
@@ -194,9 +194,30 @@ class GameSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'id',
             'participants',
+            'winners',
             'created_by',
             'created_at',
             'status',
+        )
+
+
+class CreateGameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'variant',
+            'variant_id',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
         )
 
 

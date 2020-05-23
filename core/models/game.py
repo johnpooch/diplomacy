@@ -251,4 +251,18 @@ class Game(models.Model):
         current_turn = self.get_current_turn()
         current_turn.process()
         turn_model = apps.get_model('core', 'Turn')
-        turn_model.objects.create_turn_from_previous_turn(current_turn)
+        new_turn = turn_model.objects.create_turn_from_previous_turn(
+            current_turn
+        )
+        # check win conditions
+        winning_nation = new_turn.check_for_winning_nation()
+        if winning_nation:
+            self.set_winner(winning_nation)
+
+    def set_winner(self, nation_state):
+        """
+        End the game and set the winning nation.
+        """
+        self.status = GameStatus.ENDED
+        self.save()
+        self.winners.add(nation_state)

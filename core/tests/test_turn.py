@@ -91,3 +91,44 @@ class TestTurn(TestCase):
         france_state.orders_finalized = True
         france_state.save()
         self.assertTrue(build_turn.ready_to_process)
+
+    def test_check_for_winning_nation(self):
+        turn = models.Turn.objects.create(
+            game=self.game,
+            phase=Phase.ORDER,
+            season=Season.FALL,
+            year=1901,
+        )
+        france = self.variant.nations.get(name='France')
+        france_state = models.NationState.objects.create(
+            turn=turn,
+            nation=france,
+            user=self.user
+        )
+        for i in range(17):
+            territory = models.Territory.objects.create(
+                name='Territory Name ' + str(i),
+                variant=self.variant,
+                nationality=france,
+                supply_center=True,
+            )
+            models.TerritoryState.objects.create(
+                territory=territory,
+                turn=turn,
+                controlled_by=france,
+            )
+        self.assertEqual(france_state.supply_centers.count(), 17)
+        self.assertFalse(turn.check_for_winning_nation())
+        territory = models.Territory.objects.create(
+            name='Winning territory',
+            variant=self.variant,
+            nationality=france,
+            supply_center=True,
+        )
+        models.TerritoryState.objects.create(
+            territory=territory,
+            turn=turn,
+            controlled_by=france,
+        )
+        self.assertEqual(france_state.supply_centers.count(), 18)
+        self.assertTrue(turn.check_for_winning_nation())
