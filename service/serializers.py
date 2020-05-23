@@ -64,9 +64,39 @@ class TerritoryMapDataSerializer(serializers.ModelSerializer):
         )
 
 
+class NamedCoastSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.NamedCoast
+        fields = (
+            'id',
+            'parent',
+            'name',
+        )
+
+
+class NamedCoastMapDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.NamedCoastMapData
+        fields = (
+            'pk',
+            'named_coast',
+            'name',
+            'abbreviation',
+            'text_x',
+            'text_y',
+            'piece_x',
+            'piece_y',
+            'dislodged_piece_x',
+            'dislodged_piece_y',
+        )
+
+
 class MapDataSerializer(serializers.ModelSerializer):
 
     territory_data = TerritoryMapDataSerializer(many=True)
+    named_coast_data = NamedCoastMapDataSerializer(many=True)
 
     class Meta:
         model = models.MapData
@@ -76,6 +106,7 @@ class MapDataSerializer(serializers.ModelSerializer):
             'width',
             'height',
             'territory_data',
+            'named_coast_data',
         )
 
 
@@ -110,6 +141,7 @@ class NationStateSerializer(serializers.ModelSerializer):
 class VariantSerializer(serializers.ModelSerializer):
 
     territories = TerritorySerializer(many=True)
+    named_coasts = NamedCoastSerializer(many=True)
     nations = NationSerializer(many=True)
     map_data = MapDataSerializer(many=True)
 
@@ -119,6 +151,7 @@ class VariantSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'territories',
+            'named_coasts',
             'map_data',
             'nations',
         )
