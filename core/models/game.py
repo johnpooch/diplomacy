@@ -63,6 +63,9 @@ class Game(models.Model):
         User,
         through='Participation',
     )
+    winners = models.ManyToManyField(
+        'NationState',
+    )
     private = models.BooleanField(
         default=False,
     )
