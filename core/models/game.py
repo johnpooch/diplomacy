@@ -58,7 +58,6 @@ class Game(models.Model):
         null=False,
         editable=False,
     )
-    # TODO needs to use a through model so we can record: joined at, etc.
     participants = models.ManyToManyField(
         User,
         through='Participation',
