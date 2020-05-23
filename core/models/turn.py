@@ -152,6 +152,20 @@ class Turn(models.Model):
                         return False
         return True
 
+    def check_for_winning_nation(self):
+        """
+        Iterate through every nation and check if any nation satisfies the
+        victory conditions of the game variant.
+
+        Returns:
+            * `NationState` or `None`
+        """
+        # TODO filter by active/not surrendered
+        for nation_state in self.nationstates.all():
+            if nation_state.meets_victory_conditions:
+                return nation_state
+        return None
+
     def process(self):
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)
