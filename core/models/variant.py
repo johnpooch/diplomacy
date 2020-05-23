@@ -16,6 +16,10 @@ class Variant(models.Model):
         null=False,
         default=7,
     )
+    num_supply_centers_to_win = models.PositiveIntegerField(
+        null=False,
+        default=18,
+    )
     starting_year = models.PositiveIntegerField(
         null=False,
         default=1901,
