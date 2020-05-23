@@ -2,7 +2,13 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from core import models
-from core.models.base import OrderType
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'id')
 
 
 class PieceSerializer(serializers.ModelSerializer):
@@ -126,7 +132,8 @@ class NationSerializer(serializers.ModelSerializer):
 
 class NationStateSerializer(serializers.ModelSerializer):
 
-    # TODO player should only see this for own nation
+    user = UserSerializer()
+    nation = NationSerializer()
 
     class Meta:
         model = models.NationState
@@ -134,7 +141,7 @@ class NationStateSerializer(serializers.ModelSerializer):
             'user',
             'nation',
             'surrendered',
-            'orders_finalized'
+            'orders_finalized'  # TODO should only see this if user
         )
 
 
@@ -159,6 +166,9 @@ class VariantSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
+    participants = UserSerializer(many=True)
+    winners = NationStateSerializer(many=True)
+
     class Meta:
         model = models.Game
         fields = (
@@ -175,6 +185,7 @@ class GameSerializer(serializers.ModelSerializer):
             'nation_choice_mode',
             'num_players',
             'participants',
+            'winners',
             'created_at',
             'created_by',
             'status',
@@ -237,13 +248,6 @@ class TurnSerializer(serializers.ModelSerializer):
                 self.fields.pop('orders')
 
 
-class UserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = ('username', 'id')
-
-
 class GameStateSerializer(serializers.ModelSerializer):
 
     turns = TurnSerializer(many=True)
@@ -261,4 +265,5 @@ class GameStateSerializer(serializers.ModelSerializer):
             'pieces',
             'status',
             'participants',
+            'winners',
         )
