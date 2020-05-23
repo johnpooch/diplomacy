@@ -437,3 +437,14 @@ class Build(Order):
             return self.set_illegal(illegal_messages.B006)
         self.legal_decision = Outcomes.LEGAL
 
+    def to_dict(self):
+        if self.legal_decision == Outcomes.ILLEGAL:
+            outcome = Outcomes.FAILS
+        else:
+            outcome = Outcomes.SUCCEEDS
+        return {
+            'id': self.id,
+            'legal_decision': self.legal_decision,
+            'illegal_message': self.illegal_message,
+            'outcome': outcome,
+        }

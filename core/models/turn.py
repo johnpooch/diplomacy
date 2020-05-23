@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from adjudicator import process_game_state
 
-from core.models.base import OrderType, OutcomeType, Phase, Season
+from core.models.base import OrderType, OutcomeType, Phase, Season, TerritoryType
 
 
 possible_orders = {
@@ -44,6 +44,11 @@ class TurnManager(models.Manager):
             outcome=OutcomeType.MOVES,
             type=OrderType.MOVE,
         )
+        # get successful retreat orders
+        successful_retreat_orders = previous_turn.orders.filter(
+            outcome=OutcomeType.SUCCEEDS,
+            type=OrderType.RETREAT,
+        )
 
         for piece_state in previous_turn.piecestates.all():
             # If piece disbanded do not create a new piece state
@@ -58,6 +63,10 @@ class TurnManager(models.Manager):
                 if piece_state.territory == order.source:
                     piece_data['territory'] = order.target
 
+            for order in successful_retreat_orders:
+                if piece_state.territory == order.source and piece_state.must_retreat:
+                    piece_data['territory'] = order.target
+
             # if piece dislodged set next piece to must_retreat
             if piece_state.dislodged:
                 piece_data['must_retreat'] = True
@@ -67,9 +76,14 @@ class TurnManager(models.Manager):
             territory_state.turn = new_turn
             territory_state.pk = None
             # if end of fall orders process change of possession.
-            if previous_turn.phase == Phase.ORDER and previous_turn.season == Season.FALL:
+            if previous_turn.phase == Phase.ORDER \
+                    and previous_turn.season == Season.FALL \
+                    and not territory_state.territory.type == TerritoryType.SEA:
                 try:
-                    occupying_piece = previous_turn.piecestates.get(territory=territory_state.territory)
+                    occupying_piece = new_turn.piecestates.get(
+                        territory=territory_state.territory,
+                        must_retreat=False
+                    )
                     territory_state.controlled_by = occupying_piece.piece.nation
                 except piece_state_model.DoesNotExist:
                     pass
@@ -216,7 +230,7 @@ class Turn(models.Model):
                     piece.turn_disbanded = self
                     piece.save()
                 if order.type == OrderType.BUILD and \
-                        order_data['outcome'] == 'succeeds':
+                        order_data['outcome'] == OutcomeType.SUCCEEDS:
                     piece = piece_model.objects.create(
                         game=self.game,
                         turn_created=self,
@@ -288,11 +302,11 @@ class Turn(models.Model):
         if self.season == Season.SPRING:
             return Season.FALL, Phase.ORDER, self.year
 
-        if self.season == Season.FALL:
+        if self.season == Season.FALL and not self.phase == Phase.BUILD:
             for nation_state in new_turn.nationstates.all():
                 if abs(nation_state.supply_delta):
                     return self.season, Phase.BUILD, self.year
-            return Season.SPRING, Phase.ORDER, self.year + 1
+        return Season.SPRING, Phase.ORDER, self.year + 1
 
 
 class TurnEnd(models.Model):

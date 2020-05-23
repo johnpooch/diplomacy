@@ -248,6 +248,12 @@ def data_to_state(data):
         if order_data.get('target_id'):
             target_id = order_data.pop('target_id')
             order_data['target'] = [t for t in state.territories if t.id == target_id][0]
+        if order_data.get('target_coast_id'):
+            target_coast_id = order_data.pop('target_coast_id')
+            s = 'target_coast'
+            if type == 'build':
+                s = 'named_coast'
+            order_data[s] = [n for n in state.named_coasts if n.id == target_coast_id][0]
         if order_data.get('aux_id'):
             aux_id = order_data.pop('aux_id')
             order_data['aux'] = [t for t in state.territories if t.id == aux_id][0]

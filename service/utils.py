@@ -6,6 +6,8 @@ from core.models.base import OrderType
 hold_regex = r'^(?P<source>[\w.() \-]+?(?= HOLD)) (?P<type>HOLD) -> (?P<outcome>[\w.() \-]+)'
 move_regex = r'^(?P<source>[\w.() \-]+?(?= MOVE| RETREAT)) (?P<type>MOVE|RETREAT) (?P<target>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
 aux_regex = r'^(?P<source>[\w.() \-]+?(?= MOVE| HOLD| CONVOY| SUPPORT| RETREAT)) (?P<type>MOVE|HOLD|SUPPORT|CONVOY|RETREAT) (?P<aux>[\w.() \-]+?(?= to)) to (?P<target>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
+build_regex = r'^(?P<type>BUILD|DISBAND) (?P<piece_type>fleet|army) (?P<source>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
+
 
 def form_to_data(form):
     result = {}
@@ -54,6 +56,7 @@ def text_to_order_data(text):
     }
     territory_dict = {
         'st. petersburg (south coast)': 'st. petersburg',
+        'st. petersburg (north coast)': 'st. petersburg',
     }
     regex_dict = {
         OrderType.HOLD: hold_regex,
@@ -61,6 +64,7 @@ def text_to_order_data(text):
         OrderType.RETREAT: move_regex,
         OrderType.SUPPORT: aux_regex,
         OrderType.CONVOY: aux_regex,
+        OrderType.BUILD: build_regex,
     }
 
     def _lower_groups(groups):
@@ -77,7 +81,7 @@ def text_to_order_data(text):
         nation = nation_dict.get(nation, nation)
 
         for line in lines[1:]:
-            m = re.search('MOVE|HOLD|SUPPORT|CONVOY', line)
+            m = re.search('MOVE|HOLD|SUPPORT|CONVOY|BUILD', line)
             if not m:
                 break
             order = m.group(0)
@@ -85,9 +89,15 @@ def text_to_order_data(text):
             m = re.search(regex, line)
             data = _lower_groups(m.groupdict())
             data['nation'] = nation
+            if '(' in data['source'] and data['type'] == OrderType.BUILD:
+                coast = data['source'].replace('(', '')
+                data['target_coast'] = coast.replace(')', '')
             data['source'] = territory_dict.get(data['source'], data['source'])
             target = data.get('target')
             if target:
+                if '(' in data['target']:
+                    coast = data['target'].replace('(', '')
+                    data['target_coast'] = coast.replace(')', '')
                 data['target'] = territory_dict.get(data['target'], data['target'])
             aux = data.get('aux')
             if aux:
@@ -99,5 +109,4 @@ def text_to_order_data(text):
                     'order': data
                 }
             )
-
     return json.dumps(orders)
