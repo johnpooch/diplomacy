@@ -122,8 +122,12 @@ def text_to_orders(text):
         'Austria': 'Austria-Hungary'
     }
     territory_dict = {
-        'st. petersburg (south coast)': 'st. petersburg',
+        'bulgaria (south coast)': 'bulgaria',
+        'bulgaria (north coast)': 'bulgaria',
+        'spain (south coast)': 'spain',
+        'spain (north coast)': 'spain',
         'st. petersburg (north coast)': 'st. petersburg',
+        'st. petersburg (south coast)': 'st. petersburg',
     }
     regex_dict = {
         OrderType.HOLD: hold_regex,
@@ -162,10 +166,10 @@ def text_to_orders(text):
             data['source'] = territory_dict.get(data['source'], data['source'])
             target = data.get('target')
             if target:
-                if '(' in data['target']:
+                if '(' in data['target'] and data['type'] in [OrderType.BUILD, OrderType.MOVE]:
                     coast = data['target'].replace('(', '')
                     data['target_coast'] = coast.replace(')', '')
-                data['target'] = territory_dict.get(data['target'], data['target'])
+                target = territory_dict.get(data['target'], data['target'])
             aux = data.get('aux')
             if aux:
                 aux = territory_dict.get(data['aux'], data['aux'])
