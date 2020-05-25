@@ -1,16 +1,19 @@
-import json
-import os
-import unittest
-
 from django.conf import settings
 from django.core.management import call_command
+from django.test import TestCase
 
-from service.utils import text_to_order_data
 
 GAME_DIR = settings.BASE_DIR + '/order_histories/game_1'
 
 
-class TestConvertOrderHistoryToData(unittest.TestCase):
+class TestConvertOrderHistoryToData(TestCase):
+
+    fixtures = [
+        'dev/variant',
+        'dev/nation',
+        'dev/territory',
+        'dev/named_coast',
+    ]
 
     def test_game_1(self):
         call_command(

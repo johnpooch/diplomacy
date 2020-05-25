@@ -112,7 +112,6 @@
             31,
             37,
             51,
-            75,
             75
          ],
          "shared_coasts":[
@@ -1036,7 +1035,7 @@
       "model":"core.territory",
       "pk":49,
       "fields":{
-         "name":"sevastapol",
+         "name":"sevastopol",
          "supply_center": true,
          "initial_piece_type": "fleet",
          "variant": 1,
@@ -1622,7 +1621,8 @@
             31,
             37,
             63,
-            42
+            42,
+            6
          ],
          "shared_coasts":[
              37,

@@ -58,10 +58,12 @@ class TurnManager(models.Manager):
                 'piece': piece_state.piece,
                 'turn': new_turn,
                 'territory': piece_state.territory,
+                'named_coast': piece_state.named_coast,
             }
             for order in successful_move_orders:
                 if piece_state.territory == order.source:
                     piece_data['territory'] = order.target
+                    piece_data['named_coast'] = order.target_coast
 
             for order in successful_retreat_orders:
                 if piece_state.territory == order.source and piece_state.must_retreat:
