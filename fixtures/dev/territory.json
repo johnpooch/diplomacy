@@ -112,6 +112,7 @@
             31,
             37,
             51,
+            75,
             75
          ],
          "shared_coasts":[
@@ -438,6 +439,7 @@
             28
          ],
          "controlled_by_initial":7,
+         "nationality":7,
          "type":"coastal"
       }
    },
@@ -459,6 +461,7 @@
             56
          ],
          "controlled_by_initial":5,
+         "nationality":5,
          "type":"coastal"
       }
    },
@@ -480,6 +483,7 @@
             21
          ],
          "controlled_by_initial":7,
+         "nationality":7,
          "type":"coastal"
       }
    },
@@ -503,6 +507,7 @@
             48
          ],
          "controlled_by_initial":3,
+         "nationality":3,
          "type":"coastal"
       }
    },
@@ -549,6 +554,7 @@
             43
          ],
          "controlled_by_initial":2,
+         "nationality":2,
          "type":"coastal"
       }
    },
@@ -570,6 +576,7 @@
             38
          ],
          "controlled_by_initial":1,
+         "nationality":1,
          "type":"coastal"
       }
    },
@@ -593,6 +600,7 @@
             50
          ],
          "controlled_by_initial":7,
+         "nationality":7,
          "type":"coastal"
       }
    },
@@ -639,6 +647,7 @@
             58
          ],
          "controlled_by_initial":1,
+         "nationality":1,
          "type":"coastal"
       }
    },
@@ -679,6 +688,7 @@
             26
          ],
          "controlled_by_initial":2,
+         "nationality":2,
          "type":"coastal"
       }
    },
@@ -749,6 +759,8 @@
             34
          ],
          "controlled_by_initial":3,
+         "nationality":3,
+         "nationality":3,
          "type":"coastal"
       }
    },
@@ -771,6 +783,7 @@
             58
          ],
          "controlled_by_initial":1,
+         "nationality":1,
          "type":"coastal"
       }
    },
@@ -792,6 +805,7 @@
             48
          ],
          "controlled_by_initial":6,
+         "nationality":6,
          "type":"coastal"
       }
    },
@@ -816,6 +830,7 @@
             57
          ],
          "controlled_by_initial":1,
+         "nationality":1,
          "type":"coastal"
       }
    },
@@ -838,6 +853,7 @@
             44
          ],
          "controlled_by_initial":2,
+         "nationality":2,
          "type":"coastal"
       }
    },
@@ -878,6 +894,7 @@
             46
          ],
          "controlled_by_initial":5,
+         "nationality":5,
          "type":"coastal"
       }
    },
@@ -922,6 +939,7 @@
             25
          ],
          "controlled_by_initial":2,
+         "nationality":2,
          "type":"coastal"
       }
    },
@@ -943,6 +961,7 @@
             55
          ],
          "controlled_by_initial":5,
+         "nationality":5,
          "type":"coastal"
       }
    },
@@ -984,6 +1003,7 @@
             55
          ],
          "controlled_by_initial":5,
+         "nationality":5,
          "type":"coastal"
       }
    },
@@ -1028,6 +1048,7 @@
             37
          ],
          "controlled_by_initial":3,
+         "nationality":3,
          "type":"coastal"
       }
    },
@@ -1051,6 +1072,7 @@
             47
          ],
          "controlled_by_initial":6,
+         "nationality":6,
          "type":"coastal"
       }
    },
@@ -1075,6 +1097,7 @@
             52
          ],
          "controlled_by_initial":7,
+         "nationality":7,
          "type":"coastal"
       }
    },
@@ -1117,6 +1140,7 @@
             50
          ],
          "controlled_by_initial":7,
+         "nationality":7,
          "type":"coastal"
       }
    },
@@ -1142,6 +1166,7 @@
             56
          ],
          "controlled_by_initial":4,
+         "nationality":4,
          "type":"coastal"
       }
    },
@@ -1183,6 +1208,7 @@
             46
          ],
          "controlled_by_initial":5,
+         "nationality":5,
          "type":"coastal"
       }
    },
@@ -1201,6 +1227,7 @@
             44,
             53,
             18,
+            55,
             69
          ],
          "shared_coasts":[
@@ -1208,6 +1235,7 @@
             53
          ],
          "controlled_by_initial":5,
+         "nationality":5,
          "type":"coastal"
       }
    },
@@ -1229,6 +1257,7 @@
             38
          ],
          "controlled_by_initial":1,
+         "nationality":1,
          "type":"coastal"
       }
    },
@@ -1250,6 +1279,7 @@
             36
          ],
          "controlled_by_initial":1,
+         "nationality":1,
          "type":"coastal"
       }
    },
@@ -1270,6 +1300,7 @@
 
          ],
          "controlled_by_initial":4,
+         "nationality":4,
          "type":"inland"
       }
    },
@@ -1292,6 +1323,7 @@
 
          ],
          "controlled_by_initial":4,
+         "nationality":4,
          "type":"inland"
       }
    },
@@ -1315,6 +1347,7 @@
 
          ],
          "controlled_by_initial":2,
+         "nationality":2,
          "type":"inland"
       }
    },
@@ -1337,6 +1370,7 @@
 
          ],
          "controlled_by_initial":4,
+         "nationality":4,
          "type":"inland"
       }
    },
@@ -1360,6 +1394,7 @@
 
          ],
          "controlled_by_initial":6,
+         "nationality":6,
          "type":"inland"
       }
    },
@@ -1384,6 +1419,7 @@
 
          ],
          "controlled_by_initial":3,
+         "nationality":3,
          "type":"inland"
       }
    },
@@ -1408,6 +1444,7 @@
 
          ],
          "controlled_by_initial":2,
+         "nationality":2,
          "type":"inland"
       }
    },
@@ -1428,6 +1465,7 @@
 
          ],
          "controlled_by_initial":3,
+         "nationality":3,
          "type":"inland"
       }
    },
@@ -1471,6 +1509,7 @@
 
          ],
          "controlled_by_initial":3,
+         "nationality":3,
          "type":"inland"
       }
    },
@@ -1482,6 +1521,7 @@
          "variant": 1,
          "neighbours":[
             59,
+            44,
             64,
             53,
             56,
@@ -1491,6 +1531,7 @@
 
          ],
          "controlled_by_initial":4,
+         "nationality":4,
          "type":"inland"
       }
    },
@@ -1511,6 +1552,7 @@
 
          ],
          "controlled_by_initial":6,
+         "nationality":6,
          "type":"inland"
       }
    },
@@ -1533,6 +1575,7 @@
 
          ],
          "controlled_by_initial":4,
+         "nationality":4,
          "type":"inland"
       }
    },
@@ -1556,6 +1599,7 @@
 
          ],
          "controlled_by_initial":6,
+         "nationality":6,
          "type":"inland"
       }
    },
@@ -1630,6 +1674,7 @@
              42
          ],
          "controlled_by_initial":6,
+         "nationality":6,
          "type":"coastal"
       }
    }

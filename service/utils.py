@@ -168,7 +168,7 @@ def text_to_orders(text):
                 data['target'] = territory_dict.get(data['target'], data['target'])
             aux = data.get('aux')
             if aux:
-                data['aux'] = territory_dict.get(aux, data['aux'])
+                aux = territory_dict.get(data['aux'], data['aux'])
             source = data['source']
 
             target_coast = data.get('target_coast')
@@ -176,6 +176,8 @@ def text_to_orders(text):
             if source:
                 data['source'] = models.Territory.objects.get(name=source)
             if target:
+                if target == 'hold':
+                    target = aux
                 data['target'] = models.Territory.objects.get(name=target)
             if aux:
                 data['aux'] = models.Territory.objects.get(name=aux)

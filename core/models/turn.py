@@ -243,6 +243,7 @@ class Turn(models.Model):
                         turn=self,
                         piece=piece,
                         territory=order.source,
+                        named_coast=order.target_coast,
                     )
         for territory_data in outcome.get('territories', []):
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
