@@ -12,6 +12,8 @@
             "text_y": 1115.5,
             "piece_x": 1313,
             "piece_y": 1120,
+            "supply_center_x": 1271,
+            "supply_center_y": 1144,
             "dislodged_piece_x": 1300.5,
             "dislodged_piece_y": 1107.5,
             "territory": 21
@@ -30,6 +32,8 @@
             "text_y": 1145.300048828125,
             "piece_x": 1496,
             "piece_y": 1100,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1483.5,
             "dislodged_piece_y": 1087.5,
             "territory": 23
@@ -48,6 +52,8 @@
             "text_y": 1177.199951171875,
             "piece_x": 1157,
             "piece_y": 1147,
+            "supply_center_x": 1141,
+            "supply_center_y": 1119,
             "dislodged_piece_x": 1144.5,
             "dislodged_piece_y": 1134.5,
             "territory": 28
@@ -66,6 +72,8 @@
             "text_y": 572.5999755859375,
             "piece_x": 1212,
             "piece_y": 600,
+            "supply_center_x": 1267,
+            "supply_center_y": 584,
             "dislodged_piece_x": 1199.5,
             "dislodged_piece_y": 587.5,
             "territory": 63
@@ -84,6 +92,8 @@
             "text_y": 937.7000122070312,
             "piece_x": 1296,
             "piece_y": 855,
+            "supply_center_x": 1267,
+            "supply_center_y": 973,
             "dislodged_piece_x": 1283.5,
             "dislodged_piece_y": 842.5,
             "territory": 49
@@ -102,6 +112,8 @@
             "text_y": 217.10000610351562,
             "piece_x": 1178,
             "piece_y": 415,
+            "supply_center_x": 1113,
+            "supply_center_y": 469,
             "dislodged_piece_x": 1165.5,
             "dislodged_piece_y": 402.5,
             "territory": 75
@@ -120,6 +132,8 @@
             "text_y": 1292.199951171875,
             "piece_x": 1464,
             "piece_y": 1216,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1451.5,
             "dislodged_piece_y": 1203.5,
             "territory": 52
@@ -138,6 +152,8 @@
             "text_y": 860,
             "piece_x": 1136,
             "piece_y": 810,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1123.5,
             "dislodged_piece_y": 797.5,
             "territory": 70
@@ -156,6 +172,8 @@
             "text_y": 640.7999877929688,
             "piece_x": 1037,
             "piece_y": 577,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1024.5,
             "dislodged_piece_y": 564.5,
             "territory": 37
@@ -174,6 +192,8 @@
             "text_y": 783.4000244140625,
             "piece_x": 995,
             "piece_y": 750,
+            "supply_center_x": 937,
+            "supply_center_y": 748,
             "dislodged_piece_x": 982.5,
             "dislodged_piece_y": 737.5,
             "territory": 72
@@ -192,6 +212,8 @@
             "text_y": 687.5999755859375,
             "piece_x": 877,
             "piece_y": 700,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 864.5,
             "dislodged_piece_y": 687.5,
             "territory": 48
@@ -210,6 +232,8 @@
             "text_y": 779.0999755859375,
             "piece_x": 844,
             "piece_y": 779,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 831.5,
             "dislodged_piece_y": 766.5,
             "territory": 68
@@ -228,6 +252,8 @@
             "text_y": 728,
             "piece_x": 783,
             "piece_y": 700,
+            "supply_center_x": 783,
+            "supply_center_y": 736,
             "dislodged_piece_x": 770.5,
             "dislodged_piece_y": 687.5,
             "territory": 24
@@ -246,6 +272,8 @@
             "text_y": 753.5999755859375,
             "piece_x": 695,
             "piece_y": 711,
+            "supply_center_x": 724,
+            "supply_center_y": 685,
             "dislodged_piece_x": 682.5,
             "dislodged_piece_y": 698.5,
             "territory": 35
@@ -264,6 +292,8 @@
             "text_y": 826,
             "piece_x": 648,
             "piece_y": 789,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 635.5,
             "dislodged_piece_y": 776.5,
             "territory": 66
@@ -282,6 +312,8 @@
             "text_y": 872.7999877929688,
             "piece_x": 705,
             "piece_y": 838,
+            "supply_center_x": 730,
+            "supply_center_y": 878,
             "dislodged_piece_x": 692.5,
             "dislodged_piece_y": 825.5,
             "territory": 64
@@ -300,6 +332,8 @@
             "text_y": 1015.4000244140625,
             "piece_x": 1108,
             "piece_y": 977,
+            "supply_center_x": 1083,
+            "supply_center_y": 1014,
             "dislodged_piece_x": 1095.5,
             "dislodged_piece_y": 964.5,
             "territory": 47
@@ -318,6 +352,8 @@
             "text_y": 1109.0999755859375,
             "piece_x": 1060,
             "piece_y": 1078,
+            "supply_center_x": 1013,
+            "supply_center_y": 1078,
             "dislodged_piece_x": 1047.5,
             "dislodged_piece_y": 1065.5,
             "territory": 73
@@ -336,6 +372,8 @@
             "text_y": 1160.199951171875,
             "piece_x": 978,
             "piece_y": 1200,
+            "supply_center_x": 1023,
+            "supply_center_y": 1237,
             "dislodged_piece_x": 965.5,
             "dislodged_piece_y": 1187.5,
             "territory": 33
@@ -354,6 +392,8 @@
             "text_y": 1247.5,
             "piece_x": 1265,
             "piece_y": 1220,
+            "supply_center_x": 1132,
+            "supply_center_y": 1222,
             "dislodged_piece_x": 1252.5,
             "dislodged_piece_y": 1207.5,
             "territory": 50
@@ -372,6 +412,8 @@
             "text_y": 1164.4000244140625,
             "piece_x": 918,
             "piece_y": 1123,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 905.5,
             "dislodged_piece_y": 1110.5,
             "territory": 20
@@ -390,6 +432,8 @@
             "text_y": 1100.5999755859375,
             "piece_x": 945,
             "piece_y": 1060,
+            "supply_center_x": 936,
+            "supply_center_y": 1021,
             "dislodged_piece_x": 932.5,
             "dislodged_piece_y": 1047.5,
             "territory": 67
@@ -408,6 +452,8 @@
             "text_y": 964.2999877929688,
             "piece_x": 962,
             "piece_y": 914,
+            "supply_center_x": 900,
+            "supply_center_y": 916,
             "dislodged_piece_x": 949.5,
             "dislodged_piece_y": 901.5,
             "territory": 60
@@ -426,6 +472,8 @@
             "text_y": 840.9000244140625,
             "piece_x": 1011,
             "piece_y": 841,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 998.5,
             "dislodged_piece_y": 828.5,
             "territory": 62
@@ -444,6 +492,8 @@
             "text_y": 919.5999755859375,
             "piece_x": 867,
             "piece_y": 874,
+            "supply_center_x": 835,
+            "supply_center_y": 887,
             "dislodged_piece_x": 854.5,
             "dislodged_piece_y": 861.5,
             "territory": 71
@@ -462,6 +512,8 @@
             "text_y": 855.7999877929688,
             "piece_x": 818,
             "piece_y": 824,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 805.5,
             "dislodged_piece_y": 811.5,
             "territory": 59
@@ -480,6 +532,8 @@
             "text_y": 936.7000122070312,
             "piece_x": 754,
             "piece_y": 914,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 741.5,
             "dislodged_piece_y": 901.5,
             "territory": 69
@@ -498,6 +552,8 @@
             "text_y": 966.5,
             "piece_x": 837,
             "piece_y": 1006,
+            "supply_center_x": 794,
+            "supply_center_y": 975,
             "dislodged_piece_x": 824.5,
             "dislodged_piece_y": 993.5,
             "territory": 53
@@ -516,6 +572,8 @@
             "text_y": 347,
             "piece_x": 1000,
             "piece_y": 390,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 987.5,
             "dislodged_piece_y": 377.5,
             "territory": 31
@@ -534,6 +592,8 @@
             "text_y": 391.70001220703125,
             "piece_x": 841,
             "piece_y": 469,
+            "supply_center_x": 890,
+            "supply_center_y": 489,
             "dislodged_piece_x": 828.5,
             "dislodged_piece_y": 456.5,
             "territory": 51
@@ -552,6 +612,8 @@
             "text_y": 391.70001220703125,
             "piece_x": 715,
             "piece_y": 420,
+            "supply_center_x": 761,
+            "supply_center_y": 463,
             "dislodged_piece_x": 702.5,
             "dislodged_piece_y": 407.5,
             "territory": 42
@@ -570,6 +632,8 @@
             "text_y": 584.2999877929688,
             "piece_x": 715,
             "piece_y": 597,
+            "supply_center_x": 767,
+            "supply_center_y": 626,
             "dislodged_piece_x": 702.5,
             "dislodged_piece_y": 584.5,
             "territory": 29
@@ -588,6 +652,8 @@
             "text_y": 749.2999877929688,
             "piece_x": 608,
             "piece_y": 721,
+            "supply_center_x": 630,
+            "supply_center_y": 692,
             "dislodged_piece_x": 595.5,
             "dislodged_piece_y": 708.5,
             "territory": 34
@@ -606,6 +672,8 @@
             "text_y": 796.2000122070312,
             "piece_x": 573,
             "piece_y": 763,
+            "supply_center_x": 575,
+            "supply_center_y": 755,
             "dislodged_piece_x": 560.5,
             "dislodged_piece_y": 750.5,
             "territory": 25
@@ -624,6 +692,8 @@
             "text_y": 924.2000122070312,
             "piece_x": 642,
             "piece_y": 928,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 629,
             "dislodged_piece_y": 915.5
         }
@@ -641,6 +711,8 @@
             "text_y": 962.2000122070312,
             "piece_x": 719,
             "piece_y": 1004,
+            "supply_center_x": 733,
+            "supply_center_y": 971,
             "dislodged_piece_x": 706.5,
             "dislodged_piece_y": 991.5,
             "territory": 56
@@ -659,6 +731,8 @@
             "text_y": 1004.7999877929688,
             "piece_x": 642,
             "piece_y": 978,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 629.5,
             "dislodged_piece_y": 965.5,
             "territory": 44
@@ -677,6 +751,8 @@
             "text_y": 1069,
             "piece_x": 698,
             "piece_y": 1044,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 685.5,
             "dislodged_piece_y": 1031.5,
             "territory": 55
@@ -695,6 +771,8 @@
             "text_y": 1092,
             "piece_x": 743,
             "piece_y": 1112,
+            "supply_center_x": 719,
+            "supply_center_y": 1087,
             "dislodged_piece_x": 730.5,
             "dislodged_piece_y": 1099.5,
             "territory": 46
@@ -713,6 +791,8 @@
             "text_y": 1151.699951171875,
             "piece_x": 803,
             "piece_y": 1116,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 790.5,
             "dislodged_piece_y": 1103.5,
             "territory": 22
@@ -731,6 +811,8 @@
             "text_y": 1211.300048828125,
             "piece_x": 818,
             "piece_y": 1180,
+            "supply_center_x": 778,
+            "supply_center_y": 1143,
             "dislodged_piece_x": 815.5,
             "dislodged_piece_y": 1167.5,
             "territory": 41
@@ -749,6 +831,8 @@
             "text_y": 915.4000244140625,
             "piece_x": 571,
             "piece_y": 881,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 558.5,
             "dislodged_piece_y": 868.5,
             "territory": 61
@@ -767,6 +851,8 @@
             "text_y": 962.2000122070312,
             "piece_x": 536,
             "piece_y": 985,
+            "supply_center_x": 562,
+            "supply_center_y": 1018,
             "dislodged_piece_x": 523.5,
             "dislodged_piece_y": 972.5,
             "territory": 39
@@ -785,6 +871,8 @@
             "text_y": 972.7999877929688,
             "piece_x": 434,
             "piece_y": 922,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 421.5,
             "dislodged_piece_y": 909.5,
             "territory": 32
@@ -803,6 +891,8 @@
             "text_y": 802.5,
             "piece_x": 535,
             "piece_y": 791,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 522.5,
             "dislodged_piece_y": 778.5,
             "territory": 43
@@ -821,6 +911,8 @@
             "text_y": 892,
             "piece_x": 500,
             "piece_y": 855,
+            "supply_center_x": 518,
+            "supply_center_y": 819,
             "dislodged_piece_x": 487.5,
             "dislodged_piece_y": 842.5,
             "territory": 65
@@ -839,6 +931,8 @@
             "text_y": 866.4000244140625,
             "piece_x": 416,
             "piece_y": 829,
+            "supply_center_x": 369,
+            "supply_center_y": 799,
             "dislodged_piece_x": 403.5,
             "dislodged_piece_y": 816.5,
             "territory": 26
@@ -857,6 +951,8 @@
             "text_y": 1119.699951171875,
             "piece_x": 347,
             "piece_y": 1049,
+            "supply_center_x": 302,
+            "supply_center_y": 1056,
             "dislodged_piece_x": 334.5,
             "dislodged_piece_y": 1036.5,
             "territory": 74
@@ -875,6 +971,8 @@
             "text_y": 1102.1,
             "piece_x": 193,
             "piece_y": 1023,
+            "supply_center_x": 151,
+            "supply_center_y": 1060,
             "dislodged_piece_x": 180.5,
             "dislodged_piece_y": 1010.5,
             "territory": 45
@@ -893,6 +991,8 @@
             "text_y": 1317.699951171875,
             "piece_x": 337,
             "piece_y": 1291,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 324.5,
             "dislodged_piece_y": 1278.5,
             "territory": 40
@@ -911,6 +1011,8 @@
             "text_y": 1351.800048828125,
             "piece_x": 634,
             "piece_y": 1310,
+            "supply_center_x": 647,
+            "supply_center_y": 1282,
             "dislodged_piece_x": 621.5,
             "dislodged_piece_y": 1297.5,
             "territory": 54
@@ -929,6 +1031,8 @@
             "text_y": 734.4000244140625,
             "piece_x": 500,
             "piece_y": 685,
+            "supply_center_x": 489,
+            "supply_center_y": 717,
             "dislodged_piece_x": 487.5,
             "dislodged_piece_y": 672.5,
             "territory": 36
@@ -947,6 +1051,8 @@
             "text_y": 719.5,
             "piece_x": 440,
             "piece_y": 668,
+            "supply_center_x": 440,
+            "supply_center_y": 712,
             "dislodged_piece_x": 427.5,
             "dislodged_piece_y": 655.5,
             "territory": 57
@@ -965,6 +1071,8 @@
             "text_y": 564.0999755859375,
             "piece_x": 462,
             "piece_y": 586,
+            "supply_center_x": 458,
+            "supply_center_y": 638,
             "dislodged_piece_x": 449.5,
             "dislodged_piece_y": 573.5,
             "territory": 38
@@ -983,6 +1091,8 @@
             "text_y": 653.5,
             "piece_x": 504,
             "piece_y": 626,
+            "supply_center_x": 506,
+            "supply_center_y": 647,
             "dislodged_piece_x": 491.5,
             "dislodged_piece_y": 613.5,
             "territory": 58
@@ -1001,6 +1111,8 @@
             "text_y": 500.29998779296875,
             "piece_x": 485,
             "piece_y": 524,
+            "supply_center_x": 489,
+            "supply_center_y": 565,
             "dislodged_piece_x": 472.5,
             "dislodged_piece_y": 511.5,
             "territory": 30
@@ -1019,6 +1131,8 @@
             "text_y": 479,
             "piece_x": 448,
             "piece_y": 502,
+            "supply_center_x": 446,
+            "supply_center_y": 480,
             "dislodged_piece_x": 435.5,
             "dislodged_piece_y": 489.5,
             "territory": 27
@@ -1037,6 +1151,8 @@
             "text_y": null,
             "piece_x": null,
             "piece_y": null,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": null,
             "dislodged_piece_y": null
         }
@@ -1054,6 +1170,8 @@
             "text_y": null,
             "piece_x": null,
             "piece_y": null,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": null,
             "dislodged_piece_y": null
         }
@@ -1067,10 +1185,12 @@
             "type": "sea",
             "abbreviation": "NAT",
             "path": "M 202 175 C 202 175 202 859 202 859 C 202 859 240 849 240 849 C 272 844 323 842 355 846 C 372 849 395 856 410 862 C 416 865 419 866 424 869 C 426 871 429 873 432 872 C 436 871 445 861 448 858 C 448 858 477 829 477 829 C 483 823 489 819 491 811 C 487 809 487 808 488 804 C 483 799 483 797 489 794 C 488 792 485 788 488 786 C 491 782 496 789 500 786 C 500 786 508 774 508 774 C 515 766 523 765 533 765 C 527 762 510 754 512 746 C 513 741 519 738 521 733 C 523 727 517 721 525 718 C 530 716 537 719 542 722 C 549 725 553 726 560 724 C 559 722 557 719 558 717 C 558 714 561 713 563 712 C 568 708 571 703 576 702 C 580 702 591 705 594 707 C 594 707 599 711 599 711 C 603 714 606 712 610 716 C 613 720 612 725 613 729 C 614 736 616 737 617 741 C 617 745 613 750 611 753 C 615 756 618 759 623 761 C 631 764 640 763 648 763 C 645 759 645 759 647 754 C 643 752 642 752 641 748 C 640 748 638 749 637 749 C 632 749 623 744 624 737 C 626 731 633 724 637 719 C 640 713 640 709 640 703 C 634 707 637 713 628 713 C 627 714 627 715 626 716 C 625 716 624 717 622 717 C 618 715 620 708 620 705 C 613 705 611 700 615 695 C 620 689 627 691 633 683 C 633 683 629 683 629 683 C 612 683 633 668 633 658 C 634 652 625 646 629 639 C 633 632 638 633 642 638 C 646 636 656 630 659 627 C 664 621 665 618 673 615 C 673 615 670 614 670 614 C 670 614 672 594 672 594 C 672 594 676 553 676 553 C 676 553 684 485 684 485 C 684 476 684 469 682 460 C 679 450 664 424 658 413 C 658 413 629 359 629 359 C 629 359 620 362 620 362 C 620 362 593 362 593 362 C 593 362 572 360 572 360 C 563 361 553 365 544 359 C 534 353 531 337 526 330 C 522 325 515 322 510 319 C 508 318 504 316 503 313 C 503 312 504 311 504 310 C 507 299 511 311 517 309 C 523 307 523 303 525 298 C 525 298 526 293 526 293 C 527 286 519 284 514 279 C 512 277 509 274 511 272 C 514 270 518 272 520 272 C 527 275 531 280 539 282 C 537 275 539 275 545 273 C 542 260 529 267 522 258 C 518 253 519 244 528 251 C 531 247 532 243 536 248 C 538 246 540 241 543 240 C 550 237 553 249 553 254 C 559 242 556 229 556 216 C 556 216 556 175 556 175 C 556 175 202 175 202 175 z",
-            "text_x": null,
-            "text_y": null,
+            "text_x": 325,
+            "text_y": 500,
             "piece_x": 238,
             "piece_y": 427,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 225.5,
             "dislodged_piece_y": 414.5,
             "territory": 14
@@ -1085,10 +1205,12 @@
             "type": "sea",
             "abbreviation": "NRG",
             "path": "M 560 175 C 560 175 560 228 560 228 C 560 243 569 238 568 255 C 567 263 563 265 560 269 C 558 273 556 278 556 282 C 556 282 568 277 568 277 C 568 277 568 281 568 281 C 577 279 575 273 580 268 C 586 263 587 268 587 273 C 587 273 587 278 587 278 C 589 277 593 276 595 276 C 601 276 602 283 604 287 C 606 286 609 285 611 285 C 613 285 614 287 618 288 C 618 288 630 288 630 288 C 633 288 635 288 638 289 C 653 293 651 308 652 320 C 653 327 654 334 651 341 C 647 348 639 353 632 357 C 632 357 667 423 667 423 C 679 443 688 458 688 482 C 688 482 684 516 684 516 C 684 516 677 587 677 587 C 677 587 674 615 674 615 C 674 615 698 620 698 620 C 701 621 705 623 708 623 C 710 622 718 615 720 612 C 730 604 737 597 748 590 C 775 574 808 568 838 562 C 848 559 868 554 877 555 C 886 543 890 538 905 541 C 901 531 909 531 917 530 C 913 525 913 522 920 519 C 926 517 928 521 932 520 C 935 519 941 513 947 510 C 953 506 957 508 959 506 C 961 504 961 502 964 497 C 967 492 978 481 983 480 C 985 479 987 480 989 480 C 989 466 999 454 1006 442 C 1012 433 1017 421 1023 413 C 1023 413 1042 394 1042 394 C 1042 394 1053 378 1053 378 C 1053 378 1069 356 1069 356 C 1069 356 1080 342 1080 342 C 1082 340 1086 336 1087 335 C 1088 332 1085 330 1085 327 C 1084 324 1088 319 1090 316 C 1094 313 1097 315 1099 312 C 1102 310 1103 305 1109 303 C 1113 301 1120 302 1131 297 C 1140 293 1145 286 1153 281 C 1159 277 1169 272 1172 266 C 1174 263 1172 256 1171 252 C 1171 252 1171 234 1171 234 C 1171 234 1172 219 1172 219 C 1172 219 1174 175 1174 175 C 1174 175 560 175 560 175 z",
-            "text_x": null,
-            "text_y": null,
+            "text_x": 800,
+            "text_y": 350,
             "piece_x": 605,
             "piece_y": 250,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 592.5,
             "dislodged_piece_y": 237.5,
             "territory": 15
@@ -1107,6 +1229,8 @@
             "text_y": 59.29999923706055,
             "piece_x": 1174,
             "piece_y": 83,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1161.5,
             "dislodged_piece_y": 70.5,
             "territory": 4
@@ -1125,6 +1249,8 @@
             "text_y": 538.9000244140625,
             "piece_x": 953,
             "piece_y": 495,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 940.5,
             "dislodged_piece_y": 482.5,
             "territory": 6
@@ -1143,6 +1269,8 @@
             "text_y": 660.2000122070312,
             "piece_x": 890,
             "piece_y": 620,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 877.5,
             "dislodged_piece_y": 607.5,
             "territory": 3
@@ -1161,6 +1289,8 @@
             "text_y": null,
             "piece_x": null,
             "piece_y": null,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": null,
             "dislodged_piece_y": null
         }
@@ -1178,6 +1308,8 @@
             "text_y": 571.2,
             "piece_x": 747,
             "piece_y": 528,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 734.5,
             "dislodged_piece_y": 515.5,
             "territory": 17
@@ -1196,6 +1328,8 @@
             "text_y": 665.4000244140625,
             "piece_x": 663,
             "piece_y": 641,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 650.5,
             "dislodged_piece_y": 628.5,
             "territory": 10
@@ -1214,6 +1348,8 @@
             "text_y": 512,
             "piece_x": 565,
             "piece_y": 570,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 552.5,
             "dislodged_piece_y": 557.5,
             "territory": 16
@@ -1232,6 +1368,8 @@
             "text_y": 762.5999755859375,
             "piece_x": 406,
             "piece_y": 761,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 393.5,
             "dislodged_piece_y": 748.5,
             "territory": 8
@@ -1250,6 +1388,8 @@
             "text_y": 711.4000244140625,
             "piece_x": 347,
             "piece_y": 671,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 334.5,
             "dislodged_piece_y": 658.5,
             "territory": 12
@@ -1264,10 +1404,12 @@
             "type": "sea",
             "abbreviation": "MID",
             "path": "M 202 1527 C 204 1527 210 1527 212 1526 C 214 1525 216 1518 217 1516 C 219 1509 222 1502 226 1496 C 230 1489 236 1479 242 1473 C 242 1473 254 1464 254 1464 C 260 1458 263 1453 270 1448 C 278 1442 288 1436 298 1434 C 298 1434 336 1430 336 1430 C 353 1425 369 1402 381 1389 C 381 1389 391 1379 391 1379 C 393 1378 396 1376 397 1374 C 401 1366 392 1362 389 1356 C 389 1356 387 1340 387 1340 C 385 1330 379 1321 370 1316 C 361 1311 358 1317 349 1316 C 343 1315 338 1311 333 1308 C 330 1307 325 1305 324 1302 C 323 1298 330 1291 332 1288 C 336 1281 334 1279 336 1273 C 337 1268 340 1265 340 1260 C 340 1252 335 1256 332 1252 C 328 1248 329 1242 331 1238 C 332 1232 335 1224 340 1220 C 344 1216 347 1217 352 1210 C 361 1200 375 1172 378 1159 C 378 1159 383 1139 383 1139 C 385 1134 387 1130 388 1123 C 388 1114 383 1107 390 1099 C 393 1096 397 1093 401 1093 C 404 1093 410 1096 414 1094 C 416 1094 416 1091 418 1090 C 421 1087 427 1086 430 1086 C 441 1087 439 1095 453 1101 C 453 1101 477 1109 477 1109 C 477 1109 503 1123 503 1123 C 503 1123 523 1130 523 1130 C 523 1130 534 1136 534 1136 C 539 1138 544 1138 547 1139 C 555 1141 558 1149 570 1148 C 575 1148 583 1139 587 1135 C 589 1132 598 1113 598 1110 C 599 1107 598 1106 598 1103 C 599 1096 605 1086 610 1082 C 606 1069 610 1069 609 1059 C 607 1048 598 1044 597 1032 C 597 1028 598 1025 597 1021 C 597 1016 594 1014 593 1012 C 592 1009 592 1007 591 1005 C 590 1003 586 1001 584 999 C 579 994 574 988 568 984 C 563 982 554 983 549 976 C 548 974 547 971 547 969 C 554 967 554 964 555 957 C 555 957 535 947 535 947 C 512 936 496 928 475 912 C 453 895 439 879 412 867 C 390 857 356 848 332 848 C 332 848 290 848 290 848 C 290 848 278 849 278 849 C 259 850 241 852 222 858 C 219 859 205 862 203 864 C 202 865 202 869 202 871 C 202 871 202 1527 202 1527 z",
-            "text_x": null,
-            "text_y": null,
+            "text_x": 260,
+            "text_y": 1035,
             "piece_x": 126,
             "piece_y": 902,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 113.5,
             "dislodged_piece_y": 889.5,
             "territory": 13
@@ -1286,6 +1428,8 @@
             "text_y": 1209.0999755859375,
             "piece_x": 474,
             "piece_y": 1173,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 461.5,
             "dislodged_piece_y": 1160.5,
             "territory": 19
@@ -1300,10 +1444,12 @@
             "type": "sea",
             "abbreviation": "GOL",
             "path": "M 674 1307 C 674 1307 698 1304 698 1304 C 720 1301 738 1299 760 1304 C 760 1304 809 1319 809 1319 C 813 1307 808 1308 806 1300 C 806 1296 807 1293 808 1290 C 821 1296 822 1286 836 1285 C 836 1269 826 1273 825 1257 C 825 1251 826 1242 831 1239 C 835 1236 838 1236 843 1232 C 848 1227 848 1222 854 1221 C 860 1219 870 1222 876 1223 C 876 1223 874 1210 874 1210 C 874 1206 874 1202 873 1198 C 872 1190 868 1189 862 1184 C 855 1179 852 1175 842 1177 C 832 1179 829 1185 822 1189 C 822 1189 799 1197 799 1197 C 790 1201 784 1208 774 1210 C 765 1212 758 1207 752 1200 C 750 1197 750 1195 748 1193 C 743 1190 739 1192 734 1191 C 728 1190 721 1184 715 1183 C 711 1183 706 1185 702 1186 C 682 1196 698 1217 680 1232 C 672 1238 656 1244 646 1246 C 640 1247 622 1249 618 1251 C 614 1254 616 1257 613 1259 C 611 1260 608 1260 605 1262 C 605 1262 600 1267 600 1267 C 600 1267 594 1273 594 1273 C 590 1276 586 1284 583 1289 C 583 1289 576 1298 576 1298 C 573 1304 576 1316 582 1319 C 584 1320 588 1320 590 1320 C 590 1320 606 1320 606 1320 C 619 1320 631 1316 642 1310 C 647 1307 648 1304 653 1301 C 661 1298 669 1301 674 1307 z",
-            "text_x": null,
-            "text_y": null,
+            "text_x": 675,
+            "text_y": 1270,
             "piece_x": 556,
             "piece_y": 1060,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 543.5,
             "dislodged_piece_y": 1047.5,
             "territory": 9
@@ -1318,10 +1464,12 @@
             "type": "sea",
             "abbreviation": "TYN",
             "path": "M 816 1367 C 820 1377 822 1381 822 1392 C 822 1392 822 1404 822 1404 C 822 1404 819 1426 819 1426 C 829 1424 844 1425 849 1435 C 850 1438 850 1442 850 1445 C 856 1444 870 1435 876 1432 C 876 1432 906 1419 906 1419 C 911 1415 913 1407 919 1405 C 924 1403 938 1408 944 1409 C 944 1409 951 1409 951 1409 C 964 1409 970 1407 983 1409 C 992 1398 994 1403 1004 1406 C 1006 1403 1014 1390 1015 1387 C 1016 1382 1014 1376 1012 1371 C 1010 1367 1009 1360 1006 1357 C 1003 1352 996 1347 991 1342 C 989 1340 987 1338 986 1335 C 985 1333 985 1330 982 1328 C 980 1325 970 1326 966 1326 C 967 1319 963 1315 960 1309 C 958 1306 957 1302 954 1300 C 950 1298 942 1298 938 1297 C 932 1296 927 1292 923 1287 C 923 1287 913 1273 913 1273 C 913 1273 898 1255 898 1255 C 898 1255 885 1238 885 1238 C 883 1236 880 1229 878 1228 C 875 1226 869 1225 866 1225 C 862 1224 857 1222 853 1225 C 847 1229 850 1237 850 1243 C 850 1252 849 1258 845 1266 C 843 1270 840 1275 839 1279 C 838 1288 844 1287 847 1293 C 848 1297 848 1303 848 1307 C 848 1318 842 1335 839 1346 C 838 1350 836 1358 833 1360 C 830 1363 828 1361 825 1362 C 823 1363 818 1366 816 1367 z",
-            "text_x": null,
-            "text_y": null,
+            "text_x": 840,
+            "text_y": 1385,
             "piece_x": 720,
             "piece_y": 1160,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 707.5,
             "dislodged_piece_y": 1147.5,
             "territory": 18
@@ -1340,6 +1488,8 @@
             "text_y": 1100.5999755859375,
             "piece_x": 805,
             "piece_y": 1058,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 792.5,
             "dislodged_piece_y": 1045.5,
             "territory": 1
@@ -1358,6 +1508,8 @@
             "text_y": 1251.699951171875,
             "piece_x": 858,
             "piece_y": 1296,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 845.5,
             "dislodged_piece_y": 1283.5,
             "territory": 11
@@ -1376,6 +1528,8 @@
             "text_y": 1296.4000244140625,
             "piece_x": 1055,
             "piece_y": 1240,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1042.5,
             "dislodged_piece_y": 1227.5,
             "territory": 2
@@ -1394,6 +1548,8 @@
             "text_y": 1343.300048828125,
             "piece_x": 1230,
             "piece_y": 1321,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1217.5,
             "dislodged_piece_y": 1308.5,
             "territory": 7
@@ -1412,6 +1568,8 @@
             "text_y": null,
             "piece_x": null,
             "piece_y": null,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": null,
             "dislodged_piece_y": null
         }
@@ -1429,6 +1587,8 @@
             "text_y": 1034.5999755859375,
             "piece_x": 1245,
             "piece_y": 1010,
+            "supply_center_x": null,
+            "supply_center_y": null,
             "dislodged_piece_x": 1232.5,
             "dislodged_piece_y": 997.5,
             "territory": 5
