@@ -129,6 +129,22 @@ class Turn(models.Model):
             'Phase'
         ])
 
+    @classmethod
+    def get_next(cls, turn):
+        try:
+            return cls.objects.filter(game=turn.game, id__gt=current_id) \
+                .order_by('id')[0]
+       except:
+            return None
+
+    @classmethod
+    def get_previous(cls, turn):
+        try:
+            return cls.objects.filter(game=turn.game, id__lt=current_id) \
+                .order_by('-id')[0]
+        except:
+            return None
+
     @property
     def possible_order_types(self):
         return possible_orders[self.phase]
