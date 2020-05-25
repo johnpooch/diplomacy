@@ -211,3 +211,32 @@ class TestLinkedTurns(TestCase):
         self.assertEqual(turn, self.game_b_spring_order_turn_1902)
         turn = models.Turn.get_next(turn)
         self.assertIsNone(turn)
+
+    def test_get_previous_turn(self):
+        turn = self.game_a_spring_order_turn_1902
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_fall_build_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_fall_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_fall_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_spring_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_spring_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertIsNone(turn)
+
+        turn = self.game_b_spring_order_turn_1902
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_fall_build_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_fall_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_fall_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_spring_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_spring_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertIsNone(turn)
