@@ -126,7 +126,7 @@ class CreateGame(views.APIView):
     def post(self, request):
         request.data['variant'] = 1
         request.data['num_players'] = 7
-        serializer = serializers.GameSerializer(data=request.data)
+        serializer = serializers.CreateGameSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(
                 {'errors': serializer.errors},
