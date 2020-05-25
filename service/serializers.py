@@ -200,6 +200,26 @@ class GameSerializer(serializers.ModelSerializer):
         )
 
 
+class CreateGameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'variant',
+            'variant_id',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
+        )
+
+
 class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
