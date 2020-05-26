@@ -1,0 +1,44 @@
+ENGLAND
+Norwegian Sea SUPPORT North Sea to Norway -> Supported unit has failed
+English Channel SUPPORT Picardy to Belgium -> Supported unit has failed
+North Sea MOVE Norway -> Bounced
+Yorkshire HOLD -> resolved
+
+FRANCE
+Brest HOLD -> resolved
+Picardy MOVE Belgium -> Bounced
+Spain MOVE Marseilles -> Bounced
+
+ITALY
+Ionian Sea HOLD -> resolved
+Western Mediterranean MOVE Gulf of Lyon -> resolved
+Venice MOVE Trieste -> Bounced
+Piedmont MOVE Marseilles -> Bounced
+
+GERMANY
+Baltic Sea MOVE Denmark -> resolved
+Burgundy SUPPORT Belgium to hold -> resolved
+Helgoland Bight SUPPORT Baltic Sea to Denmark -> resolved
+Paris MOVE Picardy -> Bounced
+Kiel MOVE Holland -> resolved
+Belgium HOLD -> resolved
+
+AUSTRIA
+Budapest SUPPORT Trieste to Serbia -> Supported unit has filed
+Vienna MOVE Galicia -> Bounced
+Greece MOVE Aegean Sea -> resolved
+Trieste MOVE Serbia -> Bounced
+
+TURKEY
+Smyrna HOLD -> resolved
+Bulgaria MOVE Serbia -> Bounced
+Black Sea MOVE Constantinople -> Bounced
+Constantinople MOVE Bulgaria -> Bounced
+
+RUSSIA
+Sevastopol HOLD -> resolved
+Rumania SUPPORT Bulgaria to Serbia -> Supported unit has failed
+Sweden SUPPORT Norway to hold -> resolved
+Finland SUPPORT Norway to hold -> resolved
+Norway HOLD -> resolved
+Warsaw MOVE Galicia -> Bounced

@@ -1,0 +1,398 @@
+[
+    {
+        "model": "core.order",
+        "pk": 45,
+        "fields": {
+            "turn": 3,
+            "nation": 4,
+            "type": "retreat",
+            "source": 47,
+            "target": 60,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 46,
+        "fields": {
+            "turn": 3,
+            "nation": 7,
+            "type": "hold",
+            "source": 5,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 47,
+        "fields": {
+            "turn": 3,
+            "nation": 3,
+            "type": "hold",
+            "source": 29,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 48,
+        "fields": {
+            "turn": 3,
+            "nation": 2,
+            "type": "hold",
+            "source": 8,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 49,
+        "fields": {
+            "turn": 3,
+            "nation": 7,
+            "type": "hold",
+            "source": 73,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 50,
+        "fields": {
+            "turn": 3,
+            "nation": 1,
+            "type": "hold",
+            "source": 42,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 51,
+        "fields": {
+            "turn": 3,
+            "nation": 3,
+            "type": "hold",
+            "source": 34,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 52,
+        "fields": {
+            "turn": 3,
+            "nation": 1,
+            "type": "hold",
+            "source": 16,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 53,
+        "fields": {
+            "turn": 3,
+            "nation": 1,
+            "type": "hold",
+            "source": 58,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 54,
+        "fields": {
+            "turn": 3,
+            "nation": 2,
+            "type": "hold",
+            "source": 74,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 55,
+        "fields": {
+            "turn": 3,
+            "nation": 5,
+            "type": "hold",
+            "source": 54,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 56,
+        "fields": {
+            "turn": 3,
+            "nation": 5,
+            "type": "hold",
+            "source": 56,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 57,
+        "fields": {
+            "turn": 3,
+            "nation": 6,
+            "type": "hold",
+            "source": 49,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 58,
+        "fields": {
+            "turn": 3,
+            "nation": 7,
+            "type": "hold",
+            "source": 28,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 59,
+        "fields": {
+            "turn": 3,
+            "nation": 4,
+            "type": "hold",
+            "source": 33,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 60,
+        "fields": {
+            "turn": 3,
+            "nation": 5,
+            "type": "hold",
+            "source": 44,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 61,
+        "fields": {
+            "turn": 3,
+            "nation": 6,
+            "type": "hold",
+            "source": 31,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 62,
+        "fields": {
+            "turn": 3,
+            "nation": 3,
+            "type": "hold",
+            "source": 65,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 63,
+        "fields": {
+            "turn": 3,
+            "nation": 2,
+            "type": "hold",
+            "source": 43,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 64,
+        "fields": {
+            "turn": 3,
+            "nation": 4,
+            "type": "hold",
+            "source": 53,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 65,
+        "fields": {
+            "turn": 3,
+            "nation": 6,
+            "type": "hold",
+            "source": 47,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": false,
+            "illegal_message": "('A001', 'Cannot order a piece belonging to another nation.')"
+        }
+    },
+    {
+        "model": "core.order",
+        "pk": 66,
+        "fields": {
+            "turn": 3,
+            "nation": 6,
+            "type": "hold",
+            "source": 51,
+            "target": null,
+            "target_coast": null,
+            "aux": null,
+            "piece_type": null,
+            "via_convoy": false,
+            "outcome": "succeeds",
+            "legal": true,
+            "illegal_message": null
+        }
+    }
+]

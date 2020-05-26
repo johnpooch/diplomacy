@@ -1,0 +1,44 @@
+ENGLAND
+Norwegian Sea MOVE North Sea -> Bounced
+English Channel SUPPORT Norwegian Sea to North Sea -> Support cut by F Brest - English Channel
+Edinburgh SUPPORT Norwegian Sea to North Sea -> Supported unit has failed
+
+FRANCE
+Brest MOVE English Channel -> Dislodged by A Paris - Brest
+Spain MOVE Portugal -> resolved
+
+ITALY
+Ionian Sea HOLD -> resolved
+Gulf of Lyon MOVE Spain (South Coast) -> resolved
+Venice HOLD -> resolved
+Marseilles SUPPORT Gulf of Lyon to Spain (South Coast) -> resolved
+
+GERMANY
+Munich HOLD -> resolved
+Denmark SUPPORT North Sea to hold -> resolved
+Picardy SUPPORT Paris to Brest -> resolved
+Paris MOVE Brest -> resolved
+Holland MOVE Kiel -> resolved
+Belgium MOVE English Channel -> Bounced
+North Sea HOLD -> resolved
+
+AUSTRIA
+Vienna MOVE Budapest -> Bounced
+Budapest MOVE Serbia -> Bounced
+Greece MOVE Bulgaria (South Coast) -> Bounced
+Trieste SUPPORT Budapest to Serbia -> Supported unit has failed
+
+TURKEY
+Smyrna MOVE Eastern Mediterranean -> resolved
+Constantinople MOVE Aegean Sea -> resolved
+Bulgaria SUPPORT Serbia to hold -> Support cut by F Greece - Bulgaria (South Coast)
+Serbia HOLD -> resolved
+
+RUSSIA
+Warsaw SUPPORT Ukraine to Galicia -> resolved
+Norway HOLD -> resolved
+Sevastopol MOVE Black Sea -> resolved
+St. Petersburg SUPPORT Norway to hold -> resolved
+Sweden HOLD -> resolved
+Rumania SUPPORT Serbia to hold -> resolved
+Ukraine MOVE Galicia -> resolved

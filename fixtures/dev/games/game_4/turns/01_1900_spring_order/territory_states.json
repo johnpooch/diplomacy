@@ -1,0 +1,677 @@
+[
+    {
+        "model": "core.territorystate",
+        "pk": 1,
+        "fields": {
+            "turn": 1,
+            "territory": 1,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 2,
+        "fields": {
+            "turn": 1,
+            "territory": 2,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 3,
+        "fields": {
+            "turn": 1,
+            "territory": 3,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 4,
+        "fields": {
+            "turn": 1,
+            "territory": 4,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 5,
+        "fields": {
+            "turn": 1,
+            "territory": 5,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 6,
+        "fields": {
+            "turn": 1,
+            "territory": 6,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 7,
+        "fields": {
+            "turn": 1,
+            "territory": 7,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 8,
+        "fields": {
+            "turn": 1,
+            "territory": 8,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 9,
+        "fields": {
+            "turn": 1,
+            "territory": 9,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 10,
+        "fields": {
+            "turn": 1,
+            "territory": 10,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 11,
+        "fields": {
+            "turn": 1,
+            "territory": 11,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 12,
+        "fields": {
+            "turn": 1,
+            "territory": 12,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 13,
+        "fields": {
+            "turn": 1,
+            "territory": 13,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 14,
+        "fields": {
+            "turn": 1,
+            "territory": 14,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 15,
+        "fields": {
+            "turn": 1,
+            "territory": 15,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 16,
+        "fields": {
+            "turn": 1,
+            "territory": 16,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 17,
+        "fields": {
+            "turn": 1,
+            "territory": 17,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 18,
+        "fields": {
+            "turn": 1,
+            "territory": 18,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 19,
+        "fields": {
+            "turn": 1,
+            "territory": 19,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 20,
+        "fields": {
+            "turn": 1,
+            "territory": 20,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 21,
+        "fields": {
+            "turn": 1,
+            "territory": 21,
+            "controlled_by": 7
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 22,
+        "fields": {
+            "turn": 1,
+            "territory": 22,
+            "controlled_by": 5
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 23,
+        "fields": {
+            "turn": 1,
+            "territory": 23,
+            "controlled_by": 7
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 24,
+        "fields": {
+            "turn": 1,
+            "territory": 24,
+            "controlled_by": 3
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 25,
+        "fields": {
+            "turn": 1,
+            "territory": 25,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 26,
+        "fields": {
+            "turn": 1,
+            "territory": 26,
+            "controlled_by": 2
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 27,
+        "fields": {
+            "turn": 1,
+            "territory": 27,
+            "controlled_by": 1
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 28,
+        "fields": {
+            "turn": 1,
+            "territory": 28,
+            "controlled_by": 7
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 29,
+        "fields": {
+            "turn": 1,
+            "territory": 29,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 30,
+        "fields": {
+            "turn": 1,
+            "territory": 30,
+            "controlled_by": 1
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 31,
+        "fields": {
+            "turn": 1,
+            "territory": 31,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 32,
+        "fields": {
+            "turn": 1,
+            "territory": 32,
+            "controlled_by": 2
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 33,
+        "fields": {
+            "turn": 1,
+            "territory": 33,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 34,
+        "fields": {
+            "turn": 1,
+            "territory": 34,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 35,
+        "fields": {
+            "turn": 1,
+            "territory": 35,
+            "controlled_by": 3
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 36,
+        "fields": {
+            "turn": 1,
+            "territory": 36,
+            "controlled_by": 1
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 37,
+        "fields": {
+            "turn": 1,
+            "territory": 37,
+            "controlled_by": 6
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 38,
+        "fields": {
+            "turn": 1,
+            "territory": 38,
+            "controlled_by": 1
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 39,
+        "fields": {
+            "turn": 1,
+            "territory": 39,
+            "controlled_by": 2
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 40,
+        "fields": {
+            "turn": 1,
+            "territory": 40,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 41,
+        "fields": {
+            "turn": 1,
+            "territory": 41,
+            "controlled_by": 5
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 42,
+        "fields": {
+            "turn": 1,
+            "territory": 42,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 43,
+        "fields": {
+            "turn": 1,
+            "territory": 43,
+            "controlled_by": 2
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 44,
+        "fields": {
+            "turn": 1,
+            "territory": 44,
+            "controlled_by": 5
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 45,
+        "fields": {
+            "turn": 1,
+            "territory": 45,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 46,
+        "fields": {
+            "turn": 1,
+            "territory": 46,
+            "controlled_by": 5
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 47,
+        "fields": {
+            "turn": 1,
+            "territory": 47,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 48,
+        "fields": {
+            "turn": 1,
+            "territory": 48,
+            "controlled_by": 3
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 49,
+        "fields": {
+            "turn": 1,
+            "territory": 49,
+            "controlled_by": 6
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 50,
+        "fields": {
+            "turn": 1,
+            "territory": 50,
+            "controlled_by": 7
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 51,
+        "fields": {
+            "turn": 1,
+            "territory": 51,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 52,
+        "fields": {
+            "turn": 1,
+            "territory": 52,
+            "controlled_by": 7
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 53,
+        "fields": {
+            "turn": 1,
+            "territory": 53,
+            "controlled_by": 4
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 54,
+        "fields": {
+            "turn": 1,
+            "territory": 54,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 55,
+        "fields": {
+            "turn": 1,
+            "territory": 55,
+            "controlled_by": 5
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 56,
+        "fields": {
+            "turn": 1,
+            "territory": 56,
+            "controlled_by": 5
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 57,
+        "fields": {
+            "turn": 1,
+            "territory": 57,
+            "controlled_by": 1
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 58,
+        "fields": {
+            "turn": 1,
+            "territory": 58,
+            "controlled_by": 1
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 59,
+        "fields": {
+            "turn": 1,
+            "territory": 59,
+            "controlled_by": 4
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 60,
+        "fields": {
+            "turn": 1,
+            "territory": 60,
+            "controlled_by": 4
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 61,
+        "fields": {
+            "turn": 1,
+            "territory": 61,
+            "controlled_by": 2
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 62,
+        "fields": {
+            "turn": 1,
+            "territory": 62,
+            "controlled_by": 4
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 63,
+        "fields": {
+            "turn": 1,
+            "territory": 63,
+            "controlled_by": 6
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 64,
+        "fields": {
+            "turn": 1,
+            "territory": 64,
+            "controlled_by": 3
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 65,
+        "fields": {
+            "turn": 1,
+            "territory": 65,
+            "controlled_by": 2
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 66,
+        "fields": {
+            "turn": 1,
+            "territory": 66,
+            "controlled_by": 3
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 67,
+        "fields": {
+            "turn": 1,
+            "territory": 67,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 68,
+        "fields": {
+            "turn": 1,
+            "territory": 68,
+            "controlled_by": 3
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 69,
+        "fields": {
+            "turn": 1,
+            "territory": 69,
+            "controlled_by": 4
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 70,
+        "fields": {
+            "turn": 1,
+            "territory": 70,
+            "controlled_by": 6
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 71,
+        "fields": {
+            "turn": 1,
+            "territory": 71,
+            "controlled_by": 4
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 72,
+        "fields": {
+            "turn": 1,
+            "territory": 72,
+            "controlled_by": 6
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 73,
+        "fields": {
+            "turn": 1,
+            "territory": 73,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 74,
+        "fields": {
+            "turn": 1,
+            "territory": 74,
+            "controlled_by": null
+        }
+    },
+    {
+        "model": "core.territorystate",
+        "pk": 75,
+        "fields": {
+            "turn": 1,
+            "territory": 75,
+            "controlled_by": 6
+        }
+    }
+]

@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from adjudicator import process_game_state
 
-from core.models.base import OrderType, OutcomeType, Phase, Season
+from core.models.base import OrderType, OutcomeType, Phase, Season, TerritoryType
 
 
 possible_orders = {
@@ -29,13 +29,13 @@ class TurnManager(models.Manager):
 
     # TODO move this method outside manager
     def create_turn_from_previous_turn(self, previous_turn):
-        season, phase, year = previous_turn.get_next_season_phase_and_year()
+        # NOTE how about we make the turn have 0 year until finished
         piece_state_model = apps.get_model('core', 'PieceState')
         new_turn = Turn.objects.create(
             game=previous_turn.game,
-            year=year,
-            season=season,
-            phase=phase,
+            year=0,
+            season=Season.SPRING,
+            phase=Phase.ORDER,
             current_turn=True,
         )
 
@@ -43,6 +43,11 @@ class TurnManager(models.Manager):
         successful_move_orders = previous_turn.orders.filter(
             outcome=OutcomeType.MOVES,
             type=OrderType.MOVE,
+        )
+        # get successful retreat orders
+        successful_retreat_orders = previous_turn.orders.filter(
+            outcome=OutcomeType.SUCCEEDS,
+            type=OrderType.RETREAT,
         )
 
         for piece_state in previous_turn.piecestates.all():
@@ -53,9 +58,15 @@ class TurnManager(models.Manager):
                 'piece': piece_state.piece,
                 'turn': new_turn,
                 'territory': piece_state.territory,
+                'named_coast': piece_state.named_coast,
             }
             for order in successful_move_orders:
                 if piece_state.territory == order.source:
+                    piece_data['territory'] = order.target
+                    piece_data['named_coast'] = order.target_coast
+
+            for order in successful_retreat_orders:
+                if piece_state.territory == order.source and piece_state.must_retreat:
                     piece_data['territory'] = order.target
 
             # if piece dislodged set next piece to must_retreat
@@ -64,9 +75,21 @@ class TurnManager(models.Manager):
 
             piece_state_model.objects.create(**piece_data)
         for territory_state in previous_turn.territorystates.all():
-            # TODO If end of fall orders process change of possession.
             territory_state.turn = new_turn
             territory_state.pk = None
+            # if end of fall orders process change of possession.
+            if previous_turn.phase == Phase.ORDER \
+                    and previous_turn.season == Season.FALL \
+                    and not territory_state.territory.type == TerritoryType.SEA:
+                try:
+                    occupying_piece = new_turn.piecestates.get(
+                        territory=territory_state.territory,
+                        must_retreat=False
+                    )
+                    territory_state.controlled_by = occupying_piece.piece.nation
+                except piece_state_model.DoesNotExist:
+                    pass
+
             territory_state.save()
         for nation_state in previous_turn.nationstates.all():
             # TODO account for nations which have been eliminated?
@@ -74,6 +97,10 @@ class TurnManager(models.Manager):
             nation_state.orders_finalized = False
             nation_state.pk = None
             nation_state.save()
+        new_turn.season, new_turn.phase, new_turn.year = \
+            previous_turn.get_next_season_phase_and_year(new_turn)
+        new_turn.save()
+
         return new_turn
 
 
@@ -152,10 +179,43 @@ class Turn(models.Model):
                         return False
         return True
 
+    def check_for_winning_nation(self):
+        """
+        Iterate through every nation and check if any nation satisfies the
+        victory conditions of the game variant.
+
+        Returns:
+            * `NationState` or `None`
+        """
+        # TODO filter by active/not surrendered
+        for nation_state in self.nationstates.all():
+            if nation_state.meets_victory_conditions:
+                return nation_state
+        return None
+
     def process(self):
+        self.create_default_hold_orders()
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)
+        from pprint import pprint
+        # pprint(outcome)
         self.update_turn(outcome)
+
+    def create_default_hold_orders(self):
+        """
+        Creates a hold order for any piece which does not have an order.
+        """
+        for piece_state in self.piecestates.all():
+            nation = piece_state.piece.nation
+            territory = piece_state.territory
+            orders = self.orders.filter(source=territory, nation=nation)
+            if not orders:
+                order_model = apps.get_model('core', 'Order')
+                order_model.objects.create(
+                    source=territory,
+                    nation=nation,
+                    turn=self,
+                )
 
     def update_turn(self, outcome):
         piece_state_model = apps.get_model('core', 'PieceState')
@@ -174,7 +234,7 @@ class Turn(models.Model):
                     piece.turn_disbanded = self
                     piece.save()
                 if order.type == OrderType.BUILD and \
-                        order_data['outcome'] == 'succeeds':
+                        order_data['outcome'] == OutcomeType.SUCCEEDS:
                     piece = piece_model.objects.create(
                         game=self.game,
                         turn_created=self,
@@ -185,9 +245,9 @@ class Turn(models.Model):
                         turn=self,
                         piece=piece,
                         territory=order.source,
+                        named_coast=order.target_coast,
                     )
-            return
-        for territory_data in outcome['territories']:
+        for territory_data in outcome.get('territories', []):
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
             territory = territory_state
             territory.contested = territory_data['contested']
@@ -198,7 +258,7 @@ class Turn(models.Model):
             order.legal = order_data['legal_decision'] == 'legal'
             order.illegal_message = order_data['illegal_message']
             order.save()
-        for piece_data in outcome['pieces']:
+        for piece_data in outcome.get('pieces', []):
             piece = self.piecestates.get(id=piece_data['id'])
             dislodged = piece_data['dislodged_decision'] == 'dislodged'
             piece.dislodged = dislodged
@@ -237,7 +297,7 @@ class Turn(models.Model):
         game_state['variant'] = self.game.variant.name
         return game_state
 
-    def get_next_season_phase_and_year(self):
+    def get_next_season_phase_and_year(self, new_turn):
         if not self.processed:
             raise ValueError('Cannot get next phase until order is processed.')
 
@@ -247,11 +307,11 @@ class Turn(models.Model):
         if self.season == Season.SPRING:
             return Season.FALL, Phase.ORDER, self.year
 
-        if self.season == Season.FALL:
-            # if any change in supply center control
-            if False:
-                return self.season, Phase.BUILD, self.year
-            return Season.SPRING, Phase.ORDER, self.year + 1
+        if self.season == Season.FALL and not self.phase == Phase.BUILD:
+            for nation_state in new_turn.nationstates.all():
+                if abs(nation_state.supply_delta):
+                    return self.season, Phase.BUILD, self.year
+        return Season.SPRING, Phase.ORDER, self.year + 1
 
 
 class TurnEnd(models.Model):

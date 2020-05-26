@@ -12,7 +12,7 @@ class Territory:
         self.name = name
         self.neighbour_ids = neighbour_ids
 
-        self.piece = None
+        self.pieces = set()
         self.neighbours = set()
         self.named_coasts = set()
         self.attacking_pieces = set()
@@ -24,6 +24,26 @@ class Territory:
 
     def __repr__(self):
         return f'{self.name} - {self.__class__.__name__}'
+
+    @property
+    def piece(self):
+        pieces = list(self.pieces)
+        if len(pieces) == 1:
+            return pieces[0]
+        if len(pieces) == 2:
+            return [p for p in pieces if p.retreating][0]
+        if not pieces:
+            return None
+
+    @property
+    def non_retreating_piece(self):
+        pieces = list(self.pieces)
+        if len(pieces) == 1:
+            return pieces[0]
+        if len(pieces) == 2:
+            return [p for p in pieces if not p.retreating][0]
+        if not pieces:
+            return None
 
     @property
     def hold_strength(self):

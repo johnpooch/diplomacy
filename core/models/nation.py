@@ -55,6 +55,18 @@ class NationState(PerTurnModel):
         return ' - '.join([str(self.turn), str(self.nation)])
 
     @property
+    def meets_victory_conditions(self):
+        """
+        Determines whether a nation meets the victory conditions of the game
+        variant, i.e. controls enough supply centers.
+
+        Returns:
+            * `bool`
+        """
+        num_required = self.turn.game.variant.num_supply_centers_to_win
+        return self.supply_centers.count() >= num_required
+
+    @property
     def orders(self):
         """
         Gets the orders that the nation has submitted this turn.
