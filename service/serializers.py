@@ -146,11 +146,6 @@ class NationStateSerializer(serializers.ModelSerializer):
             'surrendered',
             'orders_finalized'  # TODO should only see this if user
         )
-        read_only_fields = (
-            'user',
-            'nation',
-            'surrendered',
-        )
 
     def update(self, instance, validated_data):
         """
