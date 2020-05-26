@@ -195,7 +195,7 @@ class TestGetCreateGame(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestPostCreateGame(APITestCase):
+class TestCreateGame(APITestCase):
 
     def test_post_invalid_game(self):
         """
@@ -207,7 +207,6 @@ class TestPostCreateGame(APITestCase):
         data = {}
         url = reverse('create-game')
         response = self.client.post(url, data, format='json')
-
         self.assertEqual(response.status_code, 400)
 
     def test_post_valid_game(self):
@@ -226,6 +225,7 @@ class TestPostCreateGame(APITestCase):
         url = reverse('create-game')
         response = self.client.post(url, data, format='json')
 
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(
             models.Game.objects.get(
@@ -434,28 +434,19 @@ class TestCreateOrder(APITestCase):
     def test_create_order_not_participant(self):
         self.game.participants.remove(self.user)
         response = self.client.post(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            'User is not a participant in this game.',
-            str(response.data[0])
-        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_order_game_pending(self):
         self.game.status = GameStatus.PENDING
         self.game.save()
-
         response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual('Game is not active.', str(response.data[0]))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_order_game_ended(self):
         self.game.status = GameStatus.ENDED
         self.game.save()
-
         response = self.client.post(self.url, self.data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_order_no_orders_left_retreat_and_disband(self):
         models.Turn.objects.create(
@@ -736,10 +727,6 @@ class TestCreateOrder(APITestCase):
             'type': OrderType.DISBAND,
         }
         response = self.client.post(self.url, data, format='json')
-        self.assertEqual(
-            'Cannot issue any more disband orders.',
-            str(response.data[0])
-        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_build_occupied_territory(self):
@@ -831,30 +818,25 @@ class TestDeleteOrder(APITestCase):
             piece=self.piece,
             territory=self.territory,
         )
-
-    def test_delete_order_valid(self):
-        order = models.Order.objects.create(
+        self.order = models.Order.objects.create(
             turn=self.turn,
             source=self.territory,
             nation=self.nation
         )
-        url = reverse('order', args=[self.game.id, order.id])
-        response = self.client.delete(url, format='json')
+        self.url = reverse('order', args=[self.game.id, self.order.id])
+
+    def test_delete_order_valid(self):
+        response = self.client.delete(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(models.Order.DoesNotExist):
             self.assertTrue(models.Order.objects.get())
 
     def test_delete_order_no_order(self):
-        url = reverse('order', args=[self.game.id, 1])
+        url = reverse('order', args=[self.game.id, 200])
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_other_players_order(self):
-        order = models.Order.objects.create(
-            turn=self.turn,
-            source=self.territory,
-            nation=self.nation
-        )
         other_user = factories.UserFactory()
         self.game.participants.add(other_user)
         self.client.force_authenticate(user=other_user)
@@ -867,9 +849,8 @@ class TestDeleteOrder(APITestCase):
             turn=self.turn,
             user=other_user,
         )
-        url = reverse('order', args=[self.game.id, order.id])
-        response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.delete(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertTrue(models.Order.objects.get())
 
 

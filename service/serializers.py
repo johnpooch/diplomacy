@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from core import models
+from core.models.base import GameStatus, OrderType
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -149,7 +150,7 @@ class NationStateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """
-        Set nation finalized state
+        Set nation's `orders_finalized` field.
         """
         instance.orders_finalized = validated_data['orders_finalized']
         instance.save()
@@ -228,6 +229,18 @@ class CreateGameSerializer(serializers.ModelSerializer):
             'num_players',
         )
 
+    def validate(self, data):
+        print('AGGGGHHHHH')
+        data['variant'] = models.Variant.objects.get(id=1)
+        data['num_players'] = 7
+        return data
+
+    def create(self, validated_data):
+        print('YAGGGGHHHHH')
+        game = models.Game.objects.create(**validated_data)
+        game.participants.add(self.context['request'].user)
+        return game
+
 
 class OrderSerializer(serializers.ModelSerializer):
 
@@ -247,6 +260,15 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'nation',
         )
+
+    def validate(self, data):
+        nation_state = self.context['nation_state']
+        turn = self.context['turn']
+        data['type'] = data.get('type', OrderType.HOLD)
+        data['nation'] = nation_state.nation
+        data['turn'] = turn
+        models.Order.validate(turn, nation_state, data)
+        return data
 
 
 class TurnSerializer(serializers.ModelSerializer):

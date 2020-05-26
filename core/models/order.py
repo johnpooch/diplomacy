@@ -1,7 +1,9 @@
+from django.apps import apps
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from core.models.base import OrderType, OutcomeType, PerTurnModel, PieceType
+from core.models.base import OrderType, OutcomeType, PerTurnModel, Phase, \
+    PieceType
 
 
 class Order(PerTurnModel):
@@ -98,6 +100,52 @@ class Order(PerTurnModel):
                     'This order type is not possible during this turn.'
                 ),
             })
+
+    @classmethod
+    def validate(cls, turn, nation_state, data):
+        territory = data['source']
+        if data.get('via_convoy') and data['type'] != OrderType.MOVE:
+            raise ValidationError({
+                'via_convoy': (
+                    'Via convoy should only be specified for move orders.'
+                ),
+            })
+        if data.get('piece_type') and data['type'] != OrderType.BUILD:
+            raise ValidationError({
+                'piece_type': (
+                    'Piece type should only be specified for build orders.'
+                ),
+            })
+        if data['type'] not in turn.possible_order_types:
+            raise ValidationError({
+                'type': (
+                    'This order type is not possible during this turn.'
+                ),
+            })
+        if data['type'] not in turn.possible_order_types:
+            raise ValidationError({
+                'type': (
+                    'This order type is not possible during this turn.',
+                )
+            })
+        if turn.phase == Phase.BUILD:
+            if data['type'] == OrderType.BUILD:
+                if territory not in \
+                        [ts.territory for ts in nation_state.unoccupied_controlled_home_supply_centers]:
+                    raise ValidationError({
+                        'type': ('Cannot build in this territory.')
+                    })
+            if data['type'] == OrderType.DISBAND:
+                if not nation_state.num_orders_remaining:
+                    raise ValidationError({
+                        'type': ('Cannot issue any more disband orders.')
+                    })
+        else:
+            pieces_to_order = nation_state.pieces_to_order
+            if territory not in [p.territory for p in pieces_to_order]:
+                raise ValidationError({
+                    'type': ('Cannot create an order for this territory.')
+                })
 
     def to_dict(self):
         data = {
