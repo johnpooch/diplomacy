@@ -132,3 +132,152 @@ class TestTurn(TestCase):
         )
         self.assertEqual(france_state.supply_centers.count(), 18)
         self.assertTrue(turn.check_for_winning_nation())
+
+
+class TestLinkedTurns(TestCase):
+
+    def setUp(self):
+        self.variant = factories.StandardVariantFactory()
+        self.user = factories.UserFactory()
+        self.game_a = models.Game.objects.create(
+            name='Test game A',
+            variant=self.variant,
+            num_players=7,
+            created_by=self.user,
+        )
+        self.game_b = models.Game.objects.create(
+            name='Test game B',
+            variant=self.variant,
+            num_players=7,
+            created_by=self.user,
+        )
+        self.game_a_spring_order_turn = models.Turn.objects.create(
+            game=self.game_a,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+            year=1901,
+        )
+        self.game_b_spring_order_turn = models.Turn.objects.create(
+            game=self.game_b,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+            year=1901,
+        )
+        self.game_a_spring_retreat_turn = models.Turn.objects.create(
+            game=self.game_a,
+            phase=Phase.RETREAT_AND_DISBAND,
+            season=Season.SPRING,
+            year=1901,
+        )
+        self.game_b_spring_retreat_turn = models.Turn.objects.create(
+            game=self.game_b,
+            phase=Phase.RETREAT_AND_DISBAND,
+            season=Season.SPRING,
+            year=1901,
+        )
+        self.game_a_fall_order_turn = models.Turn.objects.create(
+            game=self.game_a,
+            phase=Phase.ORDER,
+            season=Season.FALL,
+            year=1901,
+        )
+        self.game_b_fall_order_turn = models.Turn.objects.create(
+            game=self.game_b,
+            phase=Phase.ORDER,
+            season=Season.FALL,
+            year=1901,
+        )
+        self.game_a_fall_retreat_turn = models.Turn.objects.create(
+            game=self.game_a,
+            phase=Phase.RETREAT_AND_DISBAND,
+            season=Season.FALL,
+            year=1901,
+        )
+        self.game_b_fall_retreat_turn = models.Turn.objects.create(
+            game=self.game_b,
+            phase=Phase.RETREAT_AND_DISBAND,
+            season=Season.FALL,
+            year=1901,
+        )
+        self.game_a_fall_build_turn = models.Turn.objects.create(
+            game=self.game_a,
+            phase=Phase.BUILD,
+            season=Season.FALL,
+            year=1901,
+        )
+        self.game_b_fall_build_turn = models.Turn.objects.create(
+            game=self.game_b,
+            phase=Phase.BUILD,
+            season=Season.FALL,
+            year=1901,
+        )
+        self.game_a_spring_order_turn_1902 = models.Turn.objects.create(
+            game=self.game_a,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+            year=1902,
+        )
+        self.game_b_spring_order_turn_1902 = models.Turn.objects.create(
+            game=self.game_b,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+            year=1902,
+        )
+
+    def test_get_next_turn(self):
+        turn = self.game_a_spring_order_turn
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_a_spring_retreat_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_a_fall_order_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_a_fall_retreat_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_a_fall_build_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_a_spring_order_turn_1902)
+        turn = models.Turn.get_next(turn)
+        self.assertIsNone(turn)
+
+        turn = self.game_b_spring_order_turn
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_b_spring_retreat_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_b_fall_order_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_b_fall_retreat_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_b_fall_build_turn)
+        turn = models.Turn.get_next(turn)
+        self.assertEqual(turn, self.game_b_spring_order_turn_1902)
+        turn = models.Turn.get_next(turn)
+        self.assertIsNone(turn)
+
+    def test_get_previous_turn(self):
+        turn = self.game_a_spring_order_turn_1902
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_fall_build_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_fall_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_fall_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_spring_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_a_spring_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertIsNone(turn)
+
+        turn = self.game_b_spring_order_turn_1902
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_fall_build_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_fall_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_fall_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_spring_retreat_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertEqual(turn, self.game_b_spring_order_turn)
+        turn = models.Turn.get_previous(turn)
+        self.assertIsNone(turn)

@@ -1,3 +1,4 @@
+from unittest import skip
 from django.conf import settings
 from django.core.management import call_command
 from django.test import TestCase
@@ -15,6 +16,7 @@ class TestConvertOrderHistoryToData(TestCase):
         'dev/named_coast',
     ]
 
+    @skip
     def test_game_1(self):
         call_command(
             'convert_order_histories_to_data',

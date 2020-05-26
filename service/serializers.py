@@ -247,11 +247,15 @@ class TurnSerializer(serializers.ModelSerializer):
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
     orders = OrderSerializer(many=True)
+    next_turn = serializers.SerializerMethodField()
+    previous_turn = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Turn
         fields = (
             'id',
+            'next_turn',
+            'previous_turn',
             'current_turn',
             'year',
             'season',
@@ -268,6 +272,14 @@ class TurnSerializer(serializers.ModelSerializer):
         if self.instance:
             if self.instance.current_turn:
                 self.fields.pop('orders')
+
+    def get_next_turn(self, obj):
+        turn = models.Turn.get_next(obj)
+        return getattr(turn, 'id', None)
+
+    def get_previous_turn(self, obj):
+        turn = models.Turn.get_previous(obj)
+        return getattr(turn, 'id', None)
 
 
 class GameStateSerializer(serializers.ModelSerializer):

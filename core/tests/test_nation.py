@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from core import factories, models
-from core.models.base import PieceType, Phase, Season
+from core.models.base import Phase, Season
 
 
 class TestNation(TestCase):
@@ -137,11 +137,6 @@ class TestNation(TestCase):
             turn=build_turn,
             controlled_by=france,
         )
-        models.PieceState.objects.create(
-            turn=order_turn,
-            piece=france_piece,
-            territory=paris,
-        )
         result = france_build_state.unoccupied_controlled_home_supply_centers
         self.assertFalse(paris_build_state in result)
 
@@ -157,11 +152,6 @@ class TestNation(TestCase):
             territory=paris,
             turn=build_turn,
             controlled_by=england,
-        )
-        models.PieceState.objects.create(
-            turn=order_turn,
-            piece=france_piece,
-            territory=paris,
         )
         result = france_build_state.unoccupied_controlled_home_supply_centers
         self.assertFalse(paris_build_state in result)
