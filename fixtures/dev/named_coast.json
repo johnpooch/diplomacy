@@ -75,6 +75,7 @@
       "pk":6,
       "fields":{
          "name":"st. petersburg south coast",
+         "piece_starts_here":true,
          "map_abbreviation":"sc",
          "parent":75,
          "neighbours":[

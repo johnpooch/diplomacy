@@ -113,6 +113,14 @@ class PieceState(PerTurnModel):
         )
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['turn', 'territory', 'must_retreat'],
+                name='unique_piece_in_territory,'
+            )
+        ]
+
     def __str__(self):
         # TODO Fix this up and make it used in all the error messages. Also
         # make fixtures use title instead of using `title()`
@@ -149,6 +157,7 @@ class PieceState(PerTurnModel):
             'nation': self.piece.nation.id,
             'territory_id': self.territory.id,
             'named_coast_id': getattr(self.named_coast, 'id', None),
+            'retreating': self.must_retreat,
         }
         if self.attacker_territory:
             data['attacker_territory'] = self.attacker_territory.id

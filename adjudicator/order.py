@@ -35,7 +35,7 @@ class Order:
         return self.legal_decision
 
     def update_legal_decision(self):
-        piece = self.source.piece
+        piece = self.source.non_retreating_piece
         if piece.nation != self.nation:
             return self.set_illegal(illegal_messages.A001)
 
@@ -295,7 +295,6 @@ class Support(Order):
             if all([p.order.attack_strength_decision.max_strength == 0 for p in self.source.attacking_pieces]):
                 return self.set_support_decision(Outcomes.GIVEN)
 
-
                 # # NOTE not sure what this block is for.
                 # if isinstance(target_piece.order, Convoy):
                 #     convoying_order = target_piece.order
@@ -303,8 +302,6 @@ class Support(Order):
                 #         if all([p.order.attack_strength == 0
                 #                 for p in self.source.other_attacking_pieces(convoying_order.aux.piece)]):
                 #             return Outcomes.GIVEN
-
-
 
         # fails if...
         # If aux piece is not going to target of order
@@ -371,10 +368,9 @@ class Retreat(Order):
         self.move_decision = Outcomes.UNRESOLVED
 
     def update_legal_decision(self):
-        if super().update_legal_decision() == Outcomes.ILLEGAL:
-            return Outcomes.ILLEGAL
-
         piece = self.source.piece
+        if piece.nation != self.nation:
+            return self.set_illegal(illegal_messages.A001)
 
         if self.target == piece.attacker_territory:
             return self.set_illegal(illegal_messages.R001)
@@ -407,6 +403,8 @@ class Retreat(Order):
 
         if other_retreating_pieces:
             self.set_move_decision(Outcomes.FAILS)
+        else:
+            self.set_move_decision(Outcomes.SUCCEEDS)
 
     def to_dict(self):
         data = super().to_dict()
@@ -435,3 +433,14 @@ class Build(Order):
             return self.set_illegal(illegal_messages.B006)
         self.legal_decision = Outcomes.LEGAL
 
+    def to_dict(self):
+        if self.legal_decision == Outcomes.ILLEGAL:
+            outcome = Outcomes.FAILS
+        else:
+            outcome = Outcomes.SUCCEEDS
+        return {
+            'id': self.id,
+            'legal_decision': self.legal_decision,
+            'illegal_message': self.illegal_message,
+            'outcome': outcome,
+        }

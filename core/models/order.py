@@ -110,6 +110,8 @@ class Order(PerTurnModel):
         }
         if self.target:
             data['target_id'] = self.target.id
+        if self.target_coast:
+            data['target_coast_id'] = self.target_coast.id
         if self.aux:
             data['aux_id'] = self.aux.id
         return data

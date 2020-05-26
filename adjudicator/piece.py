@@ -11,7 +11,8 @@ class Piece:
     is_army = False
     is_fleet = False
 
-    def __init__(self, _id, nation, territory, attacker_territory=None):
+    def __init__(self, _id, nation, territory, attacker_territory=None,
+                 retreating=False):
         self.id = _id
         self.nation = nation
         self.territory = territory
@@ -19,6 +20,7 @@ class Piece:
         self.dislodged_decision = Outcomes.UNRESOLVED
         self.dislodged_by = None
         self.attacker_territory = attacker_territory
+        self.retreating = retreating
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.territory}'
@@ -147,8 +149,8 @@ class Fleet(Piece):
 
     is_fleet = True
 
-    def __init__(self, _id, nation, territory, named_coast=None):
-        super().__init__(_id, nation, territory)  # DRY - do not repeat yourself
+    def __init__(self, _id, nation, territory, named_coast=None, retreating=False):
+        super().__init__(_id, nation, territory, retreating=retreating)
         self.named_coast = named_coast
 
     def can_reach(self, target, named_coast=None):
