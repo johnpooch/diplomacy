@@ -192,5 +192,7 @@ def text_to_orders(text):
                 variant__name='Standard'
             )
             data.pop('outcome')
+            if data['type'] == OrderType.RETREAT:
+                print(data)
             orders.append(models.Order(**data))
     return orders

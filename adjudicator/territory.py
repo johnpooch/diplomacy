@@ -36,6 +36,16 @@ class Territory:
             return None
 
     @property
+    def non_retreating_piece(self):
+        pieces = list(self.pieces)
+        if len(pieces) == 1:
+            return pieces[0]
+        if len(pieces) == 2:
+            return [p for p in pieces if not p.retreating][0]
+        if not pieces:
+            return None
+
+    @property
     def hold_strength(self):
         return decisions.HoldStrength(self)()
 
