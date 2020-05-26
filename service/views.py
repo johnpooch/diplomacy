@@ -271,68 +271,22 @@ class DestroyOrderView(mixins.DestroyModelMixin, generics.GenericAPIView):
         return order
 
 
-class FinalizeOrdersView(views.APIView):
+class FinalizeOrdersView(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
+    serializer_class = serializers.NationStateSerializer
 
-    def get(self, request, *args, **kwargs):
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-
-        if request.user not in game.participants.all():
-            return Response(
-                {'errors': {
-                    'data': ['User is not a participant in this game.']
-                }},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        if not game.status == GameStatus.ACTIVE:
-            return Response(
-                {'errors': {'data': ['Game is not active.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        turn = game.get_current_turn()
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=request.user,
+    def get_object(self):
+        game_id = self.kwargs['game']
+        game = get_object_or_404(
+            models.Game,
+            id=game_id,
+            status=GameStatus.ACTIVE,
+            participants=self.request.user,
         )
-        user_nation_state.orders_finalized = True
-        user_nation_state.save()
-        if turn.ready_to_process:
-            game.process()
-        return Response(status=status.HTTP_200_OK)
-
-
-class UnfinalizeOrdersView(views.APIView):
-
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-
-        if request.user not in game.participants.all():
-            return Response(
-                {'errors': {
-                    'data': ['User is not a participant in this game.']
-                }},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        if not game.status == GameStatus.ACTIVE:
-            return Response(
-                {'errors': {'data': ['Game is not active.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        turn = game.get_current_turn()
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=request.user,
+        return get_object_or_404(
+            models.NationState,
+            turn=game.get_current_turn(),
+            user=self.request.user,
+            orders_finalized=(not self.request.data['orders_finalized'])
         )
-        if not user_nation_state.orders_finalized:
-            return Response(
-                {'errors': {'data': ['Orders are not finalized.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        user_nation_state.orders_finalized = False
-        user_nation_state.save()
-        return Response(status=status.HTTP_200_OK)

@@ -890,24 +890,25 @@ class TestFinalizeOrders(APITestCase):
         )
         self.territory = territory_state.territory
         self.url = reverse('finalize-orders', args=[self.game.id])
+        self.data = {'orders_finalized': True}
 
     def test_finalize_when_not_participant(self):
         self.game.participants.all().delete()
         self.client.force_authenticate(user=self.user)
-        response = self.client.get(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_finalize_when_game_not_active(self):
         self.client.force_authenticate(user=self.user)
         self.game.status = GameStatus.PENDING
         self.game.save()
-        response = self.client.get(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_can_finalize_orders_with_no_orders(self):
         self.client.force_authenticate(user=self.user)
         with mock.patch('core.models.Turn.process', set_processed):
-            response = self.client.get(self.url, format='json')
+            response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
@@ -920,7 +921,7 @@ class TestFinalizeOrders(APITestCase):
             source=self.territory
         )
         with mock.patch('core.models.Turn.process', set_processed):
-            response = self.client.get(self.url, format='json')
+            response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
@@ -930,7 +931,7 @@ class TestFinalizeOrders(APITestCase):
         turn = self.game.get_current_turn()
         turn.nationstates.set([self.nation_state])
         with mock.patch('core.models.Turn.process', set_processed):
-            response = self.client.get(self.url, format='json')
+            response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
@@ -952,24 +953,25 @@ class TestUnfinalizeOrders(APITestCase):
             controlled_by=self.nation_state.nation,
         )
         self.territory = territory_state.territory
-        self.url = reverse('unfinalize-orders', args=[self.game.id])
+        self.url = reverse('finalize-orders', args=[self.game.id])
+        self.data = {'orders_finalized': False}
 
     def test_unfinalize_when_not_participant(self):
         self.game.participants.all().delete()
         self.client.force_authenticate(user=self.user)
-        response = self.client.get(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_unfinalize_when_game_not_active(self):
         self.client.force_authenticate(user=self.user)
         self.game.status = GameStatus.PENDING
         self.game.save()
-        response = self.client.get(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_can_unfinalize_orders_with_no_orders(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.get(self.url, format='json')
+        response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
@@ -981,7 +983,7 @@ class TestUnfinalizeOrders(APITestCase):
             nation=self.nation_state.nation,
             source=self.territory
         )
-        response = self.client.get(self.url, format='json')
+        response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
@@ -990,5 +992,5 @@ class TestUnfinalizeOrders(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.nation_state.orders_finalized = False
         self.nation_state.save()
-        response = self.client.get(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

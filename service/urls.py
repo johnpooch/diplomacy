@@ -45,11 +45,6 @@ urlpatterns = [
         name='finalize-orders'
     ),
     path(
-        'game/<int:game>/unfinalize',
-        views.UnfinalizeOrdersView.as_view(),
-        name='unfinalize-orders'
-    ),
-    path(
         'game/<int:game>',
         views.GameStateView.as_view(),
         name='game-state'

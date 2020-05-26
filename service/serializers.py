@@ -135,8 +135,8 @@ class NationSerializer(serializers.ModelSerializer):
 
 class NationStateSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
-    nation = NationSerializer()
+    user = UserSerializer(required=False)
+    nation = NationSerializer(required=False)
 
     class Meta:
         model = models.NationState
@@ -146,6 +146,19 @@ class NationStateSerializer(serializers.ModelSerializer):
             'surrendered',
             'orders_finalized'  # TODO should only see this if user
         )
+        read_only_fields = (
+            'user',
+            'nation',
+            'surrendered',
+        )
+
+    def update(self, instance, validated_data):
+        """
+        Set nation finalized state
+        """
+        instance.orders_finalized = validated_data['orders_finalized']
+        instance.save()
+        return instance
 
 
 class VariantSerializer(serializers.ModelSerializer):
