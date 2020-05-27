@@ -23,8 +23,6 @@ def get_game_filter_choices():
 
 class GameFilterChoicesView(views.APIView):
 
-    permission_classes = [IsAuthenticated]
-
     def get(self, request, format=None):
         return Response(get_game_filter_choices())
 
@@ -46,15 +44,6 @@ class BaseMixin:
             turn=game.get_current_turn(),
             user=self.request.user,
         )
-
-
-class MinimalMetadata(BaseMetadata):
-
-    def determine_metadata(self, request, view):
-        return {
-            'name': view.get_view_name(),
-            'description': view.get_view_description()
-        }
 
 
 class ListGames(generics.ListAPIView):
