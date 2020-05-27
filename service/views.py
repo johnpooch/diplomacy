@@ -1,9 +1,7 @@
-from django.db.models import Count, F
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, views, exceptions
 from rest_framework.response import Response
-from rest_framework.metadata import BaseMetadata
 
 from core import models
 from core.models.base import GameStatus
