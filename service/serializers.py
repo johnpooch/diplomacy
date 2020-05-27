@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework import exceptions, serializers
 
 from core import models
 from core.models.base import GameStatus, OrderType
@@ -152,7 +152,7 @@ class NationStateSerializer(serializers.ModelSerializer):
         """
         Set nation's `orders_finalized` field.
         """
-        instance.orders_finalized = validated_data['orders_finalized']
+        instance.orders_finalized = not(instance.orders_finalized)
         instance.save()
         return instance
 
@@ -198,6 +198,7 @@ class GameSerializer(serializers.ModelSerializer):
             'winners',
             'created_at',
             'created_by',
+            'initialized_at',
             'status',
         )
         read_only_fields = (
@@ -208,6 +209,14 @@ class GameSerializer(serializers.ModelSerializer):
             'created_at',
             'status',
         )
+
+    def update(self, instance, validated_data):
+        """
+        Add user as participant.
+        """
+        user = self.context['request'].user
+        instance.participants.add(user)
+        return instance
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -229,15 +238,11 @@ class CreateGameSerializer(serializers.ModelSerializer):
             'num_players',
         )
 
-    def validate(self, data):
-        print('AGGGGHHHHH')
-        data['variant'] = models.Variant.objects.get(id=1)
-        data['num_players'] = 7
-        return data
-
     def create(self, validated_data):
-        print('YAGGGGHHHHH')
-        game = models.Game.objects.create(**validated_data)
+        game = models.Game.objects.create(
+            created_by=self.context['request'].user,
+            **validated_data
+        )
         game.participants.add(self.context['request'].user)
         return game
 
@@ -263,11 +268,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         nation_state = self.context['nation_state']
-        turn = self.context['turn']
         data['type'] = data.get('type', OrderType.HOLD)
         data['nation'] = nation_state.nation
-        data['turn'] = turn
-        models.Order.validate(turn, nation_state, data)
+        data['turn'] = nation_state.turn
+        models.Order.validate(nation_state, data)
         return data
 
 

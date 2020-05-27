@@ -12,40 +12,25 @@ urlpatterns = [
     path(
         'games',
         views.ListGames.as_view(),
-        name='all-games'
-    ),
-    path(
-        'games/mygames',
-        views.ListUserGames.as_view(),
-        name='user-games'
+        name='list-games'
     ),
     path(
         'games/create',
-        views.CreateGame.as_view(),
+        views.CreateGameView.as_view(),
         name='create-game'
     ),
     path(
-        'games/mygames/<slug:status>',
-        views.ListUserGames.as_view(),
-        name='user-games-by-type'
-    ),
-    path(
-        'games/<slug:status>',
-        views.ListGames.as_view(),
-        name='games-by-type'
-    ),
-    path(
-        'game/<int:game>/join',
+        'game/<int:pk>/join',
         views.JoinGame.as_view(),
         name='join-game'
     ),
     path(
-        'game/<int:game>/finalize',
+        'game/<int:game>/finalize/<int:pk>',
         views.FinalizeOrdersView.as_view(),
         name='finalize-orders'
     ),
     path(
-        'game/<int:game>',
+        'game/<int:pk>',
         views.GameStateView.as_view(),
         name='game-state'
     ),

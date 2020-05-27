@@ -31,7 +31,7 @@ class TestGetGames(APITestCase):
             factories.GameFactory(status=GameStatus.ENDED),
         ]
 
-        url = reverse('all-games')
+        url = reverse('list-games')
         response = self.client.get(url, format='json')
 
         expected_data = [serializers.GameSerializer(game).data for game in games]
@@ -43,129 +43,7 @@ class TestGetGames(APITestCase):
         Cannot get all games if not authenticated.
         """
         self.client.logout()
-        url = reverse('all-games')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class TestJoinableGames(APITestCase):
-
-    def test_joinable_gets_games_that_need_participants(self):
-        """
-        Gets all games that have fewer participants than the num players of the
-        game. Excludes ended games. Excludes games where the user is already a
-        participant.
-        """
-        credentials = {'username': 'This User', 'password': 'This Password'}
-        user = factories.UserFactory(**credentials)
-        self.client.force_authenticate(user=user)
-
-        other_user = factories.UserFactory()
-        included_games = [
-            factories.GameFactory(),
-        ]
-
-        excluded_games = [  # noqa: F841
-            factories.GameFactory.create(participants=(other_user,), num_players=1),
-            factories.GameFactory.create(participants=(user,)),
-            factories.GameFactory(status=GameStatus.ENDED),
-        ]
-
-        url = reverse('games-by-type', args=['joinable'])
-        response = self.client.get(url, format='json')
-
-        expected_data = [serializers.GameSerializer(game).data for game in included_games]
-        not_expected_data = [serializers.GameSerializer(game).data for game in excluded_games]
-        for item in expected_data:
-            self.assertTrue(item in response.data)
-        for item in not_expected_data:
-            self.assertFalse(item in response.data)
-
-    def test_get_joinable_games_if_unauthenticated(self):
-        """
-        Cannot get ended games if not authenticated.
-        """
-        url = reverse('games-by-type', args=['joinable'])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class TestGetMyGames(APITestCase):
-
-    def test_get_my_games_includes_user_participant_games(self):
-        """
-        Gets all games that the user is participating in, including pending,
-        active, and ended games.
-        """
-        credentials = {'username': 'This User', 'password': 'This Password'}
-        user = factories.UserFactory(**credentials)
-        self.client.force_authenticate(user=user)
-
-        included_games = [
-            factories.GameFactory.create(
-                participants=(user,),
-                status=GameStatus.PENDING,
-            ),
-            factories.GameFactory.create(
-                participants=(user,),
-                status=GameStatus.ACTIVE,
-            ),
-            factories.GameFactory.create(
-                participants=(user,),
-                status=GameStatus.ENDED,
-            ),
-        ]
-
-        excluded_games = [  # noqa: F841
-            factories.GameFactory(),
-        ]
-
-        url = reverse('user-games')
-        response = self.client.get(url, format='json')
-
-        expected_data = [serializers.GameSerializer(game).data for game in included_games]
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
-
-    def test_get_my_active_games(self):
-        """
-        Gets all games that the user is participating in which are active.
-        """
-        credentials = {'username': 'This User', 'password': 'This Password'}
-        user = factories.UserFactory(**credentials)
-        self.client.force_authenticate(user=user)
-
-        included_games = [
-            factories.GameFactory.create(
-                participants=(user,),
-                status=GameStatus.ACTIVE,
-            ),
-        ]
-
-        excluded_games = [  # noqa: F841
-            factories.GameFactory.create(
-                participants=(user,),
-                status=GameStatus.PENDING,
-            ),
-            factories.GameFactory.create(
-                participants=(user,),
-                status=GameStatus.ENDED,
-            ),
-            factories.GameFactory(),
-        ]
-
-        url = reverse('user-games-by-type', args=[GameStatus.ACTIVE])
-        response = self.client.get(url, format='json')
-
-        expected_data = [serializers.GameSerializer(game).data for game in included_games]
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
-
-    def test_get_my_games_if_unauthenticated(self):
-        """
-        Cannot get my games if not authenticated.
-        """
-        url = reverse('user-games')
+        url = reverse('list-games')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -225,8 +103,7 @@ class TestCreateGame(APITestCase):
         url = reverse('create-game')
         response = self.client.post(url, data, format='json')
 
-        print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(
             models.Game.objects.get(
                 name='Test Game',
@@ -247,13 +124,16 @@ class TestCreateGame(APITestCase):
 
 class TestJoinGame(APITestCase):
 
+    def setUp(self):
+        self.data = {}
+
     def test_join_game_unauthorized(self):
         """
         Cannot join a game when unauthorized.
         """
         game = factories.GameFactory()
         url = reverse('join-game', args=[game.id])
-        response = self.client.get(url,format='json')
+        response = self.client.patch(url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_join_game_full(self):
@@ -270,12 +150,8 @@ class TestJoinGame(APITestCase):
         self.client.force_authenticate(user=joining_user)
 
         url = reverse('join-game', args=[game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.put(url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            response.data['errors'],
-            {'status': ['Cannot join game.']}
-        )
 
     def test_join_game_ended(self):
         """
@@ -286,14 +162,9 @@ class TestJoinGame(APITestCase):
             status=GameStatus.ENDED,
         )
         self.client.force_authenticate(user=user)
-
         url = reverse('join-game', args=[game.id])
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            response.data['errors'],
-            {'status': ['Cannot join game.']}
-        )
+        response = self.client.put(url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_join_game_success(self):
 
@@ -305,7 +176,7 @@ class TestJoinGame(APITestCase):
         self.client.force_authenticate(user=user)
 
         url = reverse('join-game', args=[game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.patch(url, self.data, format='json')
         self.assertTrue(user in game.participants.all())
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -323,7 +194,7 @@ class TestJoinGame(APITestCase):
         self.client.force_authenticate(user=user)
 
         url = reverse('join-game', args=[game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.patch(url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock_initialize.assert_called()
 
@@ -850,7 +721,7 @@ class TestDeleteOrder(APITestCase):
             user=other_user,
         )
         response = self.client.delete(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(models.Order.objects.get())
 
 
@@ -858,20 +729,40 @@ class TestFinalizeOrders(APITestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
-        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
+        self.variant = factories.VariantFactory()
+        self.game = models.Game.objects.create(
+            status=GameStatus.ACTIVE,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
         self.game.participants.add(self.user)
-        self.turn = self.game.get_current_turn()
-        self.nation_state = factories.NationStateFactory(
-            turn=self.turn,
+        turn = models.Turn.objects.create(
+            game=self.game,
+            year=1901,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+        )
+        nation = models.Nation.objects.create(
+            variant=self.game.variant,
+            name='France',
+        )
+        self.nation_state = models.NationState.objects.create(
+            nation=nation,
+            turn=turn,
             user=self.user,
         )
         territory_state = factories.TerritoryStateFactory(
-            turn=self.turn,
+            turn=turn,
             controlled_by=self.nation_state.nation,
         )
         self.territory = territory_state.territory
-        self.url = reverse('finalize-orders', args=[self.game.id])
-        self.data = {'orders_finalized': True}
+        self.url = reverse(
+            'finalize-orders',
+            args=[self.game.id, self.nation_state.id]
+        )
+        self.data = {}
 
     def test_finalize_when_not_participant(self):
         self.game.participants.all().delete()
@@ -922,10 +813,28 @@ class TestUnfinalizeOrders(APITestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
-        self.game = factories.GameFactory(status=GameStatus.ACTIVE)
+        self.variant = factories.VariantFactory()
+        self.game = models.Game.objects.create(
+            status=GameStatus.ACTIVE,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
         self.game.participants.add(self.user)
-        self.nation_state = factories.NationStateFactory(
-            turn=self.game.get_current_turn(),
+        turn = models.Turn.objects.create(
+            game=self.game,
+            year=1901,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+        )
+        nation = models.Nation.objects.create(
+            variant=self.game.variant,
+            name='France',
+        )
+        self.nation_state = models.NationState.objects.create(
+            nation=nation,
+            turn=turn,
             user=self.user,
             orders_finalized=True,
         )
@@ -934,8 +843,11 @@ class TestUnfinalizeOrders(APITestCase):
             controlled_by=self.nation_state.nation,
         )
         self.territory = territory_state.territory
-        self.url = reverse('finalize-orders', args=[self.game.id])
-        self.data = {'orders_finalized': False}
+        self.url = reverse(
+            'finalize-orders',
+            args=[self.game.id, self.nation_state.id]
+        )
+        self.data = {}
 
     def test_unfinalize_when_not_participant(self):
         self.game.participants.all().delete()
@@ -968,10 +880,3 @@ class TestUnfinalizeOrders(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
-
-    def test_if_not_finalized_error(self):
-        self.client.force_authenticate(user=self.user)
-        self.nation_state.orders_finalized = False
-        self.nation_state.save()
-        response = self.client.put(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

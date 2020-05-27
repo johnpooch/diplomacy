@@ -102,7 +102,8 @@ class Order(PerTurnModel):
             })
 
     @classmethod
-    def validate(cls, turn, nation_state, data):
+    def validate(cls, nation_state, data):
+        turn = nation_state.turn
         territory = data['source']
         if data.get('via_convoy') and data['type'] != OrderType.MOVE:
             raise ValidationError({
