@@ -141,8 +141,8 @@ class Territory:
 
 class LandTerritory(Territory):
 
-    def __init__(self, _id, name, nationality, neighbour_ids, supply_center=False, controlled_by=None):
-        super().__init__(_id, name, neighbour_ids)
+    def __init__(self, _id, name, nationality, neighbour_ids, supply_center=False, controlled_by=None, **kwargs):
+        super().__init__(_id, name, neighbour_ids, **kwargs)
         self.nationality = nationality
         self.supply_center = supply_center
         self.controlled_by = controlled_by
@@ -152,8 +152,8 @@ class CoastalTerritory(LandTerritory):
 
     is_coastal = True
 
-    def __init__(self, _id, name, nationality, neighbour_ids, shared_coast_ids, supply_center=False, controlled_by=None):
-        super().__init__(_id, name, nationality, neighbour_ids, supply_center, controlled_by)
+    def __init__(self, _id, name, nationality, neighbour_ids, shared_coast_ids, **kwargs):
+        super().__init__(_id, name, nationality, neighbour_ids, **kwargs)
         self.shared_coast_ids = shared_coast_ids
         self.shared_coasts = set()
 
