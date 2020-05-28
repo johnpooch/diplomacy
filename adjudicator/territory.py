@@ -137,7 +137,7 @@ class Territory:
     def to_dict(self):
         return {
             'id': self.id,
-            'contested': self.contested,
+            'bounce_occurred': self.bounce_occurred,
         }
 
 

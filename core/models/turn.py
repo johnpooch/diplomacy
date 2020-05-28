@@ -90,6 +90,9 @@ class TurnManager(models.Manager):
                 except piece_state_model.DoesNotExist:
                     pass
 
+            territory_state.contested = territory_state.bounce_occurred
+            territory_state.bounce_occurred = False
+
             territory_state.save()
         for nation_state in previous_turn.nationstates.all():
             # TODO account for nations which have been eliminated?
@@ -266,7 +269,7 @@ class Turn(models.Model):
         for territory_data in outcome.get('territories', []):
             territory_state = self.territorystates.get(territory__id=territory_data['id'])
             territory = territory_state
-            territory.contested = territory_data['contested']
+            territory.bounce_occurred = territory_data['bounce_occurred']
             territory.save()
         for order_data in outcome['orders']:
             order = self.orders.get(id=order_data['id'])
