@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='territorystate',
-            name='bounce_occured',
+            name='bounce_occurred',
             field=models.BooleanField(default=False),
         ),
     ]

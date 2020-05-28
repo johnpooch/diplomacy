@@ -119,7 +119,7 @@ class TerritoryState(PerTurnModel):
     contested = models.BooleanField(
         default=False,
     )
-    bounce_occured = models.BooleanField(
+    bounce_occurred = models.BooleanField(
         default=False,
     )
 
