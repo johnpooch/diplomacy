@@ -117,7 +117,10 @@ class TerritoryState(PerTurnModel):
         related_name='controlled_territories',
     )
     contested = models.BooleanField(
-        default=False
+        default=False,
+    )
+    bounce_occured = models.BooleanField(
+        default=False,
     )
 
     def to_dict(self):
