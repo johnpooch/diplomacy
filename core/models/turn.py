@@ -213,6 +213,8 @@ class Turn(models.Model):
         self.create_default_hold_orders()
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)
+        from pprint import pprint
+        # pprint(outcome)
         self.update_turn(outcome)
 
     def create_default_hold_orders(self):
