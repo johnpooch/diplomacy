@@ -1,3 +1,4 @@
+from django.db.models import Count, F
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, views, exceptions
@@ -27,10 +28,12 @@ class GameFilterChoicesView(views.APIView):
 
 class BaseMixin:
 
+    game_key = 'game'
+
     def get_game(self):
         return get_object_or_404(
             models.Game.objects,
-            id=self.kwargs['game'],
+            id=self.kwargs[self.game_key],
             status=GameStatus.ACTIVE,
             participants=self.request.user,
         )
@@ -84,20 +87,31 @@ class CreateGameView(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class GameStateView(generics.RetrieveAPIView):
+class GameStateView(BaseMixin, generics.RetrieveAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
     queryset = models.Game.objects.all()
+    game_key = 'pk'
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        # TODO clean this bullsh
+        try:
+            context['nation_state'] = self.get_user_nation_state()
+        except:
+            pass
+        return context
 
 
 class JoinGame(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameSerializer
-    queryset = models.Game.objects.filter(
-        status__in=[GameStatus.ACTIVE, GameStatus.PENDING]
-    )
+    queryset = models.Game.objects \
+        .annotate(participant_count=Count('participants')) \
+        .filter(participant_count__lt=F('num_players')) \
+        .exclude(status=GameStatus.ENDED)
 
     def check_object_permissions(self, request, obj):
         if request.user in obj.participants.all():

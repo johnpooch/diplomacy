@@ -151,7 +151,7 @@ class TestJoinGame(APITestCase):
 
         url = reverse('join-game', args=[game.id])
         response = self.client.put(url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_join_game_ended(self):
         """
@@ -204,31 +204,37 @@ class TestGetGameState(APITestCase):
     def setUp(self):
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
-
+        variant = models.Variant.objects.create(name='standard')
+        self.game = models.Game.objects.create(
+            variant=variant,
+            name='Test game',
+            status=GameStatus.ACTIVE,
+            num_players=1,
+            created_by=user,
+        )
+        
     def test_get_game_state_unauthorized(self):
         self.client.logout()
-        game = factories.GameFactory(status=GameStatus.ACTIVE)
-
-        url = reverse('game-state', args=[game.id])
+        url = reverse('game-state', args=[self.game.id])
         response = self.client.get(url, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_game_state_live_game(self):
-        game = factories.GameFactory(status=GameStatus.ACTIVE)
-        url = reverse('game-state', args=[game.id])
+        url = reverse('game-state', args=[self.game.id])
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_game_state_pending_game(self):
-        game = factories.GameFactory(status=GameStatus.PENDING)
-        url = reverse('game-state', args=[game.id])
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+        url = reverse('game-state', args=[self.game.id])
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_game_state_ended_game(self):
-        game = factories.GameFactory(status=GameStatus.ENDED)
-        url = reverse('game-state', args=[game.id])
+        self.game.status = GameStatus.ENDED
+        self.game.save()
+        url = reverse('game-state', args=[self.game.id])
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -849,12 +855,14 @@ class TestUnfinalizeOrders(APITestCase):
         )
         self.data = {}
 
+    @patch('core.models.Turn.ready_to_process', False)
     def test_unfinalize_when_not_participant(self):
         self.game.participants.all().delete()
         self.client.force_authenticate(user=self.user)
         response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    @patch('core.models.Turn.ready_to_process', False)
     def test_unfinalize_when_game_not_active(self):
         self.client.force_authenticate(user=self.user)
         self.game.status = GameStatus.PENDING
@@ -862,6 +870,7 @@ class TestUnfinalizeOrders(APITestCase):
         response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    @patch('core.models.Turn.ready_to_process', False)
     def test_can_unfinalize_orders_with_no_orders(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.put(self.url, self.data, format='json')
@@ -869,6 +878,7 @@ class TestUnfinalizeOrders(APITestCase):
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
 
+    @patch('core.models.Turn.ready_to_process', False)
     def test_can_unfinalize_orders_with_orders(self):
         self.client.force_authenticate(user=self.user)
         models.Order.objects.create(
