@@ -134,5 +134,6 @@ class TerritoryState(PerTurnModel):
             'supply_center': territory.supply_center,
             'nationality': getattr(territory.nationality, 'id', None),
             'controlled_by': getattr(territory.nationality, 'id', None),
-            'named_coasts': [n.to_dict() for n in territory.named_coasts.all()]
+            'named_coasts': [n.to_dict() for n in territory.named_coasts.all()],
+            'contested': self.contested,
         }
