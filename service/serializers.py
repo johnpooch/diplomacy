@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
 from rest_framework import exceptions, serializers
 
 from core import models
@@ -280,7 +281,10 @@ class TurnSerializer(serializers.ModelSerializer):
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
-    orders = OrderSerializer(many=True)
+    orders = OrderSerializer(
+        models.Order.objects.filter(turn__current_turn=False),
+        many=True,
+    )
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
 
@@ -300,12 +304,18 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.instance:
-            if self.instance.current_turn:
-                self.fields.pop('orders')
+    def get_fields(self, *args, **kwargs):
+        """
+        Override `get_fields` to include the user's orders for current
+        turn and all orders for previous turns.
+        """
+        nation_state = self.context.get('nation_state')
+        fields = super().get_fields(*args, **kwargs)
+        if nation_state:
+            fields['orders'].queryset = models.Order.filter(
+                Q(turn__current_turn=False) | Q(nation=nation_state.nation)
+            )
+        return fields
 
     def get_next_turn(self, obj):
         turn = models.Turn.get_next(obj)
