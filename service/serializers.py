@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework import exceptions, serializers
 
 from core import models
+from core.models.base import GameStatus, OrderType
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -135,8 +136,8 @@ class NationSerializer(serializers.ModelSerializer):
 
 class NationStateSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
-    nation = NationSerializer()
+    user = UserSerializer(required=False)
+    nation = NationSerializer(required=False)
 
     class Meta:
         model = models.NationState
@@ -146,6 +147,14 @@ class NationStateSerializer(serializers.ModelSerializer):
             'surrendered',
             'orders_finalized'  # TODO should only see this if user
         )
+
+    def update(self, instance, validated_data):
+        """
+        Set nation's `orders_finalized` field.
+        """
+        instance.orders_finalized = not(instance.orders_finalized)
+        instance.save()
+        return instance
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -189,6 +198,7 @@ class GameSerializer(serializers.ModelSerializer):
             'winners',
             'created_at',
             'created_by',
+            'initialized_at',
             'status',
         )
         read_only_fields = (
@@ -199,6 +209,14 @@ class GameSerializer(serializers.ModelSerializer):
             'created_at',
             'status',
         )
+
+    def update(self, instance, validated_data):
+        """
+        Add user as participant.
+        """
+        user = self.context['request'].user
+        instance.participants.add(user)
+        return instance
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -220,6 +238,14 @@ class CreateGameSerializer(serializers.ModelSerializer):
             'num_players',
         )
 
+    def create(self, validated_data):
+        game = models.Game.objects.create(
+            created_by=self.context['request'].user,
+            **validated_data
+        )
+        game.participants.add(self.context['request'].user)
+        return game
+
 
 class OrderSerializer(serializers.ModelSerializer):
 
@@ -239,6 +265,14 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'nation',
         )
+
+    def validate(self, data):
+        nation_state = self.context['nation_state']
+        data['type'] = data.get('type', OrderType.HOLD)
+        data['nation'] = nation_state.nation
+        data['turn'] = nation_state.turn
+        models.Order.validate(nation_state, data)
+        return data
 
 
 class TurnSerializer(serializers.ModelSerializer):

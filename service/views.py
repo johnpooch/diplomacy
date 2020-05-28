@@ -1,29 +1,15 @@
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
-
-from rest_framework import generics, mixins, status, views
-from rest_framework.exceptions import NotFound, ValidationError
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, views, exceptions
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import DeadlineFrequency, GameStatus, OrderType, Phase
+from core.models.base import GameStatus
 from service import serializers
 from service.permissions import IsAuthenticated
 
 
-def error404():
-    raise NotFound(detail="Error 404, page not found", code=404)
-
-
-def get_filter_choices(self, *args):
-    return {
-        'game_statuses': models.base.GameStatus.CHOICES,
-        'nation_choice_modes': models.base.NationChoiceMode.CHOICES,
-        'deadlines': models.base.DeadlineFrequency.CHOICES,
-        'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
-    }
-
-
+# NOTE this could possibly be replaced by using options
 def get_game_filter_choices():
     return {
         'game_statuses': models.base.GameStatus.CHOICES,
@@ -33,65 +19,29 @@ def get_game_filter_choices():
     }
 
 
-def filter_games(qs, request):
-    search = request.GET.get('search')
-    variant = request.GET.get('variant')
-    status = request.GET.get('status')
-    nation_choice_mode = request.GET.get('nation_choice_mode')
-    order_deadline = request.GET.get('order_deadline')
-    retreat_deadline = request.GET.get('retreat_deadline')
-    build_deadline = request.GET.get('build_deadline')
-    num_players = request.GET.get('num_players')
-    if search:
-        q1 = Q(name__icontains=search)
-        q2 = Q(created_by__username__icontains=search)
-        qs = qs.filter(q1 | q2).distinct()
-
-    if variant and variant != 'Choose...':
-        qs = qs.filter(variant=variant)
-
-    if status and status != 'Choose...':
-        qs = qs.filter(status=status)
-
-    if num_players:
-        qs = qs.filter(num_players=num_players)
-
-    if nation_choice_mode and nation_choice_mode != 'Choose...':
-        qs = qs.filter(nation_choice_mode=nation_choice_mode)
-
-    if order_deadline and order_deadline != 'Choose...':
-        qs = qs.filter(order_deadline=order_deadline)
-
-    if retreat_deadline and retreat_deadline != 'Choose...':
-        qs = qs.filter(retreat_deadline=retreat_deadline)
-
-    if build_deadline and build_deadline != 'Choose...':
-        qs = qs.filter(build_deadline=build_deadline)
-
-    return qs
-
-
-class GameStateView(views.APIView):
-
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, **kwargs):
-        """
-        Returns the state of the game for each turn that has taken place as
-        well as the current turn.
-        """
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-        game_state_serializer = serializers.GameStateSerializer(game)
-        return Response(game_state_serializer.data)
-
-
 class GameFilterChoicesView(views.APIView):
-
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None):
         return Response(get_game_filter_choices())
+
+
+class BaseMixin:
+
+    def get_game(self):
+        return get_object_or_404(
+            models.Game.objects,
+            id=self.kwargs['game'],
+            status=GameStatus.ACTIVE,
+            participants=self.request.user,
+        )
+
+    def get_user_nation_state(self):
+        game = self.get_game()
+        return get_object_or_404(
+            models.NationState.objects,
+            turn=game.get_current_turn(),
+            user=self.request.user,
+        )
 
 
 class ListGames(generics.ListAPIView):
@@ -99,240 +49,98 @@ class ListGames(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Game.objects.all()
     serializer_class = serializers.GameSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    search_fields = [
+        'name',
+        'created_by__username'
+    ]
+    filterset_fields = [
+        'variant',
+        'status',
+        'num_players',
+        'nation_choice_mode',
+        'order_deadline',
+        'retreat_deadline',
+        'build_deadline',
+    ]
+    ordering_fields = [
+        'created_at',
+        'initialized_at'
+    ]
 
-    def get(self, request, *args, **kwargs):
-        self.queryset = filter_games(self.queryset, self.request)
-        status = kwargs.get('status')
-        if status:
-            if status == 'joinable':
-                self.queryset = self.queryset.filter_by_joinable(request.user)
-            else:
-                self.queryset = self.queryset.filter(status=status)
-        response = self.list(request, *args, **kwargs)
-        return Response(response.data)
 
-
-class ListUserGames(ListGames):
-
-    def get(self, request, *args, **kwargs):
-        self.queryset = self.queryset.filter(participants=request.user)
-        return super().get(request, *args, **kwargs)
-
-
-class CreateGame(views.APIView):
+class CreateGameView(generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
+    serializer_class = serializers.CreateGameSerializer
 
-    def post(self, request):
-        request.data['variant'] = 1
-        request.data['num_players'] = 7
-        serializer = serializers.CreateGameSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(
-                {'errors': serializer.errors},
-                status.HTTP_400_BAD_REQUEST,
+    def create(self, request, *args, **kwargs):
+        defaults = {'variant': 1, 'num_players': 7}
+        request.data.update(defaults)
+        return super().create(request, *args, **kwargs)
+
+
+class GameStateView(generics.RetrieveAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.GameStateSerializer
+    queryset = models.Game.objects.all()
+
+
+class JoinGame(generics.UpdateAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.GameSerializer
+    queryset = models.Game.objects.filter(
+        status__in=[GameStatus.ACTIVE, GameStatus.PENDING]
+    )
+
+    def check_object_permissions(self, request, obj):
+        if request.user in obj.participants.all():
+            raise exceptions.PermissionDenied(
+                detail='User is already a participant.'
             )
-        game = serializer.save(created_by=request.user)
-        game.participants.add(request.user)
-        return Response(status=status.HTTP_200_OK)
 
 
-class JoinGame(views.APIView):
+class CreateOrderView(BaseMixin, generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-        if not game.joinable:
-            return Response(
-                {'errors': {'status': ['Cannot join game.']}},
-                status.HTTP_400_BAD_REQUEST,
-            )
-        game.participants.add(request.user)
-        if game.ready_to_initialize:
-            game.initialize()
-        return Response(status=status.HTTP_200_OK)
-
-
-class CreateOrderView(generics.GenericAPIView, mixins.CreateModelMixin):
-
-    permission_classes = [IsAuthenticated]
-    queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
 
-    def set_up(self):
-        self.game = get_object_or_404(models.Game, id=self.kwargs['game'])
-        if self.request.user not in self.game.participants.all():
-            raise ValidationError(
-                'User is not a participant in this game.',
-                status.HTTP_403_FORBIDDEN
-            )
-        try:
-            self.turn = self.game.get_current_turn()
-        except models.Turn.DoesNotExist:
-            raise ValidationError(
-                'Game is not active.',
-                status.HTTP_400_BAD_REQUEST
-            )
-        self.user_nation_state = models.NationState.objects.get(
-            turn=self.turn,
-            user=self.request.user,
-        )
-        self.source = self.request.data['source']
-
-    # NOTE might be cleaner to move these to the `Serializer.validate` method.
-    def _validate_request(self):
-        if not self.game.status == GameStatus.ACTIVE:
-            raise ValidationError(
-                'Game is not active.',
-                status.HTTP_400_BAD_REQUEST,
-            )
-        type = self.request.data.get('type', OrderType.HOLD)
-        if type not in self.turn.possible_order_types:
-            raise ValidationError(
-                'This order type is not possible during this turn.',
-                status.HTTP_400_BAD_REQUEST,
-            )
-        territory = models.Territory.objects.get(
-            id=self.request.data.get('source')
-        )
-        if self.turn.phase == Phase.BUILD:
-            order_type = self.request.data.get('type')
-            if order_type == OrderType.BUILD:
-                if territory not in \
-                        [ts.territory for ts in self.user_nation_state.unoccupied_controlled_home_supply_centers]:
-                    raise ValidationError(
-                        'Cannot create an order for this territory.',
-                        status.HTTP_400_BAD_REQUEST,
-                    )
-            if order_type == OrderType.DISBAND:
-                if not self.user_nation_state.num_orders_remaining:
-                    raise ValidationError(
-                        'Cannot issue any more disband orders.',
-                        status.HTTP_400_BAD_REQUEST,
-                    )
-        else:
-            pieces_to_order = self.user_nation_state.pieces_to_order
-            if territory not in [p.territory for p in pieces_to_order]:
-                raise ValidationError(
-                    'Cannot create an order for this territory.',
-                    status.HTTP_400_BAD_REQUEST,
-                )
-
-    def post(self, request, *args, **kwargs):
-        self.set_up()
-        return self.create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        self._validate_request()
-        # delete existing order if it exists
-        models.Order.objects.filter(
-            source=self.source,
-            turn=self.turn,
-            nation=self.user_nation_state.nation,
-        ).delete()
-        serializer.save(
-            nation=self.user_nation_state.nation,
-            turn=self.turn,
-        )
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['nation_state'] = self.get_user_nation_state()
+        return context
 
 
-class DestroyOrderView(mixins.DestroyModelMixin, generics.GenericAPIView):
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-    def get_object(self):
-        # TODO dry this validation
-        game = get_object_or_404(models.Game, id=self.kwargs['game'])
-        if self.request.user not in game.participants.all():
-            raise ValidationError(
-                'User is not a participant in this game.',
-                status.HTTP_403_FORBIDDEN
-            )
-        try:
-            turn = game.get_current_turn()
-        except models.Turn.DoesNotExist:
-            raise ValidationError(
-                'Game is not active.',
-                status.HTTP_400_BAD_REQUEST
-            )
-        order = get_object_or_404(models.Order, pk=self.kwargs['pk'])
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=self.request.user,
-        )
-        if not order.nation == user_nation_state.nation:
-            raise ValidationError(
-                'User cannot delete this order.',
-                status.HTTP_400_BAD_REQUEST
-            )
-        return order
-
-
-class FinalizeOrdersView(views.APIView):
+class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
 
     permission_classes = [IsAuthenticated]
+    serializer_class = serializers.OrderSerializer
+    queryset = models.Order.objects.all()
 
-    def get(self, request, *args, **kwargs):
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-
-        if request.user not in game.participants.all():
-            return Response(
-                {'errors': {
-                    'data': ['User is not a participant in this game.']
-                }},
-                status=status.HTTP_403_FORBIDDEN,
+    def check_object_permissions(self, request, obj):
+        user_nation_state = self.get_user_nation_state()
+        if obj.nation != user_nation_state.nation:
+            raise exceptions.PermissionDenied(
+                detail='Order does not belong to this user.'
             )
-        if not game.status == GameStatus.ACTIVE:
-            return Response(
-                {'errors': {'data': ['Game is not active.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        turn = game.get_current_turn()
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=request.user,
-        )
-        user_nation_state.orders_finalized = True
-        user_nation_state.save()
-        if turn.ready_to_process:
-            game.process()
-        return Response(status=status.HTTP_200_OK)
 
 
-class UnfinalizeOrdersView(views.APIView):
+class FinalizeOrdersView(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
+    serializer_class = serializers.NationStateSerializer
+    queryset = models.NationState.objects.filter(
+        turn__game__status=GameStatus.ACTIVE
+    )
 
-    def get(self, request, *args, **kwargs):
-        game_id = kwargs['game']
-        game = get_object_or_404(models.Game, id=game_id)
-
-        if request.user not in game.participants.all():
-            return Response(
-                {'errors': {
-                    'data': ['User is not a participant in this game.']
-                }},
-                status=status.HTTP_403_FORBIDDEN,
+    def check_object_permissions(self, request, obj):
+        if request.user != obj.user:
+            raise exceptions.PermissionDenied(
+                detail='Cannot finalize orders for other nation.'
             )
-        if not game.status == GameStatus.ACTIVE:
-            return Response(
-                {'errors': {'data': ['Game is not active.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        turn = game.get_current_turn()
-        user_nation_state = models.NationState.objects.get(
-            turn=turn,
-            user=request.user,
-        )
-        if not user_nation_state.orders_finalized:
-            return Response(
-                {'errors': {'data': ['Orders are not finalized.']}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        user_nation_state.orders_finalized = False
-        user_nation_state.save()
-        return Response(status=status.HTTP_200_OK)

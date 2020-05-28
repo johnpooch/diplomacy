@@ -389,7 +389,6 @@ class Retreat(Order):
         if self.target.contested:
             return self.set_illegal(illegal_messages.R005)
 
-
         self.legal_decision = Outcomes.LEGAL
 
     def set_move_decision(self, outcome):
