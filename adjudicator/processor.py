@@ -71,4 +71,13 @@ def process(state):
         unresolved_moves = [m for m in moves if m.move_decision == Outcomes.UNRESOLVED]
         unresolved_pieces = [p for p in pieces if p.dislodged_decision == Outcomes.UNRESOLVED]
         depth += 1
+
+    # Check update bounce_occurred_during_turn on all territories
+    for territory in state.territories:
+        attacks = [o for o in orders if o.is_move and o.target == territory]
+        if not attacks or any([a.move_decision == Outcomes.MOVES for a in attacks]):
+            territory.bounce_occurred = False
+        else:
+            territory.bounce_occurred = True
+
     return orders

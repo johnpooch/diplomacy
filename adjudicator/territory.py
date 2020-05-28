@@ -19,6 +19,8 @@ class Territory:
         self.retreating_pieces = set()
         self.contested = contested
 
+        self.bounce_occurred = False
+
     def __str__(self):
         return self.name
 
