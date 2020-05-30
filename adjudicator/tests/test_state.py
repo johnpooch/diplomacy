@@ -3,7 +3,7 @@ import unittest
 from adjudicator.named_coast import NamedCoast
 from adjudicator.order import Hold
 from adjudicator.piece import Army
-from adjudicator.state import State
+from adjudicator.state import data_to_state, State
 from adjudicator.territory import CoastalTerritory, InlandTerritory
 from adjudicator.tests.data import Nations
 
@@ -81,3 +81,62 @@ class TestState(unittest.TestCase):
         state.register(spain_nc)
 
         self.assertTrue(spain_nc in spain.named_coasts)
+
+    def test_data_to_state_gets_contested_sea(self):
+        data = {
+            'territories': [
+                {
+                    '_id': 1,
+                    'type': 'sea',
+                    'name': 'English Channel',
+                    'neighbour_ids': [],
+                    'shared_coast_ids': [],
+                    'contested': True,
+                }
+            ],
+            'named_coasts': [],
+            'pieces': [],
+            'orders': [],
+        }
+        state = data_to_state(data)
+        self.assertEqual(state.territories[0].contested, True)
+
+    def test_data_to_state_gets_contested_inland(self):
+        data = {
+            'territories': [
+                {
+                    '_id': 1,
+                    'type': 'inland',
+                    'name': 'Paris',
+                    'nationality': 1,
+                    'neighbour_ids': [],
+                    'shared_coast_ids': [],
+                    'contested': True,
+                }
+            ],
+            'named_coasts': [],
+            'pieces': [],
+            'orders': [],
+        }
+        state = data_to_state(data)
+        self.assertEqual(state.territories[0].contested, True)
+
+    def test_data_to_state_gets_contested_coastal(self):
+        data = {
+            'territories': [
+                {
+                    '_id': 1,
+                    'type': 'coastal',
+                    'name': 'Paris',
+                    'nationality': 1,
+                    'neighbour_ids': [],
+                    'shared_coast_ids': [],
+                    'contested': True,
+                }
+            ],
+            'named_coasts': [],
+            'pieces': [],
+            'orders': [],
+        }
+        state = data_to_state(data)
+        self.assertEqual(state.territories[0].contested, True)
