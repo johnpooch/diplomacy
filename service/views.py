@@ -142,6 +142,19 @@ class CreateOrderView(BaseMixin, generics.CreateAPIView):
         super().perform_create(serializer)
 
 
+class ListOrdersView(BaseMixin, generics.ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.OrderSerializer
+
+    def get_queryset(self):
+        user_nation_state = self.get_user_nation_state(self)
+        return models.Order.objects.filter(
+            turn=user_nation_state.turn,
+            nation=user_nation_state.nation,
+        )
+
+
 class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
 
     permission_classes = [IsAuthenticated]

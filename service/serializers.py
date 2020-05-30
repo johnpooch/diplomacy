@@ -308,19 +308,6 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
         )
 
-    def get_fields(self, *args, **kwargs):
-        """
-        Override `get_fields` to include the user's orders for current
-        turn and all orders for previous turns.
-        """
-        nation_state = self.context.get('nation_state')
-        fields = super().get_fields(*args, **kwargs)
-        if nation_state:
-            fields['orders'].queryset = models.Order.filter(
-                Q(turn__current_turn=False) | Q(nation=nation_state.nation)
-            )
-        return fields
-
     def get_next_turn(self, obj):
         turn = models.Turn.get_next(obj)
         return getattr(turn, 'id', None)

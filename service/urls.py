@@ -40,6 +40,11 @@ urlpatterns = [
         name='order'
     ),
     path(
+        'game/<int:game>/orders',
+        views.ListOrdersView.as_view(),
+        name='order'
+    ),
+    path(
         'game/<int:game>/order/<int:pk>',
         views.DestroyOrderView.as_view(),
         name='order'
