@@ -291,6 +291,9 @@ class Turn(models.Model):
                 piece.attacker_territory = territory_model.objects.get(id=_id)
             piece.destroyed = piece_data['destroyed']
             piece.destroyed_message = piece_data['destroyed_message']
+            if piece.destroyed:
+                piece.piece.turn_disbanded = self
+                piece.piece.save()
             piece.save()
 
     def _to_game_state_dict(self):
