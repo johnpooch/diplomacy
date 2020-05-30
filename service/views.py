@@ -35,7 +35,7 @@ class BaseMixin:
             models.Game.objects,
             id=self.kwargs[self.game_key],
             status=GameStatus.ACTIVE,
-            participants=self.request.user,
+            participants=self.request.user.id,
         )
 
     def get_user_nation_state(self):
@@ -43,7 +43,7 @@ class BaseMixin:
         return get_object_or_404(
             models.NationState.objects,
             turn=game.get_current_turn(),
-            user=self.request.user,
+            user=self.request.user.id,
         )
 
 
@@ -148,7 +148,7 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
     serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
-        user_nation_state = self.get_user_nation_state(self)
+        user_nation_state = self.get_user_nation_state()
         return models.Order.objects.filter(
             turn=user_nation_state.turn,
             nation=user_nation_state.nation,

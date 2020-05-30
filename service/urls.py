@@ -42,7 +42,7 @@ urlpatterns = [
     path(
         'game/<int:game>/orders',
         views.ListOrdersView.as_view(),
-        name='order'
+        name='orders'
     ),
     path(
         'game/<int:game>/order/<int:pk>',
