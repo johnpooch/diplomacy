@@ -1334,7 +1334,6 @@
          "name":"burgundy",
          "variant": 1,
          "neighbours":[
-            26,
             25,
             32,
             39,
@@ -1455,7 +1454,6 @@
          "name":"ruhr",
          "variant": 1,
          "neighbours":[
-            26,
             61,
             34,
             35,
@@ -1666,7 +1664,8 @@
             37,
             63,
             42,
-            6
+            6,
+            4
          ],
          "shared_coasts":[
              37,
