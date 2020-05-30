@@ -247,9 +247,12 @@ class Turn(models.Model):
                 order = self.orders.get(id=order_data['id'])
                 if order.type == OrderType.DISBAND:
                     if self.phase == Phase.RETREAT_AND_DISBAND:
-                        piece = order.source.pieces.get(must_retreat=True).piece
+                        piece = order.source.pieces.get(
+                            turn=self,
+                            must_retreat=True
+                        ).piece
                     else:
-                        piece = order.source.pieces.get().piece
+                        piece = order.source.pieces.get(turn=self).piece
                     piece.turn_disbanded = self
                     piece.save()
                 if order.type == OrderType.BUILD and \

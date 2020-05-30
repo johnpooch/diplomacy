@@ -7,7 +7,8 @@ from core.models.base import OrderType
 hold_regex = r'^(?P<source>[\w.() \-]+?(?= HOLD)) (?P<type>HOLD) -> (?P<outcome>[\w.() \-]+)'
 move_regex = r'^(?P<source>[\w.() \-]+?(?= MOVE| RETREAT)) (?P<type>MOVE|RETREAT) (?P<target>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
 aux_regex = r'^(?P<source>[\w.() \-]+?(?= MOVE| HOLD| CONVOY| SUPPORT| RETREAT)) (?P<type>MOVE|HOLD|SUPPORT|CONVOY|RETREAT) (?P<aux>[\w.() \-]+?(?= to)) to (?P<target>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
-build_regex = r'^(?P<type>BUILD|DISBAND) (?P<piece_type>fleet|army) (?P<source>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
+build_regex = r'^(?P<type>BUILD) (?P<piece_type>fleet|army) (?P<source>[\w.() \-]+) -> (?P<outcome>[\w.() \-]+)'
+destroy_regex = r'(?P<source>[\w.() \-]+) (?P<type>DISBAND) -> (?P<outcome>[\w.() \-]+)'
 
 
 def form_to_data(form):
@@ -66,6 +67,7 @@ def text_to_order_data(text):
         OrderType.SUPPORT: aux_regex,
         OrderType.CONVOY: aux_regex,
         OrderType.BUILD: build_regex,
+        OrderType.DISBAND: destroy_regex,
     }
 
     def _lower_groups(groups):
@@ -82,7 +84,7 @@ def text_to_order_data(text):
         nation = nation_dict.get(nation, nation)
 
         for line in lines[1:]:
-            m = re.search('MOVE|HOLD|SUPPORT|CONVOY|BUILD', line)
+            m = re.search('MOVE|HOLD|SUPPORT|CONVOY|BUILD|DISBAND', line)
             if not m:
                 break
             order = m.group(0)
@@ -136,6 +138,7 @@ def text_to_orders(text):
         OrderType.SUPPORT: aux_regex,
         OrderType.CONVOY: aux_regex,
         OrderType.BUILD: build_regex,
+        OrderType.DISBAND: destroy_regex,
     }
 
     def _lower_groups(groups):
@@ -152,6 +155,7 @@ def text_to_orders(text):
         nation = nation_dict.get(nation, nation)
 
         for line in lines[1:]:
+            line = line.replace('DESTROY', 'DISBAND')
             m = re.search('MOVE|HOLD|SUPPORT|CONVOY|BUILD|RETREAT|DISBAND', line)
             if not m:
                 break
