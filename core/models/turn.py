@@ -247,9 +247,12 @@ class Turn(models.Model):
                 order = self.orders.get(id=order_data['id'])
                 if order.type == OrderType.DISBAND:
                     if self.phase == Phase.RETREAT_AND_DISBAND:
-                        piece = order.source.pieces.get(must_retreat=True).piece
+                        piece = order.source.pieces.get(
+                            turn=self,
+                            must_retreat=True
+                        ).piece
                     else:
-                        piece = order.source.pieces.get().piece
+                        piece = order.source.pieces.get(turn=self).piece
                     piece.turn_disbanded = self
                     piece.save()
                 if order.type == OrderType.BUILD and \
@@ -289,6 +292,11 @@ class Turn(models.Model):
                 territory_model = apps.get_model('core', 'Territory')
                 _id = attacker_territory
                 piece.attacker_territory = territory_model.objects.get(id=_id)
+            piece.destroyed = piece_data['destroyed']
+            piece.destroyed_message = piece_data['destroyed_message']
+            if piece.destroyed:
+                piece.piece.turn_disbanded = self
+                piece.piece.save()
             piece.save()
 
     def _to_game_state_dict(self):

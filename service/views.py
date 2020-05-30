@@ -130,6 +130,17 @@ class CreateOrderView(BaseMixin, generics.CreateAPIView):
         context['nation_state'] = self.get_user_nation_state()
         return context
 
+    def perform_create(self, serializer):
+        """
+        Delete existing order before creating new order.
+        """
+        models.Order.objects.filter(
+            source=serializer.validated_data['source'],
+            turn=serializer.validated_data['turn'],
+            nation=serializer.validated_data['nation'],
+        ).delete()
+        super().perform_create(serializer)
+
 
 class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
 

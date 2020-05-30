@@ -108,12 +108,12 @@ class Territories:
         self.BOHEMIA = InlandTerritory(59, 'bohemia', 4, [62, 64, 68, 69, 71])
         self.BUDAPEST = InlandTerritory(60, 'budapest', 4, [62, 47, 67, 53, 71])
         self.BURGUNDY = InlandTerritory(61, 'burgundy', 2,
-                                   [26, 25, 32, 39, 64, 65, 43, 66])
+                                   [25, 32, 39, 64, 65, 43, 66])
         self.GALICIA = InlandTerritory(62, 'galicia', 4, [59, 60, 47, 68, 70, 71, 72])
         self.MOSCOW = InlandTerritory(63, 'moscow', Nations.RUSSIA, [37, 47, 49, 75, 70, 72], supply_center=True, controlled_by=Nations.RUSSIA)
         self.MUNICH = InlandTerritory(64, 'munich', 3, [24, 59, 61, 35, 68, 66, 69])
         self.PARIS = InlandTerritory(65, 'paris', 2, [26, 61, 32, 43, 68, 66, 69])
-        self.RUHR = InlandTerritory(66, 'ruhr', 3, [26, 61, 34, 35, 64])
+        self.RUHR = InlandTerritory(66, 'ruhr', 3, [61, 34, 35, 64])
         self.SERBIA = InlandTerritory(67, 'serbia', None, [20, 60, 73, 33, 47, 53])
         self.SILESIA = InlandTerritory(68, 'silesia', 3, [24, 59, 62, 64, 48, 72])
         self.TYROLIA = InlandTerritory(69, 'tyrolia', 4, [59, 64, 53, 56, 71])
@@ -124,7 +124,7 @@ class Territories:
                                     [47, 33, 28])
         self.SPAIN = CoastalTerritory(74, 'spain', None, [32, 39, 45, 9, 19, 13], [32, 45, 39])
         self.ST_PETERSBURG = CoastalTerritory(75, 'st. petersburg', Nations.RUSSIA,
-                                          [31, 37, 63, 42], [37, 31, 42], supply_center=True, controlled_by=Nations.RUSSIA)
+                                          [4, 31, 37, 63, 42], [37, 31, 42], supply_center=True, controlled_by=Nations.RUSSIA)
 
 
 class NamedCoasts:

@@ -95,6 +95,14 @@ class PieceState(PerTurnModel):
         on_delete=models.CASCADE,
         related_name='piece_dislodged',
     )
+    destroyed = models.BooleanField(
+        default=False
+    )
+    destroyed_message = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+    )
     must_retreat = models.BooleanField(
         default=False,
         help_text=_(

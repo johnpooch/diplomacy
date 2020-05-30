@@ -39,7 +39,7 @@ class Command(BaseCommand):
             self.create_game()
             dir_list = os.listdir(directory)
             dir_list.sort()
-            for filename in dir_list[:10]:
+            for filename in dir_list:
                 file_location = directory + '/' + filename
                 with open(file_location) as f:
                     text = (f.read())

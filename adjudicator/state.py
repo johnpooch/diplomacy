@@ -2,8 +2,8 @@ import json
 
 from adjudicator.convoy_chain import get_convoy_chains
 from adjudicator.named_coast import NamedCoast
-from adjudicator.order import Build, Convoy, Hold, Order, Move, Retreat, \
-    Support
+from adjudicator.order import Build, Convoy, Disband, Hold, Order, Move, \
+    Retreat, Support
 from adjudicator.piece import Army, Fleet, Piece
 from adjudicator.territory import CoastalTerritory, InlandTerritory, \
     SeaTerritory, Territory
@@ -13,6 +13,15 @@ class State:
 
     def __init__(self):
         self.subscribers = set()
+
+    def get_territory(self, name):
+        """
+        Retrieve a territory from the state by name. Used for testing.
+        """
+        for territory in self.territories:
+            if territory.name == name:
+                return territory
+        return None
 
     def register(self, *observers):
         """
@@ -294,6 +303,6 @@ order_type_dict = {
     'support': Support,
     'convoy': Convoy,
     'retreat': Retreat,
-    'disband': '',
+    'disband': Disband,
     'build': Build,
 }
