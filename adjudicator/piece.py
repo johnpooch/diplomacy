@@ -117,6 +117,8 @@ class Piece:
             'dislodged_decision': self.dislodged_decision,
             'dislodged_by': None,
             'attacker_territory': None,
+            'destroyed': self.destroyed,
+            'destroyed_message': self.destroyed_message,
         }
         if self.dislodged_by:
             data['dislodged_by'] = self.dislodged_by.id

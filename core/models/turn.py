@@ -289,6 +289,8 @@ class Turn(models.Model):
                 territory_model = apps.get_model('core', 'Territory')
                 _id = attacker_territory
                 piece.attacker_territory = territory_model.objects.get(id=_id)
+            piece.destroyed = piece_data['destroyed']
+            piece.destroyed_message = piece_data['destroyed_message']
             piece.save()
 
     def _to_game_state_dict(self):
