@@ -104,7 +104,6 @@ class Piece:
             * `bool`
         """
         for territory in self.territory.neighbours:
-            print(territory)
             accessible = territory.accessible_by_piece_type(self)
             unoccupied = not territory.occupied
             uncontested = not territory.bounce_occurred

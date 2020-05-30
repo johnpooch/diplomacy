@@ -13,21 +13,6 @@ class TestCanRetreat(unittest.TestCase):
         self.named_coasts = NamedCoasts(self.territories)
         self.state = register_all(self.state, self.territories, self.named_coasts)
 
-        # pieces = [
-        #     Army(0, Nations.FRANCE, self.territories.PICARDY),
-        #     Army(0, Nations.GERMANY, self.territories.BURGUNDY),
-        #     Army(0, Nations.GERMANY, self.territories.GASCONY),
-        # ]
-        # orders = [
-        #     Move(0, Nations.FRANCE, self.territories.PICARDY, self.territories.PARIS),
-        #     Move(0, Nations.GERMANY, self.territories.BURGUNDY, self.territories.PARIS),
-        #     Move(0, Nations.GERMANY, self.territories.GASCONY, self.territories.PARIS),
-        # ]
-        # self.state.register(*pieces, *orders)
-        # self.state.post_register_updates()
-        # process(self.state)
-        # self.assertTrue(orders[0].target.bounce_occurred)
-
     def test_army_all_neighbouring_land_occupied(self):
         retreating_army = Army(0, Nations.FRANCE, self.territories.PORTUGAL)
         spain_army = Army(0, Nations.ITALY, self.territories.SPAIN)
