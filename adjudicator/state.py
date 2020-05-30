@@ -14,6 +14,15 @@ class State:
     def __init__(self):
         self.subscribers = set()
 
+    def get_territory(self, name):
+        """
+        Retrieve a territory from the state by name. Used for testing.
+        """
+        for territory in self.territories:
+            if territory.name == name:
+                return territory
+        return None
+
     def register(self, *observers):
         """
         Objects need to registered in the following order:
