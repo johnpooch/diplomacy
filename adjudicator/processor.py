@@ -80,4 +80,14 @@ def process(state):
         else:
             territory.bounce_occurred = True
 
+    # Check all dislodged pieces for pieces which can't retreat
+    dislodged_pieces = [p for p in state.pieces
+                        if p.dislodged_decision == Outcomes.DISLODGED]
+    for piece in dislodged_pieces:
+        if not piece.can_retreat():
+            piece.destroyed = True
+            piece.destroyed_message = (
+                'Destroyed because piece cannot retreat to any neighboring '
+                'territories.'
+            )
     return orders

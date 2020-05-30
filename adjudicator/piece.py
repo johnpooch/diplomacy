@@ -21,6 +21,8 @@ class Piece:
         self.dislodged_by = None
         self.attacker_territory = attacker_territory
         self.retreating = retreating
+        self.destroyed = False
+        self.destroyed_message = None
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.territory}'
@@ -93,6 +95,22 @@ class Piece:
             piece = self.successful_attacking_pieces[0]
             return self.set_dislodged_decision(Outcomes.DISLODGED, piece)
         return Outcomes.UNRESOLVED
+
+    def can_retreat(self):
+        """
+        Determine whether the piece can retreat to any neighboring territory.
+
+        Returns:
+            * `bool`
+        """
+        for territory in self.territory.neighbours:
+            print(territory)
+            accessible = territory.accessible_by_piece_type(self)
+            unoccupied = not territory.occupied
+            uncontested = not territory.bounce_occurred
+            if accessible and unoccupied and uncontested:
+                return True
+        return False
 
     def to_dict(self):
         data = {
