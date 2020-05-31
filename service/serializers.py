@@ -286,6 +286,7 @@ class TurnSerializer(serializers.ModelSerializer):
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
     orders = serializers.SerializerMethodField()
+    phase = serializers.CharField(source='get_phase_display')
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
 
