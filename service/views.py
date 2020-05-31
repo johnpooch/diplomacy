@@ -35,7 +35,7 @@ class BaseMixin:
             models.Game.objects,
             id=self.kwargs[self.game_key],
             status=GameStatus.ACTIVE,
-            participants=self.request.user,
+            participants=self.request.user.id,
         )
 
     def get_user_nation_state(self):
@@ -43,7 +43,7 @@ class BaseMixin:
         return get_object_or_404(
             models.NationState.objects,
             turn=game.get_current_turn(),
-            user=self.request.user,
+            user=self.request.user.id,
         )
 
 
@@ -94,15 +94,6 @@ class GameStateView(BaseMixin, generics.RetrieveAPIView):
     queryset = models.Game.objects.all()
     game_key = 'pk'
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        # TODO clean this bullsh
-        try:
-            context['nation_state'] = self.get_user_nation_state()
-        except:
-            pass
-        return context
-
 
 class JoinGame(generics.UpdateAPIView):
 
@@ -140,6 +131,19 @@ class CreateOrderView(BaseMixin, generics.CreateAPIView):
             nation=serializer.validated_data['nation'],
         ).delete()
         super().perform_create(serializer)
+
+
+class ListOrdersView(BaseMixin, generics.ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.OrderSerializer
+
+    def get_queryset(self):
+        user_nation_state = self.get_user_nation_state()
+        return models.Order.objects.filter(
+            turn=user_nation_state.turn,
+            nation=user_nation_state.nation,
+        )
 
 
 class DestroyOrderView(BaseMixin, generics.DestroyAPIView):

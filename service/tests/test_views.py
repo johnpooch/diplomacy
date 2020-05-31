@@ -202,41 +202,190 @@ class TestJoinGame(APITestCase):
 class TestGetGameState(APITestCase):
 
     def setUp(self):
-        user = factories.UserFactory()
-        self.client.force_authenticate(user=user)
-        variant = models.Variant.objects.create(name='standard')
+        self.user = factories.UserFactory()
+        self.client.force_authenticate(user=self.user)
+        self.variant = models.Variant.objects.create(name='standard')
         self.game = models.Game.objects.create(
-            variant=variant,
+            variant=self.variant,
             name='Test game',
             status=GameStatus.ACTIVE,
             num_players=1,
-            created_by=user,
+            created_by=self.user,
         )
-        
+        self.turn = models.Turn.objects.create(
+            game=self.game,
+            year=1901,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+        )
+        self.nation = models.Nation.objects.create(
+            variant=self.variant,
+            name='Test Nation',
+        )
+        self.nation_state = models.NationState.objects.create(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.territory = models.Territory.objects.create(
+            variant=self.variant,
+            name='Paris',
+            nationality=self.nation,
+            supply_center=True,
+        )
+        self.territory_state = models.TerritoryState.objects.create(
+            territory=self.territory,
+            turn=self.turn,
+            controlled_by=self.nation_state.nation,
+        )
+        self.territory = self.territory_state.territory
+        self.piece = models.Piece.objects.create(
+            game=self.game,
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+        )
+        self.piece_state = models.PieceState.objects.create(
+            turn=self.turn,
+            piece=self.piece,
+            territory=self.territory,
+        )
+        self.url = reverse('game-state', args=[self.game.id])
+
     def test_get_game_state_unauthorized(self):
         self.client.logout()
-        url = reverse('game-state', args=[self.game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_game_state_live_game(self):
-        url = reverse('game-state', args=[self.game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_game_state_pending_game(self):
         self.game.status = GameStatus.PENDING
         self.game.save()
-        url = reverse('game-state', args=[self.game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_game_state_ended_game(self):
         self.game.status = GameStatus.ENDED
         self.game.save()
-        url = reverse('game-state', args=[self.game.id])
-        response = self.client.get(url, format='json')
+        response = self.client.get(self.url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_game_state_current_turn_orders_hidden(self):
+        models.Order.objects.create(
+            turn=self.turn,
+            source=self.territory,
+            nation=self.nation
+        )
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(response.data['turns'][0]['orders'])
+
+
+class TestListOrders(APITestCase):
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.client.force_authenticate(user=self.user)
+
+        self.variant = factories.VariantFactory()
+        self.game = models.Game.objects.create(
+            status=GameStatus.ACTIVE,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
+        self.game.participants.add(self.user)
+        self.turn = models.Turn.objects.create(
+            game=self.game,
+            year=1901,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+        )
+        self.nation = models.Nation.objects.create(
+            variant=self.variant,
+            name='Test Nation',
+        )
+        self.nation_state = models.NationState.objects.create(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.territory = models.Territory.objects.create(
+            variant=self.variant,
+            name='Paris',
+            nationality=self.nation,
+            supply_center=True,
+        )
+        self.territory_state = models.TerritoryState.objects.create(
+            territory=self.territory,
+            turn=self.turn,
+            controlled_by=self.nation_state.nation,
+        )
+        self.territory = self.territory_state.territory
+        self.piece = models.Piece.objects.create(
+            game=self.game,
+            nation=self.nation_state.nation,
+            type=PieceType.ARMY,
+        )
+        self.piece_state = models.PieceState.objects.create(
+            turn=self.turn,
+            piece=self.piece,
+            territory=self.territory,
+        )
+        self.url = reverse('orders', args=[self.game.id])
+
+    def test_no_orders(self):
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(response.data, [])
+
+    def test_orders(self):
+        models.Order.objects.create(
+            turn=self.turn,
+            source=self.territory,
+            nation=self.nation
+        )
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['nation'], self.nation.id)
+
+    def test_other_user_orders(self):
+        other_user = factories.UserFactory()
+        other_nation = models.Nation.objects.create(
+            variant=self.variant,
+            name='Other Nation',
+        )
+        models.NationState.objects.create(
+            nation=self.nation,
+            turn=self.turn,
+            user=other_user,
+        )
+        models.Order.objects.create(
+            turn=self.turn,
+            source=self.territory,
+            nation=self.nation
+        )
+        models.Order.objects.create(
+            turn=self.turn,
+            source=self.territory,
+            nation=other_nation
+        )
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['nation'], self.nation.id)
 
 
 class TestCreateOrder(APITestCase):

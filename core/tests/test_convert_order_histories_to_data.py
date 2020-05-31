@@ -16,6 +16,7 @@ class TestConvertOrderHistoryToData(TestCase):
         'dev/named_coast',
     ]
 
+    @skip
     def test_game_1(self):
         call_command(
             'convert_order_histories_to_data',

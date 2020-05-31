@@ -285,10 +285,8 @@ class TurnSerializer(serializers.ModelSerializer):
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
-    orders = OrderSerializer(
-        models.Order.objects.filter(turn__current_turn=False),
-        many=True,
-    )
+    orders = serializers.SerializerMethodField()
+    phase = serializers.CharField(source='get_phase_display')
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
 
@@ -308,19 +306,6 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
         )
 
-    def get_fields(self, *args, **kwargs):
-        """
-        Override `get_fields` to include the user's orders for current
-        turn and all orders for previous turns.
-        """
-        nation_state = self.context.get('nation_state')
-        fields = super().get_fields(*args, **kwargs)
-        if nation_state:
-            fields['orders'].queryset = models.Order.filter(
-                Q(turn__current_turn=False) | Q(nation=nation_state.nation)
-            )
-        return fields
-
     def get_next_turn(self, obj):
         turn = models.Turn.get_next(obj)
         return getattr(turn, 'id', None)
@@ -328,6 +313,12 @@ class TurnSerializer(serializers.ModelSerializer):
     def get_previous_turn(self, obj):
         turn = models.Turn.get_previous(obj)
         return getattr(turn, 'id', None)
+
+    def get_orders(self, obj):
+        # Only get orders for previous turns
+        qs = models.Order.objects.filter(turn__current_turn=False, turn=obj)
+        serializer = OrderSerializer(instance=qs, many=True)
+        return serializer.data
 
 
 class GameStateSerializer(serializers.ModelSerializer):
