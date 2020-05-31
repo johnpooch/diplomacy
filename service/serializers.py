@@ -285,10 +285,7 @@ class TurnSerializer(serializers.ModelSerializer):
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
-    orders = OrderSerializer(
-        models.Order.objects.filter(turn__current_turn=False),
-        many=True,
-    )
+    orders = serializers.SerializerMethodField()
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
 
@@ -315,6 +312,12 @@ class TurnSerializer(serializers.ModelSerializer):
     def get_previous_turn(self, obj):
         turn = models.Turn.get_previous(obj)
         return getattr(turn, 'id', None)
+
+    def get_orders(self, obj):
+        # Only get orders for previous turns
+        qs = models.Order.objects.filter(turn__current_turn=False, turn=obj)
+        serializer = OrderSerializer(instance=qs, many=True)
+        return serializer.data
 
 
 class GameStateSerializer(serializers.ModelSerializer):

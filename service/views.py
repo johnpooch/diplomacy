@@ -94,15 +94,6 @@ class GameStateView(BaseMixin, generics.RetrieveAPIView):
     queryset = models.Game.objects.all()
     game_key = 'pk'
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        # TODO clean this bullsh
-        try:
-            context['nation_state'] = self.get_user_nation_state()
-        except:
-            pass
-        return context
-
 
 class JoinGame(generics.UpdateAPIView):
 
