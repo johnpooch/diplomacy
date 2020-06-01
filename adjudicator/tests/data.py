@@ -96,7 +96,7 @@ class Territories:
         self.SWEDEN = CoastalTerritory(51, 'sweden', None, [3, 6, 29, 31, 42, 17],
                                   [29, 31, 42])
         self.SYRIA = CoastalTerritory(52, 'syria', 7, [23, 7, 50], [50])
-        self.TRIESTE = CoastalTerritory(53, 'trieste', 4, [1, 20, 60, 52, 69, 56, 71],
+        self.TRIESTE = CoastalTerritory(53, 'trieste', 4, [1, 20, 60, 52, 69, 67, 56, 71],
                                    [20, 56])
         self.TUNIS = CoastalTerritory(54, 'tunis', None, [11, 40, 18, 19], [40])
         self.TUSCANY = CoastalTerritory(55, 'tuscany', 5, [9, 44, 46, 18, 56], [44, 46])

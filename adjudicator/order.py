@@ -59,7 +59,9 @@ class Order:
 
 
 class Hold(Order):
-    pass
+
+    def __str__(self):
+        return ' '.join([self.nation, 'HOLD', self.source.name])
 
 
 class Move(Order):
@@ -76,6 +78,9 @@ class Move(Order):
         self.prevent_strength_decision = decisions.PreventStrength(self)
         self.defend_strength_decision = decisions.DefendStrength(self)
         self.path_decision = decisions.Path(self)
+
+    def __str__(self):
+        return ' '.join([self.nation, 'MOVE', self.source.name, '-', self.target.name])
 
     def update_legal_decision(self):
         if super().update_legal_decision() == Outcomes.ILLEGAL:
@@ -177,8 +182,8 @@ class Move(Order):
         if max_attack_strength <= other_pieces_min_prevent:
             return self.set_move_decision(Outcomes.FAILS)
 
-    def _resolve_convoy_swap(self):
-
+    def _convoy_swap_result(self):
+        # TODO rename
         piece = self.piece
         min_attack_strength, max_attack_strength = AttackStrength(self)()
 
@@ -189,14 +194,35 @@ class Move(Order):
         # succeeds if...
         if other_attacking_pieces:
             if min_attack_strength > other_pieces_max_prevent:
-                return self.set_move_decision(Outcomes.MOVES)
+                return Outcomes.MOVES
         else:
-            return self.set_move_decision(Outcomes.MOVES)
+            return Outcomes.MOVES
 
         # fails if...
         if other_attacking_pieces:
             if max_attack_strength <= other_pieces_min_prevent:
-                return self.set_move_decision(Outcomes.FAILS)
+                return Outcomes.FAILS
+
+        return Outcomes.UNRESOLVED
+
+    def _resolve_convoy_swap(self):
+
+        # both pieces must succeed
+        swapping_piece = self.target.piece
+        swapping_piece_order = swapping_piece.order
+
+        this_result = self._convoy_swap_result()
+        swapping_result = swapping_piece_order._convoy_swap_result()
+
+        if this_result == swapping_result == Outcomes.MOVES:
+            self.set_move_decision(Outcomes.MOVES)
+            swapping_piece_order.set_move_decision(Outcomes.MOVES)
+            return
+
+        if this_result == Outcomes.FAILS or swapping_result == Outcomes.FAILS:
+            self.set_move_decision(Outcomes.FAILS)
+            swapping_piece_order.set_move_decision(Outcomes.FAILS)
+            return
 
     def move_support(self, *args):
         legal_decisions = [Outcomes.LEGAL]
