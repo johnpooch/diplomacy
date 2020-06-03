@@ -32,7 +32,11 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M004)
+        self.assertEqual(order.illegal_code, '004')
+        self.assertEqual(
+            order.illegal_message,
+            'Fleet cannot reach non-adjacent territory.'
+        )
 
     def test_move_army_to_sea(self):
         """
@@ -50,7 +54,11 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M005)
+        self.assertEqual(order.illegal_code, '005')
+        self.assertEqual(
+            order.illegal_message,
+            'Army cannot enter a sea territory'
+        )
 
     def test_move_fleet_to_land(self):
         """
@@ -68,7 +76,14 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M006)
+        self.assertEqual(
+            order.illegal_code,
+            '006'
+        )
+        self.assertEqual(
+            order.illegal_message,
+            'Fleet cannot enter an inland territory',
+        )
 
     def test_move_to_own_sector(self):
         """
@@ -88,7 +103,11 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M002)
+        self.assertEqual(order.illegal_code, '002')
+        self.assertEqual(
+            order.illegal_message,
+            'Source and target cannot be the same territory.'
+        )
 
     # TODO more checks here
     def test_move_to_own_sector_with_convoy(self):
@@ -131,7 +150,11 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(army_yorkshire_move.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(army_yorkshire_move.illegal_message, illegal_messages.M002)
+        self.assertEqual(army_yorkshire_move.illegal_code, '002')
+        self.assertEqual(
+            army_yorkshire_move.illegal_message,
+            'Source and target cannot be the same territory.'
+        )
 
     def test_ordering_a_unit_of_another_country(self):
         """
@@ -151,7 +174,11 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.A001)
+        self.assertEqual(order.illegal_code, '001')
+        self.assertEqual(
+            order.illegal_message,
+            'Cannot order a piece belonging to another nation.'
+        )
 
     def test_only_armies_can_be_convoyed(self):
         """
@@ -175,10 +202,17 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(fleet_london_move.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(fleet_london_move.illegal_message, illegal_messages.M004)
+        self.assertEqual(fleet_london_move.illegal_code, '004')
+        self.assertEqual(
+            fleet_london_move.illegal_message,
+            'Fleet cannot reach non-adjacent territory.'
+        )
 
         self.assertEqual(fleet_north_sea_convoy.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(fleet_north_sea_convoy.illegal_message, illegal_messages.C001)
+        self.assertEqual(
+            fleet_north_sea_convoy.illegal_message,
+            'Cannot convoy a fleet.'
+        )
 
     def test_support_to_hold_yourself_not_possible(self):
         """
@@ -199,7 +233,6 @@ class TestBasicChecks(unittest.TestCase):
             Fleet(0, Nations.AUSTRIA, self.territories.TRIESTE)
         ]
 
-        # TODO finish
         army_venice_move = Move(0, Nations.ITALY, self.territories.VENICE, self.territories.TRIESTE)
         army_tyrolia_support = Support(0, Nations.ITALY, self.territories.TYROLIA, self.territories.VENICE, self.territories.TRIESTE)
         fleet_trieste_support = Support(0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.TRIESTE, self.territories.TRIESTE)
@@ -208,7 +241,10 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(fleet_trieste_support.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(fleet_trieste_support.illegal_message, illegal_messages.S001)
+        self.assertEqual(
+            fleet_trieste_support.illegal_message,
+            'Source and target cannot be the same territory.'
+        )
 
     def test_fleet_must_follow_coast_if_not_on_sea(self):
         """
@@ -228,7 +264,11 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M007)
+        self.assertEqual(order.illegal_code, '007')
+        self.assertEqual(
+            order.illegal_message,
+            'Fleet cannot reach coastal territory without shared coastline.'
+        )
 
     def test_support_on_unreachable_destination_not_possible(self):
         """
@@ -261,7 +301,10 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(fleet_rome_support.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(fleet_rome_support.illegal_message, illegal_messages.S002)
+        self.assertEqual(
+            fleet_rome_support.illegal_message,
+            'Fleet cannot reach coastal territory without shared coastline.'
+        )
 
     def test_simple_bounce(self):
         """

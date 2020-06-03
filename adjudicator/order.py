@@ -1,4 +1,4 @@
-from . import decisions
+from . import decisions, check
 from .decisions import Outcomes
 from . import illegal_messages
 from .decisions.attack_strength import AttackStrength
@@ -14,6 +14,7 @@ class Order:
         self.piece = None
         self.hold_support_orders = set()
         self.legal_decision = Outcomes.LEGAL
+        self.illegal_code = None
         self.illegal_message = None
 
     def __getattr__(self, name):
@@ -29,20 +30,20 @@ class Order:
             f'{self.__class__.__name__} has no attribute \'{name}\'.'
         )
 
-    def set_illegal(self, illegal_message):
-        self.illegal_message = illegal_message
+    def set_illegal(self, code, message):
+        self.illegal_code = code
+        self.illegal_message = message
         self.legal_decision = Outcomes.ILLEGAL
         return self.legal_decision
 
     def update_legal_decision(self):
-        piece = self.source.non_retreating_piece
-        if piece.nation != self.nation:
-            return self.set_illegal(illegal_messages.A001)
-
-    def hold_support(self, *args):
-        legal_decisions = [Outcomes.LEGAL]
-        return [s for s in self.hold_support_orders if
-                s.support_decision in args and s.legal_decision in legal_decisions]
+        """
+        Iterate through each legality check. If a check's condition is
+        satisfied, set the order to be illegal and set the illegal message.
+        """
+        for c in self.checks:
+            if c().condition(self):
+                return self.set_illegal(c.code, c.message)
 
     def to_dict(self):
         if self.piece:
@@ -60,11 +61,26 @@ class Order:
 
 class Hold(Order):
 
+    checks = [
+        check.SourcePieceBelongsToNation,
+    ]
+
     def __str__(self):
         return ' '.join([self.nation, 'HOLD', self.source.name])
 
 
 class Move(Order):
+
+    checks = [
+        check.SourcePieceBelongsToNation,
+        check.SourceAndTargetDistinct,
+        check.ArmyMovesToAdjacentTerritoryNotConvoy,
+        check.FleetMovesToAdjacentTerritory,
+        check.ArmyCanReachTarget,
+        check.FleetCanReachTarget,
+        check.FleetCanReachTargetCoastal,
+    ]
+
     def __init__(self, _id, nation, source, target, target_coast=None, via_convoy=False):
         super().__init__(_id, nation, source)
         self.target = target
@@ -81,37 +97,6 @@ class Move(Order):
 
     def __str__(self):
         return ' '.join([self.nation, 'MOVE', self.source.name, '-', self.target.name])
-
-    def update_legal_decision(self):
-        if super().update_legal_decision() == Outcomes.ILLEGAL:
-            return Outcomes.ILLEGAL
-
-        piece = self.source.piece
-
-        if self.target == self.source:
-            return self.set_illegal(illegal_messages.M002)
-
-        if not self.source.adjacent_to(self.target):
-            if piece.is_fleet:
-                return self.set_illegal(illegal_messages.M004)
-            if not self.via_convoy:
-                return self.set_illegal(illegal_messages.M003)
-
-        if not piece.can_reach(self.target, self.target_coast):
-            if piece.is_army:
-                return self.set_illegal(illegal_messages.M005)
-            else:
-                if self.target.is_coastal:
-                    return self.set_illegal(illegal_messages.M007)
-                else:
-                    return self.set_illegal(illegal_messages.M006)
-
-        if piece.is_fleet:
-            if self.source.is_coastal and self.target.is_coastal:
-                if self.source.adjacent_to(self.target) and self.target not in self.source.shared_coasts:
-                    return self.set_illegal(illegal_messages.M007)
-
-        self.legal_decision = Outcomes.LEGAL
 
     def set_move_decision(self, outcome):
         self.move_decision = outcome
@@ -269,24 +254,22 @@ class Move(Order):
 
 
 class Support(Order):
+
+    checks = [
+        check.SourcePieceBelongsToNation,
+        check.SourceAndTargetDistinct,
+        check.ArmyMovesToAdjacentTerritoryNotConvoy,
+        check.FleetMovesToAdjacentTerritory,
+        check.ArmyCanReachTarget,
+        check.FleetCanReachTarget,
+        check.FleetCanReachTargetCoastal,
+    ]
+
     def __init__(self, _id, nation, source, aux, target):
         super().__init__(_id, nation, source)
         self.aux = aux
         self.target = target
         self.support_decision = Outcomes.UNRESOLVED
-
-    def update_legal_decision(self):
-        if super().update_legal_decision() == Outcomes.ILLEGAL:
-            return Outcomes.ILLEGAL
-
-        piece = self.source.piece
-
-        if self.target == self.source:
-            return self.set_illegal(illegal_messages.S001)
-
-        if not piece.can_reach_support(self.target):
-            return self.set_illegal(illegal_messages.S002)
-        self.legal_decision = Outcomes.LEGAL
 
     def set_support_decision(self, outcome):
         self.support_decision = outcome
@@ -367,22 +350,17 @@ class Support(Order):
 
 
 class Convoy(Order):
+
+    checks = [
+        check.SourcePieceBelongsToNation,
+        check.ConvoyeeIsArmy,
+        check.AtSea,
+    ]
+
     def __init__(self, _id, nation, source, aux, target):
         super().__init__(_id, nation, source)
         self.aux = aux
         self.target = target
-
-    def update_legal_decision(self):
-        if super().update_legal_decision() == Outcomes.ILLEGAL:
-            return Outcomes.ILLEGAL
-
-        if self.aux.piece.is_fleet:
-            return self.set_illegal(illegal_messages.C001)
-
-        if not self.source.is_sea:
-            return self.set_illegal(illegal_messages.C002)
-
-        return Outcomes.LEGAL
 
 
 class Retreat(Order):

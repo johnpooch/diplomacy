@@ -1,4 +1,5 @@
 from .base import Decision, Outcomes
+from adjudicator.decisions_temp import hold_support
 
 
 class HoldStrength(Decision):
@@ -42,7 +43,7 @@ class HoldStrength(Decision):
                 return 1
             return 0
 
-        return 1 + len(piece.order.hold_support(Outcomes.GIVEN))
+        return 1 + len(hold_support(piece.order, Outcomes.GIVEN))
 
     def _maximum(self):
         piece = self.territory.piece
@@ -55,4 +56,4 @@ class HoldStrength(Decision):
                 return 0
             return 1
 
-        return 1 + len(piece.order.hold_support(Outcomes.GIVEN, Outcomes.UNRESOLVED))
+        return 1 + len(hold_support(piece.order, Outcomes.GIVEN, Outcomes.UNRESOLVED))
