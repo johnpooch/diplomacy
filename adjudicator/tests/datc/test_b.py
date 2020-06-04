@@ -79,7 +79,10 @@ class TestCoastalIssues(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M007)
+        self.assertEqual(
+            order.illegal_message,
+            'Fleet cannot reach coastal territory without shared coastline.'
+        )
 
     def test_support_to_unreachable_coast_allowed(self):
         """
@@ -146,7 +149,11 @@ class TestCoastalIssues(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(fleet_spain_nc_support.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(fleet_spain_nc_support.illegal_message, illegal_messages.S002)
+        self.assertEqual(fleet_spain_nc_support.illegal_code, '010')
+        self.assertEqual(
+            fleet_spain_nc_support.illegal_message,
+            'A piece cannot support a territory which it cannot reach.'
+        )
         self.assertEqual(fleet_marseilles_move.move_decision, Outcomes.FAILS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
 
@@ -307,7 +314,10 @@ class TestCoastalIssues(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(move.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(move.illegal_message, illegal_messages.M002)
+        self.assertEqual(
+            move.illegal_message,
+            'Source and target cannot be the same territory.'
+        )
 
     def test_army_movement_with_coastal_specification(self):
         """
@@ -378,4 +388,8 @@ class TestCoastalIssues(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.B006)
+        self.assertEqual(order.illegal_code, '011')
+        self.assertEqual(
+            order.illegal_message,
+            'Source is already occupied by a piece.'
+        )

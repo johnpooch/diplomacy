@@ -1,3 +1,6 @@
+from .piece import PieceTypes
+
+
 class Check:
     pass
 
@@ -48,7 +51,7 @@ class ArmyCanReachTarget(Check):
 
     def condition(self, order):
         piece = order.source.piece
-        return not piece.can_reach(order.target) and piece.is_army
+        return piece.is_army and not piece.can_reach(order.target)
 
 
 class FleetCanReachTarget(Check):
@@ -58,8 +61,8 @@ class FleetCanReachTarget(Check):
 
     def condition(self, order):
         piece = order.source.piece
-        return not piece.can_reach(order.target) and piece.is_fleet \
-            and not order.target.is_coastal
+        return not piece.can_reach(order.target, order.target_coast) \
+            and piece.is_fleet and not order.target.is_coastal
 
 
 class FleetCanReachTargetCoastal(Check):
@@ -71,7 +74,8 @@ class FleetCanReachTargetCoastal(Check):
 
     def condition(self, order):
         piece = order.source.piece
-        return not piece.can_reach(order.target) and piece.is_fleet \
+        return piece.is_fleet \
+            and not piece.can_reach(order.target, order.target_coast) \
             and order.target.is_coastal
 
 
@@ -95,3 +99,83 @@ class AtSea(Check):
 
     def condition(self, order):
         return order.source.is_sea
+
+
+class CanReachTargetWithoutConvoy(Check):
+
+    code = '010'
+    message = (
+        'A piece cannot support a territory which it cannot reach.'
+    )
+
+    def condition(self, order):
+        piece = order.source.piece
+        return not piece.can_reach_support(order.target)
+
+
+class SourceNotOccupied(Check):
+
+    code = '011'
+    message = (
+        'Source is already occupied by a piece.'
+    )
+
+    def condition(self, order):
+        return bool(order.source.piece)
+
+
+class SourceHasSupplyCenter(Check):
+
+    code = '012'
+    message = (
+        'Source does not have a supply center.'
+    )
+
+    def condition(self, order):
+        return not order.source.supply_center
+
+
+class SourceWithinNationalBorders(Check):
+
+    code = '013'
+    message = (
+        'Source is outside of national borders.'
+    )
+
+    def condition(self, order):
+        return not order.source.nationality == order.nation
+
+
+class SourceIsControlled(Check):
+
+    code = '014'
+    message = (
+        'Cannot build in a supply center which is controlled by a foreign '
+        'power.'
+    )
+
+    def condition(self, order):
+        return not order.source.controlled_by == order.nation
+
+
+class PieceTypeCanExist(Check):
+
+    code = '015'
+    message = (
+        'Piece type cannot exist in this type of territory.'
+    )
+
+    def condition(self, order):
+        return order.source.is_inland and order.piece_type == PieceTypes.FLEET
+
+
+class SourceNamedCoastNotSpecified(Check):
+
+    code = '016'
+    message = (
+        'Must specify a coast when building a fleet in a territory with named '
+        'coasts.'
+    )
+
+    def condition(self, order):
+        return order.source.is_inland and order.piece_type == PieceTypes.FLEET

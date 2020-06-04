@@ -17,6 +17,15 @@ class Order:
         self.illegal_code = None
         self.illegal_message = None
 
+    def __str__(self):
+        return ' '.join(
+            [
+                self.nation,
+                self.__class__.__name__.upper(),
+                self.source.name,
+            ]
+        )
+
     def __getattr__(self, name):
         """
         Adds the ability to determine the type of an order using the syntax
@@ -65,9 +74,6 @@ class Hold(Order):
         check.SourcePieceBelongsToNation,
     ]
 
-    def __str__(self):
-        return ' '.join([self.nation, 'HOLD', self.source.name])
-
 
 class Move(Order):
 
@@ -94,9 +100,6 @@ class Move(Order):
         self.prevent_strength_decision = decisions.PreventStrength(self)
         self.defend_strength_decision = decisions.DefendStrength(self)
         self.path_decision = decisions.Path(self)
-
-    def __str__(self):
-        return ' '.join([self.nation, 'MOVE', self.source.name, '-', self.target.name])
 
     def set_move_decision(self, outcome):
         self.move_decision = outcome
@@ -258,11 +261,7 @@ class Support(Order):
     checks = [
         check.SourcePieceBelongsToNation,
         check.SourceAndTargetDistinct,
-        check.ArmyMovesToAdjacentTerritoryNotConvoy,
-        check.FleetMovesToAdjacentTerritory,
-        check.ArmyCanReachTarget,
-        check.FleetCanReachTarget,
-        check.FleetCanReachTargetCoastal,
+        check.CanReachTargetWithoutConvoy,
     ]
 
     def __init__(self, _id, nation, source, aux, target):
@@ -371,30 +370,6 @@ class Retreat(Order):
         self.target_coast = target_coast
         self.move_decision = Outcomes.UNRESOLVED
 
-    def update_legal_decision(self):
-        piece = self.source.piece
-        if piece.nation != self.nation:
-            return self.set_illegal(illegal_messages.A001)
-
-        if self.target == piece.attacker_territory:
-            return self.set_illegal(illegal_messages.R001)
-
-        if not self.source.adjacent_to(self.target):
-            return self.set_illegal(illegal_messages.R002)
-
-        if not piece.can_reach(self.target, self.target_coast):
-            return self.set_illegal(illegal_messages.R003)
-
-        if piece.is_fleet:
-            if self.source.is_coastal and self.target.is_coastal:
-                if self.source.adjacent_to(self.target) and self.target not in self.source.shared_coasts:
-                    return self.set_illegal(illegal_messages.R004)
-
-        if self.target.contested:
-            return self.set_illegal(illegal_messages.R005)
-
-        self.legal_decision = Outcomes.LEGAL
-
     def set_move_decision(self, outcome):
         self.move_decision = outcome
         return self.move_decision
@@ -416,25 +391,20 @@ class Retreat(Order):
 
 
 class Build(Order):
+
+    checks = [
+        check.SourceNotOccupied,
+        check.SourceHasSupplyCenter,
+        check.SourceWithinNationalBorders,
+        check.SourceIsControlled,
+        check.PieceTypeCanExist,
+        check.SourceNamedCoastNotSpecified,
+    ]
+
     def __init__(self, _id, nation, source, piece_type, named_coast=None):
         super().__init__(_id, nation, source)
         self.piece_type = piece_type
         self.named_coast = named_coast
-
-    def update_legal_decision(self):
-        if self.source.piece:
-            return self.set_illegal(illegal_messages.B001)
-        if not self.source.supply_center:
-            return self.set_illegal(illegal_messages.B002)
-        if not self.source.nationality == self.nation:
-            return self.set_illegal(illegal_messages.B003)
-        if not self.source.controlled_by == self.nation:
-            return self.set_illegal(illegal_messages.B004)
-        if self.source.is_inland and self.piece_type == PieceTypes.FLEET:
-            return self.set_illegal(illegal_messages.B005)
-        if self.source.is_complex and self.piece_type == PieceTypes.FLEET and not self.named_coast:
-            return self.set_illegal(illegal_messages.B006)
-        self.legal_decision = Outcomes.LEGAL
 
     def to_dict(self):
         if self.legal_decision == Outcomes.ILLEGAL:
