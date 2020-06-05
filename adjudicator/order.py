@@ -47,11 +47,11 @@ class Order:
 
     def update_legal_decision(self):
         """
-        Iterate through each legality check. If a check's condition is
+        Iterate through each legality check. If a check's fail_condition is
         satisfied, set the order to be illegal and set the illegal message.
         """
         for c in self.checks:
-            if c().condition(self):
+            if c().fail_condition(self):
                 return self.set_illegal(c.code, c.message)
 
     def to_dict(self):
@@ -364,6 +364,13 @@ class Convoy(Order):
 
 class Retreat(Order):
 
+    checks = [
+        check.SourcePieceBelongsToNation,
+        check.TargetNotAttackerTerritory,
+        check.TargetNotContested,
+        check.CanReachTargetWithoutConvoy,
+    ]
+
     def __init__(self, _id, nation, source, target, target_coast=None):
         super().__init__(_id, nation, source)
         self.target = target
@@ -421,10 +428,9 @@ class Build(Order):
 
 class Disband(Order):
 
-    def update_legal_decision(self):
-        if self.source.piece:
-            return self.set_illegal(illegal_messages.B001)
-        self.legal_decision = Outcomes.LEGAL
+    checks = [
+        check.SourcePieceBelongsToNation,
+    ]
 
     def to_dict(self):
         if self.legal_decision == Outcomes.ILLEGAL:

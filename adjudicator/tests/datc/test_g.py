@@ -716,7 +716,6 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-
         self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
         self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
         self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
@@ -768,7 +767,6 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.register(*pieces, *orders)
         self.state.post_register_updates()
         process(self.state)
-
 
         self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
         self.assertEqual(orders[2].move_decision, Outcomes.FAILS)

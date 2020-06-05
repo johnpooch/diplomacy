@@ -152,7 +152,7 @@ class TestCoastalIssues(unittest.TestCase):
         self.assertEqual(fleet_spain_nc_support.illegal_code, '010')
         self.assertEqual(
             fleet_spain_nc_support.illegal_message,
-            'A piece cannot support a territory which it cannot reach.'
+            'Piece cannot reach that territory.'
         )
         self.assertEqual(fleet_marseilles_move.move_decision, Outcomes.FAILS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
@@ -388,8 +388,11 @@ class TestCoastalIssues(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_code, '011')
+        self.assertEqual(order.illegal_code, '016')
         self.assertEqual(
             order.illegal_message,
-            'Source is already occupied by a piece.'
+            (
+                'Must specify a coast when building a fleet in a territory '
+                'with named coasts.'
+            )
         )

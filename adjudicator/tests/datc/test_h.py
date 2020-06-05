@@ -33,7 +33,10 @@ class TestRetreating(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.R001)
+        self.assertEqual(
+            orders[0].illegal_message,
+            'Piece cannot retreat to the territory from which it was attacked.'
+        )
         self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
 
     def test_unit_may_not_retreat_to_contested_area(self):
@@ -52,7 +55,11 @@ class TestRetreating(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.R005)
+        self.assertEqual(
+            orders[0].illegal_message,
+            ('Cannot retreat to a territory which was contested on the '
+             'previous turn.')
+        )
         self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
 
     def test_multiple_retreat_to_the_same_area_causes_disband(self):

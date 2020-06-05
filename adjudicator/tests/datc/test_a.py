@@ -301,9 +301,10 @@ class TestBasicChecks(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(fleet_rome_support.legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(fleet_rome_support.illegal_code, '010')
         self.assertEqual(
             fleet_rome_support.illegal_message,
-            'Fleet cannot reach coastal territory without shared coastline.'
+            'Piece cannot reach that territory.'
         )
 
     def test_simple_bounce(self):
