@@ -303,14 +303,6 @@ class Support(Order):
             if all([p.order.attack_strength_decision.max_strength == 0 for p in self.source.attacking_pieces]):
                 return self.set_support_decision(Outcomes.GIVEN)
 
-                # # NOTE not sure what this block is for.
-                # if isinstance(target_piece.order, Convoy):
-                #     convoying_order = target_piece.order
-                #     if convoying_order.aux.piece:
-                #         if all([p.order.attack_strength == 0
-                #                 for p in self.source.other_attacking_pieces(convoying_order.aux.piece)]):
-                #             return Outcomes.GIVEN
-
         # fails if...
         # If aux piece is not going to target of order
         if aux_piece:
