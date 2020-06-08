@@ -41,9 +41,9 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
 
     def test_three_army_circular_movement_with_support(self):
         """
@@ -74,10 +74,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_disrupted_three_army_circular_movement(self):
         """
@@ -108,10 +108,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_circular_movement_with_attacked_convoy(self):
         """
@@ -158,13 +158,13 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(pieces[4].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(pieces[5].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[6].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[6].outcome, Outcomes.FAILS)
 
     def test_disrupted_circular_movement_due_to_dislodged_convoy(self):
         """
@@ -214,15 +214,15 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(pieces[4].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[4].dislodged_by, pieces[6])
         self.assertEqual(pieces[5].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[6].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[7].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[7].outcome, Outcomes.SUCCEEDS)
 
     def test_two_armies_with_two_convoys(self):
         """
@@ -255,8 +255,8 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_disrupted_unit_swap(self):
         """
@@ -292,6 +292,6 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)

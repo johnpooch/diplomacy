@@ -1,6 +1,3 @@
-from copy import deepcopy
-
-
 def find_circular_movements(ms):
     circular_movements = []
     moves = [m for m in ms]
@@ -27,5 +24,3 @@ def find_circular_movements(ms):
                         else:
                             next_node = next_node.target.piece.order
     return circular_movements
-
-

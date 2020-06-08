@@ -1,6 +1,5 @@
 import unittest
 
-from adjudicator import illegal_messages
 from adjudicator.decisions import Outcomes
 from adjudicator.order import Convoy, Hold, Move, Support
 from adjudicator.piece import Army, Fleet
@@ -31,10 +30,11 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(fleet, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(order.illegal)
+        self.assertEqual(order.outcome, Outcomes.FAILS)
         self.assertEqual(order.illegal_code, '004')
         self.assertEqual(
-            order.illegal_message,
+            order.illegal_verbose,
             'Fleet cannot reach non-adjacent territory.'
         )
 
@@ -53,10 +53,11 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(army, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(order.illegal)
+        self.assertEqual(order.outcome, Outcomes.FAILS)
         self.assertEqual(order.illegal_code, '005')
         self.assertEqual(
-            order.illegal_message,
+            order.illegal_verbose,
             'Army cannot enter a sea territory'
         )
 
@@ -75,13 +76,14 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(fleet, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(order.illegal)
+        self.assertEqual(order.outcome, Outcomes.FAILS)
         self.assertEqual(
             order.illegal_code,
             '006'
         )
         self.assertEqual(
-            order.illegal_message,
+            order.illegal_verbose,
             'Fleet cannot enter an inland territory',
         )
 
@@ -102,10 +104,10 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(army, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(order.illegal)
         self.assertEqual(order.illegal_code, '002')
         self.assertEqual(
-            order.illegal_message,
+            order.illegal_verbose,
             'Source and target cannot be the same territory.'
         )
 
@@ -149,10 +151,11 @@ class TestBasicChecks(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(army_yorkshire_move.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(army_yorkshire_move.illegal)
+        self.assertEqual(army_yorkshire_move.outcome, Outcomes.FAILS)
         self.assertEqual(army_yorkshire_move.illegal_code, '002')
         self.assertEqual(
-            army_yorkshire_move.illegal_message,
+            army_yorkshire_move.illegal_verbose,
             'Source and target cannot be the same territory.'
         )
 
@@ -173,10 +176,10 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(fleet, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(order.illegal)
         self.assertEqual(order.illegal_code, '001')
         self.assertEqual(
-            order.illegal_message,
+            order.illegal_verbose,
             'Cannot order a piece belonging to another nation.'
         )
 
@@ -201,16 +204,17 @@ class TestBasicChecks(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(fleet_london_move.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(fleet_london_move.illegal)
+        self.assertTrue(fleet_london_move.outcome == Outcomes.FAILS)
         self.assertEqual(fleet_london_move.illegal_code, '004')
         self.assertEqual(
-            fleet_london_move.illegal_message,
+            fleet_london_move.illegal_verbose,
             'Fleet cannot reach non-adjacent territory.'
         )
 
-        self.assertEqual(fleet_north_sea_convoy.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(fleet_north_sea_convoy.illegal)
         self.assertEqual(
-            fleet_north_sea_convoy.illegal_message,
+            fleet_north_sea_convoy.illegal_verbose,
             'Cannot convoy a fleet.'
         )
 
@@ -240,9 +244,9 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(*pieces, army_venice_move, army_tyrolia_support, fleet_trieste_support)
         process(self.state)
 
-        self.assertEqual(fleet_trieste_support.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(fleet_trieste_support.illegal)
         self.assertEqual(
-            fleet_trieste_support.illegal_message,
+            fleet_trieste_support.illegal_verbose,
             'Source and target cannot be the same territory.'
         )
 
@@ -263,10 +267,10 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(fleet, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(order.illegal)
         self.assertEqual(order.illegal_code, '007')
         self.assertEqual(
-            order.illegal_message,
+            order.illegal_verbose,
             'Fleet cannot reach coastal territory without shared coastline.'
         )
 
@@ -300,10 +304,10 @@ class TestBasicChecks(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(fleet_rome_support.legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(fleet_rome_support.illegal)
         self.assertEqual(fleet_rome_support.illegal_code, '010')
         self.assertEqual(
-            fleet_rome_support.illegal_message,
+            fleet_rome_support.illegal_verbose,
             'Piece cannot reach that territory.'
         )
 
@@ -331,11 +335,11 @@ class TestBasicChecks(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(army_venice_move.legal_decision, Outcomes.LEGAL)
-        self.assertEqual(army_vienna_move.legal_decision, Outcomes.LEGAL)
+        self.assertTrue(army_venice_move.legal)
+        self.assertTrue(army_vienna_move.legal)
 
-        self.assertEqual(army_vienna_move.move_decision, Outcomes.FAILS)
-        self.assertEqual(army_venice_move.move_decision, Outcomes.FAILS)
+        self.assertEqual(army_vienna_move.outcome, Outcomes.FAILS)
+        self.assertEqual(army_venice_move.outcome, Outcomes.FAILS)
 
         # TODO
         # self.assertFalse(army_vienna.dislodged)
@@ -371,10 +375,10 @@ class TestBasicChecks(unittest.TestCase):
         self.state.register(*pieces, army_venice_move, army_vienna_move, army_munich_move)
         process(self.state)
 
-        self.assertEqual(army_venice_move.legal_decision, Outcomes.LEGAL)
-        self.assertEqual(army_vienna_move.legal_decision, Outcomes.LEGAL)
-        self.assertEqual(army_munich_move.legal_decision, Outcomes.LEGAL)
+        self.assertTrue(army_venice_move.legal)
+        self.assertTrue(army_vienna_move.legal)
+        self.assertTrue(army_munich_move.legal)
 
-        self.assertEqual(army_vienna_move.move_decision, Outcomes.FAILS)
-        self.assertEqual(army_venice_move.move_decision, Outcomes.FAILS)
-        self.assertEqual(army_munich_move.move_decision, Outcomes.FAILS)
+        self.assertEqual(army_vienna_move.outcome, Outcomes.FAILS)
+        self.assertEqual(army_venice_move.outcome, Outcomes.FAILS)
+        self.assertEqual(army_munich_move.outcome, Outcomes.FAILS)

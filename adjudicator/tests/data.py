@@ -113,7 +113,7 @@ class Territories:
         self.MOSCOW = InlandTerritory(63, 'moscow', Nations.RUSSIA, [37, 47, 49, 75, 70, 72], supply_center=True, controlled_by=Nations.RUSSIA)
         self.MUNICH = InlandTerritory(64, 'munich', 3, [24, 59, 61, 35, 68, 66, 69])
         self.PARIS = InlandTerritory(65, 'paris', 2, [26, 61, 32, 43, 68, 66, 69])
-        self.RUHR = InlandTerritory(66, 'ruhr', 3, [61, 34, 35, 64])
+        self.RUHR = InlandTerritory(66, 'ruhr', 3, [25, 61, 34, 35, 64])
         self.SERBIA = InlandTerritory(67, 'serbia', None, [20, 60, 73, 33, 47, 53])
         self.SILESIA = InlandTerritory(68, 'silesia', 3, [24, 59, 62, 64, 48, 72])
         self.TYROLIA = InlandTerritory(69, 'tyrolia', 4, [59, 64, 53, 56, 71])

@@ -39,11 +39,11 @@ class HoldStrength(Decision):
             return 0
 
         if piece.order.is_move:
-            if piece.order.move_decision == Outcomes.FAILS:
+            if piece.order.outcome == Outcomes.FAILS:
                 return 1
             return 0
 
-        return 1 + len(hold_support(piece.order, Outcomes.GIVEN))
+        return 1 + len(hold_support(piece.order, Outcomes.SUCCEEDS))
 
     def _maximum(self):
         piece = self.territory.piece
@@ -52,8 +52,8 @@ class HoldStrength(Decision):
             return 0
 
         if piece.order.is_move:
-            if piece.order.move_decision == Outcomes.MOVES:
+            if piece.order.outcome == Outcomes.SUCCEEDS:
                 return 0
             return 1
 
-        return 1 + len(hold_support(piece.order, Outcomes.GIVEN, Outcomes.UNRESOLVED))
+        return 1 + len(hold_support(piece.order, Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))

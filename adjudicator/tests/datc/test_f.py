@@ -45,9 +45,9 @@ class TestConvoys(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[0].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[2].legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertTrue(orders[0].legal)
+        self.assertTrue(orders[2].illegal)
 
     def test_army_being_convoyed_can_bounce_as_normal(self):
         """
@@ -80,8 +80,8 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_army_being_convoyed_can_receive_support(self):
         """
@@ -116,9 +116,9 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_attacked_convoy_is_not_disrupted(self):
         """
@@ -149,8 +149,8 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_beleaguered_convoy_is_not_disrupted(self):
         """
@@ -191,11 +191,11 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[5].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodged_convoy_does_not_cut_support(self):
         """
@@ -245,14 +245,14 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(orders[1].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].support_decision, Outcomes.CUT)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[5].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[6].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[7].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[6].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[7].outcome, Outcomes.SUCCEEDS)
 
     @unittest.skip('test_dislodged_convoy_does_not_cause_contested_area - involves retreat')
     def test_dislodged_convoy_does_not_cause_contested_area(self):
@@ -288,9 +288,9 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(orders[1].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodged_convoy_does_not_cause_a_bounce(self):
         """
@@ -328,10 +328,10 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(orders[1].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodged_multi_route_convoy(self):
         """
@@ -375,9 +375,9 @@ class TestConvoys(unittest.TestCase):
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[2].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodge_of_multi_route_convoy_with_foreign_fleet(self):
         """
@@ -424,10 +424,10 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodge_of_multi_route_convoy_with_only_foreign_fleets(self):
         """
@@ -477,11 +477,11 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodge_convoying_fleet_not_on_route(self):
         """
@@ -523,10 +523,10 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     @unittest.skip('test_simple_convoy_paradox - Convoy paradox')
     def test_simple_convoy_paradox(self):
@@ -566,10 +566,10 @@ class TestConvoys(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[2].path_decision, Outcomes.NO_PATH)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
 
     # @unittest.skip

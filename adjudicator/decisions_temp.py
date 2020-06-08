@@ -23,24 +23,21 @@ def hold_support(order, *args):
     Returns:
         * A list of `Support` instances.
     """
-    legal_decisions = [Outcomes.LEGAL]
-    return [s for s in order.hold_support_orders if
-            s.support_decision in args and s.legal_decision in legal_decisions]
+    return [s for s in order.hold_support_orders if s.outcome in args]
 
 
 def resolve_convoy_swap(order_a, order_b):
     """
     Two orders which are both traveling by convoy can swap places.
-    TODO finish docstring
     """
     orders = [order_a, order_b]
     outcomes = [resolve_single_convoy_swap(o) for o in orders]
 
-    if all([o == Outcomes.MOVES for o in outcomes]):
-        [o.set_move_decision(Outcomes.MOVES) for o in orders]
+    if all([o == Outcomes.SUCCEEDS for o in outcomes]):
+        [o.set_outcome(Outcomes.SUCCEEDS) for o in orders]
 
     if any([o == Outcomes.FAILS for o in outcomes]):
-        [o.set_move_decision(Outcomes.FAILS) for o in orders]
+        [o.set_outcome(Outcomes.FAILS) for o in orders]
 
 
 def resolve_single_convoy_swap(order):
@@ -52,9 +49,9 @@ def resolve_single_convoy_swap(order):
 
     if other_attacking_pieces:
         if min_attack_strength > other_pieces_max_prevent:
-            return Outcomes.MOVES
+            return Outcomes.SUCCEEDS
     else:
-        return Outcomes.MOVES
+        return Outcomes.SUCCEEDS
 
     if other_attacking_pieces:
         if max_attack_strength <= other_pieces_min_prevent:

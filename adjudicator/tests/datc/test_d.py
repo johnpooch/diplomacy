@@ -8,7 +8,7 @@ from adjudicator.state import State
 from adjudicator.tests.data import NamedCoasts, Nations, Territories, register_all
 
 
-class TestCircularMovement(unittest.TestCase):
+class TestSupportsAndDislodges(unittest.TestCase):
 
     def setUp(self):
         self.state = State()
@@ -47,9 +47,9 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertTrue(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertTrue(orders[1].move_decision, Outcomes.FAILS)
-        self.assertTrue(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_move_cuts_support_on_hold(self):
@@ -86,10 +86,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].support_decision, Outcomes.CUT)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[1])
 
@@ -113,7 +113,7 @@ class TestCircularMovement(unittest.TestCase):
             Fleet(0, Nations.AUSTRIA, self.territories.ADRIATIC_SEA),
             Army(0, Nations.AUSTRIA, self.territories.TRIESTE),
             Army(0, Nations.ITALY, self.territories.VENICE),
-            Fleet(0, Nations.AUSTRIA, self.territories.IONIAN_SEA),
+            Fleet(0, Nations.ITALY, self.territories.IONIAN_SEA),
         ]
         orders = [
             Support(0, Nations.AUSTRIA, self.territories.ADRIATIC_SEA, self.territories.TRIESTE, self.territories.VENICE),
@@ -125,9 +125,9 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_support_to_hold_on_unit_supporting_a_hold_allowed(self):
@@ -160,10 +160,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_support_to_hold_on_unit_supporting_a_move_allowed(self):
         """
@@ -198,11 +198,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
 
     def test_support_to_hold_on_convoying_unit_allowed(self):
         """
@@ -238,12 +238,12 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
+        self.assertTrue(orders[0].legal)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_support_to_hold_on_moving_unit_not_allowed(self):
         """
@@ -281,11 +281,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[0].dislodged_by, pieces[2])
 
@@ -329,10 +329,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)  # given but fails because not move support
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)  # given but fails because not move support
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[2])
 
@@ -367,9 +367,9 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[0])
 
@@ -399,8 +399,8 @@ class TestCircularMovement(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
 
     def test_no_self_dislodgement_of_returning_unit(self):
         """
@@ -426,16 +426,16 @@ class TestCircularMovement(unittest.TestCase):
             Move(0, Nations.GERMANY, self.territories.BERLIN, self.territories.PRUSSIA),
             Move(0, Nations.GERMANY, self.territories.KIEL, self.territories.BERLIN),
             Support(0, Nations.GERMANY, self.territories.MUNICH, self.territories.KIEL, self.territories.BERLIN),
-            Move(0, Nations.GERMANY, self.territories.WARSAW, self.territories.PRUSSIA),
+            Move(0, Nations.RUSSIA, self.territories.WARSAW, self.territories.PRUSSIA),
         ]
         self.state.register(*pieces, *orders)
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_supporting_a_foreign_unit_to_dislodge_own_unit(self):
@@ -465,8 +465,8 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_supporting_a_foreign_unit_to_dislodge_returning_own_unit(self):
@@ -499,11 +499,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_supporting_a_foreign_unit_does_not_prevent_dislodgement(self):
         """
@@ -540,10 +540,10 @@ class TestCircularMovement(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_defender_cannot_cut_support_for_attack_on_itself(self):
         """
@@ -574,9 +574,9 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
 
     def test_convoying_a_unit_dislodging_a_unit_of_the_same_power_is_allowed(self):
@@ -612,8 +612,8 @@ class TestCircularMovement(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[0].dislodged_by, pieces[3])
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodgement_cuts_support(self):
         """
@@ -651,11 +651,11 @@ class TestCircularMovement(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[0].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
 
     def test_surviving_unit_will_sustain_support(self):
         """
@@ -694,12 +694,12 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[5].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[1])
 
@@ -736,10 +736,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[1])
 
@@ -776,9 +776,9 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[1])
 
@@ -824,11 +824,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[5].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[4])
@@ -871,11 +871,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(orders[0].illegal)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[0].dislodged_by, pieces[2])
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_impossible_coast_move_cannot_be_supported(self):
         """
@@ -910,11 +910,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertTrue(orders[2].illegal)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_impossible_army_move_cannot_be_supported(self):
         """
@@ -939,14 +939,14 @@ class TestCircularMovement(unittest.TestCase):
         """
         pieces = [
             Army(0, Nations.FRANCE, self.territories.MARSEILLES),
-            Fleet(0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_NC),
+            Fleet(0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_SC),
             Fleet(0, Nations.ITALY, self.territories.GULF_OF_LYON),
             Fleet(0, Nations.TURKEY, self.territories.WESTERN_MEDITERRANEAN),
             Fleet(0, Nations.TURKEY, self.territories.TYRRHENIAN_SEA),
         ]
         orders = [
             Move(0, Nations.FRANCE, self.territories.MARSEILLES, self.territories.GULF_OF_LYON),
-            Support(0, Nations.FRANCE, self.territories.SPAIN,  self.territories.MARSEILLES, self.territories.GULF_OF_LYON),
+            Support(0, Nations.FRANCE, self.territories.SPAIN, self.territories.MARSEILLES, self.territories.GULF_OF_LYON),
             Hold(0, Nations.ITALY, self.territories.GULF_OF_LYON),
             Move(0, Nations.TURKEY, self.territories.WESTERN_MEDITERRANEAN, self.territories.GULF_OF_LYON),
             Support(0, Nations.TURKEY, self.territories.TYRRHENIAN_SEA, self.territories.WESTERN_MEDITERRANEAN, self.territories.GULF_OF_LYON),
@@ -955,12 +955,12 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
+        self.assertTrue(orders[0].illegal)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[2].dislodged_by, pieces[3])
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
 
     def test_failing_hold_support_can_be_supported(self):
         """
@@ -997,10 +997,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_failing_move_support_can_be_supported(self):
@@ -1034,10 +1034,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_failing_convoy_can_be_supported(self):
@@ -1077,10 +1077,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_impossible_move_and_support(self):
         """
@@ -1121,11 +1121,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertTrue(orders[1].illegal)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_move_to_impossible_coast_and_support(self):
         """
@@ -1169,11 +1169,11 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertTrue(orders[1].illegal)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_unwanted_support_allowed(self):
         """
@@ -1208,10 +1208,10 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_support_targeting_own_area_not_allowed(self):
         """
@@ -1262,7 +1262,7 @@ class TestCircularMovement(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertTrue(orders[3].illegal)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[3].dislodged_by, pieces[0])

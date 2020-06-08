@@ -32,12 +32,12 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(orders[0].illegal)
         self.assertEqual(
-            orders[0].illegal_message,
+            orders[0].illegal_verbose,
             'Piece cannot retreat to the territory from which it was attacked.'
         )
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
 
     def test_unit_may_not_retreat_to_contested_area(self):
         """
@@ -54,13 +54,13 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
+        self.assertTrue(orders[0].illegal)
         self.assertEqual(
-            orders[0].illegal_message,
+            orders[0].illegal_verbose,
             ('Cannot retreat to a territory which was contested on the '
              'previous turn.')
         )
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
 
     def test_multiple_retreat_to_the_same_area_causes_disband(self):
         """
@@ -78,10 +78,10 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
+        self.assertTrue(orders[0].legal)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertTrue(orders[1].legal)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
 
     def test_three_retreats_to_the_same_area_causes_disband(self):
         """
@@ -102,9 +102,9 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertTrue(orders[0].legal)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertTrue(orders[1].legal)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertTrue(orders[2].legal)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
