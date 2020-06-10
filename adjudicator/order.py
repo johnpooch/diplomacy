@@ -53,10 +53,10 @@ class Order:
             raise ValueError(
                 'This order\'s outcome has already been resolved.'
             )
-        if self.check_succeeds():
-            self.outcome = Outcomes.SUCCEEDS
-        elif self.check_fails():
+        if self.check_fails():
             self.outcome = Outcomes.FAILS
+        elif self.check_succeeds():
+            self.outcome = Outcomes.SUCCEEDS
 
     def set_illegal(self, code, message):
         self.illegal_code = code
@@ -148,7 +148,10 @@ class Move(Order):
         # TODO convoy swaps should be handled separately
         if self.is_convoy_swap():
             return resolve_convoy_swap(self, self.target.piece.order)
-        super().resolve()
+        if self.check_fails():
+            self.outcome = Outcomes.FAILS
+        elif self.check_succeeds():
+            self.outcome = Outcomes.SUCCEEDS
 
     def move_support(self, *args):
         return [s for s in self.move_support_orders if
@@ -207,6 +210,8 @@ class Support(Order):
         self.target = target
 
     def check_succeeds(self):
+        if not self.piece.dislodged_decision == Outcomes.SUSTAINS:
+            return False
         source_attacking_pieces = self.source.other_attacking_pieces(self.target.piece)
         if not source_attacking_pieces:
             return True
@@ -214,10 +219,11 @@ class Support(Order):
             return all([not p.order.attack_strength_decision.max_strength for p in source_attacking_pieces])
 
     def check_fails(self):
+        if self.piece.dislodged_decision == Outcomes.DISLODGED:
+            self.outcome_verbose = 'Support fails because dislodged.'
         aux_order = self.aux.piece.order
-        if aux_order.illegal:
-            self.outcome_verbose = 'Aux self is illegal.'
-        if aux_order.is_move and aux_order.target != self.target:
+        aux_piece_moves = aux_order.is_move and aux_order.legal
+        if aux_piece_moves and aux_order.target != self.target:
             self.outcome_verbose = 'Aux piece is does not move to target.'
         if not aux_order.is_move:
             if self.target != self.aux:
@@ -226,7 +232,8 @@ class Support(Order):
         if self.source.attacking_pieces and \
                 any([p.order.attack_strength_decision()[0] >= 1
                      for p in self.source.attacking_pieces
-                     if p.territory != self.target]):
+                     if p.territory != self.target]
+                    ):
             self.outcome_verbose = 'Support is cut by attacking piece.'
         return bool(self.outcome_verbose)
 
