@@ -18,6 +18,7 @@ class Decision:
     def __init__(self, order):
         self.order = order
         self.result = Outcomes.UNRESOLVED
+        self.message = None
 
     def __call__(self):
         """

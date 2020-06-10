@@ -17,6 +17,7 @@ class Path(Decision):
             return Outcomes.PATH
 
         if not self.order.convoy_chains:
+            self.message = 'no convoy route available for move.'
             return Outcomes.NO_PATH
 
         for chain in self.order.convoy_chains:
@@ -26,6 +27,7 @@ class Path(Decision):
             return Outcomes.PATH
 
         if all([c.result == Outcomes.FAILS for c in self.order.convoy_chains]):
+            self.message = 'convoy route was disrupted.'
             return Outcomes.NO_PATH
 
         return Outcomes.UNRESOLVED

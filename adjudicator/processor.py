@@ -34,9 +34,9 @@ def process(state):
         unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
         unresolved_moves = [m for m in moves if m.outcome == Outcomes.UNRESOLVED]
         for move in unresolved_moves:
-            move.update_move_decision()
+            move.resolve()
         for support in unresolved_supports:
-            support.update_support_decision()
+            support.resolve()
         for piece in unresolved_pieces:
             piece.update_dislodged_decision()
         # resolve fleet movements
@@ -50,7 +50,7 @@ def process(state):
     while unresolved_moves or unresolved_pieces or unresolved_supports or unresolved_retreats:
         unresolved_retreats = [r for r in retreats if r.outcome == Outcomes.UNRESOLVED]
         for r in unresolved_retreats:
-            r.update_move_decision()
+            r.resolve()
 
         if depth == 10:
             circular_movements = find_circular_movements(moves)
@@ -58,12 +58,12 @@ def process(state):
                 for move in l:
                     move.outcome = Outcomes.SUCCEEDS
 
-        for move in unresolved_moves:
-            move.update_move_decision()
+        for move in [m for m in moves if m.outcome == Outcomes.UNRESOLVED]:
+            move.resolve()
 
         unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
         for support in unresolved_supports:
-            support.update_support_decision()
+            support.resolve()
 
         for piece in unresolved_pieces:
             piece.update_dislodged_decision()
@@ -75,7 +75,7 @@ def process(state):
     # Check update bounce_occurred_during_turn on all territories
     for territory in state.territories:
         attacks = [o for o in orders if o.is_move and o.target == territory]
-        if not attacks or any([a.outcome == Outcomes.MOVES for a in attacks]):
+        if not attacks or any([a.outcome == Outcomes.SUCCEEDS for a in attacks]):
             territory.bounce_occurred = False
         else:
             territory.bounce_occurred = True

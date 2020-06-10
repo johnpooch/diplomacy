@@ -48,9 +48,15 @@ class Order:
     def legal(self):
         return not self.illegal
 
-    def set_outcome(self, outcome):
-        self.outcome = outcome
-        return self.outcome
+    def resolve(self):
+        if not self.outcome == Outcomes.UNRESOLVED:
+            raise ValueError(
+                'This order\'s outcome has already been resolved.'
+            )
+        if self.check_succeeds():
+            self.outcome = Outcomes.SUCCEEDS
+        elif self.check_fails():
+            self.outcome = Outcomes.FAILS
 
     def set_illegal(self, code, message):
         self.illegal_code = code
@@ -69,16 +75,12 @@ class Order:
                 return
 
     def to_dict(self):
-        if self.piece:
-            if self.piece.dislodged_decision == Outcomes.DISLODGED:
-                outcome = Outcomes.FAILS
-            else:
-                outcome = Outcomes.SUCCEEDS
         return {
             'id': self.id,
-            'legal': self.legal,
+            'illegal': self.illegal,
+            'illegal_code': self.illegal_code,
             'illegal_verbose': self.illegal_verbose,
-            'outcome': outcome,
+            'outcome': self.outcome,
         }
 
 
@@ -114,70 +116,39 @@ class Move(Order):
         self.defend_strength_decision = decisions.DefendStrength(self)
         self.path_decision = decisions.Path(self)
 
-    def update_move_decision(self):
+    def check_succeeds(self):
+        min_attack_strength, _ = AttackStrength(self)()
+        _, max_to_beat = self._get_strength_to_beat()
+        max_prevent = max([p.order.prevent_strength_decision()[1] for p in self.target.other_attacking_pieces(self.piece)], default=0)
+
+        return min_attack_strength > max([max_to_beat, max_prevent])
+
+    def check_fails(self):
+        _, max_attack_strength = AttackStrength(self)()
+        min_to_beat, _ = self._get_strength_to_beat()
+        min_prevent = min([p.order.prevent_strength_decision()[0] for p in self.target.other_attacking_pieces(self.piece)], default=100)
+
+        other_attacking_pieces = self.target.other_attacking_pieces(self.piece)
 
         if self.path_decision() == Outcomes.NO_PATH:
-            return self.set_outcome(Outcomes.FAILS)
+            self.outcome_verbose = 'Order cannot reach target - {}' \
+                .format(self.path_decision.message)
+            return True
 
-        if self.path_decision() == Outcomes.UNRESOLVED:
-            return
+        lte_min_to_beat = max_attack_strength <= min_to_beat
+        lte_min_prevent = other_attacking_pieces \
+            and max_attack_strength <= min_prevent
 
-        if self.is_head_to_head():
-            return self._resolve_head_to_head()
+        if lte_min_to_beat or lte_min_prevent:
+            self.outcome_verbose = 'Order does not have enough strength'
+            return True
+        return False
 
+    def resolve(self):
+        # TODO convoy swaps should be handled separately
         if self.is_convoy_swap():
             return resolve_convoy_swap(self, self.target.piece.order)
-
-        piece = self.piece
-        min_attack_strength, max_attack_strength = AttackStrength(self)()
-
-        target_min_hold = self.target.hold_strength[0]
-        target_max_hold = self.target.hold_strength[1]
-
-        other_attacking_pieces = self.target.other_attacking_pieces(piece)
-        other_pieces_max_prevent = max([p.order.prevent_strength_decision()[1] for p in other_attacking_pieces], default=0)
-        other_pieces_min_prevent = min([p.order.prevent_strength_decision()[0] for p in other_attacking_pieces], default=0)
-
-        # succeeds if...
-        if other_attacking_pieces:
-            if min_attack_strength > target_max_hold:
-                if min_attack_strength > other_pieces_max_prevent:
-                    return self.set_outcome(Outcomes.SUCCEEDS)
-        else:
-            if min_attack_strength > target_max_hold:
-                return self.set_outcome(Outcomes.SUCCEEDS)
-
-        # fails if...
-        if max_attack_strength <= target_min_hold:
-            return self.set_outcome(Outcomes.FAILS)
-
-        if other_attacking_pieces:
-            if max_attack_strength <= other_pieces_min_prevent:
-                return self.set_outcome(Outcomes.FAILS)
-
-    def _resolve_head_to_head(self):
-
-        piece = self.piece
-        opposing_unit = self.target.piece
-        opposing_min_defend, opposing_max_defend = opposing_unit.order.defend_strength_decision()
-        min_attack_strength, max_attack_strength = AttackStrength(self)()
-        other_attacking_pieces = self.target.other_attacking_pieces(piece)
-        other_pieces_min_prevent = max([p.order.prevent_strength_decision()[0] for p in other_attacking_pieces], default=0)
-        other_pieces_max_prevent = max([p.order.prevent_strength_decision()[1] for p in other_attacking_pieces], default=0)
-
-        # succeeds if...
-        if min_attack_strength > opposing_max_defend:
-            if other_attacking_pieces:
-                if min_attack_strength > other_pieces_max_prevent:
-                    return self.set_outcome(Outcomes.SUCCEEDS)
-            else:
-                return self.set_outcome(Outcomes.SUCCEEDS)
-
-        # fails if...
-        if max_attack_strength <= opposing_min_defend:
-            return self.set_outcome(Outcomes.FAILS)
-        if max_attack_strength <= other_pieces_min_prevent:
-            return self.set_outcome(Outcomes.FAILS)
+        super().resolve()
 
     def move_support(self, *args):
         return [s for s in self.move_support_orders if
@@ -216,9 +187,10 @@ class Move(Order):
                             return opposing_piece.order.target == self.source
         return False
 
-    def to_dict(self):
-        data = super().to_dict()
-        return data
+    def _get_strength_to_beat(self):
+        if self.is_head_to_head():
+            return self.target.piece.order.defend_strength_decision()
+        return self.target.hold_strength
 
 
 class Support(Order):
@@ -234,68 +206,29 @@ class Support(Order):
         self.aux = aux
         self.target = target
 
-    def update_support_decision(self):
-        piece = self.piece
-        target_piece = self.target.piece
-        aux_piece = self.aux.piece
-        aux_target = getattr(self.aux.piece.order, 'target', None)
+    def check_succeeds(self):
+        source_attacking_pieces = self.source.other_attacking_pieces(self.target.piece)
+        if not source_attacking_pieces:
+            return True
+        if self.target.piece and self.aux.piece:
+            return all([not p.order.attack_strength_decision.max_strength for p in source_attacking_pieces])
 
-        source_attacking_pieces = self.source.other_attacking_pieces(target_piece)
-
-        if piece.dislodged_decision == Outcomes.DISLODGED:
-            return self.set_outcome(Outcomes.FAILS)
-
-        # succeeds if...
-        if piece.dislodged_decision == Outcomes.SUSTAINS:
-
-            if not self.source.attacking_pieces:
-                return self.set_outcome(Outcomes.SUCCEEDS)
-
-            if target_piece and aux_piece:
-                # If the aux piece is moving to the right target.
-                if aux_piece.order.is_move and aux_target == self.target:
-                    # If no pieces (other than the target piece) have strength
-                    if all([p.order.attack_strength_decision.max_strength == 0 for p in source_attacking_pieces]):
-                        return self.set_outcome(Outcomes.SUCCEEDS)
-
-            if all([p.order.attack_strength_decision.max_strength == 0 for p in self.source.attacking_pieces]):
-                return self.set_outcome(Outcomes.SUCCEEDS)
-
-        # fails if...
-        # If aux piece is not going to target of order
-        if aux_piece:
-            if aux_piece.order.is_move \
-                    and aux_piece.order.target != self.target \
-                    and aux_piece.order.legal:
-                return self.set_outcome(Outcomes.FAILS)
-            # If aux piece holds and support target is not same as aux
-            if not aux_piece.order.is_move:
-                if self.target != self.aux:
-                    return self.set_outcome(Outcomes.FAILS)
-
-        if target_piece and aux_piece:
-            if aux_piece.order.is_move and aux_piece == self.target:
-                if target_piece.order.is_convoy:
-                    convoying_order = target_piece.order
-                    if convoying_order.aux.piece:
-                        if any([p.order.min_attack_strength >= 1
-                                for p in self.source.other_attacking_pieces(convoying_order.aux.piece)]):
-                            return self.set_outcome(Outcomes.FAILS)
-                else:
-                    if any([p.order.attack_strength_decision.min_strength >= 1
-                            for p in self.source.other_attacking_pieces(self.target.piece)]):
-                        return self.set_outcome(Outcomes.FAILS)
+    def check_fails(self):
+        aux_order = self.aux.piece.order
+        if aux_order.illegal:
+            self.outcome_verbose = 'Aux self is illegal.'
+        if aux_order.is_move and aux_order.target != self.target:
+            self.outcome_verbose = 'Aux piece is does not move to target.'
+        if not aux_order.is_move:
+            if self.target != self.aux:
+                self.outcome_verbose = 'Aux piece does not move.'
 
         if self.source.attacking_pieces and \
                 any([p.order.attack_strength_decision()[0] >= 1
                      for p in self.source.attacking_pieces
-                     if p.territory != aux_target]):
-            return self.set_outcome(Outcomes.FAILS)
-
-    def to_dict(self):
-        data = super().to_dict()
-        data.update({'outcome': self.outcome})
-        return data
+                     if p.territory != self.target]):
+            self.outcome_verbose = 'Support is cut by attacking piece.'
+        return bool(self.outcome_verbose)
 
 
 class Convoy(Order):
@@ -326,19 +259,15 @@ class Retreat(Order):
         self.target = target
         self.target_coast = target_coast
 
-    def update_move_decision(self):
+    def resolve(self):
 
         piece = self.piece
         other_retreating_pieces = self.target.other_retreating_pieces(piece)
 
         if other_retreating_pieces:
-            self.set_outcome(Outcomes.FAILS)
+            self.outcome = Outcomes.FAILS
         else:
-            self.set_outcome(Outcomes.SUCCEEDS)
-
-    def to_dict(self):
-        data = super().to_dict()
-        return data
+            self.outcome = Outcomes.SUCCEEDS
 
 
 class Build(Order):
@@ -357,18 +286,6 @@ class Build(Order):
         self.piece_type = piece_type
         self.named_coast = named_coast
 
-    def to_dict(self):
-        if self.illegal:
-            outcome = Outcomes.FAILS
-        else:
-            outcome = Outcomes.SUCCEEDS
-        return {
-            'id': self.id,
-            'illegal': self.illegal,
-            'illegal_verbose': self.illegal_verbose,
-            'outcome': outcome,
-        }
-
     def __str__(self):
         order_type = self.p__class__.__name__.upper()
         return f'{self.nation} - {order_type} {self.piece_type} {self.source}'
@@ -379,18 +296,6 @@ class Disband(Order):
     checks = [
         check.SourcePieceBelongsToNation,
     ]
-
-    def to_dict(self):
-        if self.legal_decision == Outcomes.ILLEGAL:
-            outcome = Outcomes.FAILS
-        else:
-            outcome = Outcomes.SUCCEEDS
-        return {
-            'id': self.id,
-            'legal_decision': self.legal_decision,
-            'illegal_verbose': self.illegal_verbose,
-            'outcome': outcome,
-        }
 
     def __str__(self):
         order_type = self.p__class__.__name__.upper()

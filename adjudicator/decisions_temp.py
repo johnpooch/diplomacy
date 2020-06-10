@@ -34,10 +34,12 @@ def resolve_convoy_swap(order_a, order_b):
     outcomes = [resolve_single_convoy_swap(o) for o in orders]
 
     if all([o == Outcomes.SUCCEEDS for o in outcomes]):
-        [o.set_outcome(Outcomes.SUCCEEDS) for o in orders]
+        for o in orders:
+            o.outcome = Outcomes.SUCCEEDS
 
     if any([o == Outcomes.FAILS for o in outcomes]):
-        [o.set_outcome(Outcomes.FAILS) for o in orders]
+        for o in orders:
+            o.outcome = Outcomes.FAILS
 
 
 def resolve_single_convoy_swap(order):
@@ -56,5 +58,4 @@ def resolve_single_convoy_swap(order):
     if other_attacking_pieces:
         if max_attack_strength <= other_pieces_min_prevent:
             return Outcomes.FAILS
-
     return Outcomes.UNRESOLVED
