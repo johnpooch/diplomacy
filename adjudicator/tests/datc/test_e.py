@@ -624,7 +624,6 @@ class TestHeadToHeadBattles(unittest.TestCase):
         self.assertEqual(orders[0].outcome, Outcomes.FAILS)
         self.assertEqual(orders[1].outcome, Outcomes.FAILS)
 
-    @unittest.skip('test_friendly_head_to_head_battle - recursion problem')
     def test_friendly_head_to_head_battle(self):
         """
         In this case both units in the head to head battle prevent that the
