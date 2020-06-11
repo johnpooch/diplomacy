@@ -39,6 +39,10 @@ class AttackStrength(Decision):
         if self.order.is_head_to_head() or not self.order.target.piece.moves:
             if self.order.target.piece.nation == self.order.nation:
                 return 0
+            # if convoy swap
+            if self.order.is_convoy_swap():
+                return 1 + len(self.order.move_support(Outcomes.SUCCEEDS))
+
             return 1 + len([c for c in self.order.move_support(Outcomes.SUCCEEDS)
                             if c.nation != self.order.target.piece.nation])
 

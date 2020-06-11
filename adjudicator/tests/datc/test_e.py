@@ -442,7 +442,6 @@ class TestHeadToHeadBattles(unittest.TestCase):
         self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[6].outcome, Outcomes.FAILS)
 
-    @unittest.skip('test_almost_circular_movement_self_dislodgement_coasts - recursion problem')
     def test_almost_circular_movement_self_dislodgement_coasts(self):
         """
         Similar to the previous test case, but now the beleaguered fleet is in
@@ -489,11 +488,11 @@ class TestHeadToHeadBattles(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[4].outcome, Outcomes.FAILS)
-        self.assertEqual(orders[5].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
 

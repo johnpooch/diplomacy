@@ -129,6 +129,9 @@ class Move(Order):
         _, max_to_beat = self._get_strength_to_beat()
         max_prevent = max([p.order.prevent_strength_decision()[1] for p in self.target.other_attacking_pieces(self.piece)], default=0)
 
+        if self.source.name == 'portugal':
+            print(min_attack_strength)
+
         return min_attack_strength > max([max_to_beat, max_prevent])
 
     def check_fails(self):

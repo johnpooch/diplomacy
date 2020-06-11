@@ -24,6 +24,7 @@ def process(state):
     illegal_moves = [m for m in moves if m.illegal]
     # set illegal moves to fail.
     for m in illegal_moves:
+        print(m)
         m.outcome = Outcomes.FAILS
 
     unresolved_pieces = [p for p in pieces if p.dislodged_decision == Outcomes.UNRESOLVED]
