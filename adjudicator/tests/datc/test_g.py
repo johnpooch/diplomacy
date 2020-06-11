@@ -664,7 +664,6 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
-    @unittest.skip
     def test_bounce_by_convoy_to_adjacent_place(self):
         """
         Similar to test case 6.G.10, but now the other unit is taking the

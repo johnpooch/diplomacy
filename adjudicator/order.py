@@ -1,7 +1,6 @@
 from . import decisions, check
 from .decisions import Outcomes
 from .decisions.attack_strength import AttackStrength
-from .decisions_temp import resolve_convoy_swap
 
 
 class Order:
@@ -83,6 +82,15 @@ class Order:
             'outcome': self.outcome,
         }
 
+    def hold_support(self, *args):
+        """
+        Support orders which are supporting the given order to hold.
+
+        Returns:
+            * A list of `Support` instances.
+        """
+        return [s for s in self.hold_support_orders if s.outcome in args]
+
 
 class Hold(Order):
 
@@ -145,9 +153,6 @@ class Move(Order):
         return False
 
     def resolve(self):
-        # TODO convoy swaps should be handled separately
-        if self.is_convoy_swap():
-            return resolve_convoy_swap(self, self.target.piece.order)
         if self.check_fails():
             self.outcome = Outcomes.FAILS
         elif self.check_succeeds():
@@ -216,7 +221,20 @@ class Support(Order):
         if not source_attacking_pieces:
             return True
         if self.target.piece and self.aux.piece:
+            # If the aux piece is moving to the right target.
+            if self.aux.piece.order.is_move and self.aux.piece.order.target == self.target:
+                # If no pieces (other than the target piece) have strength
+                if all([p.order.attack_strength_decision.max_strength == 0 for p in source_attacking_pieces]):
+                    return True
+        if self.target.piece and self.aux.piece:
             return all([not p.order.attack_strength_decision.max_strength for p in source_attacking_pieces])
+
+        if isinstance(self.target.piece.order, Convoy):
+            convoying_order = self.target.piece.order
+            if convoying_order.aux.piece:
+                if all([p.order.attack_strength == 0
+                        for p in self.source.other_attacking_pieces(convoying_order.aux.piece)]):
+                    return True
 
     def check_fails(self):
         if self.piece.dislodged_decision == Outcomes.DISLODGED:
