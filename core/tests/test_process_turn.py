@@ -81,7 +81,7 @@ class TestProcessTurn(TestCase):
         turn.refresh_from_db()
         self.assertTrue(turn.processed)
         order.refresh_from_db()
-        self.assertEqual(order.outcome, OutcomeType.MOVES)
+        self.assertEqual(order.outcome, OutcomeType.SUCCEEDS)
 
     def test_bounce_occured(self):
         user = User.objects.create(username='Test User')
@@ -169,9 +169,12 @@ class TestProcessTurn(TestCase):
             turn=turn,
             nation=france,
             type=OrderType.MOVE,
-            source=paris,
+            source=picardy,
             target=burgundy,
         )
+        paris.neighbours.add(picardy)
+        picardy.neighbours.add(burgundy)
+        paris.neighbours.add(burgundy)
         game.process()
         turn.refresh_from_db()
         burgundy_state.refresh_from_db()
@@ -310,8 +313,8 @@ class TestPieceDestroyed(TestCase):
         paris_order.refresh_from_db()
         picardy_order.refresh_from_db()
         self.assertTrue(turn.processed)
-        self.assertEqual(picardy_order.outcome, OutcomeType.GIVEN)
-        self.assertEqual(paris_order.outcome, OutcomeType.MOVES)
+        self.assertEqual(picardy_order.outcome, OutcomeType.SUCCEEDS)
+        self.assertEqual(paris_order.outcome, OutcomeType.SUCCEEDS)
         self.assertTrue(army_brest_state.dislodged)
         self.assertEqual(army_brest_state.dislodged_by, army_paris_state)
         self.assertTrue(army_brest_state.destroyed)

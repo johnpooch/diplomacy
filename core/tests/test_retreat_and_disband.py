@@ -82,8 +82,8 @@ class TestRetreatAndDisband(TestCase):
             'orders': [
                 {
                     'id': order.id,
-                    'legal_decision': 'legal',
-                    'illegal_message': None,
+                    'illegal': False,
+                    'illegal_verbose': None,
                     'outcome': 'succeeds'
                 }
             ]

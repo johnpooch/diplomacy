@@ -15,6 +15,7 @@ def process(state):
     retreats = [o for o in orders if o.is_retreat]
     supports = [o for o in orders if o.is_support]
     convoys = [o for o in orders if o.is_convoy]
+    builds = [o for o in orders if o.is_build]
 
     illegal_retreats = [r for r in retreats if r.illegal]
     # set illegal retreats to fail.
@@ -92,4 +93,9 @@ def process(state):
                 'Destroyed because piece cannot retreat to any neighboring '
                 'territories.'
             )
+    for build in builds:
+        if build.legal:
+            build.outcome = Outcomes.SUCCEEDS
+        else:
+            build.outcome = Outcomes.FAILS
     return orders

@@ -312,7 +312,7 @@ class Build(Order):
         self.named_coast = named_coast
 
     def __str__(self):
-        order_type = self.p__class__.__name__.upper()
+        order_type = self.__class__.__name__.upper()
         return f'{self.nation} - {order_type} {self.piece_type} {self.source}'
 
 
@@ -323,5 +323,5 @@ class Disband(Order):
     ]
 
     def __str__(self):
-        order_type = self.p__class__.__name__.upper()
+        order_type = self.__class__.__name__.upper()
         return f'{self.nation} - {order_type} {self.piece_type} {self.source}'

@@ -41,7 +41,7 @@ class TurnManager(models.Manager):
 
         # get successful move orders
         successful_move_orders = previous_turn.orders.filter(
-            outcome=OutcomeType.MOVES,
+            outcome=OutcomeType.SUCCEEDS,
             type=OrderType.MOVE,
         )
         # get successful retreat orders
@@ -213,28 +213,9 @@ class Turn(models.Model):
         return None
 
     def process(self):
-        self.create_default_hold_orders()
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)
-        from pprint import pprint
-        # pprint(outcome)
         self.update_turn(outcome)
-
-    def create_default_hold_orders(self):
-        """
-        Creates a hold order for any piece which does not have an order.
-        """
-        for piece_state in self.piecestates.all():
-            nation = piece_state.piece.nation
-            territory = piece_state.territory
-            orders = self.orders.filter(source=territory, nation=nation)
-            if not orders:
-                order_model = apps.get_model('core', 'Order')
-                order_model.objects.create(
-                    source=territory,
-                    nation=nation,
-                    turn=self,
-                )
 
     def update_turn(self, outcome):
         piece_state_model = apps.get_model('core', 'PieceState')
@@ -277,8 +258,9 @@ class Turn(models.Model):
         for order_data in outcome['orders']:
             order = self.orders.get(id=order_data['id'])
             order.outcome = order_data.get('outcome')
-            order.legal = order_data['legal_decision'] == 'legal'
-            order.illegal_message = order_data['illegal_message']
+            order.outcome_verbose = order_data.get('outcome_verbose')
+            order.legal = bool(not order_data['illegal'])
+            order.illegal_verbose = order_data['illegal_verbose']
             order.save()
         for piece_data in outcome.get('pieces', []):
             piece = self.piecestates.get(id=piece_data['id'])
