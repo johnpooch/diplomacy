@@ -75,10 +75,12 @@ def process(state):
     # Check update bounce_occurred_during_turn on all territories
     for territory in state.territories:
         attacks = [o for o in orders if o.is_move and o.target == territory]
-        if not attacks or any([a.outcome == Outcomes.SUCCEEDS for a in attacks]):
-            territory.bounce_occurred = False
-        else:
-            territory.bounce_occurred = True
+        bounce_occurred = False
+        for attack in attacks:
+            if attack.legal and attack.outcome == Outcomes.FAILS and \
+                    attack.path_decision() == Outcomes.PATH:
+                bounce_occurred = True
+        territory.bounce_occurred = bounce_occurred
 
     # Check all dislodged pieces for pieces which can't retreat
     dislodged_pieces = [p for p in state.pieces
