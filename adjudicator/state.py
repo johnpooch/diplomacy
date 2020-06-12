@@ -273,14 +273,25 @@ def data_to_state(data):
         order_class = order_type_dict[type]
         order = order_class(**order_data)
         state.register(order)
+    # create an order for all pieces without orders
+    for piece in state.pieces:
+        if not piece.order:
+            order_data = {
+                '_id': 0,
+                'nation': piece.nation,
+                'source': piece.territory
+            }
+            hold = Hold(**order_data)
+            state.register(hold)
     return state
 
 
 def state_to_data(state):
+    actual_orders = [o for o in state.orders if o.id]
     return {
         'territories': [t.to_dict() for t in state.territories],
         'pieces': [p.to_dict() for p in state.pieces],
-        'orders': [o.to_dict() for o in state.orders],
+        'orders': [o.to_dict() for o in actual_orders],
     }
 
 

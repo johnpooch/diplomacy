@@ -64,10 +64,15 @@ class Order(PerTurnModel):
         null=True,
         blank=True,
     )
+    outcome_verbose = models.CharField(
+        max_length=500,
+        null=True,
+        blank=True,
+    )
     legal = models.BooleanField(
         default=True,
     )
-    illegal_message = models.CharField(
+    illegal_verbose = models.CharField(
         max_length=500,
         null=True,
         blank=True,

@@ -96,7 +96,7 @@ class Territories:
         self.SWEDEN = CoastalTerritory(51, 'sweden', None, [3, 6, 29, 31, 42, 17],
                                   [29, 31, 42])
         self.SYRIA = CoastalTerritory(52, 'syria', 7, [23, 7, 50], [50])
-        self.TRIESTE = CoastalTerritory(53, 'trieste', 4, [1, 20, 60, 52, 69, 56, 71],
+        self.TRIESTE = CoastalTerritory(53, 'trieste', 4, [1, 20, 60, 52, 69, 67, 56, 71],
                                    [20, 56])
         self.TUNIS = CoastalTerritory(54, 'tunis', None, [11, 40, 18, 19], [40])
         self.TUSCANY = CoastalTerritory(55, 'tuscany', 5, [9, 44, 46, 18, 56], [44, 46])
@@ -113,7 +113,7 @@ class Territories:
         self.MOSCOW = InlandTerritory(63, 'moscow', Nations.RUSSIA, [37, 47, 49, 75, 70, 72], supply_center=True, controlled_by=Nations.RUSSIA)
         self.MUNICH = InlandTerritory(64, 'munich', 3, [24, 59, 61, 35, 68, 66, 69])
         self.PARIS = InlandTerritory(65, 'paris', 2, [26, 61, 32, 43, 68, 66, 69])
-        self.RUHR = InlandTerritory(66, 'ruhr', 3, [61, 34, 35, 64])
+        self.RUHR = InlandTerritory(66, 'ruhr', 3, [25, 61, 34, 35, 64])
         self.SERBIA = InlandTerritory(67, 'serbia', None, [20, 60, 73, 33, 47, 53])
         self.SILESIA = InlandTerritory(68, 'silesia', 3, [24, 59, 62, 64, 48, 72])
         self.TYROLIA = InlandTerritory(69, 'tyrolia', 4, [59, 64, 53, 56, 71])

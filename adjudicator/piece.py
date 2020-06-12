@@ -39,7 +39,7 @@ class Piece:
             * `bool`
         """
         if self.order.is_move:
-            return self.order.move_decision == Outcomes.MOVES
+            return self.order.outcome == Outcomes.SUCCEEDS
         return False
 
     @property
@@ -52,7 +52,7 @@ class Piece:
             * `bool`
         """
         if self.order.is_move:
-            return self.order.move_decision == Outcomes.FAILS
+            return self.order.outcome == Outcomes.FAILS
         return True
 
     @property
@@ -63,7 +63,7 @@ class Piece:
         """
         attacking_pieces = list(self.territory.attacking_pieces)
         return all(
-            [p.order.move_decision == Outcomes.FAILS for p in attacking_pieces]
+            [p.order.outcome == Outcomes.FAILS for p in attacking_pieces]
         )
 
     @property
@@ -72,7 +72,7 @@ class Piece:
         Whether any piece attacking this piece's territory moves.
         """
         attacking_pieces = list(self.territory.attacking_pieces)
-        return [p for p in attacking_pieces if p.order.move_decision == Outcomes.MOVES]
+        return [p for p in attacking_pieces if p.order.outcome == Outcomes.SUCCEEDS]
 
     def set_dislodged_decision(self, outcome, dislodged_by=None):
         self.dislodged_decision = outcome

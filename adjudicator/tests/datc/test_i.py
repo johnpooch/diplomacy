@@ -1,7 +1,5 @@
 import unittest
 
-from adjudicator import illegal_messages
-from adjudicator.decisions import Outcomes
 from adjudicator.order import Build
 from adjudicator.piece import Army, Fleet, PieceTypes
 from adjudicator.processor import process
@@ -37,8 +35,12 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.B005)
+        self.assertTrue(orders[0].illegal)
+        self.assertEqual(orders[0].illegal_code, '015')
+        self.assertEqual(
+            orders[0].illegal_verbose,
+            'Piece type cannot exist in this type of territory.'
+        )
 
     def test_supply_center_must_be_empty_for_building(self):
         """
@@ -61,8 +63,12 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.B001)
+        self.assertTrue(orders[0].illegal)
+        self.assertEqual(orders[0].illegal_code, '011')
+        self.assertEqual(
+            orders[0].illegal_verbose,
+            'Source is already occupied by a piece.'
+        )
 
     def test_both_coasts_must_be_empty_for_building(self):
         """
@@ -87,8 +93,12 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.B001)
+        self.assertTrue(orders[0].illegal)
+        self.assertEqual(orders[0].illegal_code, '011')
+        self.assertEqual(
+            orders[0].illegal_verbose,
+            'Source is already occupied by a piece.'
+        )
 
     def test_building_in_home_supply_center_that_is_not_owned(self):
         """
@@ -103,8 +113,13 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.B004)
+        self.assertTrue(orders[0].illegal)
+        self.assertEqual(orders[0].illegal_code, '014')
+        self.assertEqual(
+            orders[0].illegal_verbose,
+            ('Cannot build in a supply center which is controlled by a '
+             'foreign power.')
+        )
 
     def test_building_in_owned_supply_center_that_is_not_home(self):
         """
@@ -119,5 +134,9 @@ class TestRetreating(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(orders[0].illegal_message, illegal_messages.B003)
+        self.assertTrue(orders[0].illegal)
+        self.assertEqual(orders[0].illegal_code, '013')
+        self.assertEqual(
+            orders[0].illegal_verbose,
+            'Source is outside of national borders.'
+        )

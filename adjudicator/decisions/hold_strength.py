@@ -1,4 +1,5 @@
 from .base import Decision, Outcomes
+from .attack_strength import AttackStrength
 
 
 class HoldStrength(Decision):
@@ -38,11 +39,22 @@ class HoldStrength(Decision):
             return 0
 
         if piece.order.is_move:
-            if piece.order.move_decision == Outcomes.FAILS:
+            if piece.order.outcome == Outcomes.FAILS:
+                return 1
+
+            # NOTE this is bullsh relating to how convoy swaps work
+            # TODO clean
+            _, max_attack_strength = AttackStrength(piece.order)()
+            target_min_prevent = max(
+                [p.order.prevent_strength_decision()[0] for p in
+                 piece.order.target.other_attacking_pieces(piece)],
+                default=0
+            )
+            if max_attack_strength <= target_min_prevent:
                 return 1
             return 0
 
-        return 1 + len(piece.order.hold_support(Outcomes.GIVEN))
+        return 1 + len(piece.order.hold_support(Outcomes.SUCCEEDS))
 
     def _maximum(self):
         piece = self.territory.piece
@@ -51,8 +63,19 @@ class HoldStrength(Decision):
             return 0
 
         if piece.order.is_move:
-            if piece.order.move_decision == Outcomes.MOVES:
+            if piece.order.outcome == Outcomes.SUCCEEDS:
+                return 0
+
+            # NOTE this is bullsh relating to how convoy swaps work
+            # TODO clean
+            min_attack_strength, _ = AttackStrength(piece.order)()
+            target_max_prevent = max(
+                [p.order.prevent_strength_decision()[1] for p in
+                 piece.order.target.other_attacking_pieces(piece)],
+                default=0
+            )
+            if min_attack_strength > target_max_prevent:
                 return 0
             return 1
 
-        return 1 + len(piece.order.hold_support(Outcomes.GIVEN, Outcomes.UNRESOLVED))
+        return 1 + len(piece.order.hold_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))

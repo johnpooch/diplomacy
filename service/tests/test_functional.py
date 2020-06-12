@@ -358,7 +358,7 @@ class TestEndToEnd(APITestCase):
         self.assertEqual(response.status_code, 200)
 
         # all other pieces hold
-        self.assertEqual(models.Order.objects.count(), 66)
+        self.assertEqual(models.Order.objects.count(), 45)
 
         turn = new_turn
         # turn is processed
@@ -428,7 +428,7 @@ class TestEndToEnd(APITestCase):
                 )
                 self.assertEqual(response.status_code, 201)
 
-        self.assertEqual(models.Order.objects.count(), 75)
+        self.assertEqual(models.Order.objects.count(), 54)
         orders = new_turn.orders.all()
         self.assertEqual(orders.count(), 9)
 

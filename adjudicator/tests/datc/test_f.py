@@ -45,9 +45,9 @@ class TestConvoys(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[0].legal_decision, Outcomes.LEGAL)
-        self.assertEqual(orders[2].legal_decision, Outcomes.ILLEGAL)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertTrue(orders[0].legal)
+        self.assertTrue(orders[2].illegal)
 
     def test_army_being_convoyed_can_bounce_as_normal(self):
         """
@@ -80,8 +80,8 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_army_being_convoyed_can_receive_support(self):
         """
@@ -116,9 +116,9 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_attacked_convoy_is_not_disrupted(self):
         """
@@ -149,8 +149,8 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_beleaguered_convoy_is_not_disrupted(self):
         """
@@ -191,11 +191,11 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[5].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodged_convoy_does_not_cut_support(self):
         """
@@ -245,16 +245,15 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(orders[1].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].support_decision, Outcomes.CUT)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[5].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[6].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[7].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[6].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[7].outcome, Outcomes.SUCCEEDS)
 
-    @unittest.skip('test_dislodged_convoy_does_not_cause_contested_area - involves retreat')
     def test_dislodged_convoy_does_not_cause_contested_area(self):
         """
         When a fleet of a convoy is dislodged, the landing area is not
@@ -288,9 +287,11 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(orders[1].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertFalse(self.territories.HOLLAND.bounce_occurred)
 
     def test_dislodged_convoy_does_not_cause_a_bounce(self):
         """
@@ -328,10 +329,10 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(orders[1].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodged_multi_route_convoy(self):
         """
@@ -375,9 +376,9 @@ class TestConvoys(unittest.TestCase):
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[2].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodge_of_multi_route_convoy_with_foreign_fleet(self):
         """
@@ -424,10 +425,10 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodge_of_multi_route_convoy_with_only_foreign_fleets(self):
         """
@@ -477,11 +478,11 @@ class TestConvoys(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_dislodge_convoying_fleet_not_on_route(self):
         """
@@ -523,12 +524,12 @@ class TestConvoys(unittest.TestCase):
 
         self.assertEqual(pieces[0].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[1].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
-    @unittest.skip('test_simple_convoy_paradox - Convoy paradox')
+    @unittest.skip
     def test_simple_convoy_paradox(self):
         """
         The most common paradox is when the attacked unit supports an attack on
@@ -559,83 +560,74 @@ class TestConvoys(unittest.TestCase):
         orders = [
             Support(0, Nations.ENGLAND, self.territories.LONDON, self.territories.WALES, self.territories.ENGLISH_CHANNEL),
             Move(0, Nations.ENGLAND, self.territories.WALES, self.territories.ENGLISH_CHANNEL),
-            Move(0, Nations.FRANCE, self.territories.BREST, self.territories.LONDON),
+            Move(0, Nations.FRANCE, self.territories.BREST, self.territories.LONDON, via_convoy=True),
             Convoy(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BREST, self.territories.LONDON),
         ]
         self.state.register(*pieces, *orders)
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].path_decision, Outcomes.NO_PATH)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].path_decision(), Outcomes.NO_PATH)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
 
-    # @unittest.skip
-    # def test_simple_convoy_paradox_with_additional_convoy(self):
-    #     """
-    #     Paradox rules only apply on the paradox core.
-    #     England:
-    #     F London Supports F Wales - English Channel
-    #     F Wales - English Channel
-    #     France:
-    #     A Brest - London
-    #     F English Channel Convoys A Brest - London
-    #     Italy:
-    #     F Irish Sea Convoys A North Africa - Wales
-    #     F Mid-Atlantic Ocean Convoys A North Africa - Wales
-    #     A North Africa - Wales
-    #     The Italian convoy is not part of the paradox core and should therefore
-    #     succeed when the move of the fleet in Wales is successful. This is the
-    #     case except when the 'All Hold' paradox rule is used (fully applied,
-    #     not just as "backup" rule, see issue 4.A.2).
-    #     I prefer the Szykman rule, so I prefer that both the fleet in Wales as
-    #     the army in North Africa succeed in moving.
-    #     """
-    #     fleet_london = cap(
-    #         self.turn, self.england, fleet, self.london, support, self.wales,
-    #         self.english_channel
-    #     )
-    #     fleet_wales = cap(
-    #         self.turn, self.england, fleet, self.wales, move,
-    #         target=self.english_channel
-    #     )
-    #     army_brest = cap(
-    #         self.turn, self.france, army, self.brest, move, target=self.london,
-    #     )
-    #     fleet_english_channel = cap(
-    #         self.turn, self.france, fleet, self.english_channel, convoy,
-    #         self.brest, self.london
-    #     )
-    #     fleet_irish_sea = cap(
-    #         self.turn, self.italy, fleet, self.irish_sea, convoy,
-    #         self.north_africa, self.wales
-    #     )
-    #     fleet_mid_atlantic = cap(
-    #         self.turn, self.italy, fleet, self.mid_atlantic, convoy,
-    #         self.north_africa, self.wales
-    #     )
-    #     army_north_africa = cap(
-    #         self.turn, self.italy, army, self.north_africa, move,
-    #         target=self.wales,
-    #     )
-    #
-    #     models.Command.objects.process()
-    #     [v.refresh_from_db() for v in locals().values() if v != self]
-    #
-    #     self.assertTrue(fleet_london.command.succeeds)
-    #     self.assertTrue(fleet_wales.command.succeeds)
-    #     self.assertTrue(army_brest.command.fails)
-    #     self.assertTrue(fleet_english_channel.command.fails)
-    #     self.assertEqual(
-    #         fleet_english_channel.dislodged_by,
-    #         fleet_wales
-    #     )
-    #     self.assertTrue(army_north_africa.command.succeeds)
-    #     self.assertTrue(fleet_irish_sea.command.succeeds)
-    #     self.assertTrue(fleet_mid_atlantic.command.succeeds)
-    #
+    @unittest.skip
+    def test_simple_convoy_paradox_with_additional_convoy(self):
+        """
+        Paradox rules only apply on the paradox core.
+
+        England:
+        F London Supports F Wales - English Channel
+        F Wales - English Channel
+
+        France:
+        A Brest - London
+        F English Channel Convoys A Brest - London
+
+        Italy:
+        F Irish Sea Convoys A North Africa - Wales
+        F Mid-Atlantic Ocean Convoys A North Africa - Wales
+        A North Africa - Wales
+
+        The Italian convoy is not part of the paradox core and should
+        therefore succeed when the move of the fleet in Wales is successful.
+        This is the case except when the 'All Hold' paradox rule is used
+        (fully applied, not just as "backup" rule, see issue 4.A.2).  I prefer
+        the Szykman rule, so I prefer that both the fleet in Wales as the army
+        in North Africa succeed in moving.
+        """
+        pieces = [
+            Fleet(0, Nations.ENGLAND, self.territories.LONDON),
+            Fleet(0, Nations.ENGLAND, self.territories.WALES),
+            Army(0, Nations.FRANCE, self.territories.BREST),
+            Fleet(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+            Fleet(0, Nations.ITALY, self.territories.IRISH_SEA),
+            Fleet(0, Nations.ITALY, self.territories.MID_ATLANTIC),
+            Army(0, Nations.ITALY, self.territories.NORTH_AFRICA),
+        ]
+        orders = [
+            Support(0, Nations.ENGLAND, self.territories.LONDON, self.territories.WALES, self.territories.ENGLISH_CHANNEL),
+            Move(0, Nations.ENGLAND, self.territories.WALES, self.territories.ENGLISH_CHANNEL),
+            Move(0, Nations.FRANCE, self.territories.BREST, self.territories.LONDON, via_convoy=True),
+            Convoy(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BREST, self.territories.LONDON),
+            Convoy(0, Nations.ITALY, self.territories.IRISH_SEA, self.territories.NORTH_AFRICA, self.territories.WALES),
+            Convoy(0, Nations.ITALY, self.territories.MID_ATLANTIC, self.territories.NORTH_AFRICA, self.territories.WALES),
+            Move(0, Nations.ITALY, self.territories.NORTH_AFRICA, self.territories.WALES, via_convoy=True)
+        ]
+        self.state.register(*pieces, *orders)
+        self.state.post_register_updates()
+        process(self.state)
+
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].path_decision(), Outcomes.NO_PATH)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
+        self.assertEqual(orders[6].path_decision(), Outcomes.PATH)
+        self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
+
     # @unittest.skip
     # def test_pandins_paradox(self):
     #     """

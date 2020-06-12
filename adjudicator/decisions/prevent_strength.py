@@ -32,15 +32,15 @@ class PreventStrength(Decision):
             return 0
         if self.order.is_head_to_head():
             opposing_order = self.order.target.piece.order
-            if opposing_order.move_decision in [Outcomes.MOVES, Outcomes.UNRESOLVED]:
+            if opposing_order.outcome in [Outcomes.SUCCEEDS, Outcomes.UNRESOLVED]:
                 return 0
-        return 1 + len(self.order.move_support(Outcomes.GIVEN))
+        return 1 + len(self.order.move_support(Outcomes.SUCCEEDS))
 
     def _maximum(self):
         if self.order.path_decision() == Outcomes.NO_PATH:
             return 0
         if self.order.is_head_to_head():
             opposing_order = self.order.target.piece.order
-            if opposing_order.move_decision == Outcomes.MOVES:
+            if opposing_order.outcome == Outcomes.SUCCEEDS:
                 return 0
-        return 1 + len(self.order.move_support(Outcomes.GIVEN, Outcomes.UNRESOLVED))
+        return 1 + len(self.order.move_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))
