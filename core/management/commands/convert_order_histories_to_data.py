@@ -60,6 +60,7 @@ class Command(BaseCommand):
         )
         self.game.participants.add(*self.users)
         self.game.initialize()
+        print(f'Game created: "{self.game.name}"')
 
     def create_turn(self, filename, text):
         print(f'Converting \'{filename}\'...')

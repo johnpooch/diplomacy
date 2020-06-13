@@ -127,7 +127,11 @@ class Move(Order):
     def check_succeeds(self):
         min_attack_strength, _ = AttackStrength(self)()
         _, max_to_beat = self._get_strength_to_beat()
-        max_prevent = max([p.order.prevent_strength_decision()[1] for p in self.target.other_attacking_pieces(self.piece)], default=0)
+        max_prevent = max(
+            [p.order.prevent_strength_decision()[1]
+             for p in self.target.other_attacking_pieces(self.piece)],
+            default=0
+        )
 
         return min_attack_strength > max([max_to_beat, max_prevent])
 

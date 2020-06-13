@@ -44,14 +44,15 @@ class HoldStrength(Decision):
 
             # NOTE this is bullsh relating to how convoy swaps work
             # TODO clean
-            _, max_attack_strength = AttackStrength(piece.order)()
-            target_min_prevent = max(
-                [p.order.prevent_strength_decision()[0] for p in
-                 piece.order.target.other_attacking_pieces(piece)],
-                default=0
-            )
-            if max_attack_strength <= target_min_prevent:
-                return 1
+            if piece.order.is_convoy_swap():
+                _, max_attack_strength = AttackStrength(piece.order)()
+                target_min_prevent = max(
+                    [p.order.prevent_strength_decision()[0] for p in
+                     piece.order.target.other_attacking_pieces(piece)],
+                    default=0
+                )
+                if max_attack_strength <= target_min_prevent:
+                    return 1
             return 0
 
         return 1 + len(piece.order.hold_support(Outcomes.SUCCEEDS))
@@ -68,14 +69,15 @@ class HoldStrength(Decision):
 
             # NOTE this is bullsh relating to how convoy swaps work
             # TODO clean
-            min_attack_strength, _ = AttackStrength(piece.order)()
-            target_max_prevent = max(
-                [p.order.prevent_strength_decision()[1] for p in
-                 piece.order.target.other_attacking_pieces(piece)],
-                default=0
-            )
-            if min_attack_strength > target_max_prevent:
-                return 0
+            if piece.order.is_convoy_swap():
+                min_attack_strength, _ = AttackStrength(piece.order)()
+                target_max_prevent = max(
+                    [p.order.prevent_strength_decision()[1] for p in
+                     piece.order.target.other_attacking_pieces(piece)],
+                    default=0
+                )
+                if min_attack_strength > target_max_prevent:
+                    return 0
             return 1
 
         return 1 + len(piece.order.hold_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))
