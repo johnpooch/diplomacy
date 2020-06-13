@@ -1,0 +1,47 @@
+ENGLAND
+North Sea MOVE London -> Attack broken by F Yorkshire - London
+Edinburgh MOVE Yorkshire -> resolved
+London MOVE Wales -> resolved
+
+FRANCE
+Portugal HOLD -> resolved
+
+ITALY
+Naples MOVE Ionian Sea -> resolved
+Adriatic Sea SUPPORT Naples to Ionian Sea -> resolved
+Tuscany MOVE Piedmont -> resolved
+Mid-Atlantic Ocean MOVE Portugal -> Bounced
+Venice MOVE Trieste -> Bounced
+Marseilles MOVE Spain -> resolved
+
+GERMANY
+Yorkshire MOVE London -> resolved
+Munich SUPPORT Berlin to Silesia -> resolved
+Denmark MOVE North Sea -> Bounced
+Berlin MOVE Silesia -> resolved
+Belgium MOVE Holland -> Bounced
+English Channel SUPPORT Yorkshire to London -> resolved
+Kiel MOVE Holland -> Bounced
+Brest MOVE Picardy -> resolved
+
+AUSTRIA
+Trieste MOVE Serbia -> Bounced
+Vienna SPPORT Budapest to hold -> resolved
+Albania MOVE Greece -> Bounced
+Budapest SUPPORT Trieste to Serbia -> Support cut by A Rumania - Budapest
+
+TURKEY
+Eastern Mediterranean MOVE Ionian Sea -> Attack broken by F Naples - Ionian Sea
+Constantinople MOVE Aegean Sea -> resolved
+Bulgaria MOVE Constantinople -> resolved
+Greece SUPPORT Eastern Mediterranean to Ionian Sea -> Support cut by F Albania - Greece
+Serbia SUPPORT Rumania to Budapest -> Support cut by A Trieste - Serbia
+
+RUSSIA
+Black Sea MOVE Rumania -> Bounced
+Galicia SUPPORT Rumania to Budapest -> Supported unit has failed
+Livonia MOVE Prussia -> resolved
+Silesia HOLD -> Dislodged by A Berlin - Silesia
+Norway HOLD -> resolved
+Sweden HOLD -> resolved
+Rumania MOVE Budapest -> Bounced

@@ -1,0 +1,47 @@
+ENGLAND
+North Sea MOVE London -> resolved
+Yorkshire SUPPORT North Sea to London -> resolved
+
+FRANCE
+Portugal HOLD -> Destroyed by F Mid-Atlantic Ocean - Portugal
+
+ITALY
+Ionian Sea HOLD -> resolved
+Adriatic Sea SUPPORT Ionian Sea to hold -> resolved
+Piedmont MOVE Tuscany -> resolved
+Mid-Atlantic Ocean MOVE Portugal -> resolved
+Venice HOLD -> resolved
+Spain SUPPORT Mid-Atlantic Ocean to Portugal -> resolved
+
+GERMANY
+Belgium MOVE Holland -> resolved
+Denmark MOVE North Sea -> resolved
+Munich SUPPORT Silesia to hold -> resolved
+London HOLD -> Dislodged by F North Sea - London
+Silesia HOLD -> resolved
+Berlin MOVE Baltic Sea -> Bounced
+Picardy MOVE Belgium -> resolved
+Kiel MOVE Denmark -> resolved
+English Channel SUPPORT Denmark to North Sea -> resolved
+
+AUSTRIA
+Budapest MOVE Vienna -> resolved
+Trieste MOVE Tyrolia -> resolved
+Vienna MOVE Bohemia -> resolved
+
+TURKEY
+Aegean Sea MOVE Greece -> resolved
+Eastern Mediterranean MOVE Ionian Sea -> Bounced
+Smyrna MOVE Aegean Sea -> resolved
+Constantinople MOVE Bulgaria -> resolved
+Greece MOVE Albania -> resolved
+Serbia SUPPORT Rumania to Budapest -> resolved
+
+RUSSIA
+Prussia HOLD -> resolved
+Sweden MOVE Baltic Sea -> Bounced
+Galicia SUPPORT Rumania to Budapest -> resolved
+Rumania MOVE Budapest -> resolved
+Warsaw SUPPORT Prussia to hold -> resolved
+Norway MOVE Skagerrack -> resolved
+Black Sea MOVE Rumania -> resolved
