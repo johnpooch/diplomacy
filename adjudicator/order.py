@@ -328,4 +328,4 @@ class Disband(Order):
 
     def __str__(self):
         order_type = self.__class__.__name__.upper()
-        return f'{self.nation} - {order_type} {self.piece_type} {self.source}'
+        return f'{self.nation} - {order_type} {self.source}'

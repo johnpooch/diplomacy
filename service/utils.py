@@ -130,6 +130,7 @@ def text_to_orders(text):
         'spain (north coast)': 'spain',
         'st. petersburg (north coast)': 'st. petersburg',
         'st. petersburg (south coast)': 'st. petersburg',
+        'skagerrack': 'skagerrak',
     }
     regex_dict = {
         OrderType.HOLD: hold_regex,
@@ -186,6 +187,7 @@ def text_to_orders(text):
             if target:
                 if target == 'hold':
                     target = aux
+                target = territory_dict.get(target, target)
                 data['target'] = models.Territory.objects.get(name=target)
             if aux:
                 data['aux'] = models.Territory.objects.get(name=aux)
