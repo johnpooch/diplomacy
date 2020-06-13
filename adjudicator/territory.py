@@ -12,18 +12,40 @@ class Territory:
         self.name = name
         self.neighbour_ids = neighbour_ids
 
-        self.piece = None
+        self.pieces = set()
         self.neighbours = set()
         self.named_coasts = set()
         self.attacking_pieces = set()
         self.retreating_pieces = set()
         self.contested = contested
 
+        self.bounce_occurred = False
+
     def __str__(self):
         return self.name
 
     def __repr__(self):
         return f'{self.name} - {self.__class__.__name__}'
+
+    @property
+    def piece(self):
+        pieces = list(self.pieces)
+        if len(pieces) == 1:
+            return pieces[0]
+        if len(pieces) == 2:
+            return [p for p in pieces if p.retreating][0]
+        if not pieces:
+            return None
+
+    @property
+    def non_retreating_piece(self):
+        pieces = list(self.pieces)
+        if len(pieces) == 1:
+            return pieces[0]
+        if len(pieces) == 2:
+            return [p for p in pieces if not p.retreating][0]
+        if not pieces:
+            return None
 
     @property
     def hold_strength(self):
@@ -115,14 +137,14 @@ class Territory:
     def to_dict(self):
         return {
             'id': self.id,
-            'contested': self.contested,
+            'bounce_occurred': self.bounce_occurred,
         }
 
 
 class LandTerritory(Territory):
 
-    def __init__(self, _id, name, nationality, neighbour_ids, supply_center=False, controlled_by=None):
-        super().__init__(_id, name, neighbour_ids)
+    def __init__(self, _id, name, nationality, neighbour_ids, supply_center=False, controlled_by=None, **kwargs):
+        super().__init__(_id, name, neighbour_ids, **kwargs)
         self.nationality = nationality
         self.supply_center = supply_center
         self.controlled_by = controlled_by
@@ -132,8 +154,8 @@ class CoastalTerritory(LandTerritory):
 
     is_coastal = True
 
-    def __init__(self, _id, name, nationality, neighbour_ids, shared_coast_ids, supply_center=False, controlled_by=None):
-        super().__init__(_id, name, nationality, neighbour_ids, supply_center, controlled_by)
+    def __init__(self, _id, name, nationality, neighbour_ids, shared_coast_ids, **kwargs):
+        super().__init__(_id, name, nationality, neighbour_ids, **kwargs)
         self.shared_coast_ids = shared_coast_ids
         self.shared_coasts = set()
 

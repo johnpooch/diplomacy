@@ -1,6 +1,5 @@
 import unittest
 
-from adjudicator import illegal_messages
 from adjudicator.decisions import Outcomes
 from adjudicator.order import Build, Hold, Move, Support
 from adjudicator.piece import Army, Fleet
@@ -78,8 +77,11 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.register(fleet, order)
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.M007)
+        self.assertTrue(order.illegal)
+        self.assertEqual(
+            order.illegal_verbose,
+            'Fleet cannot reach coastal territory without shared coastline.'
+        )
 
     def test_support_to_unreachable_coast_allowed(self):
         """
@@ -111,9 +113,9 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(fleet_gascony_move.move_decision, Outcomes.MOVES)
-        self.assertEqual(fleet_western_med_move.move_decision, Outcomes.FAILS)
-        self.assertEqual(fleet_marseilles_support.support_decision, Outcomes.GIVEN)
+        self.assertEqual(fleet_gascony_move.outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(fleet_western_med_move.outcome, Outcomes.FAILS)
+        self.assertEqual(fleet_marseilles_support.outcome, Outcomes.SUCCEEDS)
 
     def test_support_from_unreachable_coast_not_allowed(self):
         """
@@ -145,9 +147,13 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(fleet_spain_nc_support.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(fleet_spain_nc_support.illegal_message, illegal_messages.S002)
-        self.assertEqual(fleet_marseilles_move.move_decision, Outcomes.FAILS)
+        self.assertTrue(fleet_spain_nc_support.illegal)
+        self.assertEqual(fleet_spain_nc_support.illegal_code, '010')
+        self.assertEqual(
+            fleet_spain_nc_support.illegal_verbose,
+            'Piece cannot reach that territory.'
+        )
+        self.assertEqual(fleet_marseilles_move.outcome, Outcomes.FAILS)
         self.assertEqual(pieces[2].dislodged_decision, Outcomes.SUSTAINS)
 
     def test_support_can_be_cut_with_other_coast(self):
@@ -188,10 +194,10 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.CUT)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
 
     def test_supporting_with_unspecified_coast(self):
@@ -234,10 +240,10 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_supporting_with_unspecified_coast_when_only_one_coast_is_possible(self):
         """
@@ -282,10 +288,10 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
 
     def test_coast_cannot_be_ordered_to_change(self):
         """
@@ -306,8 +312,11 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(move.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(move.illegal_message, illegal_messages.M002)
+        self.assertTrue(move.illegal)
+        self.assertEqual(
+            move.illegal_verbose,
+            'Source and target cannot be the same territory.'
+        )
 
     def test_army_movement_with_coastal_specification(self):
         """
@@ -329,8 +338,8 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(move.move_decision, Outcomes.MOVES)
-        self.assertEqual(move.legal_decision, Outcomes.LEGAL)
+        self.assertEqual(move.outcome, Outcomes.SUCCEEDS)
+        self.assertTrue(move.legal)
 
     def test_coastal_crawl_not_allowed(self):
         """
@@ -358,8 +367,8 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
 
     def test_building_with_unspecified_coast(self):
         """
@@ -377,5 +386,12 @@ class TestCoastalIssues(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(order.legal_decision, Outcomes.ILLEGAL)
-        self.assertEqual(order.illegal_message, illegal_messages.B006)
+        self.assertTrue(order.illegal)
+        self.assertEqual(order.illegal_code, '016')
+        self.assertEqual(
+            order.illegal_verbose,
+            (
+                'Must specify a coast when building a fleet in a territory '
+                'with named coasts.'
+            )
+        )

@@ -1,0 +1,310 @@
+[
+    {
+        "model": "core.piecestate",
+        "pk": 1,
+        "fields": {
+            "turn": 1,
+            "piece": 1,
+            "territory": 21,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 2,
+        "fields": {
+            "turn": 1,
+            "piece": 2,
+            "territory": 24,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 3,
+        "fields": {
+            "turn": 1,
+            "piece": 3,
+            "territory": 26,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 4,
+        "fields": {
+            "turn": 1,
+            "piece": 4,
+            "territory": 28,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 5,
+        "fields": {
+            "turn": 1,
+            "piece": 5,
+            "territory": 30,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 6,
+        "fields": {
+            "turn": 1,
+            "piece": 6,
+            "territory": 35,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 7,
+        "fields": {
+            "turn": 1,
+            "piece": 7,
+            "territory": 36,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 8,
+        "fields": {
+            "turn": 1,
+            "piece": 8,
+            "territory": 38,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 9,
+        "fields": {
+            "turn": 1,
+            "piece": 9,
+            "territory": 39,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 10,
+        "fields": {
+            "turn": 1,
+            "piece": 10,
+            "territory": 41,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 11,
+        "fields": {
+            "turn": 1,
+            "piece": 11,
+            "territory": 46,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 12,
+        "fields": {
+            "turn": 1,
+            "piece": 12,
+            "territory": 49,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 13,
+        "fields": {
+            "turn": 1,
+            "piece": 13,
+            "territory": 50,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 14,
+        "fields": {
+            "turn": 1,
+            "piece": 14,
+            "territory": 53,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 15,
+        "fields": {
+            "turn": 1,
+            "piece": 15,
+            "territory": 56,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 16,
+        "fields": {
+            "turn": 1,
+            "piece": 16,
+            "territory": 60,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 17,
+        "fields": {
+            "turn": 1,
+            "piece": 17,
+            "territory": 63,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 18,
+        "fields": {
+            "turn": 1,
+            "piece": 18,
+            "territory": 64,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 19,
+        "fields": {
+            "turn": 1,
+            "piece": 19,
+            "territory": 65,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 20,
+        "fields": {
+            "turn": 1,
+            "piece": 20,
+            "territory": 71,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 21,
+        "fields": {
+            "turn": 1,
+            "piece": 21,
+            "territory": 72,
+            "named_coast": null,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    },
+    {
+        "model": "core.piecestate",
+        "pk": 22,
+        "fields": {
+            "turn": 1,
+            "piece": 22,
+            "territory": 75,
+            "named_coast": 6,
+            "dislodged": false,
+            "dislodged_by": null,
+            "must_retreat": false,
+            "attacker_territory": null
+        }
+    }
+]

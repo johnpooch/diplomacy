@@ -30,19 +30,23 @@ class AttackStrength(Decision):
     def _minimum(self):
         path = Path(self.order)()
 
-        if path == Outcomes.NO_PATH:
+        if path == Outcomes.NO_PATH or path == Outcomes.UNRESOLVED:
             return 0
 
         if not self.order.target.piece or self.order.target.piece.moves:
-            return 1 + len(self.order.move_support(Outcomes.GIVEN))
+            return 1 + len(self.order.move_support(Outcomes.SUCCEEDS))
 
         if self.order.is_head_to_head() or not self.order.target.piece.moves:
             if self.order.target.piece.nation == self.order.nation:
                 return 0
-            return 1 + len([c for c in self.order.move_support(Outcomes.GIVEN)
+            # if convoy swap
+            if self.order.is_convoy_swap():
+                return 1 + len(self.order.move_support(Outcomes.SUCCEEDS))
+
+            return 1 + len([c for c in self.order.move_support(Outcomes.SUCCEEDS)
                             if c.nation != self.order.target.piece.nation])
 
-        return 1 + len(self.order.move_support(Outcomes.GIVEN))
+        return 1 + len(self.order.move_support(Outcomes.SUCCEEDS))
 
     def _maximum(self):
         path = Path(self.order)()
@@ -51,12 +55,12 @@ class AttackStrength(Decision):
             return 0
 
         if not self.order.target.piece or self.order.target.piece.moves:
-            return 1 + len(self.order.move_support(Outcomes.GIVEN, Outcomes.UNRESOLVED))
+            return 1 + len(self.order.move_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))
 
         if self.order.is_head_to_head() or self.order.target.piece.stays:
             if self.order.target.piece.nation == self.order.nation:
                 return 0
-            return 1 + len([c for c in self.order.move_support(Outcomes.GIVEN, Outcomes.UNRESOLVED)
+            return 1 + len([c for c in self.order.move_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED)
                             if c.nation != self.order.target.piece.nation])
 
-        return 1 + len(self.order.move_support(Outcomes.GIVEN, Outcomes.UNRESOLVED))
+        return 1 + len(self.order.move_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))

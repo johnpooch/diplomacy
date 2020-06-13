@@ -67,6 +67,7 @@ class OutcomeType:
     AUX_FAILED = 'aux_failed'
     AUX_DOES_NOT_CORRESPOND = 'aux_does_not_correspond'
     SUCCEEDS = 'succeeds'
+    GIVEN = 'given'
     FAILS = 'fails'
     CHOICES = (
         (MOVES, 'Moves'),
@@ -75,6 +76,7 @@ class OutcomeType:
         (AUX_FAILED, 'Aux failed'),
         (AUX_DOES_NOT_CORRESPOND, 'Aux does not correspond'),
         (SUCCEEDS, 'Succeeds'),
+        (GIVEN, 'Given'),
         (FAILS, 'Fails'),
     )
 

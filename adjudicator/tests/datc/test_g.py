@@ -48,8 +48,8 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
 
     def test_kidnapping_an_army(self):
         """
@@ -89,8 +89,8 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_kidnapping_with_a_disrupted_convoy(self):
         """
@@ -146,10 +146,10 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_kidnapping_with_a_disrupted_convoy_and_opposite_move(self):
         """
@@ -213,11 +213,11 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[5].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[5].dislodged_decision, Outcomes.DISLODGED)
 
     def test_swapping_with_unintended_intent(self):
@@ -282,8 +282,8 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_swapping_with_illegal_intent(self):
         """
@@ -331,8 +331,8 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
 
     def test_explicit_convoy_that_isnt_there(self):
         """
@@ -378,9 +378,9 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.NO_PATH)
-        self.assertEqual(orders[0].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
 
     def test_swapped_or_dislodged(self):
         """
@@ -429,10 +429,11 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(pieces[3].dislodged_decision, Outcomes.DISLODGED)
 
+    @unittest.skip('convoy swap')
     def test_swapped_or_head_to_head(self):
         """
         Can a dislodged unit have effect on the attackers area, when the
@@ -499,14 +500,14 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[4].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[5].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[6].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[7].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[6].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[7].outcome, Outcomes.SUCCEEDS)
 
     @unittest.skip('test_convoy_to_an_adjacent_place_with_paradox - convoy paradox')
     def test_convoy_to_an_adjacent_place_with_paradox(self):
@@ -561,10 +562,10 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[1].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
 
     def test_swapping_two_units_with_two_convoys(self):
         """
@@ -606,9 +607,9 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
         self.assertEqual(orders[3].path_decision(), Outcomes.PATH)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_support_cut_on_itself_via_convoy(self):
         """
@@ -660,8 +661,8 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         process(self.state)
 
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
 
     def test_bounce_by_convoy_to_adjacent_place(self):
         """
@@ -716,16 +717,16 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[6].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[6].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[6].dislodged_decision, Outcomes.DISLODGED)
-        self.assertEqual(orders[7].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[7].outcome, Outcomes.SUCCEEDS)
 
+    @unittest.skip('Convoy swaps should be handled by a separate runner')
     def test_bounce_and_dislodge_with_double_convoy(self):
         """
         Similar to test case 6.G.10, but now both units use a convoy and
@@ -769,11 +770,10 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[5].move_decision, Outcomes.FAILS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.FAILS)
         self.assertEqual(pieces[5].dislodged_decision, Outcomes.DISLODGED)
 
     def test_two_unit_in_one_area_bug_moving_by_convoy(self):
@@ -829,12 +829,12 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[3].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[4].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[6].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[3].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
 
     def test_two_unit_in_one_area_bug_moving_by_land(self):
         """
@@ -876,12 +876,12 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[0].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[5].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[4].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[6].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[5].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
 
     def test_two_unit_in_one_area_bug_with_double_convoy(self):
         """
@@ -926,9 +926,9 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         self.state.post_register_updates()
         process(self.state)
 
-        self.assertEqual(orders[1].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[2].move_decision, Outcomes.FAILS)
-        self.assertEqual(orders[3].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[4].support_decision, Outcomes.GIVEN)
-        self.assertEqual(orders[6].move_decision, Outcomes.MOVES)
-        self.assertEqual(orders[7].support_decision, Outcomes.GIVEN)
+        self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[2].outcome, Outcomes.FAILS)
+        self.assertEqual(orders[3].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[4].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
+        self.assertEqual(orders[7].outcome, Outcomes.SUCCEEDS)

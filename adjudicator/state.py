@@ -2,8 +2,8 @@ import json
 
 from adjudicator.convoy_chain import get_convoy_chains
 from adjudicator.named_coast import NamedCoast
-from adjudicator.order import Build, Convoy, Hold, Order, Move, Retreat, \
-    Support
+from adjudicator.order import Build, Convoy, Disband, Hold, Order, Move, \
+    Retreat, Support
 from adjudicator.piece import Army, Fleet, Piece
 from adjudicator.territory import CoastalTerritory, InlandTerritory, \
     SeaTerritory, Territory
@@ -13,6 +13,15 @@ class State:
 
     def __init__(self):
         self.subscribers = set()
+
+    def get_territory(self, name):
+        """
+        Retrieve a territory from the state by name. Used for testing.
+        """
+        for territory in self.territories:
+            if territory.name == name:
+                return territory
+        return None
 
     def register(self, *observers):
         """
@@ -32,7 +41,7 @@ class State:
                 self._update_territory_named_coasts(observer)
 
             if isinstance(observer, Piece):
-                self._update_territory_piece(observer)
+                self._update_territory_pieces(observer)
 
             if isinstance(observer, Order):
                 self._update_piece_order(observer)
@@ -80,13 +89,13 @@ class State:
     def convoys(self):
         return [s for s in self.subscribers if isinstance(s, Convoy)]
 
-    def _update_territory_piece(self, observer):
+    def _update_territory_pieces(self, observer):
         """
-        Update the piece attribute of all territories.
+        Update the pieces attribute of all territories.
         """
         for t in self.territories:
             if observer.territory == t:
-                t.piece = observer
+                t.pieces.add(observer)
 
     def _update_neighbours(self, observer):
         """
@@ -248,6 +257,12 @@ def data_to_state(data):
         if order_data.get('target_id'):
             target_id = order_data.pop('target_id')
             order_data['target'] = [t for t in state.territories if t.id == target_id][0]
+        if order_data.get('target_coast_id'):
+            target_coast_id = order_data.pop('target_coast_id')
+            s = 'target_coast'
+            if type == 'build':
+                s = 'named_coast'
+            order_data[s] = [n for n in state.named_coasts if n.id == target_coast_id][0]
         if order_data.get('aux_id'):
             aux_id = order_data.pop('aux_id')
             order_data['aux'] = [t for t in state.territories if t.id == aux_id][0]
@@ -258,14 +273,25 @@ def data_to_state(data):
         order_class = order_type_dict[type]
         order = order_class(**order_data)
         state.register(order)
+    # create an order for all pieces without orders
+    for piece in state.pieces:
+        if not piece.order:
+            order_data = {
+                '_id': 0,
+                'nation': piece.nation,
+                'source': piece.territory
+            }
+            hold = Hold(**order_data)
+            state.register(hold)
     return state
 
 
 def state_to_data(state):
+    actual_orders = [o for o in state.orders if o.id]
     return {
         'territories': [t.to_dict() for t in state.territories],
         'pieces': [p.to_dict() for p in state.pieces],
-        'orders': [o.to_dict() for o in state.orders],
+        'orders': [o.to_dict() for o in actual_orders],
     }
 
 
@@ -288,6 +314,6 @@ order_type_dict = {
     'support': Support,
     'convoy': Convoy,
     'retreat': Retreat,
-    'disband': '',
+    'disband': Disband,
     'build': Build,
 }

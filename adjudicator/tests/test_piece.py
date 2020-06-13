@@ -210,6 +210,8 @@ class TestToDict(unittest.TestCase):
                 'dislodged_decision': 'dislodged',
                 'dislodged_by': 2,
                 'attacker_territory': 11,
+                'destroyed': False,
+                'destroyed_message': None,
             }
         )
 
@@ -224,5 +226,7 @@ class TestToDict(unittest.TestCase):
                 'dislodged_decision': 'sustains',
                 'dislodged_by': None,
                 'attacker_territory': None,
+                'destroyed': False,
+                'destroyed_message': None,
             }
         )

@@ -1,8 +1,10 @@
-coverage
 Django
+coverage
 django-cors-headers
-factory_boy
-djangorestframework
-mysqlclient
 django-extensions
+django-filter
 django-rest-knox
+djangorestframework
+factory_boy
+faker
+mysqlclient

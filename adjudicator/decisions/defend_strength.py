@@ -7,11 +7,14 @@ class DefendStrength(Decision):
     defend its own territory from the other piece of the head to head battle. A
     decision that results in a value equal or greater than zero.
     """
+    def __call__(self):
+        return self._resolve()
+
     def _resolve(self):
         return self._minimum(), self._maximum()
 
     def _minimum(self):
-        return 1 + len(self.order.move_support(Outcomes.GIVEN))
+        return 1 + len(self.order.move_support(Outcomes.SUCCEEDS))
 
     def _maximum(self):
-        return 1 + len(self.order.move_support(Outcomes.GIVEN, Outcomes.UNRESOLVED))
+        return 1 + len(self.order.move_support(Outcomes.SUCCEEDS, Outcomes.UNRESOLVED))

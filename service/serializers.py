@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from django.db.models import Q
+from rest_framework import exceptions, serializers
 
 from core import models
+from core.models.base import GameStatus, OrderType
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -135,8 +137,8 @@ class NationSerializer(serializers.ModelSerializer):
 
 class NationStateSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer()
-    nation = NationSerializer()
+    user = UserSerializer(required=False)
+    nation = NationSerializer(required=False)
 
     class Meta:
         model = models.NationState
@@ -146,6 +148,16 @@ class NationStateSerializer(serializers.ModelSerializer):
             'surrendered',
             'orders_finalized'  # TODO should only see this if user
         )
+
+    def update(self, instance, validated_data):
+        """
+        Set nation's `orders_finalized` field. Finalize if turn is ready.
+        """
+        instance.orders_finalized = not(instance.orders_finalized)
+        instance.save()
+        if instance.turn.ready_to_process:
+            instance.turn.game.process()
+        return instance
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -167,8 +179,8 @@ class VariantSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
-    participants = UserSerializer(many=True)
-    winners = NationStateSerializer(many=True)
+    participants = UserSerializer(many=True, read_only=True)
+    winners = NationStateSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Game
@@ -189,15 +201,55 @@ class GameSerializer(serializers.ModelSerializer):
             'winners',
             'created_at',
             'created_by',
+            'initialized_at',
             'status',
         )
         read_only_fields = (
             'id',
             'participants',
+            'winners',
             'created_by',
             'created_at',
             'status',
         )
+
+    def update(self, instance, validated_data):
+        """
+        Add user as participant.
+        """
+        user = self.context['request'].user
+        instance.participants.add(user)
+        if instance.ready_to_initialize:
+            instance.initialize()
+        return instance
+
+
+class CreateGameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'variant',
+            'variant_id',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
+        )
+
+    def create(self, validated_data):
+        game = models.Game.objects.create(
+            created_by=self.context['request'].user,
+            **validated_data
+        )
+        game.participants.add(self.context['request'].user)
+        return game
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -219,18 +271,31 @@ class OrderSerializer(serializers.ModelSerializer):
             'nation',
         )
 
+    def validate(self, data):
+        nation_state = self.context['nation_state']
+        data['type'] = data.get('type', OrderType.HOLD)
+        data['nation'] = nation_state.nation
+        data['turn'] = nation_state.turn
+        models.Order.validate(nation_state, data)
+        return data
+
 
 class TurnSerializer(serializers.ModelSerializer):
 
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = NationStateSerializer(many=True, source='nationstates')
-    orders = OrderSerializer(many=True)
+    orders = serializers.SerializerMethodField()
+    phase = serializers.CharField(source='get_phase_display')
+    next_turn = serializers.SerializerMethodField()
+    previous_turn = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Turn
         fields = (
             'id',
+            'next_turn',
+            'previous_turn',
             'current_turn',
             'year',
             'season',
@@ -241,12 +306,19 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
         )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def get_next_turn(self, obj):
+        turn = models.Turn.get_next(obj)
+        return getattr(turn, 'id', None)
 
-        if self.instance:
-            if self.instance.current_turn:
-                self.fields.pop('orders')
+    def get_previous_turn(self, obj):
+        turn = models.Turn.get_previous(obj)
+        return getattr(turn, 'id', None)
+
+    def get_orders(self, obj):
+        # Only get orders for previous turns
+        qs = models.Order.objects.filter(turn__current_turn=False, turn=obj)
+        serializer = OrderSerializer(instance=qs, many=True)
+        return serializer.data
 
 
 class GameStateSerializer(serializers.ModelSerializer):

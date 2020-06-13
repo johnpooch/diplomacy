@@ -9,65 +9,93 @@ def process(state):
     orders = state.orders
     pieces = state.pieces
     for order in orders:
-        order.update_legal_decision()
+        order.check_legal()
 
     moves = [o for o in orders if o.is_move]
     retreats = [o for o in orders if o.is_retreat]
     supports = [o for o in orders if o.is_support]
     convoys = [o for o in orders if o.is_convoy]
+    builds = [o for o in orders if o.is_build]
 
-    illegal_retreats = [r for r in retreats if r.legal_decision == Outcomes.ILLEGAL]
+    illegal_retreats = [r for r in retreats if r.illegal]
     # set illegal retreats to fail.
     for r in illegal_retreats:
-        r.move_decision = Outcomes.FAILS
+        r.outcome = Outcomes.FAILS
 
-    unresolved_retreats = [r for r in retreats if r.move_decision == Outcomes.UNRESOLVED]
-    for r in unresolved_retreats:
-        r.update_move_decision()
-
-    illegal_moves = [m for m in moves if m.legal_decision == Outcomes.ILLEGAL]
+    illegal_moves = [m for m in moves if m.illegal]
     # set illegal moves to fail.
     for m in illegal_moves:
-        m.move_decision = Outcomes.FAILS
+        m.outcome = Outcomes.FAILS
 
     unresolved_pieces = [p for p in pieces if p.dislodged_decision == Outcomes.UNRESOLVED]
-    unresolved_supports = [s for s in supports if s.support_decision == Outcomes.UNRESOLVED]
+    unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
 
     unresolved_convoys = [c for c in convoys if c.piece.dislodged_decision == Outcomes.UNRESOLVED]
     while unresolved_convoys:
-        unresolved_supports = [s for s in supports if s.support_decision == Outcomes.UNRESOLVED]
-        unresolved_moves = [m for m in moves if m.move_decision == Outcomes.UNRESOLVED]
+        unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
+        unresolved_moves = [m for m in moves if m.outcome == Outcomes.UNRESOLVED]
         for move in unresolved_moves:
-            move.update_move_decision()
+            move.resolve()
         for support in unresolved_supports:
-            support.update_support_decision()
+            support.resolve()
         for piece in unresolved_pieces:
             piece.update_dislodged_decision()
         # resolve fleet movements
         unresolved_convoys = [c for c in convoys if c.piece.dislodged_decision == Outcomes.UNRESOLVED]
 
     # refresh after convoys resolved
-    unresolved_moves = [m for m in moves if m.move_decision == Outcomes.UNRESOLVED]
+    unresolved_moves = [m for m in moves if m.outcome == Outcomes.UNRESOLVED]
 
     depth = 0
-    while unresolved_moves or unresolved_pieces or unresolved_supports:
+    unresolved_retreats = [r for r in retreats if r.outcome == Outcomes.UNRESOLVED]
+    while unresolved_moves or unresolved_pieces or unresolved_supports or unresolved_retreats:
+        unresolved_retreats = [r for r in retreats if r.outcome == Outcomes.UNRESOLVED]
+        for r in unresolved_retreats:
+            r.resolve()
+
         if depth == 10:
             circular_movements = find_circular_movements(moves)
             for l in circular_movements:
                 for move in l:
-                    move.move_decision = Outcomes.MOVES
+                    move.outcome = Outcomes.SUCCEEDS
 
-        for move in unresolved_moves:
-            move.update_move_decision()
+        for move in [m for m in moves if m.outcome == Outcomes.UNRESOLVED]:
+            move.resolve()
 
-        unresolved_supports = [s for s in supports if s.support_decision == Outcomes.UNRESOLVED]
+        unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
         for support in unresolved_supports:
-            support.update_support_decision()
+            support.resolve()
 
         for piece in unresolved_pieces:
             piece.update_dislodged_decision()
 
-        unresolved_moves = [m for m in moves if m.move_decision == Outcomes.UNRESOLVED]
+        unresolved_moves = [m for m in moves if m.outcome == Outcomes.UNRESOLVED]
         unresolved_pieces = [p for p in pieces if p.dislodged_decision == Outcomes.UNRESOLVED]
         depth += 1
+
+    # Check update bounce_occurred_during_turn on all territories
+    for territory in state.territories:
+        attacks = [o for o in orders if o.is_move and o.target == territory]
+        bounce_occurred = False
+        for attack in attacks:
+            if attack.legal and attack.outcome == Outcomes.FAILS and \
+                    attack.path_decision() == Outcomes.PATH:
+                bounce_occurred = True
+        territory.bounce_occurred = bounce_occurred
+
+    # Check all dislodged pieces for pieces which can't retreat
+    dislodged_pieces = [p for p in state.pieces
+                        if p.dislodged_decision == Outcomes.DISLODGED]
+    for piece in dislodged_pieces:
+        if not piece.can_retreat():
+            piece.destroyed = True
+            piece.destroyed_message = (
+                'Destroyed because piece cannot retreat to any neighboring '
+                'territories.'
+            )
+    for build in builds:
+        if build.legal:
+            build.outcome = Outcomes.SUCCEEDS
+        else:
+            build.outcome = Outcomes.FAILS
     return orders

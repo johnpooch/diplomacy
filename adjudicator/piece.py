@@ -11,7 +11,8 @@ class Piece:
     is_army = False
     is_fleet = False
 
-    def __init__(self, _id, nation, territory, attacker_territory=None):
+    def __init__(self, _id, nation, territory, attacker_territory=None,
+                 retreating=False):
         self.id = _id
         self.nation = nation
         self.territory = territory
@@ -19,6 +20,9 @@ class Piece:
         self.dislodged_decision = Outcomes.UNRESOLVED
         self.dislodged_by = None
         self.attacker_territory = attacker_territory
+        self.retreating = retreating
+        self.destroyed = False
+        self.destroyed_message = None
 
     def __str__(self):
         return f'{self.__class__.__name__} {self.territory}'
@@ -35,7 +39,7 @@ class Piece:
             * `bool`
         """
         if self.order.is_move:
-            return self.order.move_decision == Outcomes.MOVES
+            return self.order.outcome == Outcomes.SUCCEEDS
         return False
 
     @property
@@ -48,7 +52,7 @@ class Piece:
             * `bool`
         """
         if self.order.is_move:
-            return self.order.move_decision == Outcomes.FAILS
+            return self.order.outcome == Outcomes.FAILS
         return True
 
     @property
@@ -59,7 +63,7 @@ class Piece:
         """
         attacking_pieces = list(self.territory.attacking_pieces)
         return all(
-            [p.order.move_decision == Outcomes.FAILS for p in attacking_pieces]
+            [p.order.outcome == Outcomes.FAILS for p in attacking_pieces]
         )
 
     @property
@@ -68,7 +72,7 @@ class Piece:
         Whether any piece attacking this piece's territory moves.
         """
         attacking_pieces = list(self.territory.attacking_pieces)
-        return [p for p in attacking_pieces if p.order.move_decision == Outcomes.MOVES]
+        return [p for p in attacking_pieces if p.order.outcome == Outcomes.SUCCEEDS]
 
     def set_dislodged_decision(self, outcome, dislodged_by=None):
         self.dislodged_decision = outcome
@@ -92,12 +96,29 @@ class Piece:
             return self.set_dislodged_decision(Outcomes.DISLODGED, piece)
         return Outcomes.UNRESOLVED
 
+    def can_retreat(self):
+        """
+        Determine whether the piece can retreat to any neighboring territory.
+
+        Returns:
+            * `bool`
+        """
+        for territory in self.territory.neighbours:
+            accessible = territory.accessible_by_piece_type(self)
+            unoccupied = not territory.occupied
+            uncontested = not territory.bounce_occurred
+            if accessible and unoccupied and uncontested:
+                return True
+        return False
+
     def to_dict(self):
         data = {
             'id': self.id,
             'dislodged_decision': self.dislodged_decision,
             'dislodged_by': None,
             'attacker_territory': None,
+            'destroyed': self.destroyed,
+            'destroyed_message': self.destroyed_message,
         }
         if self.dislodged_by:
             data['dislodged_by'] = self.dislodged_by.id
@@ -147,8 +168,8 @@ class Fleet(Piece):
 
     is_fleet = True
 
-    def __init__(self, _id, nation, territory, named_coast=None):
-        super().__init__(_id, nation, territory)  # DRY - do not repeat yourself
+    def __init__(self, _id, nation, territory, named_coast=None, retreating=False):
+        super().__init__(_id, nation, territory, retreating=retreating)
         self.named_coast = named_coast
 
     def can_reach(self, target, named_coast=None):

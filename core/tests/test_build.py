@@ -254,8 +254,8 @@ class TestBuild(TestCase):
             'orders': [
                 {
                     'id': order.id,
-                    'legal_decision': 'legal',
-                    'illegal_message': None,
+                    'illegal': False,
+                    'illegal_verbose': None,
                     'outcome': 'succeeds'
                 }
             ]
@@ -299,8 +299,8 @@ class TestBuild(TestCase):
             'orders': [
                 {
                     'id': order.id,
-                    'legal_decision': 'illegal',
-                    'illegal_message': None,
+                    'illegal': True,
+                    'illegal_verbose': None,
                     'outcome': 'fails'
                 }
             ]
@@ -343,8 +343,8 @@ class TestBuild(TestCase):
             'orders': [
                 {
                     'id': order.id,
-                    'legal_decision': 'legal',
-                    'illegal_message': None,
+                    'illegal': False,
+                    'illegal_verbose': None,
                     'outcome': 'succeeds'
                 }
             ]

@@ -44,6 +44,12 @@ class TestEndToEnd(APITestCase):
         jason = text_to_order_data(text)
         self.order_data_2 = json.loads(jason)
 
+        file_to_open = data_folder + game_dir + 'fall_build_1901.txt'
+        with open(file_to_open) as f:
+            text = f.read()
+        jason = text_to_order_data(text)
+        self.build_data_1 = json.loads(jason)
+
     def test_end_to_end(self):
         register_url = reverse('register')
         create_game_url = reverse('create-game')
@@ -66,7 +72,7 @@ class TestEndToEnd(APITestCase):
         john = User.objects.get(username='john')
         self.client.force_authenticate(user=john)
         response = self.client.post(create_game_url, data, format='json')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         game = models.Game.objects.get()
         # john automatically added as participant
@@ -80,8 +86,7 @@ class TestEndToEnd(APITestCase):
         data = {'source': 1}
         create_order_url = reverse('order', args=[game.id])
         response = self.client.post(create_order_url, data, format='json')
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual('Game is not active.', str(response.data[0]))
+        self.assertEqual(response.status_code, 404)
 
         # each player joins game
         join_game_url = reverse('join-game', args=[game.id])
@@ -89,7 +94,7 @@ class TestEndToEnd(APITestCase):
         for user in other_users:
             self.client.force_authenticate(user=user)
             with mock.patch('random.shuffle', reverse_list):
-                response = self.client.get(join_game_url, format='json')
+                response = self.client.patch(join_game_url, format='json')
             self.assertEqual(response.status_code, 200)
             self.assertTrue(user in game.participants.all())
             participation = models.Participation.objects.get(user=user, game=game)
@@ -119,8 +124,8 @@ class TestEndToEnd(APITestCase):
 
         # eighth player tries to join game
         self.client.force_authenticate(user=new_user)
-        response = self.client.get(join_game_url, format='json')
-        self.assertEqual(response.status_code, 400)
+        response = self.client.patch(join_game_url, format='json')
+        self.assertEqual(response.status_code, 404)
         self.assertFalse(new_user in game.participants.all())
 
         # each player submits orders
@@ -154,11 +159,13 @@ class TestEndToEnd(APITestCase):
         for order in orders:
             self.assertEqual(order.outcome, None)
 
-        finalize_orders_url = reverse('finalize-orders', args=[game.id])
         # each player finalizes orders
-        for user in game.participants.all():
-            self.client.force_authenticate(user=user)
-            response = self.client.get(finalize_orders_url)
+        for nation_state in nation_states.all():
+            finalize_orders_url = reverse(
+                'finalize-orders', args=[game.id, nation_state.id]
+            )
+            self.client.force_authenticate(user=nation_state.user)
+            response = self.client.patch(finalize_orders_url)
             self.assertEqual(response.status_code, 200)
 
         # turn is processed
@@ -247,9 +254,12 @@ class TestEndToEnd(APITestCase):
             self.assertEqual(order.outcome, None)
 
         # each player finalizes orders
-        for user in game.participants.all():
-            self.client.force_authenticate(user=user)
-            response = self.client.get(finalize_orders_url)
+        for nation_state in nation_states:
+            finalize_orders_url = reverse(
+                'finalize-orders', args=[game.id, nation_state.id]
+            )
+            self.client.force_authenticate(user=nation_state.user)
+            response = self.client.patch(finalize_orders_url)
             self.assertEqual(response.status_code, 200)
 
         turn = new_turn
@@ -306,4 +316,145 @@ class TestEndToEnd(APITestCase):
 
         # check that only army in rumania has to retreat
         retreating_piece = new_turn.piecestates.get(must_retreat=True)
+        non_retreating_piece = new_turn.piecestates.exclude(must_retreat=True)[0]
         self.assertEqual(retreating_piece.territory.name, 'rumania')
+
+        # check that attempts by other users to retreat pieces fail
+        non_retreating_user = new_turn.nationstates.get(
+            nation=non_retreating_piece.piece.nation
+        ).user
+        self.client.force_authenticate(user=non_retreating_user)
+        data = {
+            'source': non_retreating_piece.territory.id,
+            'target': retreating_piece.territory.id,
+            'type': base.OrderType.RETREAT,
+        }
+        create_order_url = reverse('order', args=[game.id])
+        response = self.client.post(create_order_url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        retreating_user = new_turn.nationstates.get(
+            nation=retreating_piece.piece.nation
+        ).user
+        self.client.force_authenticate(user=retreating_user)
+        data = {
+            'source': retreating_piece.territory.id,
+            'target': game.variant.territories.get(name='budapest').id,
+            'type': base.OrderType.RETREAT,
+        }
+        create_order_url = reverse('order', args=[game.id])
+        # nation_state = new_turn.nationstates.get(user=retreating_user)
+        response = self.client.post(create_order_url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+        self.assertEqual(models.Order.objects.count(), 45)
+
+        # player finalizes orders
+        nation_state = game.get_current_turn().nationstates.get(user=retreating_user)
+        finalize_orders_url = reverse(
+            'finalize-orders', args=[game.id, nation_state.id]
+        )
+        response = self.client.patch(finalize_orders_url)
+        self.assertEqual(response.status_code, 200)
+
+        # all other pieces hold
+        self.assertEqual(models.Order.objects.count(), 45)
+
+        turn = new_turn
+        # turn is processed
+        turn.refresh_from_db()
+        self.assertTrue(turn.processed)
+        self.assertTrue(turn.processed_at)
+        self.assertFalse(turn.current_turn)
+
+        # orders have outcomes
+        orders = turn.orders.all()
+        for order in orders:
+            self.assertTrue(order.outcome)
+
+        # check retreat succeeds
+        retreat_order = turn.orders.get(type=base.OrderType.RETREAT)
+        self.assertEqual(retreat_order.outcome, base.OutcomeType.SUCCEEDS)
+
+        # new turn
+        new_turn = game.get_current_turn()
+        self.assertEqual(new_turn.year, 1901)
+        self.assertEqual(new_turn.season, base.Season.FALL)
+        self.assertEqual(new_turn.phase, base.Phase.BUILD)
+
+        # new nation states are created
+        nation_states = models.NationState.objects.filter(turn=new_turn)
+        self.assertEqual(nation_states.count(), 7)
+
+        # new territory states are created
+        new_territory_states = models.TerritoryState.objects.filter(turn=new_turn)
+        self.assertEqual(new_territory_states.count(), 75)
+
+        # new piece states are created
+        new_piece_states = models.PieceState.objects.filter(turn=new_turn)
+        self.assertEqual(new_piece_states.count(), 22)
+
+        # check retreating piece now in budapest
+        new_turn.piecestates.get(territory__name='budapest')
+
+        # players issue build orders.
+        for nation_state in nation_states:
+            orders = [o for o in self.build_data_1
+                      if o['order']['nation'] == nation_state.nation.name]
+            cleaned_orders = []
+            for order in orders:
+                order_data = copy(order['order'])
+                source = order_data.get('source')
+                target = order_data.get('target')
+                target_coast = order_data.get('target_coast')
+                aux = order_data.get('aux')
+                if source:
+                    order_data['source'] = models.Territory.objects.get(name=source).id
+                if aux:
+                    order_data['aux'] = models.Territory.objects.get(name=aux).id
+                if target:
+                    order_data['target'] = models.Territory.objects.get(name=target).id
+                if target_coast:
+                    order_data['target_coast'] = models.NamedCoast.objects.get(name=target_coast).id
+                order_data.pop('nation')
+                cleaned_orders.append(order_data)
+
+            self.client.force_authenticate(user=nation_state.user)
+            for order in cleaned_orders:
+                response = self.client.post(
+                    create_order_url,
+                    order,
+                    format='json',
+                )
+                self.assertEqual(response.status_code, 201)
+
+        self.assertEqual(models.Order.objects.count(), 54)
+        orders = new_turn.orders.all()
+        self.assertEqual(orders.count(), 9)
+
+        # each player finalizes orders
+        for nation_state in game.get_current_turn().nationstates.all():
+            finalize_orders_url = reverse(
+                'finalize-orders', args=[game.id, nation_state.id]
+            )
+            self.client.force_authenticate(user=nation_state.user)
+            response = self.client.patch(finalize_orders_url)
+            self.assertEqual(response.status_code, 200)
+
+        for order in orders:
+            self.assertEqual(order.outcome, base.OutcomeType.SUCCEEDS)
+
+        # new pieces created
+        self.assertEqual(models.Piece.objects.all().count(), 31)
+
+        turn = new_turn
+        turn.refresh_from_db()
+        self.assertTrue(turn.processed)
+        self.assertTrue(turn.processed_at)
+        self.assertFalse(turn.current_turn)
+
+        # new turn
+        new_turn = game.get_current_turn()
+        self.assertEqual(new_turn.year, 1902)
+        self.assertEqual(new_turn.season, base.Season.SPRING)
+        self.assertEqual(new_turn.phase, base.Phase.ORDER)

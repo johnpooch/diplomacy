@@ -1,0 +1,44 @@
+ENGLAND
+Norway SUPPORT Denmark to Sweden -> Dislodged by F St. Petersburg (North Coast) - Norway
+London MOVE English Channel -> resolved
+North Sea SUPPORT Norway to hold -> Supported unit has failed
+Yorkshire HOLD -> resolved
+
+FRANCE
+English Channel MOVE Brest -> resolved
+Picardy SUPPORT English Channel to Brest -> resolved
+Spain MOVE Marseilles -> Bounced
+
+ITALY
+Naples MOVE Ionian Sea -> resolved
+Tunis MOVE Western Mediterranean -> resolved
+Venice HOLD -> resolved
+Piedmont MOVE Marseilles -> Bounced
+
+GERMANY
+Berlin MOVE Baltic Sea -> resolved
+Munich MOVE Burgundy -> resolved
+Kiel MOVE Helgoland Bight -> resolved
+Paris MOVE Brest -> Attack broken by F English Channel - Brest
+Denmark MOVE Kiel -> resolved
+Holland MOVE Belgium -> resolved
+
+AUSTRIA
+Budapest SUPPORT Trieste to Serbia -> Supported unit has failed
+Vienna MOVE Galicia -> Bounced
+Greece MOVE Aegean Sea -> Bounced
+Trieste MOVE Serbia -> Bounced
+
+TURKEY
+Smyrna MOVE Aegean Sea -> Bounced
+Bulgaria MOVE Serbia -> Bounced
+Black Sea SUPPORT Constantinople to Bulgaria -> Supported unit has failed
+Constantinople MOVE Bulgaria -> Bounced
+
+RUSSIA
+Sevastopol SUPPORT Rumania to hold -> resolved
+Rumania SUPPORT Bulgaria to Serbia -> Supported unit has failed
+Sweden SUPPORT St. Petersburg (North Coast) to Norway -> resolved
+Finland SUPPORT St. Petersburg (North Coast) to Norway -> resolved
+St. Petersburg (North Coast) MOVE Norway -> resolved
+Warsaw MOVE Galicia -> Bounced

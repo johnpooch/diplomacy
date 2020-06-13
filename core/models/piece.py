@@ -95,6 +95,14 @@ class PieceState(PerTurnModel):
         on_delete=models.CASCADE,
         related_name='piece_dislodged',
     )
+    destroyed = models.BooleanField(
+        default=False
+    )
+    destroyed_message = models.CharField(
+        max_length=200,
+        null=True,
+        blank=True,
+    )
     must_retreat = models.BooleanField(
         default=False,
         help_text=_(
@@ -112,6 +120,14 @@ class PieceState(PerTurnModel):
             'to the attacking piece\'s territory.'
         )
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['turn', 'territory', 'must_retreat'],
+                name='unique_piece_in_territory,'
+            )
+        ]
 
     def __str__(self):
         # TODO Fix this up and make it used in all the error messages. Also
@@ -149,6 +165,7 @@ class PieceState(PerTurnModel):
             'nation': self.piece.nation.id,
             'territory_id': self.territory.id,
             'named_coast_id': getattr(self.named_coast, 'id', None),
+            'retreating': self.must_retreat,
         }
         if self.attacker_territory:
             data['attacker_territory'] = self.attacker_territory.id
