@@ -226,8 +226,6 @@ class GameSerializer(serializers.ModelSerializer):
         return instance
 
     def get_user_status(self, game):
-        user = self.context['request'].user
-        print(user)
         return {}
 
 
@@ -353,7 +351,6 @@ class GameStateSerializer(serializers.ModelSerializer):
     def get_user_status(self, game):
         turn = game.get_current_turn()
         user = self.context['request'].user
-        print(user)
         if user.is_anonymous:
             return {}
         try:
