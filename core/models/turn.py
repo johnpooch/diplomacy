@@ -24,7 +24,6 @@ possible_orders = {
     ],
 }
 
-
 class TurnManager(models.Manager):
 
     # TODO move this method outside manager
