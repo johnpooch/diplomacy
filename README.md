@@ -1,5 +1,6 @@
 # Diplomacy
-test
+
+adfgnakdfhgjaf
 A web browser version of the classic strategy board game Diplomacy.
 
 We are massive fans of the game and have been happily using some of the
