@@ -1,9 +1,9 @@
 ## Contributing
 
 Thank you so much for considering contribution towards this project. We welcome
-contributors at experience level. Our only requirement is that contributors are
-enthusiastic and kind towards other contributors - leave the back stabbing and
-treachery on the board!
+contributors at any experience level. Our only requirement is that contributors
+are enthusiastic and kind towards other contributors - leave the back stabbing
+and treachery on the board!
 
 ### Adding issues
 
