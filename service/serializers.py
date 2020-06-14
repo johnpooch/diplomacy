@@ -181,6 +181,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     participants = UserSerializer(many=True, read_only=True)
     winners = NationStateSerializer(many=True, read_only=True)
+    user_status = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Game
@@ -203,6 +204,7 @@ class GameSerializer(serializers.ModelSerializer):
             'created_by',
             'initialized_at',
             'status',
+            'user_status',
         )
         read_only_fields = (
             'id',
@@ -222,6 +224,11 @@ class GameSerializer(serializers.ModelSerializer):
         if instance.ready_to_initialize:
             instance.initialize()
         return instance
+
+    def get_user_status(self, game):
+        user = self.context['request'].user
+        print(user)
+        return {}
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
@@ -327,6 +334,7 @@ class GameStateSerializer(serializers.ModelSerializer):
     variant = VariantSerializer()
     pieces = PieceSerializer(many=True)
     participants = UserSerializer(many=True)
+    user_status = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Game
@@ -339,4 +347,17 @@ class GameStateSerializer(serializers.ModelSerializer):
             'status',
             'participants',
             'winners',
+            'user_status',
         )
+
+    def get_user_status(self, game):
+        turn = game.get_current_turn()
+        user = self.context['request'].user
+        print(user)
+        if user.is_anonymous:
+            return {}
+        try:
+            nation_state = models.NationState.objects.get(user=user, turn=turn)
+            return {'playing_as': nation_state.nation}
+        except models.NationState.DoesNotExist:
+            return {}
