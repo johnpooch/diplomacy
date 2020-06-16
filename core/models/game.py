@@ -117,9 +117,6 @@ class Game(models.Model):
 
     objects = GameManager()
 
-    class Meta:
-        db_table = "game"
-
     @property
     def ended(self):
         """
