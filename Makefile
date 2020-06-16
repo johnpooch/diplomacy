@@ -35,3 +35,7 @@ superuser:
 	docker exec -it diplomacy_diplomacy.service_1 \
 		./manage.py shell -c "from django.contrib.auth.models import User; \
 		User.objects.create_superuser('admin', 'admin@example.com', 'admin')"
+
+create_game_from_history:
+	docker exec -it diplomacy_diplomacy.service_1 \
+		./manage.py convert_order_histories_to_data order_histories/game_1/ --num_turns 15

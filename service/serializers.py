@@ -181,6 +181,7 @@ class GameSerializer(serializers.ModelSerializer):
 
     participants = UserSerializer(many=True, read_only=True)
     winners = NationStateSerializer(many=True, read_only=True)
+    user_nation_state = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Game
@@ -203,6 +204,7 @@ class GameSerializer(serializers.ModelSerializer):
             'created_by',
             'initialized_at',
             'status',
+            'user_nation_state',
         )
         read_only_fields = (
             'id',
@@ -212,6 +214,17 @@ class GameSerializer(serializers.ModelSerializer):
             'created_at',
             'status',
         )
+
+    def get_user_nation_state(self, game):
+        user = self.context['request'].user
+        data = None
+        if not user.is_anonymous and game.status == GameStatus.ACTIVE:
+            turn = game.get_current_turn()
+            nation_state = turn.nationstates.filter(user=user).first()
+            if nation_state:
+                data = NationStateSerializer(nation_state).data
+        return data
+
 
     def update(self, instance, validated_data):
         """

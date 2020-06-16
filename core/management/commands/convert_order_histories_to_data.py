@@ -27,6 +27,11 @@ class Command(BaseCommand):
             type=str,
             help='Directory to load data from.',
         )
+        parser.add_argument(
+            '--num_turns',
+            type=int,
+            help='Specifies the number of turns to be converted.',
+        )
 
     def handle(self, *args, **options):
         directory = settings.BASE_DIR + '/' + options['indir']
@@ -39,6 +44,11 @@ class Command(BaseCommand):
             self.create_game()
             dir_list = os.listdir(directory)
             dir_list.sort()
+
+            # Limit the turns by the given num_turns
+            if options['num_turns']:
+                dir_list = dir_list[:options['num_turns']]
+
             for filename in dir_list:
                 file_location = directory + '/' + filename
                 with open(file_location) as f:
