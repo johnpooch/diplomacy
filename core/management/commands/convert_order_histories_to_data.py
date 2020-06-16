@@ -28,6 +28,11 @@ class Command(BaseCommand):
             help='Directory to load data from.',
         )
         parser.add_argument(
+            '--name',
+            type=str,
+            help='The name of the game that is created.',
+        )
+        parser.add_argument(
             '--num_turns',
             type=int,
             help='Specifies the number of turns to be converted.',
@@ -41,7 +46,11 @@ class Command(BaseCommand):
 
         with transaction.atomic():
             print(f'\nCreating new game from "{directory}"...')
-            self.create_game()
+
+            name = options['name']
+            if not name:
+                name = custom_faker.word_name()
+            self.create_game(name)
             dir_list = os.listdir(directory)
             dir_list.sort()
 
@@ -55,14 +64,14 @@ class Command(BaseCommand):
                     text = (f.read())
                 self.create_turn(filename, text)
 
-    def create_game(self):
+    def create_game(self, name):
         self.users = [custom_faker.user() for i in range(7)]
         self.variant = models.Variant.objects.get(
             name='Standard',
         )
         self.game = models.Game.objects.create(
             variant=self.variant,
-            name=custom_faker.word_name(),
+            name=name,
             description=fake.sentence(),
             num_players=7,
             created_by=self.users[0],

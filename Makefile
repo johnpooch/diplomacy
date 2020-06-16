@@ -1,4 +1,6 @@
-dev_fixtures:
+dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game
+
+dev_fixtures_basic:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
 		fixtures/dev/user.json \
 		fixtures/dev/variant.json \
@@ -7,7 +9,10 @@ dev_fixtures:
 		fixtures/dev/named_coast.json \
 		fixtures/dev/map_data.json \
 		fixtures/dev/territory_map_data.json \
-		fixtures/dev/named_coast_map_data.json \
+		fixtures/dev/named_coast_map_data.json 
+
+dev_fixtures_games:
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
 		fixtures/dev/games/game_1/game.json \
 		fixtures/dev/games/game_1/pieces.json \
 		fixtures/dev/games/game_1/turns/01_1900_spring_order/turn.json \
@@ -23,6 +28,10 @@ dev_fixtures:
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/piece_states.json \
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/territory_states.json \
 		fixtures/dev/games/game_3/game.json
+
+create_retreating_game:
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
+		order_histories/game_1/ --num_turns 2 --name 'Retreating Game'
 
 reset_db:
 	docker rm -vf diplomacy_diplomacy.mysql_1
