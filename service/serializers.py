@@ -35,6 +35,7 @@ class PieceStateSerializer(serializers.ModelSerializer):
             'dislodged',
             'dislodged_by',
             'attacker_territory',
+            'must_retreat',
         )
 
 
