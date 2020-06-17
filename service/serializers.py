@@ -3,7 +3,7 @@ from django.db.models import Q
 from rest_framework import exceptions, serializers
 
 from core import models
-from core.models.base import GameStatus, OrderType
+from core.models.base import GameStatus, OrderType, Phase
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -140,6 +140,7 @@ class NationStateSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(required=False)
     nation = NationSerializer(required=False)
+    build_territories = serializers.SerializerMethodField()
 
     class Meta:
         model = models.NationState
@@ -147,12 +148,27 @@ class NationStateSerializer(serializers.ModelSerializer):
             'user',
             'nation',
             'surrendered',
-            'orders_finalized'  # TODO should only see this if user
+            'orders_finalized',  # TODO should only see this if user
+            'num_orders_remaining',
+            'supply_delta',
+            'build_territories',
+            'num_builds',
+            'num_disbands',
         )
+
+    def get_build_territories(self, nation_state):
+        """
+        Get a list of territory ids for each territory which the user can build
+        in.
+        """
+        if nation_state.turn.phase != Phase.BUILD:
+            return None
+        return [ts.territory.id for ts
+                in nation_state.unoccupied_controlled_home_supply_centers]
 
     def update(self, instance, validated_data):
         """
-        Set nation's `orders_finalized` field. Finalize if turn is ready.
+        Set nation's `orders_finalized` field. Process game if turn is ready.
         """
         instance.orders_finalized = not(instance.orders_finalized)
         instance.save()

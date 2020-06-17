@@ -33,6 +33,10 @@ create_retreating_game:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
 		order_histories/game_1/ --num_turns 2 --name 'Retreating Game'
 
+create_build_game:
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
+		order_histories/game_1/ --num_turns 3 --name 'Build Game'
+
 reset_db:
 	docker rm -vf diplomacy_diplomacy.mysql_1
 	docker-compose up -d diplomacy.mysql
