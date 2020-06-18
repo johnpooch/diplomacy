@@ -1,4 +1,4 @@
-dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game create_build_game
+dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game create_build_game create_orders_game
 
 dev_fixtures_basic:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
@@ -28,6 +28,10 @@ dev_fixtures_games:
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/piece_states.json \
 		fixtures/dev/games/game_2/turns/02_1900_fall_order/territory_states.json \
 		fixtures/dev/games/game_3/game.json
+
+create_orders_game:
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
+		order_histories/game_1/ --num_turns 1 --name 'Orders Game'
 
 create_retreating_game:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
