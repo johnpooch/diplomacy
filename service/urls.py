@@ -45,6 +45,11 @@ urlpatterns = [
         name='orders'
     ),
     path(
+        'game/<int:game>/nation-state',
+        views.RetrievePrivateNationStateView.as_view(),
+        name='private-nation-state'
+    ),
+    path(
         'game/<int:game>/order/<int:pk>',
         views.DestroyOrderView.as_view(),
         name='order'

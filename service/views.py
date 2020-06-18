@@ -155,6 +155,29 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
         )
 
 
+class RetrievePrivateNationStateView(BaseMixin, generics.RetrieveAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.PrivateNationStateSerializer
+
+    def get_object(self):
+        game = get_object_or_404(
+            models.Game.objects,
+            id=self.kwargs['game'],
+        )
+        return models.NationState.objects.filter(
+            turn=game.get_current_turn(),
+            user=self.request.user.id,
+        ).first()
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not instance:
+            return Response({})
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
 class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
 
     permission_classes = [IsAuthenticated]
@@ -172,7 +195,7 @@ class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
 class FinalizeOrdersView(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.NationStateSerializer
+    serializer_class = serializers.PublicNationStateSerializer
     queryset = models.NationState.objects.filter(
         turn__game__status=GameStatus.ACTIVE
     )
