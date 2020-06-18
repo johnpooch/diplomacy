@@ -139,7 +139,16 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
     serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
-        user_nation_state = self.get_user_nation_state()
+        game = get_object_or_404(
+            models.Game.objects,
+            id=self.kwargs['game'],
+        )
+        user_nation_state = models.NationState.objects.filter(
+            turn=game.get_current_turn(),
+            user=self.request.user.id,
+        ).first()
+        if not user_nation_state:
+            return models.Order.objects.none()
         return models.Order.objects.filter(
             turn=user_nation_state.turn,
             nation=user_nation_state.nation,

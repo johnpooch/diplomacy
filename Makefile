@@ -1,4 +1,4 @@
-dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game
+dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game create_build_game
 
 dev_fixtures_basic:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \

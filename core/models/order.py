@@ -141,6 +141,10 @@ class Order(PerTurnModel):
                     raise ValidationError({
                         'type': ('Cannot build in this territory.')
                     })
+                if not nation_state.num_orders_remaining:
+                    raise ValidationError({
+                        'type': ('Cannot issue any more build orders.')
+                    })
             if data['type'] == OrderType.DISBAND:
                 if not nation_state.num_orders_remaining:
                     raise ValidationError({
