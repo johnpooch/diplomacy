@@ -183,6 +183,7 @@ class PrivateNationStateSerializer(BaseNationStateSerializer):
     class Meta:
         model = models.NationState
         fields = (
+            'id',
             'user',
             'nation',
             'surrendered',

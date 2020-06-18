@@ -25,7 +25,7 @@ urlpatterns = [
         name='join-game'
     ),
     path(
-        'game/<int:game>/finalize/<int:pk>',
+        'game/finalize/<int:pk>',
         views.FinalizeOrdersView.as_view(),
         name='finalize-orders'
     ),
