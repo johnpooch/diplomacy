@@ -254,6 +254,10 @@ class GameSerializer(serializers.ModelSerializer):
         Add user as participant.
         """
         user = self.context['request'].user
+        print('AGGGHHHH')
+        if user in instance.participants.all():
+            instance.participants.remove(user)
+            return instance
         instance.participants.add(user)
         if instance.ready_to_initialize:
             instance.initialize()

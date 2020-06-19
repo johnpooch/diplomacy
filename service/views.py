@@ -95,20 +95,22 @@ class GameStateView(BaseMixin, generics.RetrieveAPIView):
     game_key = 'pk'
 
 
-class JoinGame(generics.UpdateAPIView):
+class ToggleJoinGame(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameSerializer
-    queryset = models.Game.objects \
-        .annotate(participant_count=Count('participants')) \
-        .filter(participant_count__lt=F('num_players')) \
-        .exclude(status=GameStatus.ENDED)
+    queryset = models.Game.objects.all()
 
     def check_object_permissions(self, request, obj):
-        if request.user in obj.participants.all():
-            raise exceptions.PermissionDenied(
-                detail='User is already a participant.'
-            )
+        if request.user not in obj.participants.all():
+            if obj.participants.count() >= obj.num_players:
+                raise exceptions.PermissionDenied(
+                    detail='Game is already full.'
+                )
+            if obj.status != GameStatus.PENDING:
+                raise exceptions.PermissionDenied(
+                    detail='Game is not pending.'
+                )
 
 
 class CreateOrderView(BaseMixin, generics.CreateAPIView):

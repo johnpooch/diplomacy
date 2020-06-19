@@ -21,8 +21,8 @@ urlpatterns = [
     ),
     path(
         'game/<int:pk>/join',
-        views.JoinGame.as_view(),
-        name='join-game'
+        views.ToggleJoinGame.as_view(),
+        name='toggle-join-game'
     ),
     path(
         'game/finalize/<int:pk>',
