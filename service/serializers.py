@@ -213,58 +213,6 @@ class VariantSerializer(serializers.ModelSerializer):
         )
 
 
-class GameSerializer(serializers.ModelSerializer):
-
-    participants = UserSerializer(many=True, read_only=True)
-    winners = PublicNationStateSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = models.Game
-        fields = (
-            'id',
-            'name',
-            'description',
-            'variant',
-            'variant_id',
-            'private',
-            'password',
-            'order_deadline',
-            'retreat_deadline',
-            'build_deadline',
-            'process_on_finalized_orders',
-            'nation_choice_mode',
-            'num_players',
-            'participants',
-            'winners',
-            'created_at',
-            'created_by',
-            'initialized_at',
-            'status',
-        )
-        read_only_fields = (
-            'id',
-            'participants',
-            'winners',
-            'created_by',
-            'created_at',
-            'status',
-        )
-
-    def update(self, instance, validated_data):
-        """
-        Add user as participant.
-        """
-        user = self.context['request'].user
-        print('AGGGHHHH')
-        if user in instance.participants.all():
-            instance.participants.remove(user)
-            return instance
-        instance.participants.add(user)
-        if instance.ready_to_initialize:
-            instance.initialize()
-        return instance
-
-
 class CreateGameSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -360,6 +308,66 @@ class TurnSerializer(serializers.ModelSerializer):
         qs = models.Order.objects.filter(turn__current_turn=False, turn=obj)
         serializer = OrderSerializer(instance=qs, many=True)
         return serializer.data
+
+
+class GameSerializer(serializers.ModelSerializer):
+
+    participants = UserSerializer(many=True, read_only=True)
+    current_turn = serializers.SerializerMethodField()
+    winners = PublicNationStateSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'description',
+            'variant',
+            'variant_id',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
+            'participants',
+            'winners',
+            'created_at',
+            'created_by',
+            'initialized_at',
+            'status',
+            'current_turn',
+        )
+        read_only_fields = (
+            'id',
+            'participants',
+            'winners',
+            'created_by',
+            'created_at',
+            'status',
+        )
+
+    def get_current_turn(self, game):
+        try:
+            current_turn = game.get_current_turn()
+            return TurnSerializer(current_turn).data
+        except models.Turn.DoesNotExist:
+            return None
+
+    def update(self, instance, validated_data):
+        """
+        Add user as participant.
+        """
+        user = self.context['request'].user
+        if user in instance.participants.all():
+            instance.participants.remove(user)
+            return instance
+        instance.participants.add(user)
+        if instance.ready_to_initialize:
+            instance.initialize()
+        return instance
 
 
 class GameStateSerializer(serializers.ModelSerializer):
