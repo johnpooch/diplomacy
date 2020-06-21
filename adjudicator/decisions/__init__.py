@@ -5,6 +5,7 @@ from .attack_strength import AttackStrength
 from .path import Path
 from .prevent_strength import PreventStrength
 
+
 __all__ = [
     'Outcomes',
 

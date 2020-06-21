@@ -8,7 +8,18 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g&$7(^po3l^!yxj4c+-^ly!9#ydc95j8o8(=%j1@cn*po)0@ig'
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'g&$7(^po3l^!yxj4c+-^ly!9#ydc95j8o8(=%j1@cn*po)0@ig'
+)
+
+# Set this to True to avoid transmitting the CSRF cookie over HTTP
+# accidentally.
+CSRF_COOKIE_SECURE = True
+
+# Set this to True to avoid transmitting the session cookie over HTTP
+# accidentally.
+SESSION_COOKIE_SECURE = True
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
