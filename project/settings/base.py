@@ -26,7 +26,7 @@ DEBUG = True
 TESTING = False
 
 ALLOWED_HOSTS = [
-    'diplomacy.herokuapp.com'
+    'johnpooch-diplomacy.herokuapp.com'
 ]
 
 
