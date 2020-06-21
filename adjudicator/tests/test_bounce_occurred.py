@@ -1,9 +1,8 @@
 import unittest
 
 from adjudicator.order import Move
-from adjudicator.piece import Army, Fleet
+from adjudicator.piece import Army
 from adjudicator.processor import process
-from adjudicator.paradoxes import find_circular_movements
 from adjudicator.state import State
 from adjudicator.tests.data import NamedCoasts, Nations, Territories, register_all
 

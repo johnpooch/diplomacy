@@ -9,7 +9,6 @@ from faker import Faker
 from service.utils import text_to_orders
 
 from core import models
-from core.models import base
 from core.utils import faker as custom_faker
 
 fake = Faker()

@@ -12,6 +12,14 @@ class Resolutions:
     SUCCEEDS = 'succeeds'
 
 
+def adjudicate():
+    pass
+
+
+def backup_rule():
+    pass
+
+
 def resolve(order):
     dep_list = []
 

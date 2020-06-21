@@ -27,4 +27,3 @@ class TestConvertTextToData(unittest.TestCase):
         self.assertEqual(len(data), 22)
         self.assertEqual(data[0]['order'], expected_order)
         self.assertEqual(data[0]['outcome'], 'resolved')
-

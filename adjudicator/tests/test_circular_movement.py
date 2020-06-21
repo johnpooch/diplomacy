@@ -121,4 +121,3 @@ class TestCircularMovement(unittest.TestCase):
         orders = []
         result = find_circular_movements(orders)
         self.assertEqual(len(result), 0)
-

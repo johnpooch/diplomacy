@@ -243,7 +243,7 @@ class TestPieceDestroyed(TestCase):
         gascony = models.Territory.objects.get(
             name='gascony',
         )
-        gascony_state = models.TerritoryState.objects.create(
+        models.TerritoryState.objects.create(
             territory=gascony,
             turn=turn,
             controlled_by=france,

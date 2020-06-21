@@ -556,7 +556,7 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
             Move(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.SKAGERRAK),
             Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
             Convoy(0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
-            Support(0, Nations.RUSSIA,self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
+            Support(0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
         self.state.register(*pieces, *orders)
         self.state.post_register_updates()

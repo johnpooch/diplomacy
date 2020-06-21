@@ -1,6 +1,5 @@
 import unittest
 
-from adjudicator import illegal_messages
 from adjudicator.decisions import Outcomes
 from adjudicator.order import Retreat
 from adjudicator.piece import Army

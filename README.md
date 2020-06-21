@@ -72,6 +72,11 @@ You can sign into the client and the service using these credentials.
 
 From within the service container run `python3 manage.py test`.
 
+### Linting
+
+Run flake8 to check for code style problems. Run `flake8 .` from the project
+root. Any code style warning they will be displayed.
+
 ## Test Coverage
 
 To generate a test coverage report test coverage, run `coverage run manage.py

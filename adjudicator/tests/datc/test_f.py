@@ -1,7 +1,7 @@
 import unittest
 
 from adjudicator.decisions import Outcomes
-from adjudicator.order import Convoy, Hold, Move, Support
+from adjudicator.order import Convoy, Move, Support
 from adjudicator.piece import Army, Fleet
 from adjudicator.processor import process
 from adjudicator.state import State

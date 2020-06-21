@@ -1,4 +1,3 @@
-from copy import deepcopy
 from adjudicator.decisions import Outcomes
 
 
@@ -37,7 +36,7 @@ def get_convoy_chains(source, target, convoys):
         * `target` - `Territory`
         * `convoys` - `list` of `Convoy` instances
 
-    returns:
+    Returns:
         * `list` where each element in the list is a `ConvoyChain` instance.
     """
     convoy_paths = set()
@@ -67,7 +66,7 @@ def build_chain(initial_chain, target, convoys):
         if convoy.source.adjacent_to(initial_chain[-1].source):
             chain = initial_chain + [convoy]
 
-            # path found - neighbouring piece is adjacent to target
+            # path found - neighboring piece is adjacent to target
             if convoy.source.adjacent_to(target):
                 complete_chains.append(tuple(chain))
                 continue

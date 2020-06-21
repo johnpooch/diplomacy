@@ -83,6 +83,7 @@ class TerritoryStateFactory(DjangoModelFactory):
 
     territory = factory.SubFactory(TerritoryFactory)
 
+
 class TurnFactory(DjangoModelFactory):
     class Meta:
         model = models.Turn
@@ -119,7 +120,6 @@ class GameFactory(DjangoModelFactory):
 
         if not create:
             self._prefetched_objects_cache = {'turns': turns}
-
 
 
 class StandardTerritoryFactory(DjangoModelFactory):
