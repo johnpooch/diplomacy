@@ -25,7 +25,9 @@ SESSION_COOKIE_SECURE = True
 DEBUG = False
 TESTING = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'diplomacy.herokuapp.com'
+]
 
 
 # Application definition
