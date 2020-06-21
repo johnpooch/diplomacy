@@ -11,3 +11,4 @@ faker
 mysqlclient
 gunicorn
 psycopg2-binary
+whitenoise
