@@ -1,1 +1,1 @@
-web: gunicorn diplomacy.wsgi:application
+web: gunicorn project.wsgi:application
