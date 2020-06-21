@@ -26,8 +26,8 @@ urlpatterns = [
     ),
     path(
         'game/finalize/<int:pk>',
-        views.FinalizeOrdersView.as_view(),
-        name='finalize-orders'
+        views.ToggleFinalizeOrdersView.as_view(),
+        name='toggle-finalize-orders'
     ),
     path(
         'game/<int:pk>',

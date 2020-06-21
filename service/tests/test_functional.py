@@ -89,7 +89,7 @@ class TestEndToEnd(APITestCase):
         self.assertEqual(response.status_code, 404)
 
         # each player joins game
-        join_game_url = reverse('join-game', args=[game.id])
+        join_game_url = reverse('toggle-join-game', args=[game.id])
         other_users = User.objects.exclude(username='john')
         for user in other_users:
             self.client.force_authenticate(user=user)
@@ -105,7 +105,7 @@ class TestEndToEnd(APITestCase):
         nation_states = \
             models.NationState.objects.filter(turn=turn)
 
-        # game is now active and has been initialised
+        # game is now active and has been initialized
         game.refresh_from_db()
         self.assertEqual(game.status, base.GameStatus.ACTIVE)
 
@@ -125,7 +125,7 @@ class TestEndToEnd(APITestCase):
         # eighth player tries to join game
         self.client.force_authenticate(user=new_user)
         response = self.client.patch(join_game_url, format='json')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
         self.assertFalse(new_user in game.participants.all())
 
         # each player submits orders
@@ -162,7 +162,7 @@ class TestEndToEnd(APITestCase):
         # each player finalizes orders
         for nation_state in nation_states.all():
             finalize_orders_url = reverse(
-                'finalize-orders', args=[game.id, nation_state.id]
+                'toggle-finalize-orders', args=[nation_state.id]
             )
             self.client.force_authenticate(user=nation_state.user)
             response = self.client.patch(finalize_orders_url)
@@ -256,7 +256,7 @@ class TestEndToEnd(APITestCase):
         # each player finalizes orders
         for nation_state in nation_states:
             finalize_orders_url = reverse(
-                'finalize-orders', args=[game.id, nation_state.id]
+                'toggle-finalize-orders', args=[nation_state.id]
             )
             self.client.force_authenticate(user=nation_state.user)
             response = self.client.patch(finalize_orders_url)
@@ -352,7 +352,7 @@ class TestEndToEnd(APITestCase):
         # player finalizes orders
         nation_state = game.get_current_turn().nationstates.get(user=retreating_user)
         finalize_orders_url = reverse(
-            'finalize-orders', args=[game.id, nation_state.id]
+            'toggle-finalize-orders', args=[nation_state.id]
         )
         response = self.client.patch(finalize_orders_url)
         self.assertEqual(response.status_code, 200)
@@ -435,7 +435,7 @@ class TestEndToEnd(APITestCase):
         # each player finalizes orders
         for nation_state in game.get_current_turn().nationstates.all():
             finalize_orders_url = reverse(
-                'finalize-orders', args=[game.id, nation_state.id]
+                'toggle-finalize-orders', args=[nation_state.id]
             )
             self.client.force_authenticate(user=nation_state.user)
             response = self.client.patch(finalize_orders_url)

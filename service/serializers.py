@@ -1,9 +1,8 @@
 from django.contrib.auth.models import User
-from django.db.models import Q
-from rest_framework import exceptions, serializers
+from rest_framework import serializers
 
 from core import models
-from core.models.base import GameStatus, OrderType, Phase
+from core.models.base import OrderType, Phase
 
 
 class UserSerializer(serializers.ModelSerializer):

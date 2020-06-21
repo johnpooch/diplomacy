@@ -146,7 +146,7 @@ class Game(models.Model):
         True when the correct number of players have joined and the game hasn't
         been initialized.
         """
-        return self.participants.all().count() == self.num_players \
+        return self.participants.all().count() >= self.num_players \
             and not self.turns.all().exists()
 
     def initialize(self):

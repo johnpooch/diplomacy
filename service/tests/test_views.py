@@ -126,14 +126,22 @@ class TestJoinGame(APITestCase):
 
     def setUp(self):
         self.data = {}
+        self.user = factories.UserFactory()
+        self.variant = factories.VariantFactory()
+        self.game = models.Game.objects.create(
+            status=GameStatus.PENDING,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
+        self.url = reverse('toggle-join-game', args=[self.game.id])
 
     def test_join_game_unauthorized(self):
         """
         Cannot join a game when unauthorized.
         """
-        game = factories.GameFactory()
-        url = reverse('join-game', args=[game.id])
-        response = self.client.patch(url, self.data, format='json')
+        response = self.client.patch(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_join_game_full(self):
@@ -141,60 +149,40 @@ class TestJoinGame(APITestCase):
         Cannot join a game when the game already has enough participants.
         """
         joined_user = factories.UserFactory()
-        joining_user = factories.UserFactory()
-        game = factories.GameFactory(
-            participants=(joined_user,),
-            num_players=1,
-        )
+        self.game.num_players = 1
+        self.game.participants.add(joined_user)
+        self.game.save()
 
-        self.client.force_authenticate(user=joining_user)
-
-        url = reverse('join-game', args=[game.id])
-        response = self.client.put(url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_join_game_ended(self):
         """
         Cannot join a game when the game already has ended.
         """
-        user = factories.UserFactory()
-        game = factories.GameFactory(
-            status=GameStatus.ENDED,
-        )
-        self.client.force_authenticate(user=user)
-        url = reverse('join-game', args=[game.id])
-        response = self.client.put(url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.game.status = GameStatus.ENDED
+        self.game.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_join_game_success(self):
 
-        user = factories.UserFactory()
-        game = factories.GameFactory(
-            status=GameStatus.ACTIVE,
-        )
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+        self.client.force_authenticate(user=self.user)
 
-        self.client.force_authenticate(user=user)
-
-        url = reverse('join-game', args=[game.id])
-        response = self.client.patch(url, self.data, format='json')
-        self.assertTrue(user in game.participants.all())
+        response = self.client.patch(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.user in self.game.participants.all())
 
     @patch('core.models.Game.initialize')
     def test_join_game_initialise_game(self, mock_initialize):
-        user = factories.UserFactory()
-        variant = models.Variant.objects.create(name='standard')
-        game = models.Game.objects.create(
-            variant=variant,
-            name='Test game',
-            status=GameStatus.ACTIVE,
-            num_players=1,
-            created_by=user,
-        )
-        self.client.force_authenticate(user=user)
-
-        url = reverse('join-game', args=[game.id])
-        response = self.client.patch(url, self.data, format='json')
+        self.game.num_players = 1
+        self.game.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         mock_initialize.assert_called()
 
@@ -914,8 +902,8 @@ class TestFinalizeOrders(APITestCase):
         )
         self.territory = territory_state.territory
         self.url = reverse(
-            'finalize-orders',
-            args=[self.game.id, self.nation_state.id]
+            'toggle-finalize-orders',
+            args=[self.nation_state.id]
         )
         self.data = {}
 
@@ -999,8 +987,8 @@ class TestUnfinalizeOrders(APITestCase):
         )
         self.territory = territory_state.territory
         self.url = reverse(
-            'finalize-orders',
-            args=[self.game.id, self.nation_state.id]
+            'toggle-finalize-orders',
+            args=[self.nation_state.id]
         )
         self.data = {}
 

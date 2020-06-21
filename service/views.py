@@ -96,7 +96,6 @@ class GameStateView(BaseMixin, generics.RetrieveAPIView):
 
 
 class ToggleJoinGame(generics.UpdateAPIView):
-
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameSerializer
     queryset = models.Game.objects.all()
@@ -194,7 +193,7 @@ class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
             )
 
 
-class FinalizeOrdersView(generics.UpdateAPIView):
+class ToggleFinalizeOrdersView(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.PublicNationStateSerializer
