@@ -75,7 +75,7 @@ From within the service container run `python3 manage.py test`.
 ### Linting
 
 Run flake8 to check for code style problems. Run `flake8 .` from the project
-root. Any code style warning they will be displayed.
+root. If there are code style problems they will be displayed.
 
 ## Test Coverage
 
