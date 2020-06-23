@@ -1,4 +1,9 @@
-dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game create_build_game create_orders_game
+.PHONY: all
+
+all: reset_db dev_fixtures superuser
+
+dev_fixtures: dev_fixtures_basic dev_fixtures_games create_retreating_game \
+	create_build_game create_orders_game create_long_game
 
 dev_fixtures_basic:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
@@ -40,6 +45,10 @@ create_retreating_game:
 create_build_game:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
 		order_histories/game_1/ --num_turns 3 --name 'Build Game'
+
+create_long_game:
+	docker exec -it diplomacy_diplomacy.service_1 ./manage.py convert_order_histories_to_data \
+		order_histories/game_1/ --num_turns 14 --name 'Long Game'
 
 reset_db:
 	docker rm -vf diplomacy_diplomacy.mysql_1
