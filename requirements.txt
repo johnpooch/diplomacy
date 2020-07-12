@@ -1,3 +1,4 @@
+bs4
 Django
 coverage
 dj-database-url
@@ -8,6 +9,7 @@ django-rest-knox
 djangorestframework
 factory_boy
 faker
+lxml
 mysqlclient
 gunicorn
 psycopg2-binary

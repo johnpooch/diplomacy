@@ -2,7 +2,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "England"
+            "name": "England",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#20659a\",\"path\":\"M0,0H84.13V168.26H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M84.13,0h84.13V168.26H84.13Z\"},{\"fill\":\"#df3043\",\"path\":\"M168.26,0h84.13V168.26H168.26Z\"}]}"
         },
         "model": "core.nation",
         "pk": 1
@@ -10,7 +11,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "France"
+            "name": "France",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#20659a\",\"path\":\"M0,0H84.13V168.26H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M84.13,0h84.13V168.26H84.13Z\"},{\"fill\":\"#df3043\",\"path\":\"M168.26,0h84.13V168.26H168.26Z\"}]}"
         },
         "model": "core.nation",
         "pk": 2
@@ -18,7 +20,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "Germany"
+            "name": "Germany",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#4c4c4d\",\"path\":\"M0,0H252.39V56.09H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M0,56.09H252.39v56.08H0Z\"},{\"fill\":\"#df3043\",\"path\":\"M0,112.17H252.39v56.09H0Z\"}]}"
         },
         "model": "core.nation",
         "pk": 3
@@ -26,7 +29,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "Austria-Hungary"
+            "name": "Austria-Hungary",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#20659a\",\"path\":\"M0,0H84.13V168.26H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M84.13,0h84.13V168.26H84.13Z\"},{\"fill\":\"#df3043\",\"path\":\"M168.26,0h84.13V168.26H168.26Z\"}]}"
         },
         "model": "core.nation",
         "pk": 4
@@ -34,7 +38,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "Italy"
+            "name": "Italy",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#20659a\",\"path\":\"M0,0H84.13V168.26H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M84.13,0h84.13V168.26H84.13Z\"},{\"fill\":\"#df3043\",\"path\":\"M168.26,0h84.13V168.26H168.26Z\"}]}"
         },
         "model": "core.nation",
         "pk": 5
@@ -42,7 +47,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "Russia"
+            "name": "Russia",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#20659a\",\"path\":\"M0,0H84.13V168.26H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M84.13,0h84.13V168.26H84.13Z\"},{\"fill\":\"#df3043\",\"path\":\"M168.26,0h84.13V168.26H168.26Z\"}]}"
         },
         "model": "core.nation",
         "pk": 6
@@ -50,7 +56,8 @@
     {
         "fields": {
             "variant": 1,
-            "name": "Turkey"
+            "name": "Turkey",
+            "flag": "{\"viewBox\":\"0 0 252.39 168.26\",\"paths\":[{\"fill\":\"#20659a\",\"path\":\"M0,0H84.13V168.26H0Z\"},{\"fill\":\"#f0efef\",\"path\":\"M84.13,0h84.13V168.26H84.13Z\"},{\"fill\":\"#df3043\",\"path\":\"M168.26,0h84.13V168.26H168.26Z\"}]}"
         },
         "model": "core.nation",
         "pk": 7
