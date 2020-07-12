@@ -56,4 +56,4 @@ class Command(BaseCommand):
                     'path': path['d']
                 }
             )
-        return json.dumps(result_dict)
+        return json.dumps(json.dumps(result_dict))
