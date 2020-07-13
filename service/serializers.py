@@ -323,6 +323,8 @@ class GameSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     current_turn = serializers.SerializerMethodField()
     winners = PublicNationStateSerializer(many=True, read_only=True)
+    variant = VariantSerializer()
+    pieces = PieceSerializer(many=True)
 
     class Meta:
         model = models.Game
@@ -331,7 +333,6 @@ class GameSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'variant',
-            'variant_id',
             'private',
             'password',
             'order_deadline',
@@ -347,6 +348,7 @@ class GameSerializer(serializers.ModelSerializer):
             'initialized_at',
             'status',
             'current_turn',
+            'pieces',
         )
         read_only_fields = (
             'id',
