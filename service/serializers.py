@@ -331,6 +331,7 @@ class GameSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'slug',
             'description',
             'variant',
             'private',
@@ -392,6 +393,7 @@ class GameStateSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'slug',
             'description',
             'turns',
             'variant',

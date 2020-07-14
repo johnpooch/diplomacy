@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, re_path, include
 
 from . import views
 
@@ -19,40 +19,40 @@ urlpatterns = [
         views.CreateGameView.as_view(),
         name='create-game'
     ),
-    path(
-        'game/<int:pk>/join',
+    re_path(
+        r'game/(?P<slug>[_\-\w]+)/join',
         views.ToggleJoinGame.as_view(),
         name='toggle-join-game'
     ),
-    path(
-        'game/finalize/<int:pk>',
+    re_path(
+        r'game/finalize/(?P<pk>[0-9]+)',
         views.ToggleFinalizeOrdersView.as_view(),
         name='toggle-finalize-orders'
     ),
-    path(
-        'game/<int:pk>',
-        views.GameStateView.as_view(),
-        name='game-state'
-    ),
-    path(
-        'game/<int:game>/order',
+    re_path(
+        r'game/(?P<slug>[_\-\w]+)/order$',
         views.CreateOrderView.as_view(),
         name='order'
     ),
-    path(
-        'game/<int:game>/orders',
+    re_path(
+        r'game/(?P<slug>[_\-\w]+)/orders$',
         views.ListOrdersView.as_view(),
         name='orders'
     ),
-    path(
-        'game/<int:game>/nation-state',
+    re_path(
+        r'game/(?P<slug>[_\-\w]+)/nation-state$',
         views.RetrievePrivateNationStateView.as_view(),
         name='private-nation-state'
     ),
-    path(
-        'game/<int:game>/order/<int:pk>',
+    re_path(
+        r'game/(?P<slug>[_\-\w]+)/order/(?P<pk>[0-9]+)$',
         views.DestroyOrderView.as_view(),
         name='order'
+    ),
+    re_path(
+        r'game/(?P<slug>[_\-\w]+)$',
+        views.GameStateView.as_view(),
+        name='game-state'
     ),
     path(
         'api-auth/',

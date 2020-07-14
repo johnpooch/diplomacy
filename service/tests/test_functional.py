@@ -84,12 +84,12 @@ class TestEndToEnd(APITestCase):
 
         # john tries to create order before game has started
         data = {'source': 1}
-        create_order_url = reverse('order', args=[game.id])
+        create_order_url = reverse('order', args=[game.slug])
         response = self.client.post(create_order_url, data, format='json')
         self.assertEqual(response.status_code, 404)
 
         # each player joins game
-        join_game_url = reverse('toggle-join-game', args=[game.id])
+        join_game_url = reverse('toggle-join-game', args=[game.slug])
         other_users = User.objects.exclude(username='john')
         for user in other_users:
             self.client.force_authenticate(user=user)
@@ -329,7 +329,7 @@ class TestEndToEnd(APITestCase):
             'target': retreating_piece.territory.id,
             'type': base.OrderType.RETREAT,
         }
-        create_order_url = reverse('order', args=[game.id])
+        create_order_url = reverse('order', args=[game.slug])
         response = self.client.post(create_order_url, data, format='json')
         self.assertEqual(response.status_code, 400)
 
@@ -342,7 +342,7 @@ class TestEndToEnd(APITestCase):
             'target': game.variant.territories.get(name='budapest').id,
             'type': base.OrderType.RETREAT,
         }
-        create_order_url = reverse('order', args=[game.id])
+        create_order_url = reverse('order', args=[game.slug])
         # nation_state = new_turn.nationstates.get(user=retreating_user)
         response = self.client.post(create_order_url, data, format='json')
         self.assertEqual(response.status_code, 201)

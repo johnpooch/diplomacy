@@ -135,7 +135,7 @@ class TestJoinGame(APITestCase):
             created_by=self.user,
             num_players=7
         )
-        self.url = reverse('toggle-join-game', args=[self.game.id])
+        self.url = reverse('toggle-join-game', args=[self.game.slug])
 
     def test_join_game_unauthorized(self):
         """
@@ -237,7 +237,7 @@ class TestGetGameState(APITestCase):
             piece=self.piece,
             territory=self.territory,
         )
-        self.url = reverse('game-state', args=[self.game.id])
+        self.url = reverse('game-state', args=[self.game.slug])
 
     def test_get_game_state_unauthorized(self):
         self.client.logout()
@@ -322,7 +322,7 @@ class TestListOrders(APITestCase):
             piece=self.piece,
             territory=self.territory,
         )
-        self.url = reverse('orders', args=[self.game.id])
+        self.url = reverse('orders', args=[self.game.slug])
 
     def test_no_orders(self):
         response = self.client.get(self.url, format='json')
@@ -431,7 +431,7 @@ class TestCreateOrder(APITestCase):
         self.data = {
             'source': self.territory.id,
         }
-        self.url = reverse('order', args=[self.game.id])
+        self.url = reverse('order', args=[self.game.slug])
 
     def test_get(self):
         response = self.client.get(self.url, self.data, format='json')
@@ -837,7 +837,7 @@ class TestDeleteOrder(APITestCase):
             source=self.territory,
             nation=self.nation
         )
-        self.url = reverse('order', args=[self.game.id, self.order.id])
+        self.url = reverse('order', args=[self.game.slug, self.order.id])
 
     def test_delete_order_valid(self):
         response = self.client.delete(self.url, format='json')
@@ -846,7 +846,7 @@ class TestDeleteOrder(APITestCase):
             self.assertTrue(models.Order.objects.get())
 
     def test_delete_order_no_order(self):
-        url = reverse('order', args=[self.game.id, 200])
+        url = reverse('order', args=[self.game.slug, 200])
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 

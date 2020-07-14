@@ -27,12 +27,10 @@ class GameFilterChoicesView(views.APIView):
 
 class BaseMixin:
 
-    game_key = 'game'
-
     def get_game(self):
         return get_object_or_404(
             models.Game.objects,
-            id=self.kwargs[self.game_key],
+            slug=self.kwargs['slug'],
             status=GameStatus.ACTIVE,
             participants=self.request.user.id,
         )
@@ -91,13 +89,14 @@ class GameStateView(BaseMixin, generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
     queryset = models.Game.objects.all()
-    game_key = 'pk'
+    lookup_field = 'slug'
 
 
 class ToggleJoinGame(generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameSerializer
     queryset = models.Game.objects.all()
+    lookup_field = 'slug'
 
     def check_object_permissions(self, request, obj):
         if request.user not in obj.participants.all():
@@ -141,7 +140,7 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
     def get_queryset(self):
         game = get_object_or_404(
             models.Game.objects,
-            id=self.kwargs['game'],
+            slug=self.kwargs['slug'],
         )
         user_nation_state = models.NationState.objects.filter(
             turn=game.get_current_turn(),
@@ -163,7 +162,7 @@ class RetrievePrivateNationStateView(BaseMixin, generics.RetrieveAPIView):
     def get_object(self):
         game = get_object_or_404(
             models.Game.objects,
-            id=self.kwargs['game'],
+            slug=self.kwargs['slug'],
         )
         return models.NationState.objects.filter(
             turn=game.get_current_turn(),
