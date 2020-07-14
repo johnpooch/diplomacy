@@ -130,9 +130,18 @@ class TerritoryStateSerializer(serializers.ModelSerializer):
 
 class NationSerializer(serializers.ModelSerializer):
 
+    flag_as_data = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Nation
-        fields = ('id', 'name', )
+        fields = (
+            'id',
+            'name',
+            'flag_as_data',
+        )
+
+    def get_flag_as_data(self, nation):
+        return nation.flag_as_data
 
 
 class BaseNationStateSerializer(serializers.ModelSerializer):
@@ -314,6 +323,8 @@ class GameSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     current_turn = serializers.SerializerMethodField()
     winners = PublicNationStateSerializer(many=True, read_only=True)
+    variant = VariantSerializer()
+    pieces = PieceSerializer(many=True)
 
     class Meta:
         model = models.Game
@@ -322,7 +333,6 @@ class GameSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'variant',
-            'variant_id',
             'private',
             'password',
             'order_deadline',
@@ -338,6 +348,7 @@ class GameSerializer(serializers.ModelSerializer):
             'initialized_at',
             'status',
             'current_turn',
+            'pieces',
         )
         read_only_fields = (
             'id',

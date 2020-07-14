@@ -55,8 +55,8 @@ def process(state):
 
         if depth == 10:
             circular_movements = find_circular_movements(moves)
-            for l in circular_movements:
-                for move in l:
+            for li in circular_movements:
+                for move in li:
                     move.outcome = Outcomes.SUCCEEDS
 
         for move in [m for m in moves if m.outcome == Outcomes.UNRESOLVED]:
