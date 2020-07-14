@@ -17,8 +17,8 @@ WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 data_folder = WORKING_DIRECTORY + '/order_histories/'
 
 
-def reverse_list(l):
-    return l.reverse()
+def reverse_list(li):
+    return li.reverse()
 
 
 class TestEndToEnd(APITestCase):
@@ -117,7 +117,7 @@ class TestEndToEnd(APITestCase):
             )
 
         # eighth player signs up
-        data = {'username': 'mark', 'email': f'mark@mark.com', 'password': 'mark'}
+        data = {'username': 'mark', 'email': 'mark@mark.com', 'password': 'mark'}
         response = self.client.post(register_url, data, format='json')
         self.assertEqual(response.status_code, 200)
         new_user = User.objects.get(username='mark')
