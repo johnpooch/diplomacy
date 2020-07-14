@@ -29,5 +29,5 @@ class TestSvgToJson(TestCase):
                 }
             ]
         }
-        returned_data = json.loads(out.getvalue())
+        returned_data = json.loads(json.loads(out.getvalue()))
         self.assertEqual(expected_data, returned_data)
