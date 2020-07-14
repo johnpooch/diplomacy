@@ -29,7 +29,9 @@ class Nation(models.Model):
 
     @property
     def flag_as_data(self):
-        return json.loads(self.flag)
+        if self.flag:
+            return json.loads(self.flag)
+        return {}
 
 
 class NationState(PerTurnModel):
