@@ -1,0 +1,44 @@
+ENGLAND
+London SUPPORT Yorkshire to hold -> resolved
+Yorkshire SUPPORT London to hold -> resolved
+
+ITALY
+Ionian Sea SUPPORT Adriatic Sea to hold -> Dislodged by F Eastern Mediterranean - Ionian Sea
+Tuscany MOVE Venice -> Bounced
+Adriatic Sea SUPPORT Ionian Sea to hold -> Supported unit has failed
+Spain MOVE Marseilles -> resolved
+Portugal HOLD -> resolved
+Venice MOVE Trieste -> Attack broken by A Serbia - Trieste
+
+GERMANY
+English Channel CONVOY Belgium to Wales -> resolved
+Munich HOLD -> resolved
+Silesia MOVE Berlin -> Bounced
+North Sea MOVE Norway -> resolved
+Berlin MOVE Baltic Sea -> resolved
+Holland MOVE Ruhr -> resolved
+Belgium MOVE Wales -> resolved
+Denmark MOVE Sweden -> Dislodged by F Sweden - Denmark
+Wales MOVE Liverpool -> resolved
+
+AUSTRIA
+Bohemia SUPPORT Vienna to Galicia -> resolved
+Vienna MOVE Galicia -> resolved
+Tyrolia MOVE Venice -> Bounced
+
+TURKEY
+Eastern Mediterranean MOVE Ionian Sea -> resolved
+Greece SUPPORT Eastern Mediterranean to Ionian Sea -> resolved
+Aegean Sea SUPPORT Eastern Mediterranean to Ionian Sea -> resolved
+Bulgaria HOLD -> resolved
+Albania SUPPORT Serbia to Trieste -> resolved
+Serbia MOVE Trieste -> resolved
+
+RUSSIA
+Prussia MOVE Berlin -> Bounced
+Sweden MOVE Denmark -> resolved
+Galicia SUPPORT Warsaw to Silesia -> Dislodged by A Vienna - Galicia
+Budapest SUPPORT Serbia to Trieste -> resolved
+Warsaw MOVE Silesia -> Bounced
+Skagerrack SUPPORT Sweden to Denmark -> resolved
+Rumania HOLD -> resolved
