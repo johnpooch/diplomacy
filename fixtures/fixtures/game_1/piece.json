@@ -1,0 +1,244 @@
+[
+{
+    "model": "core.piece",
+    "pk": 67,
+    "fields": {
+        "nation": 7,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 68,
+    "fields": {
+        "nation": 3,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 69,
+    "fields": {
+        "nation": 2,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 70,
+    "fields": {
+        "nation": 7,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 71,
+    "fields": {
+        "nation": 1,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 72,
+    "fields": {
+        "nation": 3,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 73,
+    "fields": {
+        "nation": 1,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 74,
+    "fields": {
+        "nation": 1,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 75,
+    "fields": {
+        "nation": 2,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 76,
+    "fields": {
+        "nation": 5,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 77,
+    "fields": {
+        "nation": 5,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 78,
+    "fields": {
+        "nation": 6,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 79,
+    "fields": {
+        "nation": 7,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 80,
+    "fields": {
+        "nation": 4,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 81,
+    "fields": {
+        "nation": 5,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 82,
+    "fields": {
+        "nation": 4,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 83,
+    "fields": {
+        "nation": 6,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 84,
+    "fields": {
+        "nation": 3,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 85,
+    "fields": {
+        "nation": 2,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 86,
+    "fields": {
+        "nation": 4,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 87,
+    "fields": {
+        "nation": 6,
+        "game": 5,
+        "type": "army",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+},
+{
+    "model": "core.piece",
+    "pk": 88,
+    "fields": {
+        "nation": 6,
+        "game": 5,
+        "type": "fleet",
+        "turn_created": null,
+        "turn_disbanded": null
+    }
+}
+]

@@ -157,7 +157,3 @@ FIXTURE_DIRS = (
 # FIXTURE_DIRS = (
 #     'fixtures',
 # )
-
-SHELL_PLUS_PRE_IMPORTS = (
-    ('core.factories', '*'),
-)
