@@ -51,7 +51,7 @@ def user():
     while User.objects.filter(username=username):
         username = username + str(scrim)
         scrim += 1
-    return User.objects.create_user(
+    return User.objects.create(
         first_name=first_name,
         last_name=last_name,
         username=username,

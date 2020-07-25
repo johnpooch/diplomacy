@@ -1,11 +1,12 @@
+import json
 import os
-import re
 
-from django.utils.text import camel_case_to_spaces
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.utils.text import camel_case_to_spaces
 
 from core import models
-from core.models.base import GameStatus
+from core.utils import faker as custom_faker
 
 
 file_location = 'fixtures/games/'
@@ -23,9 +24,14 @@ class Game:
         TURKEY = 'Turkey'
 
     game = None
-    variant = None
     turn_number = None
     test_user_nation = None
+
+    def __init__(self, log):
+        self.log = log
+        self._turn_map = {}
+        self._nation_map = {}
+        self._territory_map = {}
 
     @property
     def name(self):
@@ -36,68 +42,108 @@ class Game:
         return self.__class__.__doc__.strip()
 
     @property
-    def file_location(self):
+    def fixture_location(self):
         location = '/'.join(
             [
                 settings.BASE_DIR,
                 'fixtures',
-                'games',
-                self.variant,
+                'fixtures',
                 self.game
             ]
         )
         if not os.path.isdir(location):
             raise ValueError(
-                'f{location} not found.'
+                f'{location} not found.'
             )
         return location
 
-    @property
-    def files(self):
-        location = self.file_location
-        dir_list = os.listdir(self.file_location)
-        dir_list.sort()
-        files = []
-        for f in dir_list:
-            files.append('/'.join([location, f]))
-            if f.startswith(self.turn_number):
-                return files
-        raise ValueError(
-            f'No file found beginning with {self.turn_number}.'
-        )
+    def get_fixture_file(self, file_name):
+        path = '/'.join([self.fixture_location, file_name])
+        if not os.path.isdir(path):
+            raise ValueError(f'{path} not found.')
+        return path
 
-    def create_game(self, variant):
-        return models.Game.objects.create(
-            variant=variant,
-            name=self.name,
-            desciption=self.description,
-            status=GameStatus.ACTIVE,
-            num_players=7,
-        )
+    def get_fixture_data(self, file_path):
+        result = []
+        with open(file_path) as json_file:
+            data = json.load(json_file)
+        for item in data:
+            result.append({**data['fields'], 'pk': data['pk']})
+        return result
 
-    def create_turn_from_file(self, f, game):
-        f = os.path.basename(f)  # just take filename
-        turn_data = self.convert_file_name_to_turn_data(f)
-        return models.Turn.objects.create(
-            game=game,
-            **turn_data,
-        )
+    def create_users(self, num_players):
+        users = [custom_faker.user() for i in range(num_players - 1)]
+        test_user = User.objects.get_or_create(
+            username='testuser',
+            email='test-user@test.com',
+            password='pass'
+        )[0]
+        users.append(test_user)
+        return users
 
-    def convert_file_name_to_turn_data(self, filename):
-        regex = r'^\d{2}_(?P<season>spring|fall)_(?P<year>\d{4})_(?P<phase>[a-z_]*)'
-        m = re.search(regex, filename)
-        data = m.groupdict()
-        data['year'] = int(data['year'])
-        return data
+    def create_game(self, variant, data):
+        data.update(
+            {
+                'variant': variant,
+                'name': self.name,
+                'description': self.description,
+            }
+        )
+        data.pop('winners')
+        data.pop('pk')
+        game = models.Game.objects.create(**data)
+        self.log(repr(game))
+        return game
+
+    def create_turns(self, game, data):
+        result = []
+        for item in data:
+            item['game'] = game
+            pk = item.pop('pk')
+            turn = models.Turn.objects.create(**item)
+            self.log(repr(turn))
+            self._turn_map[pk] = turn
+            result.append(turn)
+        return result
 
     def bake(self, variant, log):
-        log('Creating game \'{self.game_name}\'')
-        game = self.create_game(variant)
-        # Create turns - bulk create?
-        for f in self.files:
-            turn = self.create_turn_from_file(f, game)
-            # TODO make a management tool to dump out a game as json data.
+        game_data = self.get_fixture_data('game.json')[0]
+        turn_data = self.get_fixture_data('turn.json')
+
+        nation_data = self.get_fixture_data('nation.json')
+        self._populate_nation_map(nation_data)
+
+        self.log('Creating users for \'{self.game_name}\'...')
+        users = self.create_users(game_data['num_players'])
+
+        self.log('Creating game \'{self.game_name}\'...')
+        game_data['created_by'] = users[-1]
+        game = self.create_game(variant, game_data)
+
+        self.log('Creating turns...')
+        self.create_turns(game, turn_data)
+
+        # TODO need to limit to only turns up to a given turn
+
+
+    def _populate_nation_map(self, variant, data):
+        for item in data:
+            pk = item['pk']
+            nation = models.Nation.objects.get(
+                variant=variant,
+                name=item['name']
+            )
+            self._nation_map[pk] = nation
+
+    def _populate_territory_map(self, variant, data):
+        for item in data:
+            pk = item['pk']
+            territory = models.Territory.objects.get(
+                variant=variant,
+                name=item['name']
+            )
+            self._territory_map[pk] = territory
+
 
 class Spring1900(Game):
-    variant = 'standard'
     game = 'game_1'

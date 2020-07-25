@@ -83,6 +83,19 @@ class Command(BaseCommand):
         os.makedirs(location)
 
         game = models.Game.objects.get(id=options['id'])
+
+        variant = game.variant
+
+        nations = variant.nations.all()
+        nation_location = '/'.join([location, 'nation.json'])
+        nation_ids = nations.values_list('id', flat=True)
+        self.dump_model(models.Nation, nation_ids, nation_location)
+
+        territories = variant.territories.all()
+        territory_location = '/'.join([location, 'territory.json'])
+        territory_ids = territories.values_list('id', flat=True)
+        self.dump_model(models.Territory, territory_ids, territory_location)
+
         game_location = '/'.join([location, 'game.json'])
         self.dump_model(models.Game, [game.id], game_location)
 
