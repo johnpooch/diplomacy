@@ -132,9 +132,15 @@ class Game:
         result = []
         for item in data:
             turn_created = item['turn_created']
-            if turn_created and turn_created not in self._turn_map.keys():
-                # this piece does not exist by this point in the game.
-                continue
+            if turn_created:
+                try:
+                    turn = self._turn_map[turn_created]
+                    if turn.current_turn:
+                        continue
+                    item['turn_created'] = turn
+                except KeyError:
+                    # this piece does not exist by this point in the game.
+                    continue
             item['game'] = game
             nation_pk = item['nation']
             item['nation'] = self._nation_map[nation_pk]
@@ -165,7 +171,11 @@ class Game:
             item['turn'] = turn
 
             piece_pk = item['piece']
-            item['piece'] = self._piece_map[piece_pk]
+            try:
+                item['piece'] = self._piece_map[piece_pk]
+            except KeyError:
+                # piece doesnt exist yet because build phase?
+                continue
 
             territory_pk = item['territory']
             item['territory'] = self._territory_map[territory_pk]
@@ -214,7 +224,6 @@ class Game:
     def create_nation_states(self, data, users):
         result = []
         for item in data:
-            test_nation = False
             turn_pk = item['turn']
             try:
                 turn = self._turn_map[turn_pk]
@@ -224,14 +233,14 @@ class Game:
 
             nation_pk = item['nation']
             nation = self._nation_map[nation_pk]
+            test_nation = nation.name == self.test_user_nation
             item['nation'] = nation
 
             user_pk = item['user']
             if user_pk in self._user_map.keys():
                 user = self._user_map[user_pk]
-            elif nation.name == self.test_user_nation:
+            elif test_nation:
                 user = users[-1]
-                test_nation = True
                 self._user_map[user_pk] = user
             else:
                 user = users.pop(0)
@@ -438,8 +447,70 @@ class RetreatTurnAllOthersFinalized(RetreatTurn):
     other_players_finalized = True
 
 
+class BuildTurn(StandardGame):
+    """
+    Test user is playing as Germany and can build three pieces.
+    """
+    year = 1901
+    season = Season.FALL
+    phase = Phase.BUILD
+    test_user_nation = GERMANY
+
+
+class BuildTurnAllOthersFinalized(BuildTurn):
+    """
+    Test user is playing as Germany and can build three pieces. All other
+    players have finalized their orders.
+    """
+    other_players_finalized = True
+
+
+class DisbandTurn(StandardGame):
+    """
+    Test user is playing as England and must disband a piece.
+    """
+    year = 1902
+    season = Season.FALL
+    phase = Phase.BUILD
+    test_user_nation = ENGLAND
+
+
+class DisbandTurnAllOthersFinalized(DisbandTurn):
+    """
+    Test user is playing as England and must disband a piece. All other
+    players have finalized their orders.
+    """
+    other_players_finalized = True
+
+
+class MoveToNamedCoast(StandardGame):
+    """
+    Test user is playing as Italy and has a fleet in the Western-Mediterranean
+    which can move to Spain.
+    """
+    year = 1902
+    season = Season.FALL
+    phase = Phase.ORDER
+    test_user_nation = ITALY
+
+
+class MoveToNamedCoastAllOthersFinalized(MoveToNamedCoast):
+    """
+    Test user is playing as Italy and has a fleet in the Western-Mediterranean
+    which can move to Spain. All other players have finalized orders
+    """
+    other_players_finalized = True
+
+
 recipes = {
     'first_turn': FirstTurn,
     'first_all_others_finalized': FirstTurnAllOthersFinalized,
     'retreat_turn': RetreatTurn,
+    'retreat_turn_all_others_finalized': RetreatTurnAllOthersFinalized,
+    'build_turn': BuildTurn,
+    'build_turn_all_others_finalized': BuildTurnAllOthersFinalized,
+    'disband_turn': DisbandTurn,
+    'disband_turn_all_others_finalized': DisbandTurnAllOthersFinalized,
+    'move_to_named_coast': MoveToNamedCoast,
+    'move_to_named_coast_all_others_finalized': MoveToNamedCoastAllOthersFinalized,
 }
