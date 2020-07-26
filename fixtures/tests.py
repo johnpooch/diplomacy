@@ -14,7 +14,7 @@ class TestGame(Game):
     """
     Test docstring.
     """
-    variant = 'test'
+    variant_identifier = 'test'
     year = 1901
     season = Season.FALL
     phase = Phase.BUILD

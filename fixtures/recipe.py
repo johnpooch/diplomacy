@@ -4,23 +4,25 @@ import os
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.utils.text import camel_case_to_spaces
+from django.utils.text import camel_case_to_spaces, slugify
 
 from core import models
+from core.models.base import Phase, Season
 from core.utils import faker as custom_faker
+
+
+ENGLAND = 'England'
+FRANCE = 'France'
+GERMANY = 'Germany'
+AUSTRIA = 'Austria-Hungary'
+ITALY = 'Italy'
+RUSSIA = 'Russia'
+TURKEY = 'Turkey'
 
 
 class Game:
 
-    class Nations:
-        ENGLAND = 'England'
-        FRANCE = 'France'
-        GERMANY = 'Germany'
-        AUSTRIA = 'Austria-Hungary'
-        ITALY = 'Italy'
-        RUSSIA = 'Russia'
-        TURKEY = 'Turkey'
-
+    variant_identifier = None
     game = None
     test_user_nation = None
     year = None
@@ -63,16 +65,17 @@ class Game:
 
     def get_fixture_file(self, file_name):
         path = '/'.join([self.fixture_location, file_name])
-        if not os.path.isdir(path):
+        if not os.path.isfile(path):
             raise ValueError(f'{path} not found.')
         return path
 
-    def get_fixture_data(self, file_path):
+    def get_fixture_data(self, file_name):
+        file_path = self.get_fixture_file(file_name)
         result = []
         with open(file_path) as json_file:
             data = json.load(json_file)
         for item in data:
-            result.append({**data['fields'], 'pk': data['pk']})
+            result.append({**item['fields'], 'pk': item['pk']})
         return result
 
     def create_users(self, num_players):
@@ -90,6 +93,7 @@ class Game:
             {
                 'variant': variant,
                 'name': self.name,
+                # 'slug': slugify(self.name),
                 'description': self.description,
             }
         )
@@ -241,7 +245,7 @@ class Game:
                 'and phase.'
             )
 
-    def bake(self, variant, log):
+    def bake(self, variant):
         game_data = self.get_fixture_data('game.json')[0]
         turn_data = self.get_fixture_data('turn.json')
         nation_data = self.get_fixture_data('nation.json')
@@ -254,9 +258,9 @@ class Game:
 
         self.validate(turn_data)
 
-        self._populate_nation_map(nation_data)
-        self._populate_territory_map(territory_data)
-        self._populate_named_coast_map(named_coast_data)
+        self._populate_nation_map(variant, nation_data)
+        self._populate_territory_map(variant, territory_data)
+        self._populate_named_coast_map(variant, named_coast_data)
 
         self.log('Creating users for \'{self.game_name}\'...')
         users = self.create_users(game_data['num_players'])
@@ -318,11 +322,18 @@ class Game:
         )
 
 
-class TestGame(Game):
+class Spring1900(Game):
     """
-    Test docstring.
+    This game has just started. Test user is playing as England.
     """
-    variant = 'test'
+    game = 'game_1'
+    variant_identifier = 'standard'
     year = 1901
-    season = Season.FALL
-    phase = Phase.BUILD
+    season = Season.SPRING
+    phase = Phase.ORDER
+    test_user_nation = ENGLAND
+
+
+recipes = {
+    'spring_1900': Spring1900,
+}
