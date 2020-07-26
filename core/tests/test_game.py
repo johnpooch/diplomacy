@@ -8,7 +8,7 @@ from core.models.base import GameStatus, Phase, Season
 class TestGame(TestCase):
 
     def setUp(self):
-        self.variant = factories.StandardVariantFactory()
+        self.variant = models.Variant.objects.get(identifier='standard')
         self.users = []
         for i in range(7):
             self.users.append(factories.UserFactory())

@@ -1,0 +1,11 @@
+[
+    {
+        "model": "core.mapdata",
+        "pk": 1,
+        "fields": {
+            "variant": 1,
+            "width": 1835,
+            "height": 1360
+        }
+    }
+]

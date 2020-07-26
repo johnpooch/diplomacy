@@ -1,0 +1,164 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$iYW2ipMj3Ppl$F/dC/uHZFbK4wxsxiKvpFPE8a+6MKevMVP3zeCIEDtE=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "hamsayes",
+        "first_name": "",
+        "last_name": "",
+        "email": "hamsayes@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:25.909Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$MrKikXgdcEaP$RdAo42QIfA7gohSornr6SXZKYrk96BZ0jhBjGTq6Gns=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "johnpooch",
+        "first_name": "",
+        "last_name": "",
+        "email": "johnpooch@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.013Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$GKHIyU52kaDH$yFvyW7qgtZNzeQibznPyudZc9yosEYFJx2WMBEUCH0A=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "26slices",
+        "first_name": "",
+        "last_name": "",
+        "email": "26slices@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.108Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$5edPcj9aGlXa$PekTjO8BFGir0N07APLhWnK9ER88v1oXEssV8B0d1Xs=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "pk-fire",
+        "first_name": "",
+        "last_name": "",
+        "email": "pk-fire@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.204Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$VFQJbmhVd6Wv$5l+jEh3S6/aMFfRoCvMzHNTUSTuRchbeI6vuJ6mfQQY=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "jigglypuff",
+        "first_name": "",
+        "last_name": "",
+        "email": "jigglypuff@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.301Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$wjZfzIRbgcW1$xEns5eERGzrLC5fZLmHVdS//SF/M5PbRea3p3vS5xbI=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "epresley",
+        "first_name": "",
+        "last_name": "",
+        "email": "epresley@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.400Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$kekv3DBj8LvQ$84HoweeFc/XApki5qcmU2wpmkmfhzUUHl2SiKYbP9EY=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "cberry",
+        "first_name": "",
+        "last_name": "",
+        "email": "cberry@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.501Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$X5hGmEVaQqdD$Y5QFcVXK2fKX0iwu9eFP9NGcLE8Zn+53KBnuIT3TQZA=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "rosspooch",
+        "first_name": "",
+        "last_name": "",
+        "email": "rosspooch@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.597Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$180000$uECWaED7YQlM$O5FcOleSkGAuRBLqM2ZKQU+zY4r6ahoQCu4FsgTRTM0=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "AlwaysLying",
+        "first_name": "",
+        "last_name": "",
+        "email": "AlwaysLying@diplomacy.gg",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2020-06-14T15:53:26.705Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

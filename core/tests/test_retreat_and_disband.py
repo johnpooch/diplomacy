@@ -8,7 +8,7 @@ from core.models.base import OrderType, Phase, PieceType, Season
 class TestRetreatAndDisband(TestCase):
 
     def setUp(self):
-        self.variant = factories.StandardVariantFactory()
+        self.variant = models.Variant.objects.get(identifier='standard')
         self.user = factories.UserFactory()
         self.game = models.Game.objects.create(
             name='Test game',
