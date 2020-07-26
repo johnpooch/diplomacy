@@ -10,6 +10,6 @@ def get_fixture_data(file_name):
     Args:
         * `file_name` - `str` - the name of the file e.g. 'nation.json'
     """
-    with open(settings.BASE_DIR + '/fixtures/' + file_name, 'r') as f:
+    with open(settings.BASE_DIR + '/core/fixtures/' + file_name, 'r') as f:
         data = f.read()
     return json.loads(data)

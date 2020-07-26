@@ -12,6 +12,11 @@ class Variant(models.Model):
         null=False,
         max_length=100,
     )
+    # unlike name, this will never change for a given variant
+    identifier = models.CharField(
+        null=False,
+        max_length=100,
+    )
     max_num_players = models.PositiveIntegerField(
         null=False,
         default=7,

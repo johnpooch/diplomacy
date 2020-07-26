@@ -1,0 +1,1157 @@
+[
+{
+    "model": "core.nationstate",
+    "pk": 64,
+    "fields": {
+        "turn": 13,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 65,
+    "fields": {
+        "turn": 13,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 66,
+    "fields": {
+        "turn": 13,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 67,
+    "fields": {
+        "turn": 13,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 68,
+    "fields": {
+        "turn": 13,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 69,
+    "fields": {
+        "turn": 13,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 70,
+    "fields": {
+        "turn": 13,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 71,
+    "fields": {
+        "turn": 14,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 72,
+    "fields": {
+        "turn": 14,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 73,
+    "fields": {
+        "turn": 14,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 74,
+    "fields": {
+        "turn": 14,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 75,
+    "fields": {
+        "turn": 14,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 76,
+    "fields": {
+        "turn": 14,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 77,
+    "fields": {
+        "turn": 14,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 78,
+    "fields": {
+        "turn": 15,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 79,
+    "fields": {
+        "turn": 15,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 80,
+    "fields": {
+        "turn": 15,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 81,
+    "fields": {
+        "turn": 15,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 82,
+    "fields": {
+        "turn": 15,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 83,
+    "fields": {
+        "turn": 15,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 84,
+    "fields": {
+        "turn": 15,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 85,
+    "fields": {
+        "turn": 16,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 86,
+    "fields": {
+        "turn": 16,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 87,
+    "fields": {
+        "turn": 16,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 88,
+    "fields": {
+        "turn": 16,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 89,
+    "fields": {
+        "turn": 16,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 90,
+    "fields": {
+        "turn": 16,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 91,
+    "fields": {
+        "turn": 16,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 92,
+    "fields": {
+        "turn": 17,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 93,
+    "fields": {
+        "turn": 17,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 94,
+    "fields": {
+        "turn": 17,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 95,
+    "fields": {
+        "turn": 17,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 96,
+    "fields": {
+        "turn": 17,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 97,
+    "fields": {
+        "turn": 17,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 98,
+    "fields": {
+        "turn": 17,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 99,
+    "fields": {
+        "turn": 18,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 100,
+    "fields": {
+        "turn": 18,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 101,
+    "fields": {
+        "turn": 18,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 102,
+    "fields": {
+        "turn": 18,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 103,
+    "fields": {
+        "turn": 18,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 104,
+    "fields": {
+        "turn": 18,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 105,
+    "fields": {
+        "turn": 18,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 106,
+    "fields": {
+        "turn": 19,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 107,
+    "fields": {
+        "turn": 19,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 108,
+    "fields": {
+        "turn": 19,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 109,
+    "fields": {
+        "turn": 19,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 110,
+    "fields": {
+        "turn": 19,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 111,
+    "fields": {
+        "turn": 19,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 112,
+    "fields": {
+        "turn": 19,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 113,
+    "fields": {
+        "turn": 20,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 114,
+    "fields": {
+        "turn": 20,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 115,
+    "fields": {
+        "turn": 20,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 116,
+    "fields": {
+        "turn": 20,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 117,
+    "fields": {
+        "turn": 20,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 118,
+    "fields": {
+        "turn": 20,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 119,
+    "fields": {
+        "turn": 20,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 120,
+    "fields": {
+        "turn": 21,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 121,
+    "fields": {
+        "turn": 21,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 122,
+    "fields": {
+        "turn": 21,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 123,
+    "fields": {
+        "turn": 21,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 124,
+    "fields": {
+        "turn": 21,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 125,
+    "fields": {
+        "turn": 21,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 126,
+    "fields": {
+        "turn": 21,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 127,
+    "fields": {
+        "turn": 22,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 128,
+    "fields": {
+        "turn": 22,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 129,
+    "fields": {
+        "turn": 22,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 130,
+    "fields": {
+        "turn": 22,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 131,
+    "fields": {
+        "turn": 22,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 132,
+    "fields": {
+        "turn": 22,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 133,
+    "fields": {
+        "turn": 22,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 134,
+    "fields": {
+        "turn": 23,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 135,
+    "fields": {
+        "turn": 23,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 136,
+    "fields": {
+        "turn": 23,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 137,
+    "fields": {
+        "turn": 23,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 138,
+    "fields": {
+        "turn": 23,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 139,
+    "fields": {
+        "turn": 23,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 140,
+    "fields": {
+        "turn": 23,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 141,
+    "fields": {
+        "turn": 24,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 142,
+    "fields": {
+        "turn": 24,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 143,
+    "fields": {
+        "turn": 24,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 144,
+    "fields": {
+        "turn": 24,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 145,
+    "fields": {
+        "turn": 24,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 146,
+    "fields": {
+        "turn": 24,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 147,
+    "fields": {
+        "turn": 24,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 148,
+    "fields": {
+        "turn": 25,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 149,
+    "fields": {
+        "turn": 25,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 150,
+    "fields": {
+        "turn": 25,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 151,
+    "fields": {
+        "turn": 25,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 152,
+    "fields": {
+        "turn": 25,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 153,
+    "fields": {
+        "turn": 25,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 154,
+    "fields": {
+        "turn": 25,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 155,
+    "fields": {
+        "turn": 26,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 156,
+    "fields": {
+        "turn": 26,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 157,
+    "fields": {
+        "turn": 26,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 158,
+    "fields": {
+        "turn": 26,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 159,
+    "fields": {
+        "turn": 26,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 160,
+    "fields": {
+        "turn": 26,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 161,
+    "fields": {
+        "turn": 26,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 162,
+    "fields": {
+        "turn": 27,
+        "nation": 1,
+        "user": 34,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 163,
+    "fields": {
+        "turn": 27,
+        "nation": 2,
+        "user": 31,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 164,
+    "fields": {
+        "turn": 27,
+        "nation": 3,
+        "user": 36,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 165,
+    "fields": {
+        "turn": 27,
+        "nation": 4,
+        "user": 37,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 166,
+    "fields": {
+        "turn": 27,
+        "nation": 5,
+        "user": 33,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 167,
+    "fields": {
+        "turn": 27,
+        "nation": 6,
+        "user": 35,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 168,
+    "fields": {
+        "turn": 27,
+        "nation": 7,
+        "user": 32,
+        "orders_finalized": false,
+        "surrendered": false
+    }
+}
+]

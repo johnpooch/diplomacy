@@ -8,6 +8,7 @@ from django.db.models.manager import Manager
 from django.utils.timezone import now
 
 from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
+from core.models.mixins import AutoSlug
 
 
 class GameQuerySet(models.QuerySet):
@@ -34,7 +35,7 @@ class GameManager(Manager.from_queryset(GameQuerySet)):
     pass
 
 
-class Game(models.Model):
+class Game(models.Model, AutoSlug):
 
     variant = models.ForeignKey(
         'Variant',
@@ -45,6 +46,13 @@ class Game(models.Model):
     name = models.CharField(
         max_length=50,
         null=False
+    )
+    slug = models.CharField(
+        max_length=255,
+        null=False,
+        blank=True,
+        db_index=True,
+        unique=True,
     )
     description = models.CharField(
         max_length=1000,
