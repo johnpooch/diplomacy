@@ -2,18 +2,7 @@
 
 all: reset_db dev_fixtures superuser
 
-dev_fixtures: dev_fixtures_basic create_games
-
-dev_fixtures_basic:
-	docker exec -it diplomacy_diplomacy.service_1 ./manage.py loaddata \
-		cp_fixtures/dev/user.json \
-		cp_fixtures/dev/variant.json \
-		cp_fixtures/dev/nation.json \
-		cp_fixtures/dev/territory.json \
-		cp_fixtures/dev/named_coast.json \
-		cp_fixtures/dev/map_data.json \
-		cp_fixtures/dev/territory_map_data.json \
-		cp_fixtures/dev/named_coast_map_data.json 
+dev_fixtures: create_games
 
 create_games:
 	docker exec -it diplomacy_diplomacy.service_1 ./manage.py create_game_fixtures
