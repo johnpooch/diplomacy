@@ -95,7 +95,7 @@ class TestCreateGame(APITestCase):
         """
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
-        variant = factories.VariantFactory()
+        variant = models.Variant.objects.get(identifier='standard')
 
         data = {
             'name': 'Test Game',
@@ -127,7 +127,7 @@ class TestJoinGame(APITestCase):
     def setUp(self):
         self.data = {}
         self.user = factories.UserFactory()
-        self.variant = factories.VariantFactory()
+        self.variant = models.Variant.objects.get(identifier='standard')
         self.game = models.Game.objects.create(
             status=GameStatus.PENDING,
             variant=self.variant,
@@ -192,7 +192,7 @@ class TestGetGameState(APITestCase):
     def setUp(self):
         self.user = factories.UserFactory()
         self.client.force_authenticate(user=self.user)
-        self.variant = models.Variant.objects.create(name='standard')
+        self.variant = models.Variant.objects.create(name='test')
         self.game = models.Game.objects.create(
             variant=self.variant,
             name='Test game',
