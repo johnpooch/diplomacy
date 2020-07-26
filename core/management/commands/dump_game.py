@@ -136,3 +136,10 @@ class Command(BaseCommand):
         territory_states_ids = territory_states.values_list('id', flat=True)
         territory_state_location = '/'.join([location, 'territory_state.json'])
         self.dump_model(models.TerritoryState, territory_states_ids, territory_state_location)
+
+        orders = models.Order.objects.filter(
+            turn_id__in=turn_ids
+        )
+        order_ids = orders.values_list('id', flat=True)
+        order_location = '/'.join([location, 'order.json'])
+        self.dump_model(models.Order, order_ids, order_location)

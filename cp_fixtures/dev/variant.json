@@ -1,7 +1,8 @@
 [
   {
     "fields": {
-      "name": "Standard"
+      "name": "Standard",
+      "identifier": "standard"
     },
     "model": "core.variant",
     "pk": 1

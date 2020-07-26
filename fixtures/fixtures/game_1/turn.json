@@ -1,58 +1,212 @@
 [
 {
     "model": "core.turn",
-    "pk": 7,
+    "pk": 13,
     "fields": {
-        "game": 5,
+        "game": 7,
         "season": "spring",
         "phase": "order",
         "year": 1901,
         "current_turn": false,
         "processed": true,
-        "processed_at": "2020-07-14T18:55:25.350Z",
-        "created_at": "2020-07-14T18:55:24.505Z"
+        "processed_at": "2020-07-26T12:59:23.029Z",
+        "created_at": "2020-07-26T12:59:22.272Z"
     }
 },
 {
     "model": "core.turn",
-    "pk": 8,
+    "pk": 14,
     "fields": {
-        "game": 5,
+        "game": 7,
         "season": "fall",
         "phase": "order",
         "year": 1901,
         "current_turn": false,
         "processed": true,
-        "processed_at": "2020-07-14T18:55:26.317Z",
-        "created_at": "2020-07-14T18:55:25.626Z"
+        "processed_at": "2020-07-26T12:59:23.947Z",
+        "created_at": "2020-07-26T12:59:23.276Z"
     }
 },
 {
     "model": "core.turn",
-    "pk": 9,
+    "pk": 15,
     "fields": {
-        "game": 5,
+        "game": 7,
         "season": "fall",
         "phase": "retreat_and_disband",
         "year": 1901,
         "current_turn": false,
         "processed": true,
-        "processed_at": "2020-07-14T18:55:27.293Z",
-        "created_at": "2020-07-14T18:55:26.566Z"
+        "processed_at": "2020-07-26T12:59:24.910Z",
+        "created_at": "2020-07-26T12:59:24.184Z"
     }
 },
 {
     "model": "core.turn",
-    "pk": 10,
+    "pk": 16,
     "fields": {
-        "game": 5,
+        "game": 7,
         "season": "fall",
         "phase": "build",
         "year": 1901,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:25.681Z",
+        "created_at": "2020-07-26T12:59:25.110Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 17,
+    "fields": {
+        "game": 7,
+        "season": "spring",
+        "phase": "order",
+        "year": 1902,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:26.740Z",
+        "created_at": "2020-07-26T12:59:25.973Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 18,
+    "fields": {
+        "game": 7,
+        "season": "spring",
+        "phase": "retreat_and_disband",
+        "year": 1902,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:27.606Z",
+        "created_at": "2020-07-26T12:59:27.022Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 19,
+    "fields": {
+        "game": 7,
+        "season": "fall",
+        "phase": "order",
+        "year": 1902,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:28.612Z",
+        "created_at": "2020-07-26T12:59:27.832Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 20,
+    "fields": {
+        "game": 7,
+        "season": "fall",
+        "phase": "build",
+        "year": 1902,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:29.606Z",
+        "created_at": "2020-07-26T12:59:28.883Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 21,
+    "fields": {
+        "game": 7,
+        "season": "spring",
+        "phase": "order",
+        "year": 1903,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:30.622Z",
+        "created_at": "2020-07-26T12:59:29.852Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 22,
+    "fields": {
+        "game": 7,
+        "season": "spring",
+        "phase": "retreat_and_disband",
+        "year": 1903,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:31.436Z",
+        "created_at": "2020-07-26T12:59:30.907Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 23,
+    "fields": {
+        "game": 7,
+        "season": "fall",
+        "phase": "order",
+        "year": 1903,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:32.435Z",
+        "created_at": "2020-07-26T12:59:31.693Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 24,
+    "fields": {
+        "game": 7,
+        "season": "fall",
+        "phase": "retreat_and_disband",
+        "year": 1903,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:33.515Z",
+        "created_at": "2020-07-26T12:59:32.724Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 25,
+    "fields": {
+        "game": 7,
+        "season": "fall",
+        "phase": "build",
+        "year": 1903,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:34.306Z",
+        "created_at": "2020-07-26T12:59:33.751Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 26,
+    "fields": {
+        "game": 7,
+        "season": "spring",
+        "phase": "order",
+        "year": 1904,
+        "current_turn": false,
+        "processed": true,
+        "processed_at": "2020-07-26T12:59:35.375Z",
+        "created_at": "2020-07-26T12:59:34.551Z"
+    }
+},
+{
+    "model": "core.turn",
+    "pk": 27,
+    "fields": {
+        "game": 7,
+        "season": "spring",
+        "phase": "retreat_and_disband",
+        "year": 1904,
         "current_turn": true,
         "processed": false,
         "processed_at": null,
-        "created_at": "2020-07-14T18:55:27.499Z"
+        "created_at": "2020-07-26T12:59:35.652Z"
     }
 }
 ]

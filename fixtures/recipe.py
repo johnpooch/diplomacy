@@ -28,6 +28,7 @@ class Game:
     year = None
     season = None
     phase = None
+    other_players_finalized = False
 
     def __init__(self, log):
         self.log = log
@@ -80,11 +81,17 @@ class Game:
 
     def create_users(self, num_players):
         users = [custom_faker.user() for i in range(num_players - 1)]
-        test_user = User.objects.get_or_create(
-            username='testuser',
-            email='test-user@test.com',
-            password='pass'
-        )[0]
+        try:
+            test_user = User.objects.get(
+                username='testuser',
+                email='test-user@test.com',
+            )
+        except User.DoesNotExist:
+            test_user = User.objects.create_user(
+                username='testuser',
+                email='test-user@test.com',
+                password='pass',
+            )
         users.append(test_user)
         return users
 
@@ -93,14 +100,14 @@ class Game:
             {
                 'variant': variant,
                 'name': self.name,
-                # 'slug': slugify(self.name),
+                'slug': slugify(self.name),
                 'description': self.description,
             }
         )
         data.pop('winners')
         data.pop('pk')
         game = models.Game.objects.create(**data)
-        self.log(repr(game))
+        self.log('\t' + repr(game))
         return game
 
     def create_turns(self, game, data):
@@ -109,10 +116,12 @@ class Game:
             item['game'] = game
             pk = item.pop('pk')
             turn = models.Turn.objects.create(**item)
-            self.log(repr(turn))
+            self.log('\t' + repr(turn))
             self._turn_map[pk] = turn
             result.append(turn)
             if self._check_if_last_turn(item):
+                turn.current_turn = True
+                turn.save()
                 return result
         raise ValueError(
             'Could not find turn in fixture with the given year, season and '
@@ -129,9 +138,17 @@ class Game:
             item['game'] = game
             nation_pk = item['nation']
             item['nation'] = self._nation_map[nation_pk]
+
+            turn_disbanded_pk = item['turn_disbanded']
+            if turn_disbanded_pk:
+                try:
+                    item['turn_disbanded'] = self._turn_map[turn_disbanded_pk]
+                except KeyError:
+                    item['turn_disbanded'] = None
+
             pk = item.pop('pk')
             piece = models.Piece.objects.create(**item)
-            self.log(repr(piece))
+            self.log('\t' + repr(piece))
             self._piece_map[pk] = piece
             result.append(piece)
         return result
@@ -166,7 +183,7 @@ class Game:
             pk = item.pop('pk')
             piece_state = models.PieceState.objects.create(**item)
             self._piece_state_map[pk] = piece_state
-            self.log(repr(piece_state))
+            self.log('\t' + repr(piece_state))
             result.append(piece_state)
         return result
 
@@ -184,18 +201,20 @@ class Game:
             item['territory'] = self._territory_map[territory_pk]
 
             controlled_by_pk = item['controlled_by']
-            item['controlled_by'] = self._nation_map[controlled_by_pk]
+            if controlled_by_pk:
+                item['controlled_by'] = self._nation_map[controlled_by_pk]
 
             item.pop('pk')
 
             territory_state = models.TerritoryState.objects.create(**item)
-            self.log(repr(territory_state))
+            self.log('\t' + repr(territory_state))
             result.append(territory_state)
         return result
 
     def create_nation_states(self, data, users):
         result = []
         for item in data:
+            test_nation = False
             turn_pk = item['turn']
             try:
                 turn = self._turn_map[turn_pk]
@@ -212,22 +231,70 @@ class Game:
                 user = self._user_map[user_pk]
             elif nation.name == self.test_user_nation:
                 user = users[-1]
+                test_nation = True
                 self._user_map[user_pk] = user
             else:
                 user = users.pop(0)
                 self._user_map[user_pk] = user
+
+            if turn.current_turn:
+                if self.other_players_finalized and not test_nation:
+                    item['orders_finalized'] = True
+                else:
+                    item['orders_finalized'] = False
+            else:
+                item['orders_finalized'] = True
 
             item['user'] = user
 
             item.pop('pk')
 
             nation_state = models.NationState.objects.create(**item)
-            self.log(repr(nation_state))
+            self.log('\t' + repr(nation_state))
             result.append(nation_state)
+        return result
+
+    def create_orders(self, data):
+        result = []
+        for item in data:
+            turn_pk = item['turn']
+            try:
+                turn = self._turn_map[turn_pk]
+            except KeyError:
+                continue
+            item['turn'] = turn
+
+            nation = item['nation']
+            item['nation'] = self._nation_map[nation]
+
+            source = item['source']
+            if source:
+                item['source'] = self._territory_map[source]
+
+            target = item['target']
+            if target:
+                item['target'] = self._territory_map[target]
+
+            aux = item['aux']
+            if aux:
+                item['aux'] = self._territory_map[aux]
+
+            target_coast = item['target_coast']
+            if target_coast:
+                item['target_coast'] = self._named_coast_map[target_coast]
+
+            item.pop('pk')
+
+            order = models.Order.objects.create(**item)
+            self.log('\t' + repr(order))
+            result.append(order)
         return result
 
     def set_dislodged_by(self, data):
         for item in data:
+            turn_pk = item['turn']
+            if turn_pk not in self._turn_map:
+                continue
             pk = item['pk']
             dislodged_by_pk = item['dislodged_by']
             if dislodged_by_pk:
@@ -255,6 +322,7 @@ class Game:
         piece_state_data = self.get_fixture_data('piece_state.json')
         territory_state_data = self.get_fixture_data('territory_state.json')
         nation_state_data = self.get_fixture_data('nation_state.json')
+        order_data = self.get_fixture_data('order.json')
 
         self.validate(turn_data)
 
@@ -268,6 +336,8 @@ class Game:
         self.log('Creating game \'{self.game_name}\'...')
         game_data['created_by'] = users[-1]
         game = self.create_game(variant, game_data)
+
+        game.participants.set(users)
 
         self.log('Creating turns...')
         self.create_turns(game, turn_data)
@@ -284,6 +354,9 @@ class Game:
 
         self.log('Creating nation states...')
         self.create_nation_states(nation_state_data, users)
+
+        self.log('Creating orders...')
+        self.create_orders(order_data)
 
     def _populate_nation_map(self, variant, data):
         for item in data:
@@ -322,7 +395,12 @@ class Game:
         )
 
 
-class Spring1900(Game):
+class StandardGame(Game):
+    game = 'game_1'
+    variant_identifier = 'standard'
+
+
+class FirstTurn(StandardGame):
     """
     This game has just started. Test user is playing as England.
     """
@@ -334,6 +412,34 @@ class Spring1900(Game):
     test_user_nation = ENGLAND
 
 
+class FirstTurnAllOthersFinalized(FirstTurn):
+    """
+    This game has just started. All other players have finalized orders. Test
+    user is playing as England.
+    """
+    other_players_finalized = True
+
+
+class RetreatTurn(StandardGame):
+    """
+    Test user is playing as Austria-Hungary and must retreat one piece.
+    """
+    year = 1901
+    season = Season.FALL
+    phase = Phase.RETREAT_AND_DISBAND
+    test_user_nation = AUSTRIA
+
+
+class RetreatTurnAllOthersFinalized(RetreatTurn):
+    """
+    Test user is playing as Austria-Hungary and must retreat one piece. All
+    other players have finalized their orders.
+    """
+    other_players_finalized = True
+
+
 recipes = {
-    'spring_1900': Spring1900,
+    'first_turn': FirstTurn,
+    'first_all_others_finalized': FirstTurnAllOthersFinalized,
+    'retreat_turn': RetreatTurn,
 }

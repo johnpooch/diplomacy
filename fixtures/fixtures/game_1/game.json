@@ -1,11 +1,12 @@
 [
 {
     "model": "core.game",
-    "pk": 5,
+    "pk": 7,
     "fields": {
         "variant": 1,
-        "name": "Build Game",
-        "description": "Century themselves heavy.",
+        "name": "Long Game",
+        "slug": "long-game",
+        "description": "Marriage degree throughout music use.",
         "status": "active",
         "private": false,
         "password": null,
@@ -15,9 +16,9 @@
         "process_on_finalized_orders": true,
         "nation_choice_mode": "random",
         "num_players": 7,
-        "created_by": 17,
-        "created_at": "2020-07-14T18:55:24.499Z",
-        "initialized_at": "2020-07-14T18:55:24.802Z",
+        "created_by": 31,
+        "created_at": "2020-07-26T12:59:22.268Z",
+        "initialized_at": "2020-07-26T12:59:22.541Z",
         "winners": []
     }
 }
