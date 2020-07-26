@@ -4,6 +4,7 @@ import re
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from django.forms.models import model_to_dict
 
 from core import models
@@ -66,6 +67,7 @@ class Command(BaseCommand):
             location,
         )
 
+    @transaction.atomic
     def handle(self, *args, **options):
         directory = '/'.join([settings.BASE_DIR, options['location']])
         game_dir_name = options['game_dir_name']
@@ -95,6 +97,13 @@ class Command(BaseCommand):
         territory_location = '/'.join([location, 'territory.json'])
         territory_ids = territories.values_list('id', flat=True)
         self.dump_model(models.Territory, territory_ids, territory_location)
+
+        named_coasts = models.NamedCoast.objects.filter(
+            parent__in=territories
+        )
+        named_coast_location = '/'.join([location, 'named_coast.json'])
+        named_coast_ids = named_coasts.values_list('id', flat=True)
+        self.dump_model(models.NamedCoast, named_coast_ids, named_coast_location)
 
         game_location = '/'.join([location, 'game.json'])
         self.dump_model(models.Game, [game.id], game_location)
