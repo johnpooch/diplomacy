@@ -130,18 +130,12 @@ class TerritoryStateSerializer(serializers.ModelSerializer):
 
 class NationSerializer(serializers.ModelSerializer):
 
-    flag_as_data = serializers.SerializerMethodField()
-
     class Meta:
         model = models.Nation
         fields = (
             'id',
             'name',
-            'flag_as_data',
         )
-
-    def get_flag_as_data(self, nation):
-        return nation.flag_as_data
 
 
 class BaseNationStateSerializer(serializers.ModelSerializer):
@@ -318,6 +312,82 @@ class TurnSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
+class ListNationStatesSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer()
+
+    class Meta:
+        model = models.NationState
+        fields = (
+            'user',
+            'nation',
+        )
+
+
+class ListTurnSerializer(serializers.ModelSerializer):
+
+    phase = serializers.CharField(source='get_phase_display')
+    nation_states = ListNationStatesSerializer(many=True, source='nationstates')
+
+    class Meta:
+        model = models.Turn
+        fields = (
+            'id',
+            'year',
+            'season',
+            'phase',
+            'nation_states',
+        )
+
+
+class ListVariantSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Variant
+        fields = (
+            'id',
+            'name',
+        )
+
+
+class ListGamesSerializer(serializers.ModelSerializer):
+
+    current_turn = serializers.SerializerMethodField()
+    participants = UserSerializer(many=True, read_only=True)
+    variant = ListVariantSerializer()
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'description',
+            'variant',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
+            'participants',
+            'created_at',
+            'created_by',
+            'initialized_at',
+            'status',
+            'current_turn',
+        )
+
+    def get_current_turn(self, game):
+        try:
+            current_turn = game.get_current_turn()
+            return ListTurnSerializer(current_turn).data
+        except models.Turn.DoesNotExist:
+            return None
+
+
 class GameSerializer(serializers.ModelSerializer):
 
     participants = UserSerializer(many=True, read_only=True)
@@ -402,3 +472,18 @@ class GameStateSerializer(serializers.ModelSerializer):
             'participants',
             'winners',
         )
+
+
+class NationFlagSerializer(serializers.ModelSerializer):
+
+    flag_as_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Nation
+        fields = (
+            'id',
+            'flag_as_data',
+        )
+
+    def get_flag_as_data(self, nation):
+        return nation.flag_as_data

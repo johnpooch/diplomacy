@@ -47,8 +47,8 @@ class BaseMixin:
 class ListGames(generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
-    queryset = models.Game.objects.all()
-    serializer_class = serializers.GameSerializer
+    queryset = models.Game.objects.all().select_related('variant')
+    serializer_class = serializers.ListGamesSerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -204,3 +204,9 @@ class ToggleFinalizeOrdersView(generics.UpdateAPIView):
             raise exceptions.PermissionDenied(
                 detail='Cannot finalize orders for other nation.'
             )
+
+
+class ListNationFlags(generics.ListAPIView):
+
+    serializer_class = serializers.NationFlagSerializer
+    queryset = models.Nation.objects.all()

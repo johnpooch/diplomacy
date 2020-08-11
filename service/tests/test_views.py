@@ -1,3 +1,4 @@
+import json
 from unittest import mock
 from unittest.mock import patch
 
@@ -1027,3 +1028,39 @@ class TestUnfinalizeOrders(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
+
+
+class TestListNationFlags(APITestCase):
+
+    def setUp(self):
+        user = factories.UserFactory()
+        self.client.force_authenticate(user=user)
+        models.Nation.objects.all().delete()
+
+    def test_get_all_games(self):
+        """
+        Gets all nation flags.
+        """
+        variant = models.Variant.objects.get(identifier='standard')
+        flag_data = {
+            "viewBox": "0 0 252.39 168.26",
+            "paths": [
+                {
+                    "fill": "#5d9240",
+                    "path": "M0,0H84.13V168.26H0Z"
+                }
+            ]
+        }
+        nation = models.Nation.objects.create(
+            variant=variant,
+            name='Test nation',
+            flag=json.dumps(flag_data)
+        )
+        url = reverse('list-nation-flags')
+        response = self.client.get(url, format='json')
+        nation_flag_data = response.data[0]
+        self.assertEqual(nation_flag_data['id'], nation.id)
+        self.assertEqual(
+            nation_flag_data['flag_as_data']['viewBox'],
+            '0 0 252.39 168.26'
+        )

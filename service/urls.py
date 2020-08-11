@@ -55,6 +55,11 @@ urlpatterns = [
         name='game-state'
     ),
     path(
+        'list-nation-flags',
+        views.ListNationFlags.as_view(),
+        name='list-nation-flags'
+    ),
+    path(
         'api-auth/',
         include('rest_framework.urls', namespace='rest_framework')
     )
