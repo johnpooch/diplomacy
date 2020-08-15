@@ -60,7 +60,11 @@ urlpatterns = [
         name='list-nation-flags'
     ),
     path(
+        'password_reset/',
+        include('django_rest_passwordreset.urls', namespace='password_reset')
+    ),
+    path(
         'api-auth/',
         include('rest_framework.urls', namespace='rest_framework')
-    )
+    ),
 ]

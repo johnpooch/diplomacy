@@ -6,6 +6,7 @@ django-cors-headers
 django-extensions
 django-filter
 django-rest-knox
+django-rest-passwordreset
 djangorestframework
 factory_boy
 faker

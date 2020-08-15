@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'knox',
+    'django_rest_passwordreset',
     'adjudicator',
     'core',
     'service',

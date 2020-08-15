@@ -20,6 +20,10 @@ DATABASES = {
     },
 }
 
+EMAIL_HOST = 'mailcatcher.smtp'
+EMAIL_PORT = '1025'
+CLIENT_URL = 'http://localhost:8000'
+
 # NOTE non Docker setup
 # DATABASES = {
 #     'default': {
