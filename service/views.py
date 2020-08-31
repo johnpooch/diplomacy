@@ -47,7 +47,11 @@ class BaseMixin:
 class ListGames(generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
-    queryset = models.Game.objects.all().select_related('variant')
+    queryset = (
+        models.Game.objects.all()
+        .select_related('variant')
+        .order_by('-created_at')
+    )
     serializer_class = serializers.ListGamesSerializer
     filter_backends = [
         DjangoFilterBackend,
@@ -71,6 +75,12 @@ class ListGames(generics.ListAPIView):
         'created_at',
         'initialized_at'
     ]
+
+
+class ListVariants(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Variant.objects.all()
+    serializer_class = serializers.ListVariantsSerializer
 
 
 class CreateGameView(generics.CreateAPIView):

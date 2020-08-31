@@ -54,7 +54,7 @@ class NamedCoastMapDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.NamedCoastMapData
         fields = (
-            'pk',
+            'id',
             'named_coast',
             'name',
             'abbreviation',
@@ -87,7 +87,7 @@ class TerritoryMapDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TerritoryMapData
         fields = (
-            'pk',
+            'id',
             'territory',
             'type',
             'name',
@@ -160,6 +160,7 @@ class PublicNationStateSerializer(BaseNationStateSerializer):
     class Meta:
         model = models.NationState
         fields = (
+            'id',
             'user',
             'nation',
             'surrendered',
@@ -319,6 +320,7 @@ class ListNationStatesSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.NationState
         fields = (
+            'id',
             'user',
             'nation',
         )
@@ -340,7 +342,24 @@ class ListTurnSerializer(serializers.ModelSerializer):
         )
 
 
-class ListVariantSerializer(serializers.ModelSerializer):
+class ListVariantsSerializer(serializers.ModelSerializer):
+
+    territories = TerritorySerializer(many=True)
+    nations = NationSerializer(many=True)
+    map_data = MapDataSerializer(many=True)
+
+    class Meta:
+        model = models.Variant
+        fields = (
+            'id',
+            'name',
+            'territories',
+            'nations',
+            'map_data',
+        )
+
+
+class LightVariantsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Variant
@@ -354,7 +373,6 @@ class ListGamesSerializer(serializers.ModelSerializer):
 
     current_turn = serializers.SerializerMethodField()
     participants = UserSerializer(many=True, read_only=True)
-    variant = ListVariantSerializer()
 
     class Meta:
         model = models.Game

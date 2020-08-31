@@ -60,6 +60,11 @@ urlpatterns = [
         name='list-nation-flags'
     ),
     path(
+        'variants',
+        views.ListVariants.as_view(),
+        name='list-variants'
+    ),
+    path(
         'password_reset/',
         include('django_rest_passwordreset.urls', namespace='password_reset')
     ),
