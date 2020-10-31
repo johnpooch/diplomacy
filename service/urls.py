@@ -35,7 +35,7 @@ urlpatterns = [
         name='order'
     ),
     re_path(
-        r'game/(?P<slug>[_\-\w]+)/orders$',
+        r'game/(?P<pk>[0-9]+)/orders$',
         views.ListOrdersView.as_view(),
         name='orders'
     ),
@@ -55,7 +55,21 @@ urlpatterns = [
         name='game-state'
     ),
     path(
+        'list-nation-flags',
+        views.ListNationFlags.as_view(),
+        name='list-nation-flags'
+    ),
+    path(
+        'variants',
+        views.ListVariants.as_view(),
+        name='list-variants'
+    ),
+    path(
+        'password_reset/',
+        include('django_rest_passwordreset.urls', namespace='password_reset')
+    ),
+    path(
         'api-auth/',
         include('rest_framework.urls', namespace='rest_framework')
-    )
+    ),
 ]

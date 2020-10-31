@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, views, exceptions
+from rest_framework import exceptions, filters, generics, status, views
 from rest_framework.response import Response
 
 from core import models
@@ -47,8 +47,12 @@ class BaseMixin:
 class ListGames(generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
-    queryset = models.Game.objects.all()
-    serializer_class = serializers.GameSerializer
+    queryset = (
+        models.Game.objects.all()
+        .select_related('variant')
+        .order_by('-created_at')
+    )
+    serializer_class = serializers.ListGamesSerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -71,6 +75,12 @@ class ListGames(generics.ListAPIView):
         'created_at',
         'initialized_at'
     ]
+
+
+class ListVariants(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = models.Variant.objects.all()
+    serializer_class = serializers.ListVariantsSerializer
 
 
 class CreateGameView(generics.CreateAPIView):
@@ -120,16 +130,35 @@ class CreateOrderView(BaseMixin, generics.CreateAPIView):
         context['nation_state'] = self.get_user_nation_state()
         return context
 
-    def perform_create(self, serializer):
+    def delete_old_order(self, serializer):
         """
-        Delete existing order before creating new order.
+        Delete existing order before creating new order. Return existing order
+        ID so client can update store correctly.
         """
-        models.Order.objects.filter(
-            source=serializer.validated_data['source'],
-            turn=serializer.validated_data['turn'],
-            nation=serializer.validated_data['nation'],
-        ).delete()
-        super().perform_create(serializer)
+        try:
+            old_order = models.Order.objects.get(
+                source=serializer.validated_data['source'],
+                turn=serializer.validated_data['turn'],
+                nation=serializer.validated_data['nation'],
+            )
+            old_order_id = old_order.id
+            old_order.delete()
+            return old_order_id
+        except models.Order.DoesNotExist:
+            return None
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        old_order_id = self.delete_old_order(serializer)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        response_data = {**serializer.data, 'old_order': old_order_id}
+        return Response(
+            response_data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
 
 
 class ListOrdersView(BaseMixin, generics.ListAPIView):
@@ -138,18 +167,18 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
     serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
-        game = get_object_or_404(
-            models.Game.objects,
-            slug=self.kwargs['slug'],
+        turn = get_object_or_404(
+            models.Turn,
+            id=self.kwargs['pk'],
         )
         user_nation_state = models.NationState.objects.filter(
-            turn=game.get_current_turn(),
+            turn=turn,
             user=self.request.user.id,
         ).first()
         if not user_nation_state:
             return models.Order.objects.none()
         return models.Order.objects.filter(
-            turn=user_nation_state.turn,
+            turn=turn,
             nation=user_nation_state.nation,
         )
 
@@ -204,3 +233,9 @@ class ToggleFinalizeOrdersView(generics.UpdateAPIView):
             raise exceptions.PermissionDenied(
                 detail='Cannot finalize orders for other nation.'
             )
+
+
+class ListNationFlags(generics.ListAPIView):
+
+    serializer_class = serializers.NationFlagSerializer
+    queryset = models.Nation.objects.all()

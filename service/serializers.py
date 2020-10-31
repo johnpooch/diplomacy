@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
 from rest_framework import serializers
 
 from core import models
@@ -28,6 +29,7 @@ class PieceStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.PieceState
         fields = (
+            'id',
             'piece',
             'territory',
             'named_coast',
@@ -54,7 +56,7 @@ class NamedCoastMapDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.NamedCoastMapData
         fields = (
-            'pk',
+            'id',
             'named_coast',
             'name',
             'abbreviation',
@@ -87,7 +89,7 @@ class TerritoryMapDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.TerritoryMapData
         fields = (
-            'pk',
+            'id',
             'territory',
             'type',
             'name',
@@ -125,7 +127,11 @@ class TerritoryStateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.TerritoryState
-        fields = ('territory', 'controlled_by',)
+        fields = (
+            'id',
+            'territory',
+            'controlled_by',
+        )
 
 
 class NationSerializer(serializers.ModelSerializer):
@@ -144,36 +150,36 @@ class NationSerializer(serializers.ModelSerializer):
         return nation.flag_as_data
 
 
-class BaseNationStateSerializer(serializers.ModelSerializer):
+class PublicNationStateSerializer(serializers.ModelSerializer):
 
-    user = UserSerializer(required=False)
-    nation = NationSerializer(required=False)
-    build_territories = serializers.SerializerMethodField()
-
-    def get_build_territories(self, nation_state):
-        """
-        Get a list of territory ids for each territory in which the user can
-        build.
-        """
-        if nation_state.turn.phase != Phase.BUILD:
-            return None
-        return [ts.territory.id for ts
-                in nation_state.unoccupied_controlled_home_supply_centers]
-
-
-class PublicNationStateSerializer(BaseNationStateSerializer):
+    orders_finalized = serializers.SerializerMethodField()
+    num_orders_remaining = serializers.SerializerMethodField()
 
     class Meta:
         model = models.NationState
         fields = (
+            'id',
             'user',
             'nation',
+            'orders_finalized',
+            'num_orders_remaining',
             'surrendered',
             'supply_delta',
-            'build_territories',
             'num_builds',
             'num_disbands',
         )
+
+    def get_orders_finalized(self, nation_state):
+        user = self.context['request'].user
+        if user.id == nation_state.user.id:
+            return nation_state.orders_finalized
+        return None
+
+    def get_num_orders_remaining(self, nation_state):
+        user = self.context['request'].user
+        if user.id == nation_state.user.id:
+            return nation_state.num_orders_remaining
+        return None
 
     def update(self, instance, validated_data):
         """
@@ -186,7 +192,9 @@ class PublicNationStateSerializer(BaseNationStateSerializer):
         return instance
 
 
-class PrivateNationStateSerializer(BaseNationStateSerializer):
+class PrivateNationStateSerializer(serializers.ModelSerializer):
+
+    build_territories = serializers.SerializerMethodField()
 
     class Meta:
         model = models.NationState
@@ -202,6 +210,16 @@ class PrivateNationStateSerializer(BaseNationStateSerializer):
             'num_builds',
             'num_disbands',
         )
+
+    def get_build_territories(self, nation_state):
+        """
+        Get a list of territory ids for each territory in which the user can
+        build.
+        """
+        if nation_state.turn.phase != Phase.BUILD:
+            return None
+        return [ts.territory.id for ts
+                in nation_state.unoccupied_controlled_home_supply_centers]
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -227,6 +245,7 @@ class CreateGameSerializer(serializers.ModelSerializer):
         model = models.Game
         fields = (
             'id',
+            'slug',
             'name',
             'variant',
             'variant_id',
@@ -249,7 +268,31 @@ class CreateGameSerializer(serializers.ModelSerializer):
         return game
 
 
+class OrderTurnGameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'slug',
+        )
+
+
+class OrderTurnSerializer(serializers.ModelSerializer):
+
+    game = OrderTurnGameSerializer(read_only=True)
+
+    class Meta:
+        model = models.Turn
+        fields = (
+            'id',
+            'game',
+        )
+
+
 class OrderSerializer(serializers.ModelSerializer):
+
+    turn = OrderTurnSerializer(read_only=True)
 
     class Meta:
         model = models.Order
@@ -263,6 +306,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'aux',
             'piece_type',
             'via_convoy',
+            'turn',
         )
         read_only_fields = (
             'nation',
@@ -313,9 +357,105 @@ class TurnSerializer(serializers.ModelSerializer):
 
     def get_orders(self, obj):
         # Only get orders for previous turns
-        qs = models.Order.objects.filter(turn__current_turn=False, turn=obj)
+        qs = models.Order.objects.filter(
+            turn__current_turn=False,
+            turn=obj
+        )
         serializer = OrderSerializer(instance=qs, many=True)
         return serializer.data
+
+
+class ListNationStatesSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer()
+
+    class Meta:
+        model = models.NationState
+        fields = (
+            'id',
+            'user',
+            'nation',
+        )
+
+
+class ListTurnSerializer(serializers.ModelSerializer):
+
+    phase = serializers.CharField(source='get_phase_display')
+    nation_states = ListNationStatesSerializer(many=True, source='nationstates')
+
+    class Meta:
+        model = models.Turn
+        fields = (
+            'id',
+            'year',
+            'season',
+            'phase',
+            'nation_states',
+        )
+
+
+class ListVariantsSerializer(serializers.ModelSerializer):
+
+    territories = TerritorySerializer(many=True)
+    nations = NationSerializer(many=True)
+    map_data = MapDataSerializer(many=True)
+
+    class Meta:
+        model = models.Variant
+        fields = (
+            'id',
+            'name',
+            'territories',
+            'nations',
+            'map_data',
+        )
+
+
+class LightVariantsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Variant
+        fields = (
+            'id',
+            'name',
+        )
+
+
+class ListGamesSerializer(serializers.ModelSerializer):
+
+    current_turn = serializers.SerializerMethodField()
+    participants = UserSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Game
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'description',
+            'variant',
+            'private',
+            'password',
+            'order_deadline',
+            'retreat_deadline',
+            'build_deadline',
+            'process_on_finalized_orders',
+            'nation_choice_mode',
+            'num_players',
+            'participants',
+            'created_at',
+            'created_by',
+            'initialized_at',
+            'status',
+            'current_turn',
+        )
+
+    def get_current_turn(self, game):
+        try:
+            current_turn = game.get_current_turn()
+            return ListTurnSerializer(current_turn).data
+        except models.Turn.DoesNotExist:
+            return None
 
 
 class GameSerializer(serializers.ModelSerializer):
@@ -323,7 +463,6 @@ class GameSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     current_turn = serializers.SerializerMethodField()
     winners = PublicNationStateSerializer(many=True, read_only=True)
-    variant = VariantSerializer()
     pieces = PieceSerializer(many=True)
 
     class Meta:
@@ -384,9 +523,7 @@ class GameSerializer(serializers.ModelSerializer):
 class GameStateSerializer(serializers.ModelSerializer):
 
     turns = TurnSerializer(many=True)
-    variant = VariantSerializer()
     pieces = PieceSerializer(many=True)
-    participants = UserSerializer(many=True)
 
     class Meta:
         model = models.Game
@@ -399,6 +536,19 @@ class GameStateSerializer(serializers.ModelSerializer):
             'variant',
             'pieces',
             'status',
-            'participants',
-            'winners',
         )
+
+
+class NationFlagSerializer(serializers.ModelSerializer):
+
+    flag_as_data = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Nation
+        fields = (
+            'id',
+            'flag_as_data',
+        )
+
+    def get_flag_as_data(self, nation):
+        return nation.flag_as_data

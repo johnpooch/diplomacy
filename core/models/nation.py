@@ -42,7 +42,6 @@ class NationState(PerTurnModel):
     nation = models.ForeignKey(
         'Nation',
         null=False,
-        related_name='+',
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
