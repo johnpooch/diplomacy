@@ -8,7 +8,6 @@ from rest_framework.test import APITestCase
 
 from core import factories, models
 from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
-from service import serializers
 
 
 def set_processed(self):
