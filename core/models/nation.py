@@ -27,6 +27,8 @@ class Nation(models.Model):
     )
     flag = models.TextField()
 
+    class Meta:
+        unique_together = ('name', 'variant')
 
     def __str__(self):
         return self.name
