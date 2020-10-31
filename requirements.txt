@@ -8,7 +8,7 @@ django-filter
 django-rest-knox
 django-rest-passwordreset
 djangorestframework
-factory_boy>=2.12,<3.0
+factory_boy
 faker
 lxml
 mysqlclient

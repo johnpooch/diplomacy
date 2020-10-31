@@ -1,6 +1,7 @@
 import factory
 from faker import Faker
-from factory import DjangoModelFactory, lazy_attribute, post_generation
+from factory import lazy_attribute, post_generation
+from factory.django import DjangoModelFactory
 
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
