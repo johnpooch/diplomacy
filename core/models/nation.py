@@ -11,18 +11,22 @@ class Nation(models.Model):
     """
     Represents a playable nation in the game, e.g. 'France'.
     """
+    name = models.CharField(
+        max_length=15,
+    )
     variant = models.ForeignKey(
         'Variant',
         null=False,
         related_name='nations',
         on_delete=models.CASCADE,
     )
-    name = models.CharField(
-        max_length=15,
+    uid = models.CharField(
+        max_length=100,
+        null=False,
+        unique=True,
     )
     flag = models.TextField()
 
-    # TODO add unique together for variant and name
 
     def __str__(self):
         return self.name
