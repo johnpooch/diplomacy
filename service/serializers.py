@@ -58,6 +58,7 @@ class TerritorySerializer(serializers.ModelSerializer):
         model = models.Territory
         fields = (
             'id',
+            'uid',
             'name',
             'type',
             'supply_center',
