@@ -111,17 +111,24 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'num_builds',
             'num_disbands',
         )
+        read_only_fields = (
+            'nation',
+        )
 
     def get_orders_finalized(self, nation_state):
-        user = self.context['request'].user
-        if user.id == nation_state.user.id:
-            return nation_state.orders_finalized
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            if user.id == nation_state.user.id:
+                return nation_state.orders_finalized
         return None
 
     def get_num_orders_remaining(self, nation_state):
-        user = self.context['request'].user
-        if user.id == nation_state.user.id:
-            return nation_state.num_orders_remaining
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            if user.id == nation_state.user.id:
+                return nation_state.num_orders_remaining
         return None
 
     def update(self, instance, validated_data):
