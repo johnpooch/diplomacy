@@ -61,6 +61,9 @@ class Territory(models.Model):
         choices=PieceType.CHOICES,
     )
 
+    class Meta:
+        unique_together = ('name', 'variant')
+
     def __str__(self):
         return self.name
 
