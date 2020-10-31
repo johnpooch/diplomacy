@@ -7,6 +7,11 @@ class NamedCoast(models.Model):
         max_length=100,
         null=False
     )
+    uid = models.CharField(
+        max_length=100,
+        null=False,
+        unique=True,
+    )
     map_abbreviation = models.CharField(
         max_length=50,
         null=False
