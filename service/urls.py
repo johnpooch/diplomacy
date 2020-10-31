@@ -35,7 +35,7 @@ urlpatterns = [
         name='order'
     ),
     re_path(
-        r'game/(?P<slug>[_\-\w]+)/orders$',
+        r'game/(?P<pk>[0-9]+)/orders$',
         views.ListOrdersView.as_view(),
         name='orders'
     ),
