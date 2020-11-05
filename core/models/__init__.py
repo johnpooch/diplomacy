@@ -1,6 +1,5 @@
 from .community import Announcement, Message
 from .game import Game
-from .map_data import MapData, NamedCoastMapData, TerritoryMapData
 from .named_coast import NamedCoast
 from .nation import Nation, NationState
 from .order import Order
@@ -14,10 +13,8 @@ from .variant import Variant
 __all__ = [
     'Announcement',
     'Game',
-    'MapData',
     'Message',
     'NamedCoast',
-    'NamedCoastMapData',
     'Nation',
     'NationState',
     'Order',
@@ -25,7 +22,6 @@ __all__ = [
     'Piece',
     'PieceState',
     'Territory',
-    'TerritoryMapData',
     'TerritoryState',
     'Turn',
     'Variant',

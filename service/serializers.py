@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.db.models import Q
 from rest_framework import serializers
 
 from core import models
@@ -51,24 +50,6 @@ class NamedCoastSerializer(serializers.ModelSerializer):
         )
 
 
-class NamedCoastMapDataSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.NamedCoastMapData
-        fields = (
-            'id',
-            'named_coast',
-            'name',
-            'abbreviation',
-            'text_x',
-            'text_y',
-            'piece_x',
-            'piece_y',
-            'dislodged_piece_x',
-            'dislodged_piece_y',
-        )
-
-
 class TerritorySerializer(serializers.ModelSerializer):
 
     named_coasts = NamedCoastSerializer(many=True)
@@ -77,49 +58,11 @@ class TerritorySerializer(serializers.ModelSerializer):
         model = models.Territory
         fields = (
             'id',
+            'uid',
             'name',
             'type',
             'supply_center',
             'named_coasts',
-        )
-
-
-class TerritoryMapDataSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.TerritoryMapData
-        fields = (
-            'id',
-            'territory',
-            'type',
-            'name',
-            'abbreviation',
-            'path',
-            'text_x',
-            'text_y',
-            'piece_x',
-            'piece_y',
-            'dislodged_piece_x',
-            'dislodged_piece_y',
-            'supply_center_x',
-            'supply_center_y',
-        )
-
-
-class MapDataSerializer(serializers.ModelSerializer):
-
-    territory_data = TerritoryMapDataSerializer(many=True)
-    named_coast_data = NamedCoastMapDataSerializer(many=True)
-
-    class Meta:
-        model = models.MapData
-        fields = (
-            'id',
-            'identifier',
-            'width',
-            'height',
-            'territory_data',
-            'named_coast_data',
         )
 
 
@@ -168,17 +111,24 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'num_builds',
             'num_disbands',
         )
+        read_only_fields = (
+            'nation',
+        )
 
     def get_orders_finalized(self, nation_state):
-        user = self.context['request'].user
-        if user.id == nation_state.user.id:
-            return nation_state.orders_finalized
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            if user.id == nation_state.user.id:
+                return nation_state.orders_finalized
         return None
 
     def get_num_orders_remaining(self, nation_state):
-        user = self.context['request'].user
-        if user.id == nation_state.user.id:
-            return nation_state.num_orders_remaining
+        request = self.context.get('request')
+        if request:
+            user = request.user
+            if user.id == nation_state.user.id:
+                return nation_state.num_orders_remaining
         return None
 
     def update(self, instance, validated_data):
@@ -226,7 +176,6 @@ class VariantSerializer(serializers.ModelSerializer):
 
     territories = TerritorySerializer(many=True)
     nations = NationSerializer(many=True)
-    map_data = MapDataSerializer(many=True)
 
     class Meta:
         model = models.Variant
@@ -234,7 +183,6 @@ class VariantSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'territories',
-            'map_data',
             'nations',
         )
 
@@ -398,7 +346,6 @@ class ListVariantsSerializer(serializers.ModelSerializer):
 
     territories = TerritorySerializer(many=True)
     nations = NationSerializer(many=True)
-    map_data = MapDataSerializer(many=True)
 
     class Meta:
         model = models.Variant
@@ -407,7 +354,6 @@ class ListVariantsSerializer(serializers.ModelSerializer):
             'name',
             'territories',
             'nations',
-            'map_data',
         )
 
 

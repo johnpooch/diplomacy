@@ -3,13 +3,26 @@ from django.core.mail import send_mail
 from django.db.models import signals
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.utils import timezone
+from django.utils.text import slugify
 
 from django_rest_passwordreset.signals import reset_password_token_created
 
 from core import models
 from core.models.mixins import AutoSlug
 from core.utils.models import super_receiver
+
+
+def set_uid(instance):
+    """
+    In tests we don't want to have to manually set the uid when creating
+    nations and territories. This combines the instance name and the variant
+    name to create the uid automatically before saving.
+    """
+    time = str(timezone.now())
+    instance.uid = slugify(
+        '-'.join(['test', instance.variant.name, instance.name, time])
+    )
 
 
 @receiver(signals.pre_save, sender=models.Turn)
@@ -32,6 +45,18 @@ def add_automatic_slug(sender, instance, **kwargs):
     Fill the slug field on models inheriting from AutoSlug on pre-save.
     """
     instance.hydrate_slug()
+
+
+@receiver(signals.pre_save, sender=models.Nation)
+def set_nation_uid_if_not_set(sender, instance, **kwargs):
+    if not instance.uid:
+        set_uid(instance)
+
+
+@receiver(signals.pre_save, sender=models.Territory)
+def set_territory_uid_if_not_set(sender, instance, **kwargs):
+    if not instance.uid:
+        set_uid(instance)
 
 
 @receiver(reset_password_token_created)

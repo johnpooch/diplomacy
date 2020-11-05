@@ -13,6 +13,11 @@ class Territory(models.Model):
         max_length=50,
         null=False,
     )
+    uid = models.CharField(
+        max_length=100,
+        null=False,
+        unique=True,
+    )
     controlled_by_initial = models.ForeignKey(
         'Nation',
         on_delete=models.CASCADE,
@@ -55,6 +60,9 @@ class Territory(models.Model):
         null=True,
         choices=PieceType.CHOICES,
     )
+
+    class Meta:
+        unique_together = ('name', 'variant')
 
     def __str__(self):
         return self.name

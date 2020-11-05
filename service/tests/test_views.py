@@ -8,7 +8,6 @@ from rest_framework.test import APITestCase
 
 from core import factories, models
 from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
-from service import serializers
 
 
 def set_processed(self):
@@ -18,26 +17,11 @@ def set_processed(self):
 
 class TestGetGames(APITestCase):
 
+    max_diff = None
+
     def setUp(self):
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
-
-    def test_get_all_games(self):
-        """
-        Gets all games including pending, active, and ended games.
-        """
-        games = [
-            factories.GameFactory(status=GameStatus.PENDING),
-            factories.GameFactory(status=GameStatus.ACTIVE),
-            factories.GameFactory(status=GameStatus.ENDED),
-        ]
-
-        url = reverse('list-games')
-        response = self.client.get(url, format='json')
-
-        expected_data = [serializers.GameSerializer(game).data for game in games]
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
 
     def test_get_all_games_unauthenticated(self):
         """
@@ -323,7 +307,7 @@ class TestListOrders(APITestCase):
             piece=self.piece,
             territory=self.territory,
         )
-        self.url = reverse('orders', args=[self.game.slug])
+        self.url = reverse('orders', args=[self.turn.id])
 
     def test_no_orders(self):
         response = self.client.get(self.url, format='json')
@@ -857,7 +841,7 @@ class TestDeleteOrder(APITestCase):
         self.client.force_authenticate(user=other_user)
         nation = models.Nation.objects.create(
             variant=self.variant,
-            name='Test Nation',
+            name='Test Nation 2',
         )
         models.NationState.objects.create(
             nation=nation,

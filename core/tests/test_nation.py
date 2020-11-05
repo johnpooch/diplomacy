@@ -26,7 +26,7 @@ class TestNation(TestCase):
         )
         england = models.Nation.objects.create(
             variant=self.variant,
-            name='France',
+            name='England',
         )
         paris = models.Territory.objects.create(
             name='Paris',
