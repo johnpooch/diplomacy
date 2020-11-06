@@ -5,8 +5,12 @@ from .parsers import SnakeCaseParser
 
 
 class ToCamelCase(renderers.JSONRenderer):
-    renderer_classes = (CamelCaseRenderer, )
+    renderer_classes = (CamelCaseRenderer, renderers.BrowsableAPIRenderer)
 
 
 class FromCamelCase:
     parser_classes = (SnakeCaseParser, )
+
+
+class CamelCase(FromCamelCase, ToCamelCase):
+    pass
