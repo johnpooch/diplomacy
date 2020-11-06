@@ -7,14 +7,14 @@ from core import models
 from core.models.base import GameStatus
 from service import serializers
 from service.permissions import IsAuthenticated
-from service.mixins import FromCamelCase, ToCamelCase
+from service.mixins import CamelCase
 
 
 # NOTE this could possibly be replaced by using options
 def get_game_filter_choices():
     return {
-        'game_statuses': models.base.GameStatus.CHOICES,
-        'nation_choice_modes': models.base.NationChoiceMode.CHOICES,
+        'gameStatuses': models.base.GameStatus.CHOICES,
+        'nationChoiceModes': models.base.NationChoiceMode.CHOICES,
         'deadlines': models.base.DeadlineFrequency.CHOICES,
         'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
     }
