@@ -183,43 +183,6 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
         )
 
 
-class RetrievePrivateNationStateView(BaseMixin, generics.RetrieveAPIView):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = serializers.PrivateNationStateSerializer
-
-    def get_object(self):
-        game = get_object_or_404(
-            models.Game.objects,
-            slug=self.kwargs['slug'],
-        )
-        return models.NationState.objects.filter(
-            turn=game.get_current_turn(),
-            user=self.request.user.id,
-        ).first()
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if not instance:
-            return Response({})
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-
-class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = serializers.OrderSerializer
-    queryset = models.Order.objects.all()
-
-    def check_object_permissions(self, request, obj):
-        user_nation_state = self.get_user_nation_state()
-        if obj.nation != user_nation_state.nation:
-            raise exceptions.PermissionDenied(
-                detail='Order does not belong to this user.'
-            )
-
-
 class ToggleFinalizeOrdersView(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
@@ -233,9 +196,3 @@ class ToggleFinalizeOrdersView(generics.UpdateAPIView):
             raise exceptions.PermissionDenied(
                 detail='Cannot finalize orders for other nation.'
             )
-
-
-class ListNationFlags(generics.ListAPIView):
-
-    serializer_class = serializers.NationFlagSerializer
-    queryset = models.Nation.objects.all()

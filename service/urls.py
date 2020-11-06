@@ -40,24 +40,9 @@ urlpatterns = [
         name='orders'
     ),
     re_path(
-        r'game/(?P<slug>[_\-\w]+)/nation-state$',
-        views.RetrievePrivateNationStateView.as_view(),
-        name='private-nation-state'
-    ),
-    re_path(
-        r'game/(?P<slug>[_\-\w]+)/order/(?P<pk>[0-9]+)$',
-        views.DestroyOrderView.as_view(),
-        name='order'
-    ),
-    re_path(
         r'game/(?P<slug>[_\-\w]+)$',
         views.GameStateView.as_view(),
         name='game-state'
-    ),
-    path(
-        'list-nation-flags',
-        views.ListNationFlags.as_view(),
-        name='list-nation-flags'
     ),
     path(
         'variants',
