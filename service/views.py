@@ -7,6 +7,7 @@ from core import models
 from core.models.base import GameStatus
 from service import serializers
 from service.permissions import IsAuthenticated
+from service.mixins import FromCamelCase, ToCamelCase
 
 
 # NOTE this could possibly be replaced by using options
@@ -44,7 +45,7 @@ class BaseMixin:
         )
 
 
-class ListGames(generics.ListAPIView):
+class ListGames(ToCamelCase, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     queryset = (
@@ -77,13 +78,13 @@ class ListGames(generics.ListAPIView):
     ]
 
 
-class ListVariants(generics.ListAPIView):
+class ListVariants(ToCamelCase, generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Variant.objects.all()
     serializer_class = serializers.ListVariantsSerializer
 
 
-class CreateGameView(generics.CreateAPIView):
+class CreateGameView(FromCamelCase, generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CreateGameSerializer
@@ -94,7 +95,7 @@ class CreateGameView(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class GameStateView(BaseMixin, generics.RetrieveAPIView):
+class GameStateView(ToCamelCase, BaseMixin, generics.RetrieveAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
@@ -120,7 +121,7 @@ class ToggleJoinGame(generics.UpdateAPIView):
                 )
 
 
-class CreateOrderView(BaseMixin, generics.CreateAPIView):
+class CreateOrderView(FromCamelCase, BaseMixin, generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
@@ -161,7 +162,7 @@ class CreateOrderView(BaseMixin, generics.CreateAPIView):
         )
 
 
-class ListOrdersView(BaseMixin, generics.ListAPIView):
+class ListOrdersView(ToCamelCase, BaseMixin, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
