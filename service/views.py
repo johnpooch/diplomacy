@@ -45,7 +45,7 @@ class BaseMixin:
         )
 
 
-class ListGames(ToCamelCase, generics.ListAPIView):
+class ListGames(CamelCase, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     queryset = (
@@ -78,13 +78,13 @@ class ListGames(ToCamelCase, generics.ListAPIView):
     ]
 
 
-class ListVariants(ToCamelCase, generics.ListAPIView):
+class ListVariants(CamelCase, generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Variant.objects.all()
     serializer_class = serializers.ListVariantsSerializer
 
 
-class CreateGameView(FromCamelCase, generics.CreateAPIView):
+class CreateGameView(CamelCase, generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CreateGameSerializer
@@ -95,7 +95,7 @@ class CreateGameView(FromCamelCase, generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class GameStateView(ToCamelCase, BaseMixin, generics.RetrieveAPIView):
+class GameStateView(CamelCase, BaseMixin, generics.RetrieveAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
@@ -121,8 +121,7 @@ class ToggleJoinGame(generics.UpdateAPIView):
                 )
 
 
-class CreateOrderView(FromCamelCase, BaseMixin, generics.CreateAPIView):
-
+class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
 
@@ -162,7 +161,7 @@ class CreateOrderView(FromCamelCase, BaseMixin, generics.CreateAPIView):
         )
 
 
-class ListOrdersView(ToCamelCase, BaseMixin, generics.ListAPIView):
+class ListOrdersView(CamelCase, BaseMixin, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
@@ -184,8 +183,7 @@ class ListOrdersView(ToCamelCase, BaseMixin, generics.ListAPIView):
         )
 
 
-class ToggleFinalizeOrdersView(generics.UpdateAPIView):
-
+class ToggleFinalizeOrdersView(CamelCase, generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.PublicNationStateSerializer
     queryset = models.NationState.objects.filter(
