@@ -198,6 +198,13 @@ class Turn(models.Model):
                         return False
         return True
 
+    @property
+    def turn_end(self):
+        try:
+            return self.turnend
+        except TurnEnd.DoesNotExist:
+            return None
+
     def check_for_winning_nation(self):
         """
         Iterate through every nation and check if any nation satisfies the
