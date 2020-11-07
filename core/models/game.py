@@ -125,6 +125,9 @@ class Game(models.Model, AutoSlug):
 
     objects = GameManager()
 
+    def __str__(self):
+        return self.name
+
     @property
     def ended(self):
         """
