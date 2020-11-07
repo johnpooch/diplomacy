@@ -1,5 +1,5 @@
 from django.apps import apps
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils import timezone
 
 from adjudicator import process_game_state
@@ -323,6 +323,43 @@ class Turn(models.Model):
         return Season.SPRING, Phase.ORDER, self.year + 1
 
 
+class TurnEndManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('datetime')
+
+    def new(self, turn, datetime):
+        """
+        Create a task to process a turn.
+
+        This method will set up an async task to run process_turn() at the
+        date given, and return the created TurnEnd object to represent
+        this task.
+
+        Args:
+            * `turn` - `Turn` - Turn to be processed.
+            * `datetime` - `datetime` - When article is to be published. If
+            datetime is not in the future, the minimum value of timezone.now()
+            is used.
+        """
+        from ..tasks import process_turn
+
+        if turn.turn_end:
+            raise IntegrityError(
+                'A TurnEnd for turn ID %d already exists.' % turn.id
+            )
+
+        task = process_turn.apply_async(
+            kwargs={
+                'turn_id': turn.id,
+                'processed_at': datetime,
+            },
+            eta=datetime,
+        )
+
+        return self.create(turn=turn, datetime=datetime, task_id=task.id)
+
+
 class TurnEnd(models.Model):
     """
     Represents the future end of a turn.
@@ -344,3 +381,5 @@ class TurnEnd(models.Model):
         max_length=255,
         null=True,
     )
+
+    objects = TurnEndManager()
