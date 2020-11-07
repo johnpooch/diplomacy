@@ -377,7 +377,6 @@ class TurnEnd(models.Model):
     """
     turn = models.OneToOneField(
         'Turn',
-        related_name='end',
         null=False,
         on_delete=models.CASCADE,
     )
