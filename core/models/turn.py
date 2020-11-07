@@ -219,16 +219,16 @@ class Turn(models.Model):
                 return nation_state
         return None
 
-    def process(self):
+    def process(self, processed_at=None):
         game_state_dict = self._to_game_state_dict()
         outcome = process_game_state(game_state_dict)
-        self.update_turn(outcome)
+        self.update_turn(outcome, processed_at=processed_at)
 
-    def update_turn(self, outcome):
+    def update_turn(self, outcome, processed_at=None):
         piece_state_model = apps.get_model('core', 'PieceState')
         piece_model = apps.get_model('core', 'Piece')
         self.processed = True
-        self.processed_at = timezone.now()
+        self.processed_at = processed_at or timezone.now()
         self.save()
         if self.phase in [Phase.RETREAT_AND_DISBAND, Phase.BUILD]:
             for order_data in outcome['orders']:
