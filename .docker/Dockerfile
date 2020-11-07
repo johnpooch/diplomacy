@@ -1,8 +1,10 @@
 FROM python:latest AS diplomacy-base
 
 ARG DOCKER_UID
-ENV PATH="$PATH:/home/app/.local/bin"
+ARG ENV=prod
 ARG INSTALL_DIR=/opt/diplomacy
+
+ENV ENV=$ENV
 ENV INSTALL_DIR=$INSTALL_DIR
 ENV PATH="$PATH:/home/app/.local/bin:$INSTALL_DIR/.bin"
 ENV PYTHONUNBUFFERED 1
