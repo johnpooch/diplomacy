@@ -330,6 +330,7 @@ class ListTurnSerializer(serializers.ModelSerializer):
 
     phase = serializers.CharField(source='get_phase_display')
     nation_states = ListNationStatesSerializer(many=True, source='nationstates')
+    turn_end = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Turn
@@ -339,7 +340,11 @@ class ListTurnSerializer(serializers.ModelSerializer):
             'season',
             'phase',
             'nation_states',
+            'turn_end',
         )
+
+    def get_turn_end(self, turn):
+        return turn.turn_end
 
 
 class ListVariantsSerializer(serializers.ModelSerializer):
