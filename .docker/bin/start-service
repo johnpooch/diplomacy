@@ -2,9 +2,8 @@
 
 source "${INSTALL_DIR}/.bin/_start.sh"
 
-while [ 1 ]
-do
+while [ 1 ]; do
     echo Starting Runserver.
-    python manage.py runserver 0.0.0.0:8000
+    manage runserver 0.0.0.0:8000
     sleep 5
 done

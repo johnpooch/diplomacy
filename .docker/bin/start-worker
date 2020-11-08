@@ -1,10 +1,9 @@
 #!/bin/bash
 
-source "${install_dir}/.bin/_start.sh"
+source "${INSTALL_DIR}/.bin/_start.sh"
 
-while [ 1 ]
-do
-    echo Starting Runserver.
-    python manage.py runserver 0.0.0.0:8000
+while [ 1 ]; do
+    echo Starting Celery worker.
+    manage runcelery
     sleep 5
 done
