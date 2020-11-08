@@ -40,3 +40,5 @@ FIXTURE_DIRS = (
 # )
 
 CLIENT_URL = 'http://localhost:8000'
+
+CELERY_BROKER_URL = os.environ.get('AMQP_HOST', 'brockman.rabbitmq')
