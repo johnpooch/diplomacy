@@ -67,4 +67,7 @@ class Command(BaseCommand):
         current_turn = game.get_current_turn()
         models.TurnEnd.objects.filter(turn=current_turn).delete()
         turn_end = models.TurnEnd.objects.new(current_turn, dt)
-        self.stdout.write(repr(turn_end))
+        self.stdout.write(
+            'Success. Current turn of {} will be processed at {}.'
+            .format(str(game), turn_end.datetime)
+        )
