@@ -18,7 +18,7 @@ def process_turn(turn_id, processed_at):
 
     try:
         with transaction.atomic():
-            turn.process(processed_at)
+            turn.game.process(processed_at)
     except Exception:
         pass
     finally:
