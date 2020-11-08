@@ -345,9 +345,7 @@ class TurnEndManager(models.Manager):
 
         Args:
             * `turn` - `Turn` - Turn to be processed.
-            * `datetime` - `datetime` - When article is to be published. If
-            datetime is not in the future, the minimum value of timezone.now()
-            is used.
+            * `datetime` - `datetime` - When the turn is to be processed.
         """
         from ..tasks import process_turn
 
