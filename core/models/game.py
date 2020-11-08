@@ -113,6 +113,7 @@ class Game(models.Model, AutoSlug):
     )
     created_by = models.ForeignKey(
         User,
+        null=True,
         on_delete=models.CASCADE,
         related_name='created_games',
     )
