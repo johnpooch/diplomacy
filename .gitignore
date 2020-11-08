@@ -23,3 +23,6 @@ project/settings/local.py
 docker-compose.override.yml
 
 /env/
+
+# celery beat schedule file
+celerybeat-schedule
