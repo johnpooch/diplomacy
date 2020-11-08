@@ -344,7 +344,9 @@ class ListTurnSerializer(serializers.ModelSerializer):
         )
 
     def get_turn_end(self, turn):
-        return turn.turn_end
+        if turn.turn_end:
+            return turn.turn_end.datetime
+        return None
 
 
 class ListVariantsSerializer(serializers.ModelSerializer):
