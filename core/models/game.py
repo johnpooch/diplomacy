@@ -253,9 +253,9 @@ class Game(models.Model, AutoSlug):
         """
         return self.turns.get(current_turn=True)
 
-    def process(self):
+    def process(self, processed_at=None):
         current_turn = self.get_current_turn()
-        current_turn.process()
+        current_turn.process(processed_at)
         turn_model = apps.get_model('core', 'Turn')
         new_turn = turn_model.objects.create_turn_from_previous_turn(
             current_turn
