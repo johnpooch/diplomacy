@@ -205,6 +205,16 @@ class Turn(models.Model):
         except TurnEnd.DoesNotExist:
             return None
 
+    # TODO test
+    @property
+    def deadline(self):
+        if self.phase == Phase.ORDER:
+            return self.game.order_deadline
+        if self.phase == Phase.RETREAT_AND_DISBAND:
+            return self.game.retreat_deadline
+        if self.phase == Phase.BUILD:
+            return self.game.build_deadline
+
     def check_for_winning_nation(self):
         """
         Iterate through every nation and check if any nation satisfies the
