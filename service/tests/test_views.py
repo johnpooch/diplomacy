@@ -3,6 +3,7 @@ from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -10,8 +11,9 @@ from core import factories, models
 from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
 
 
-def set_processed(self):
+def set_processed(self, processed_at=None):
     self.processed = True
+    self.processed_at = processed_at or timezone.now()
     self.save()
 
 
