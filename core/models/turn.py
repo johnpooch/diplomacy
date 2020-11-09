@@ -30,8 +30,7 @@ possible_orders = {
 
 class TurnManager(models.Manager):
 
-    # TODO test
-    def create_with_turn_end(self, **kwargs):
+    def new(self, **kwargs):
         """
         Create a new `Turn` instance and also create a related `TurnEnd`
         instance.
@@ -47,7 +46,7 @@ class TurnManager(models.Manager):
     def create_turn_from_previous_turn(self, previous_turn):
         # NOTE how about we make the turn have 0 year until finished
         piece_state_model = apps.get_model('core', 'PieceState')
-        new_turn = self.create_with_turn_end(
+        new_turn = self.new(
             game=previous_turn.game,
             year=0,
             season=Season.SPRING,
@@ -221,7 +220,6 @@ class Turn(models.Model):
         except TurnEnd.DoesNotExist:
             return None
 
-    # TODO test
     @property
     def deadline(self):
         if self.phase == Phase.ORDER:
