@@ -153,6 +153,7 @@ class Turn(models.Model):
 
     def __str__(self):
         return " ".join([
+            f'[{self.game.name}]',
             self.get_season_display(),
             str(self.year),
             self.get_phase_display(),
