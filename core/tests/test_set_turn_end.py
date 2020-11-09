@@ -1,21 +1,16 @@
-from unittest.mock import patch
 from io import StringIO
 
-from celery.result import AsyncResult
 from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.test import TestCase
 from django.utils import timezone
 
 from core import models
+from core.tests import DiplomacyTestCaseMixin
 from core.models.base import GameStatus, Phase, Season
 
 
-apply_async_path = 'core.tasks.process_turn.apply_async'
-dummy_task_id = 'd095799e-fdad-4445-adeb-74a0c9d91a56'
-
-
-class TestSetTurnEnd(TestCase):
+class TestSetTurnEnd(TestCase, DiplomacyTestCaseMixin):
 
     command = 'set_turn_end'
     date_format = '%Y-%m-%d %H:%M:%S'
@@ -41,9 +36,7 @@ class TestSetTurnEnd(TestCase):
         self.yesterday = timezone.now() - timezone.timedelta(days=1)
         self.yesterday_string = self.yesterday.strftime(self.date_format)
 
-        apply_async = patch(apply_async_path)
-        self.apply_async = apply_async.start()
-        self.apply_async.return_value = AsyncResult(id=dummy_task_id)
+        self.patch_process_turn_apply_async()
 
     def call_command(self, slug, date_string):
         call_command(self.command, slug, date_string, stdout=self.out)

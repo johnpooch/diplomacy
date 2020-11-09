@@ -7,15 +7,14 @@ from django.utils import timezone
 
 from core import factories, models
 from core.tasks import process_turn
+from core.tests import DiplomacyTestCaseMixin
 from core.models.base import Phase, Season
 
 
-apply_async_path = 'core.tasks.process_turn.apply_async'
 process_path = 'core.models.Turn.process'
-dummy_task_id = 'd095799e-fdad-4445-adeb-74a0c9d91a56'
 
 
-class TestTurnEnd(TestCase):
+class TestTurnEnd(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
         self.variant = models.Variant.objects.get(identifier='standard')
@@ -26,9 +25,7 @@ class TestTurnEnd(TestCase):
             num_players=7,
             created_by=self.user,
         )
-
-        apply_async = patch(apply_async_path)
-        self.apply_async = apply_async.start()
+        self.patch_process_turn_apply_async()
 
     def create_turn(self):
         return models.Turn.objects.create(
@@ -44,13 +41,12 @@ class TestTurnEnd(TestCase):
         self.assertIsNone(turn.turn_end)
 
     def test_turn_end_creation(self):
-        self.apply_async.return_value = AsyncResult(id=dummy_task_id)
         turn = self.create_turn()
         datetime = timezone.now()
 
         turn_end = models.TurnEnd.objects.new(turn=turn, datetime=datetime)
         self.assertIsInstance(turn_end, models.TurnEnd)
-        self.assertEqual(dummy_task_id, turn_end.task_id)
+        self.assertEqual(self.dummy_task_id, turn_end.task_id)
 
         self.apply_async.assert_called_with(
             kwargs={'turn_id': turn.id, 'processed_at': datetime},
@@ -59,7 +55,6 @@ class TestTurnEnd(TestCase):
         self.assertEqual(turn_end, turn.turn_end)
 
     def test_process_outcome(self):
-        self.apply_async.return_value = AsyncResult(id=dummy_task_id)
         turn = self.create_turn()
         datetime = timezone.now()
 
@@ -70,7 +65,7 @@ class TestTurnEnd(TestCase):
 
         self.assertTrue(turn.processed)
         self.assertEqual(turn.processed_at, datetime)
-        self.assertEqual(0, len(models.TurnEnd.objects.all()))
+        self.assertEqual(1, len(models.TurnEnd.objects.all()))
 
     def test_process_standalone(self):
         turn = self.create_turn()
@@ -81,7 +76,6 @@ class TestTurnEnd(TestCase):
         self.assertEqual(turn.processed_at, datetime)
 
     def test_turn_end_duplication(self):
-        self.apply_async.return_value = AsyncResult(id=dummy_task_id)
         turn = self.create_turn()
         datetime = timezone.now()
         tomorrow = datetime + timezone.timedelta(days=1)
@@ -98,7 +92,6 @@ class TestTurnEnd(TestCase):
         )
 
     def test_turn_end_graceful_fail(self):
-        self.apply_async.return_value = AsyncResult(id=dummy_task_id)
         turn = self.create_turn()
         datetime = timezone.now()
 

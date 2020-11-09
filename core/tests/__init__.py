@@ -1,10 +1,42 @@
+from unittest.mock import patch
+
+from celery.result import AsyncResult
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from core import models
 from core.models import base
 
 
+apply_async_path = 'core.tasks.process_turn.apply_async'
+
+
 class DiplomacyTestCaseMixin:
+
+    dummy_task_id = 'd095799e-fdad-4445-adeb-74a0c9d91a56'
+
+    def assertSimilarTimestamp(self, actual, expected=timezone.now(),
+                               tolerance=1, msg=None):
+        """
+        Test that two timestamps `actual` and `expected` are within N seconds
+        of each other, where N is the `tolerance` value (default 1 second).
+
+        Args:
+            `actual` - `datetime`
+            `expected` - `datetime` - default is current timestamp.
+            `tolerance` - `int` - Maximum number of seconds' difference allowed
+            for test to pass (default 1).
+        """
+        self.assertLess(
+            expected - actual,
+            timezone.timedelta(seconds=tolerance),
+            msg,
+        )
+
+    def patch_process_turn_apply_async(self):
+        apply_async = patch(apply_async_path)
+        self.apply_async = apply_async.start()
+        self.apply_async.return_value = AsyncResult(id=self.dummy_task_id)
 
     def create_test_user(self, save=True, **kwargs):
         kwargs.setdefault('username', 'testuser')

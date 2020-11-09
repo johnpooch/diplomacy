@@ -1,11 +1,13 @@
 from django.test import TestCase
+from django.utils import timezone
 
 from core import models
 from core import factories
+from core.tests import DiplomacyTestCaseMixin
 from core.models.base import GameStatus, Phase, Season
 
 
-class TestGame(TestCase):
+class TestGame(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
         self.variant = models.Variant.objects.get(identifier='standard')
@@ -19,17 +21,27 @@ class TestGame(TestCase):
             created_by=self.users[0],
         )
         self.game.participants.add(*self.users)
+        self.patch_process_turn_apply_async()
 
     def test_create_initial_turn(self):
         self.assertFalse(self.game.turns.all())
         with self.assertRaises(models.Turn.DoesNotExist):
             self.assertFalse(self.game.get_current_turn())
         self.game.create_initial_turn()
+
+        # New Turn instance created
         current_turn = self.game.get_current_turn()
         self.assertEqual(current_turn.year, 1901)
         self.assertEqual(current_turn.season, Season.SPRING)
         self.assertEqual(current_turn.phase, Phase.ORDER)
         self.assertEqual(models.Turn.objects.count(), 1)
+
+        # New TurnEnd instance created
+        self.assertTrue(current_turn.turn_end)
+        self.assertSimilarTimestamp(
+            current_turn.turn_end.datetime,
+            timezone.now() + timezone.timedelta(days=1)
+        )
 
     def test_create_nation_states(self):
         turn = self.game.create_initial_turn()
