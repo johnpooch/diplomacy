@@ -31,9 +31,7 @@ class TestSetTurnEnd(TestCase, DiplomacyTestCaseMixin):
             season=Season.SPRING,
             year=1900,
         )
-        self.tomorrow = timezone.now() + timezone.timedelta(days=1)
         self.tomorrow_string = self.tomorrow.strftime(self.date_format)
-        self.yesterday = timezone.now() - timezone.timedelta(days=1)
         self.yesterday_string = self.yesterday.strftime(self.date_format)
 
         self.patch_process_turn_apply_async()

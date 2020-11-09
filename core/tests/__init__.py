@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from core import models
 from core.models import base
+from core.utils.date import timespan
 
 
 apply_async_path = 'core.tasks.process_turn.apply_async'
@@ -32,6 +33,14 @@ class DiplomacyTestCaseMixin:
             timezone.timedelta(seconds=tolerance),
             msg,
         )
+
+    @property
+    def tomorrow(self):
+        return timezone.now() + timezone.timedelta(days=1)
+
+    @property
+    def yesterday(self):
+        return timezone.now() - timezone.timedelta(days=1)
 
     def patch_process_turn_apply_async(self):
         apply_async = patch(apply_async_path)
@@ -76,7 +85,11 @@ class DiplomacyTestCaseMixin:
             game.save()
         return game
 
-    def create_test_turn(self, save=True, **kwargs):
+    def create_test_turn(self, save=True, turn_end=False, **kwargs):
+        if (not save) and turn_end:
+            raise ValueError(
+                'Cannot create turn end for turn which is not saved'
+            )
         if 'game' not in kwargs:
             kwargs['game'] = self.create_test_game()
         kwargs.setdefault('season', base.Season.SPRING)
@@ -86,6 +99,10 @@ class DiplomacyTestCaseMixin:
         turn = models.Turn(**kwargs)
         if save:
             turn.save()
+        if turn_end:
+            td = timespan.get_timespan(turn.deadline).timedelta
+            turn_end_dt = timezone.now() + td
+            models.TurnEnd.objects.new(turn, turn_end_dt)
         return turn
 
     def create_test_territory(self, save=True, **kwargs):
