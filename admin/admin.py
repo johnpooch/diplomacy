@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
-from django.contrib.auth.models import Group, User
 from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
 
 from core import models
