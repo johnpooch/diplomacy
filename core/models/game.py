@@ -179,7 +179,7 @@ class Game(models.Model, AutoSlug):
         """
         variant = self.variant
         turn_model = apps.get_model('core', 'Turn')
-        return turn_model.objects.create(
+        return turn_model.objects.create_with_turn_end(
             game=self,
             year=variant.starting_year,
             season=variant.starting_season,

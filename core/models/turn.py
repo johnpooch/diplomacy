@@ -4,7 +4,10 @@ from django.utils import timezone
 
 from adjudicator import process_game_state
 
-from core.models.base import OrderType, OutcomeType, Phase, Season, TerritoryType
+from core.models.base import (
+    OrderType, OutcomeType, Phase, Season, TerritoryType
+)
+from core.utils.date import timespan
 
 
 possible_orders = {
@@ -27,11 +30,24 @@ possible_orders = {
 
 class TurnManager(models.Manager):
 
+    # TODO test
+    def create_with_turn_end(self, **kwargs):
+        """
+        Create a new `Turn` instance and also create a related `TurnEnd`
+        instance.
+        """
+        turn = self.create(**kwargs)
+        td = timespan.get_timespan(turn.deadline).timedelta
+        turn_end_dt = timezone.now() + td
+        TurnEnd.objects.new(turn, turn_end_dt)
+        return turn
+
     # TODO move this method outside manager
+    # TODO test
     def create_turn_from_previous_turn(self, previous_turn):
         # NOTE how about we make the turn have 0 year until finished
         piece_state_model = apps.get_model('core', 'PieceState')
-        new_turn = Turn.objects.create(
+        new_turn = self.create_with_turn_end(
             game=previous_turn.game,
             year=0,
             season=Season.SPRING,
