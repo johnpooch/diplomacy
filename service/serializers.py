@@ -107,6 +107,7 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'orders_finalized',
             'num_orders_remaining',
             'surrendered',
+            'surrendered_at',
             'supply_delta',
             'num_builds',
             'num_disbands',
