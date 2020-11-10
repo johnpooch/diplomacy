@@ -430,10 +430,10 @@ class ListGamesSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
-    participants = UserSerializer(many=True, read_only=True)
     current_turn = serializers.SerializerMethodField()
-    winners = PublicNationStateSerializer(many=True, read_only=True)
+    participants = UserSerializer(many=True, read_only=True)
     pieces = PieceSerializer(many=True)
+    winners = PublicNationStateSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Game
