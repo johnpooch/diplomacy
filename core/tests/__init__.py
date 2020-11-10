@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from core import models
 from core.models import base
@@ -7,8 +8,8 @@ from core.models import base
 class DiplomacyTestCaseMixin:
 
     def create_test_user(self, save=True, **kwargs):
-        kwargs.setdefault('username', 'testuser')
-        kwargs.setdefault('email', 'testuser@test.com')
+        kwargs.setdefault('username', timezone.now().isoformat())
+        kwargs.setdefault('email', timezone.now().isoformat() + '@test.com')
         kwargs.setdefault('first_name', 'test')
         kwargs.setdefault('first_name', 'test')
         user = User(**kwargs)
