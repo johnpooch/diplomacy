@@ -3,10 +3,12 @@ from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories, models
+from core.tests import DiplomacyTestCaseMixin
 from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
 
 
@@ -1012,6 +1014,76 @@ class TestUnfinalizeOrders(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
+
+
+class TestToggleSurrender(APITestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'toggle-surrender'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.game.participants.add(self.user)
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.url = reverse(self.view_name, args=[self.nation_state.id])
+        self.data = {}
+
+    def test_surrender_when_not_participant(self):
+        self.game.participants.all().delete()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_surrender_when_game_not_active(self):
+        self.client.force_authenticate(user=self.user)
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_surrender_different_nation(self):
+        france = self.create_test_nation(variant=self.variant, name='France')
+        other_user = self.create_test_user()
+        self.other_nation_state = self.create_test_nation_state(
+            nation=france,
+            turn=self.turn,
+            user=other_user,
+        )
+        self.url = reverse(self.view_name, args=[self.other_nation_state.id])
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_surrender(self):
+        self.url = reverse(self.view_name, args=[self.nation_state.id])
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertTrue(self.nation_state.surrendered)
+        self.assertTrue(self.nation_state.surrendered_at)
+
+    def test_surrender_already_surrendered(self):
+        self.url = reverse(self.view_name, args=[self.nation_state.id])
+        self.nation_state.surrendered = True
+        self.nation_state.surrendered_at = timezone.now()
+        self.nation_state.save()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.put(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.nation_state.refresh_from_db()
+        self.assertFalse(self.nation_state.surrendered)
+        self.assertIsNone(self.nation_state.surrendered_at)
 
 
 class TestListNationFlags(APITestCase):
