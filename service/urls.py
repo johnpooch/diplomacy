@@ -64,6 +64,11 @@ urlpatterns = [
         views.ListVariants.as_view(),
         name='list-variants'
     ),
+    re_path(
+        r'game/surrender/(?P<pk>[0-9]+)',
+        views.ToggleSurrenderView.as_view(),
+        name='toggle-surrender',
+    ),
     path(
         'password_reset/',
         include('django_rest_passwordreset.urls', namespace='password_reset')

@@ -223,7 +223,7 @@ class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
 class ToggleFinalizeOrdersView(generics.UpdateAPIView):
 
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.PublicNationStateSerializer
+    serializer_class = serializers.ToggleFinalizeOrdersSerializer
     queryset = models.NationState.objects.filter(
         turn__game__status=GameStatus.ACTIVE
     )
@@ -232,6 +232,22 @@ class ToggleFinalizeOrdersView(generics.UpdateAPIView):
         if request.user != obj.user:
             raise exceptions.PermissionDenied(
                 detail='Cannot finalize orders for other nation.'
+            )
+
+
+class ToggleSurrenderView(generics.UpdateAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.ToggleSurrenderSerializer
+    queryset = models.NationState.objects.filter(
+        turn__current_turn=True,
+        turn__game__status=GameStatus.ACTIVE,
+    )
+
+    def check_object_permissions(self, request, obj):
+        if request.user != obj.user:
+            raise exceptions.PermissionDenied(
+                detail='Cannot surrender if not controlling nation.'
             )
 
 
