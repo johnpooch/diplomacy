@@ -143,6 +143,29 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
+
+    def update(self, instance, validated_data):
+        """
+        Set nation's `orders_finalized` field. Process game if turn is ready.
+        """
+        instance.orders_finalized = not(instance.orders_finalized)
+        instance.save()
+        if instance.turn.ready_to_process:
+            instance.turn.game.process()
+        return instance
+
+
+class ToggleSurrenderSerializer(PublicNationStateSerializer):
+
+    def update(self, instance, validated_data):
+        """
+        Set nation game state `surrendered` field. Process game if turn is
+        ready.
+        """
+        return instance.toggle_surrender()
+
+
 class PrivateNationStateSerializer(serializers.ModelSerializer):
 
     build_territories = serializers.SerializerMethodField()
