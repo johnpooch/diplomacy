@@ -3,6 +3,7 @@ import json
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 from core.models.base import PerTurnModel, Phase
 
@@ -206,3 +207,61 @@ class NationState(PerTurnModel):
             num_orders = max(self.num_builds, self.num_disbands)
             return max(0, num_orders - self.orders.count())
         return self.pieces_to_order.count() - self.orders.count()
+
+    def toggle_surrender(self, commit=True):
+        """
+        Toggle the status of the `surrendered` field. Set or un-set
+        `surrendered_at`.
+
+        Args:
+            * `commit` - `bool` - Whether the instance will be saved. Set to
+              `False` if other fields need to updated before saving.
+
+        Returns:
+            * Updated `NationGameState` instance
+
+        Raises:
+            * `ValueError` if the turn is not the current turn.
+        """
+        if not self.turn.current_turn:
+            raise ValueError(
+                'Only current turn nation state can change surrender state.'
+            )
+        if not self.surrendered:
+            return self.surrender(commit=commit)
+        return self.cancel_surrender(commit=commit)
+
+    def surrender(self, commit=True):
+        """
+        Sets the `surrendered` field to `True`. Also sets `surrendered_at`.
+
+        Args:
+            * `commit` - `bool` - Whether the instance will be saved. Set to
+              `False` if other fields need to updated before saving.
+
+        Returns:
+            * Updated `NationGameState` instance
+        """
+        self.surrendered = True
+        self.surrendered_at = timezone.now()
+        if commit:
+            self.save()
+        return self
+
+    def cancel_surrender(self, commit=True):
+        """
+        Sets the `surrendered` field to `False` and sets `surrendered_at` to
+        `None`.
+
+        Args:
+            * `commit` - `bool` - Whether the instance will be saved. Set to
+              `False` if other fields need to updated before saving.
+
+        Returns:
+            * Updated `NationGameState` instance
+        """
+        self.surrendered = False
+        self.surrendered_at = None
+        if commit:
+            self.save()
+        return self
