@@ -59,11 +59,15 @@ class NationState(PerTurnModel):
     orders_finalized = models.BooleanField(
         default=False,
     )
+    # TODO add orders finalized at
     surrendered = models.BooleanField(
         default=False,
     )
+    surrendered_at = models.DateTimeField(
+        null=True,
+    )
 
-    # TODO add unique together for turn and name
+    # TODO add unique together for turn and nation
 
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
