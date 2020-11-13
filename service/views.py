@@ -244,8 +244,8 @@ class ToggleSurrenderView(generics.UpdateAPIView):
         turn__game__status=GameStatus.ACTIVE,
     )
 
-    def check_object_permissions(self, request, obj):
-        if request.user != obj.user:
+    def check_object_permissions(self, request, nation_state):
+        if request.user != nation_state.user:
             raise exceptions.PermissionDenied(
                 detail='Cannot surrender if not controlling nation.'
             )

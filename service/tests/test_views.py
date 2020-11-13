@@ -3,13 +3,14 @@ from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
-from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories, models
 from core.tests import DiplomacyTestCaseMixin
-from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
+from core.models.base import (
+    GameStatus, OrderType, Phase, PieceType, Season, SurrenderStatus
+)
 
 
 def set_processed(self):
@@ -1069,21 +1070,27 @@ class TestToggleSurrender(APITestCase, DiplomacyTestCaseMixin):
         self.client.force_authenticate(user=self.user)
         response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.nation_state.refresh_from_db()
-        self.assertTrue(self.nation_state.surrendered)
-        self.assertTrue(self.nation_state.surrendered_at)
+        models.Surrender.objects.get(
+            user=self.nation_state.user,
+            turn=self.nation_state.turn,
+            status=SurrenderStatus.PENDING,
+        )
 
     def test_surrender_already_surrendered(self):
         self.url = reverse(self.view_name, args=[self.nation_state.id])
-        self.nation_state.surrendered = True
-        self.nation_state.surrendered_at = timezone.now()
-        self.nation_state.save()
+        models.Surrender.objects.create(
+            user=self.nation_state.user,
+            turn=self.nation_state.turn,
+            status=SurrenderStatus.PENDING,
+        )
         self.client.force_authenticate(user=self.user)
         response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.nation_state.refresh_from_db()
-        self.assertFalse(self.nation_state.surrendered)
-        self.assertIsNone(self.nation_state.surrendered_at)
+        models.Surrender.objects.get(
+            user=self.nation_state.user,
+            turn=self.nation_state.turn,
+            status=SurrenderStatus.CANCELED,
+        )
 
 
 class TestListNationFlags(APITestCase):

@@ -106,8 +106,6 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'nation',
             'orders_finalized',
             'num_orders_remaining',
-            'surrendered',
-            'surrendered_at',
             'supply_delta',
             'num_builds',
             'num_disbands',
@@ -158,12 +156,9 @@ class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
 
 class ToggleSurrenderSerializer(PublicNationStateSerializer):
 
-    def update(self, instance, validated_data):
-        """
-        Set nation game state `surrendered` field. Process game if turn is
-        ready.
-        """
-        return instance.toggle_surrender()
+    def update(self, nation_state, validated_data):
+        nation_state.turn.toggle_surrender(nation_state.user)
+        return nation_state
 
 
 class PrivateNationStateSerializer(serializers.ModelSerializer):
@@ -176,7 +171,6 @@ class PrivateNationStateSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'nation',
-            'surrendered',
             'orders_finalized',
             'num_orders_remaining',
             'supply_delta',
