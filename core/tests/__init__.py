@@ -111,11 +111,22 @@ class DiplomacyTestCaseMixin:
         if 'turn' not in kwargs:
             kwargs['turn'] = self.create_test_turn()
         kwargs.setdefault('orders_finalized', False)
-        kwargs.setdefault('surrendered', False)
         nation_state = models.NationState(**kwargs)
         if save:
             nation_state.save()
         return nation_state
+
+    def create_test_order(self, save=True, **kwargs):
+        if 'nation' not in kwargs:
+            kwargs['nation'] = self.create_test_nation()
+        if 'turn' not in kwargs:
+            kwargs['turn'] = self.create_test_turn()
+        if 'source' not in kwargs:
+            kwargs['source'] = self.create_test_territory()
+        order = models.Order(**kwargs)
+        if save:
+            order.save()
+        return order
 
     def create_test_territory_state(self, save=True, **kwargs):
         if 'territory' not in kwargs:
