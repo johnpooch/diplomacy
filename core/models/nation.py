@@ -3,9 +3,8 @@ import json
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
-from core.models.base import PerTurnModel, Phase
+from core.models.base import PerTurnModel, Phase, SurrenderStatus
 
 
 class Nation(models.Model):
@@ -44,7 +43,7 @@ class Nation(models.Model):
 class NationState(PerTurnModel):
     """
     Through model between `Turn`, `User`, and `Nation`. Represents the
-    state of a nation in during a turn.
+    state of a nation during a turn.
     """
     nation = models.ForeignKey(
         'Nation',
@@ -66,6 +65,31 @@ class NationState(PerTurnModel):
 
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
+
+    @property
+    def civil_disorder(self):
+        """
+        Whether any user can control the nation. Special rules take effect when
+        a nation is in civil disorder.
+
+        Returns:
+            * `bool`
+        """
+        return (not self.user) or self.user_surrendering
+
+    @property
+    def user_surrendering(self):
+        """
+        Whether the user that is currently in control of the nation state has
+        decided to surrender.
+
+        Returns:
+            * `bool`
+        """
+        return self.turn.surrenders.filter(
+            user=self.user,
+            status=SurrenderStatus.PENDING
+        ).exists()
 
     @property
     def meets_victory_conditions(self):
