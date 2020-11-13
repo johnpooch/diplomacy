@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.manager import Manager
-from django.utils.timezone import now
+from django.utils import timezone
 
-from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
+from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode
 from core.models.mixins import AutoSlug
 
 
@@ -166,7 +166,7 @@ class Game(models.Model, AutoSlug):
         self.create_initial_territory_states()
         self.create_initial_pieces()
         self.status = GameStatus.ACTIVE
-        self.initialized_at = now()
+        self.initialized_at = timezone.now()
         self.save()
 
     def create_initial_turn(self):
