@@ -5,6 +5,7 @@ from .nation import Nation, NationState
 from .order import Order
 from .participation import Participation
 from .piece import Piece, PieceState
+from .surrender import Surrender
 from .territory import Territory, TerritoryState
 from .turn import Turn
 from .variant import Variant
@@ -21,6 +22,7 @@ __all__ = [
     'Participation',
     'Piece',
     'PieceState',
+    'Surrender',
     'Territory',
     'TerritoryState',
     'Turn',

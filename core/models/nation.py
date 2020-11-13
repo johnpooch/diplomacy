@@ -61,12 +61,6 @@ class NationState(PerTurnModel):
         default=False,
     )
     # TODO add orders finalized at
-    surrendered = models.BooleanField(
-        default=False,
-    )
-    surrendered_at = models.DateTimeField(
-        null=True,
-    )
 
     # TODO add unique together for turn and nation
 
