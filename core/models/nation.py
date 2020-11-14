@@ -66,6 +66,20 @@ class NationState(PerTurnModel):
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
 
+    def copy_to_new_turn(self, turn):
+        """
+        Create a copy of the instance for the next turn. Created when the turn
+        ends and a new turn is created.
+        """
+        # Set user to None if pending surrender at end of turn
+        if self.user_surrendering:
+            self.user = None
+        self.turn = turn
+        self.orders_finalized = False
+        self.pk = None
+        self.save()
+        return self
+
     @property
     def civil_disorder(self):
         """

@@ -97,11 +97,7 @@ class TurnManager(models.Manager):
 
             territory_state.save()
         for nation_state in previous_turn.nationstates.all():
-            # TODO account for nations which have been eliminated?
-            nation_state.turn = new_turn
-            nation_state.orders_finalized = False
-            nation_state.pk = None
-            nation_state.save()
+            nation_state.copy_to_new_turn(new_turn)
         new_turn.season, new_turn.phase, new_turn.year = \
             previous_turn.get_next_season_phase_and_year(new_turn)
         new_turn.save()
