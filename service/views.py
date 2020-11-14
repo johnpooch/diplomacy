@@ -7,13 +7,14 @@ from core import models
 from core.models.base import GameStatus
 from service import serializers
 from service.permissions import IsAuthenticated
+from service.mixins import CamelCase
 
 
 # NOTE this could possibly be replaced by using options
 def get_game_filter_choices():
     return {
-        'game_statuses': models.base.GameStatus.CHOICES,
-        'nation_choice_modes': models.base.NationChoiceMode.CHOICES,
+        'gameStatuses': models.base.GameStatus.CHOICES,
+        'nationChoiceModes': models.base.NationChoiceMode.CHOICES,
         'deadlines': models.base.DeadlineFrequency.CHOICES,
         'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
     }
@@ -44,7 +45,7 @@ class BaseMixin:
         )
 
 
-class ListGames(generics.ListAPIView):
+class ListGames(CamelCase, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     queryset = (
@@ -77,13 +78,13 @@ class ListGames(generics.ListAPIView):
     ]
 
 
-class ListVariants(generics.ListAPIView):
+class ListVariants(CamelCase, generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     queryset = models.Variant.objects.all()
     serializer_class = serializers.ListVariantsSerializer
 
 
-class CreateGameView(generics.CreateAPIView):
+class CreateGameView(CamelCase, generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.CreateGameSerializer
@@ -94,7 +95,7 @@ class CreateGameView(generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class GameStateView(BaseMixin, generics.RetrieveAPIView):
+class GameStateView(CamelCase, BaseMixin, generics.RetrieveAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
@@ -120,8 +121,7 @@ class ToggleJoinGame(generics.UpdateAPIView):
                 )
 
 
-class CreateOrderView(BaseMixin, generics.CreateAPIView):
-
+class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
 
@@ -161,7 +161,7 @@ class CreateOrderView(BaseMixin, generics.CreateAPIView):
         )
 
 
-class ListOrdersView(BaseMixin, generics.ListAPIView):
+class ListOrdersView(CamelCase, BaseMixin, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
@@ -183,45 +183,7 @@ class ListOrdersView(BaseMixin, generics.ListAPIView):
         )
 
 
-class RetrievePrivateNationStateView(BaseMixin, generics.RetrieveAPIView):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = serializers.PrivateNationStateSerializer
-
-    def get_object(self):
-        game = get_object_or_404(
-            models.Game.objects,
-            slug=self.kwargs['slug'],
-        )
-        return models.NationState.objects.filter(
-            turn=game.get_current_turn(),
-            user=self.request.user.id,
-        ).first()
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if not instance:
-            return Response({})
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
-
-class DestroyOrderView(BaseMixin, generics.DestroyAPIView):
-
-    permission_classes = [IsAuthenticated]
-    serializer_class = serializers.OrderSerializer
-    queryset = models.Order.objects.all()
-
-    def check_object_permissions(self, request, obj):
-        user_nation_state = self.get_user_nation_state()
-        if obj.nation != user_nation_state.nation:
-            raise exceptions.PermissionDenied(
-                detail='Order does not belong to this user.'
-            )
-
-
-class ToggleFinalizeOrdersView(generics.UpdateAPIView):
-
+class ToggleFinalizeOrdersView(CamelCase, generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.ToggleFinalizeOrdersSerializer
     queryset = models.NationState.objects.filter(
@@ -249,9 +211,3 @@ class ToggleSurrenderView(generics.UpdateAPIView):
             raise exceptions.PermissionDenied(
                 detail='Cannot surrender if not controlling nation.'
             )
-
-
-class ListNationFlags(generics.ListAPIView):
-
-    serializer_class = serializers.NationFlagSerializer
-    queryset = models.Nation.objects.all()
