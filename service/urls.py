@@ -50,9 +50,14 @@ urlpatterns = [
         name='list-variants'
     ),
     re_path(
-        r'game/surrender/(?P<pk>[0-9]+)',
+        r'surrender/(?P<turn>[0-9]+)/(?P<pk>[0-9]+)',
         views.ToggleSurrenderView.as_view(),
-        name='toggle-surrender',
+        name='cancel-surrender',
+    ),
+    re_path(
+        r'surrender/(?P<turn>[0-9]+)',
+        views.ToggleSurrenderView.as_view(),
+        name='surrender',
     ),
     path(
         'password_reset/',

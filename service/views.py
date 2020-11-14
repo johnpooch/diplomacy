@@ -4,7 +4,7 @@ from rest_framework import exceptions, filters, generics, status, views
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import GameStatus
+from core.models.base import GameStatus, SurrenderStatus
 from service import serializers
 from service.permissions import IsAuthenticated
 from service.mixins import CamelCase
@@ -197,17 +197,32 @@ class ToggleFinalizeOrdersView(CamelCase, generics.UpdateAPIView):
             )
 
 
-class ToggleSurrenderView(generics.UpdateAPIView):
+class ToggleSurrenderView(generics.UpdateAPIView, generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.ToggleSurrenderSerializer
-    queryset = models.NationState.objects.filter(
+    serializer_class = serializers.SurrenderSerializer
+    queryset = models.Surrender.objects.filter(
         turn__current_turn=True,
         turn__game__status=GameStatus.ACTIVE,
+        status=SurrenderStatus.PENDING
     )
 
-    def check_object_permissions(self, request, nation_state):
-        if request.user != nation_state.user:
+    def create(self, request, *args, **kwargs):
+        turn = models.Turn.objects.get(id=kwargs['turn'])
+        if not turn.current_turn:
+            raise exceptions.PermissionDenied(
+                'Cannot surrender on inactive turn.'
+            )
+        if not turn.game.status == GameStatus.ACTIVE:
+            raise exceptions.PermissionDenied(
+                'Cannot surrender on inactive game.'
+            )
+        defaults = {'user': request.user.id, 'turn': kwargs['turn']}
+        request.data.update(defaults)
+        return super().create(request, *args, **kwargs)
+
+    def check_object_permissions(self, request, surrender):
+        if request.user != surrender.user:
             raise exceptions.PermissionDenied(
                 detail='Cannot surrender if not controlling nation.'
             )

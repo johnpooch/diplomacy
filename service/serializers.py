@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import serializers
 
 from core import models
-from core.models.base import OrderType, Phase
+from core.models.base import OrderType, Phase, SurrenderStatus
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -281,6 +282,34 @@ class OrderSerializer(serializers.ModelSerializer):
         return data
 
 
+class SurrenderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Surrender
+        fields = (
+            'id',
+            'turn',
+            'user',
+            'status',
+            'replaced_by',
+            'resolved_at',
+            'created_at',
+        )
+
+    def create(self, validated_data):
+        turn = validated_data['turn']
+        return models.Surrender.objects.create(
+            user=self.context['request'].user,
+            turn=turn,
+        )
+
+    def update(self, surrender, validated_data):
+        surrender.status = SurrenderStatus.CANCELED
+        surrender.resolved_at = timezone.now()
+        surrender.save()
+        return surrender
+
+
 class TurnSerializer(serializers.ModelSerializer):
 
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
@@ -290,6 +319,7 @@ class TurnSerializer(serializers.ModelSerializer):
     phase = serializers.CharField(source='get_phase_display')
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
+    surrenders = SurrenderSerializer(many=True)
 
     class Meta:
         model = models.Turn
@@ -305,6 +335,7 @@ class TurnSerializer(serializers.ModelSerializer):
             'piece_states',
             'nation_states',
             'orders',
+            'surrenders',
         )
 
     def get_next_turn(self, obj):
@@ -342,6 +373,7 @@ class ListTurnSerializer(serializers.ModelSerializer):
 
     phase = serializers.CharField(source='get_phase_display')
     nation_states = ListNationStatesSerializer(many=True, source='nationstates')
+    surrenders = SurrenderSerializer(many=True)
 
     class Meta:
         model = models.Turn
@@ -350,6 +382,7 @@ class ListTurnSerializer(serializers.ModelSerializer):
             'year',
             'season',
             'phase',
+            'surrenders',
             'nation_states',
         )
 

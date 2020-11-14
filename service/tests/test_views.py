@@ -928,9 +928,9 @@ class TestUnfinalizeOrders(APITestCase):
         self.assertFalse(self.nation_state.orders_finalized)
 
 
-class TestToggleSurrender(APITestCase, DiplomacyTestCaseMixin):
+class TestSurrender(APITestCase, DiplomacyTestCaseMixin):
 
-    view_name = 'toggle-surrender'
+    view_name = 'surrender'
 
     def setUp(self):
         self.variant = self.create_test_variant()
@@ -947,55 +947,66 @@ class TestToggleSurrender(APITestCase, DiplomacyTestCaseMixin):
             turn=self.turn,
             user=self.user,
         )
-        self.url = reverse(self.view_name, args=[self.nation_state.id])
+        self.url = reverse(self.view_name, args=[self.turn.id])
         self.data = {}
 
     def test_surrender_when_not_participant(self):
         self.game.participants.all().delete()
         self.client.force_authenticate(user=self.user)
-        response = self.client.put(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_surrender_when_game_not_active(self):
         self.client.force_authenticate(user=self.user)
         self.game.status = GameStatus.PENDING
         self.game.save()
-        response = self.client.put(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_surrender_different_nation(self):
-        france = self.create_test_nation(variant=self.variant, name='France')
-        other_user = self.create_test_user()
-        self.other_nation_state = self.create_test_nation_state(
-            nation=france,
-            turn=self.turn,
-            user=other_user,
-        )
-        self.url = reverse(self.view_name, args=[self.other_nation_state.id])
-        self.client.force_authenticate(user=self.user)
-        response = self.client.put(self.url, self.data, format='json')
+        response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_surrender(self):
-        self.url = reverse(self.view_name, args=[self.nation_state.id])
         self.client.force_authenticate(user=self.user)
-        response = self.client.put(self.url, self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         models.Surrender.objects.get(
             user=self.nation_state.user,
             turn=self.nation_state.turn,
             status=SurrenderStatus.PENDING,
         )
 
-    def test_surrender_already_surrendered(self):
-        self.url = reverse(self.view_name, args=[self.nation_state.id])
-        models.Surrender.objects.create(
+
+class TestCancelSurrender(APITestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'cancel-surrender'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.game.participants.add(self.user)
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.surrender = models.Surrender.objects.create(
             user=self.nation_state.user,
             turn=self.nation_state.turn,
             status=SurrenderStatus.PENDING,
         )
+        self.url = reverse(
+            self.view_name,
+            args=[self.turn.id, self.surrender.id]
+        )
+        self.data = {}
+
+    def test_cancel_surrender(self):
         self.client.force_authenticate(user=self.user)
-        response = self.client.put(self.url, self.data, format='json')
+        response = self.client.patch(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         models.Surrender.objects.get(
             user=self.nation_state.user,
