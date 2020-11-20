@@ -98,6 +98,10 @@ class TurnManager(models.Manager):
             territory_state.save()
         for nation_state in previous_turn.nationstates.all():
             nation_state.copy_to_new_turn(new_turn)
+        for draw in previous_turn.draws.all():
+            if draw.status ==  DrawStatus.PROPOSED:
+                draw.status = DrawStatus.EXPIRED
+                draw.save()
         new_turn.season, new_turn.phase, new_turn.year = \
             previous_turn.get_next_season_phase_and_year(new_turn)
         new_turn.save()
