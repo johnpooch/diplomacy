@@ -71,7 +71,7 @@ class Game(models.Model, AutoSlug):
         through='Participation',
     )
     winners = models.ManyToManyField(
-        'NationState',
+        'Nation',
     )
     private = models.BooleanField(
         default=False,
