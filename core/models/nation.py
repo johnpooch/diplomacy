@@ -3,6 +3,7 @@ import json
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import OuterRef, Subquery
 
 from core.models.base import PerTurnModel, Phase, SurrenderStatus
 
@@ -40,6 +41,25 @@ class Nation(models.Model):
         return {}
 
 
+class NationStateQuerySet(models.QuerySet):
+
+    def exclude_civil_disorder(self):
+        """
+        A NationState instance is considered in civil_disorder if it does not
+        have a user controlling it or the user is surrendering.
+        """
+        qs = self
+        return qs.filter(
+            user__isnull=False,
+        ).exclude(
+            surrenders__status=SurrenderStatus.PENDING,
+        )
+
+
+class NationStateManager(models.Manager.from_queryset(NationStateQuerySet)):
+    pass
+
+
 class NationState(PerTurnModel):
     """
     Through model between `Turn`, `User`, and `Nation`. Represents the
@@ -59,6 +79,8 @@ class NationState(PerTurnModel):
     orders_finalized = models.BooleanField(
         default=False,
     )
+
+    objects = NationStateManager()
     # TODO add orders finalized at
 
     # TODO add unique together for turn and nation
@@ -100,8 +122,7 @@ class NationState(PerTurnModel):
         Returns:
             * `bool`
         """
-        return self.turn.surrenders.filter(
-            user=self.user,
+        return self.surrenders.filter(
             status=SurrenderStatus.PENDING
         ).exists()
 
@@ -239,3 +260,7 @@ class NationState(PerTurnModel):
             num_orders = max(self.num_builds, self.num_disbands)
             return max(0, num_orders - self.orders.count())
         return self.pieces_to_order.count() - self.orders.count()
+
+
+def get_combined_strength(nation_states):
+    return sum([ns.supply_centers.count() for ns in nation_states])
