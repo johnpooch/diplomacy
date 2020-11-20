@@ -264,10 +264,18 @@ class Game(models.Model, AutoSlug):
         if winning_nation:
             self.set_winner(winning_nation)
 
-    def set_winner(self, nation_state):
+    def set_winners(self, *nations):
         """
-        End the game and set the winning nation.
+        End the game and set the winning nation(s).
+
+        Args:
+            * `nations` - one or more `Nation` instances.
         """
+        for nation in nations:
+            if nation.variant != self.variant:
+                raise ValueError(
+                    'Nation does not belong to the same variant as this game'
+                )
         self.status = GameStatus.ENDED
         self.save()
-        self.winners.add(nation_state)
+        self.winners.set(nations)
