@@ -1,4 +1,5 @@
 from .community import Announcement, Message
+from .draw import Draw, DrawResponse
 from .game import Game
 from .named_coast import NamedCoast
 from .nation import Nation, NationState
@@ -13,6 +14,8 @@ from .variant import Variant
 
 __all__ = [
     'Announcement',
+    'Draw',
+    'DrawResponse',
     'Game',
     'Message',
     'NamedCoast',

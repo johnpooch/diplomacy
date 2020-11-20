@@ -30,6 +30,30 @@ class DeadlineFrequency:
     )
 
 
+class DrawResponse:
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    CHOICES = (
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+    )
+
+
+class DrawStatus:
+    PROPOSED = 'proposed'
+    CANCELED = 'canceled'
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    EXPIRED = 'expired'
+    CHOICES = (
+        (PROPOSED, 'Proposed'),
+        (CANCELED, 'Canceled'),
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+        (EXPIRED, 'Expired'),
+    )
+
+
 class GameStatus:
     PENDING = 'pending'
     ACTIVE = 'active'
