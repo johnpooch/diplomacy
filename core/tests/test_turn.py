@@ -1,9 +1,7 @@
-from unittest.mock import patch
-
 from django.test import TestCase
 
 from core import factories, models
-from core.models.base import PieceType, Phase, Season, SurrenderStatus
+from core.models.base import PieceType, Phase, Season
 from core.tests import DiplomacyTestCaseMixin
 
 

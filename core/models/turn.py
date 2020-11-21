@@ -1,11 +1,11 @@
 from django.apps import apps
-from django.db import models, transaction
+from django.db import models
 from django.utils import timezone
 
 from adjudicator import process_game_state
 
 from core.models.base import (
-    OrderType, OutcomeType, Phase, Season, SurrenderStatus, TerritoryType
+    OrderType, OutcomeType, Phase, Season, TerritoryType
 )
 
 
