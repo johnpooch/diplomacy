@@ -109,7 +109,7 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
     def test_set_winners_one_winner(self):
         self.game.status = GameStatus.ACTIVE
         self.game.save()
-        turn = self.create_test_turn(game=self.game)
+        self.create_test_turn(game=self.game)
         france = self.variant.nations.get(name='France')
         self.game.set_winners(france)
         self.assertTrue(france in self.game.winners.all())
@@ -118,7 +118,7 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
     def test_set_winners_multiple_winners(self):
         self.game.status = GameStatus.ACTIVE
         self.game.save()
-        turn = self.create_test_turn(game=self.game)
+        self.create_test_turn(game=self.game)
         france = self.variant.nations.get(name='France')
         england = self.variant.nations.get(name='England')
         self.game.set_winners(france, england)
@@ -129,7 +129,7 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
     def test_invalid_nation(self):
         self.game.status = GameStatus.ACTIVE
         self.game.save()
-        turn = self.create_test_turn(game=self.game)
+        self.create_test_turn(game=self.game)
         france = self.variant.nations.get(name='France')
         other_variant = self.create_test_variant(name='Other')
         other_nation = self.create_test_nation(variant=other_variant)

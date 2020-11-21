@@ -4,9 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from core import models
-from core.models.base import (
-    DrawStatus, GameStatus, OrderType, Phase, SurrenderStatus
-)
+from core.models.base import DrawStatus, OrderType, Phase, SurrenderStatus
 
 from . import validators as custom_validators
 

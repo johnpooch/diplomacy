@@ -3,7 +3,6 @@ import json
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import OuterRef, Subquery
 
 from core.models.base import PerTurnModel, Phase, SurrenderStatus
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from core.models.base import PerTurnModel, SurrenderStatus
+from core.models.base import SurrenderStatus
 
 
 class Surrender(models.Model):

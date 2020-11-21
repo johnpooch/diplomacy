@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-from core import models, signals
 from core.models.base import DrawStatus, GameStatus
 from core.tests import DiplomacyTestCaseMixin
 
