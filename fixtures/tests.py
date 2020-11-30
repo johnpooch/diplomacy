@@ -355,7 +355,6 @@ class TestRecipe(TestCase, DiplomacyTestCaseMixin):
                 "nation": 3,
                 "user": 19,
                 "orders_finalized": False,
-                "surrendered": False
             }
         ]
         nation_state = self.recipe.create_nation_states(nation_state_data, [test_user])[0]
@@ -398,7 +397,6 @@ class TestRecipe(TestCase, DiplomacyTestCaseMixin):
                 "nation": 3,
                 "user": 19,
                 "orders_finalized": False,
-                "surrendered": False
             }
         ]
         nation_state = self.recipe.create_nation_states(
@@ -444,7 +442,6 @@ class TestRecipe(TestCase, DiplomacyTestCaseMixin):
                 "nation": 3,
                 "user": 19,
                 "orders_finalized": False,
-                "surrendered": False
             }
         ]
         self.recipe.test_user_nation = 'England'

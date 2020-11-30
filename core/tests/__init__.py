@@ -1,14 +1,31 @@
+from unittest.mock import patch
+
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from core import models
 from core.models import base
 
 
+set_status_path = 'core.models.Draw.set_status'
+set_winners_path = 'core.models.Game.set_winners'
+
+
 class DiplomacyTestCaseMixin:
 
+    def patch_set_status(self):
+        self.set_status_patcher = patch(set_status_path)
+        self.set_status_patch = self.set_status_patcher.start()
+        self.addCleanup(self.set_status_patcher.stop)
+
+    def patch_set_winners(self):
+        self.set_winners_patcher = patch(set_winners_path)
+        self.set_winners_patch = self.set_winners_patcher.start()
+        self.addCleanup(self.set_winners_patcher.stop)
+
     def create_test_user(self, save=True, **kwargs):
-        kwargs.setdefault('username', 'testuser')
-        kwargs.setdefault('email', 'testuser@test.com')
+        kwargs.setdefault('username', timezone.now().isoformat())
+        kwargs.setdefault('email', timezone.now().isoformat() + '@test.com')
         kwargs.setdefault('first_name', 'test')
         kwargs.setdefault('first_name', 'test')
         user = User(**kwargs)
@@ -110,11 +127,22 @@ class DiplomacyTestCaseMixin:
         if 'turn' not in kwargs:
             kwargs['turn'] = self.create_test_turn()
         kwargs.setdefault('orders_finalized', False)
-        kwargs.setdefault('surrendered', False)
         nation_state = models.NationState(**kwargs)
         if save:
             nation_state.save()
         return nation_state
+
+    def create_test_order(self, save=True, **kwargs):
+        if 'nation' not in kwargs:
+            kwargs['nation'] = self.create_test_nation()
+        if 'turn' not in kwargs:
+            kwargs['turn'] = self.create_test_turn()
+        if 'source' not in kwargs:
+            kwargs['source'] = self.create_test_territory()
+        order = models.Order(**kwargs)
+        if save:
+            order.save()
+        return order
 
     def create_test_territory_state(self, save=True, **kwargs):
         if 'territory' not in kwargs:
@@ -128,3 +156,16 @@ class DiplomacyTestCaseMixin:
         if save:
             territory_state.save()
         return territory_state
+
+    def create_test_draw(self, save=True, **kwargs):
+        if 'turn' not in kwargs:
+            kwargs['turn'] = self.create_test_turn()
+        if 'proposed_by' not in kwargs:
+            kwargs['proposed_by'] = self.create_test_nation()
+        if 'proposed_by_user' not in kwargs:
+            kwargs['proposed_by_user'] = self.create_test_user()
+        kwargs.setdefault('status', base.DrawStatus.PROPOSED)
+        draw = models.Draw(**kwargs)
+        if save:
+            draw.save()
+        return draw

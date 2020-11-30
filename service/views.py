@@ -4,7 +4,7 @@ from rest_framework import exceptions, filters, generics, status, views
 from rest_framework.response import Response
 
 from core import models
-from core.models.base import GameStatus
+from core.models.base import DrawStatus, GameStatus, SurrenderStatus
 from service import serializers
 from service.permissions import IsAuthenticated
 from service.mixins import CamelCase
@@ -185,7 +185,7 @@ class ListOrdersView(CamelCase, BaseMixin, generics.ListAPIView):
 
 class ToggleFinalizeOrdersView(CamelCase, generics.UpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = serializers.PublicNationStateSerializer
+    serializer_class = serializers.ToggleFinalizeOrdersSerializer
     queryset = models.NationState.objects.filter(
         turn__game__status=GameStatus.ACTIVE
     )
@@ -194,4 +194,154 @@ class ToggleFinalizeOrdersView(CamelCase, generics.UpdateAPIView):
         if request.user != obj.user:
             raise exceptions.PermissionDenied(
                 detail='Cannot finalize orders for other nation.'
+            )
+
+
+class ToggleSurrenderView(
+        CamelCase, generics.UpdateAPIView, generics.CreateAPIView
+):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.SurrenderSerializer
+    queryset = models.Surrender.objects.filter(
+        nation_state__turn__current_turn=True,
+        nation_state__turn__game__status=GameStatus.ACTIVE,
+        status=SurrenderStatus.PENDING
+    )
+
+    def create(self, request, *args, **kwargs):
+        turn = models.Turn.objects.get(id=kwargs['turn'])
+        if not turn.current_turn:
+            raise exceptions.PermissionDenied(
+                'Cannot surrender on inactive turn.'
+            )
+        if not turn.game.status == GameStatus.ACTIVE:
+            raise exceptions.PermissionDenied(
+                'Cannot surrender on inactive game.'
+            )
+        user_nation_state = get_object_or_404(
+            models.NationState,
+            turn=turn,
+            user=request.user.id,
+        )
+        defaults = {
+            'user': request.user.id,
+            'nation_state': user_nation_state.id
+        }
+        request.data.update(defaults)
+        return super().create(request, *args, **kwargs)
+
+    def check_object_permissions(self, request, surrender):
+        if request.user != surrender.user:
+            raise exceptions.PermissionDenied(
+                detail='Cannot surrender if not controlling nation.'
+            )
+
+
+class ProposeDraw(generics.CreateAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.CreateDrawSerializer
+    queryset = models.Draw.objects.filter(
+        turn__current_turn=True,
+        turn__game__status=GameStatus.ACTIVE,
+        status=DrawStatus.PROPOSED
+    )
+
+    def get_user_nation_state(self):
+        turn = self.kwargs['turn']
+        return get_object_or_404(
+            models.NationState.objects,
+            turn=turn,
+            user=self.request.user.id,
+        )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user_nation_state'] = self.get_user_nation_state()
+        return context
+
+    def create(self, request, *args, **kwargs):
+        turn = models.Turn.objects.get(id=kwargs['turn'])
+        nation = models.Nation.objects.get(
+            nationstate__user=request.user,
+            nationstate__turn=turn,
+        )
+        defaults = {
+            'turn': turn.id,
+            'proposed_by': nation.id,
+            'proposed_by_user': request.user.id,
+        }
+        request.data.update(defaults)
+        return super().create(request, *args, **kwargs)
+
+
+class CancelDraw(generics.UpdateAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.CancelDrawSerializer
+    queryset = models.Draw.objects.filter(
+        turn__current_turn=True,
+        turn__game__status=GameStatus.ACTIVE,
+        status=DrawStatus.PROPOSED
+    )
+
+    def check_object_permissions(self, request, draw):
+        turn = self.kwargs['turn']
+        nation = models.NationState.objects.get(
+            user=request.user,
+            turn=turn
+        ).nation
+        if nation != draw.proposed_by:
+            raise exceptions.PermissionDenied(
+                detail='Cannot cancel another nation\'s draw proposal.'
+            )
+
+
+class DrawResponse(CamelCase, generics.CreateAPIView, generics.DestroyAPIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.DrawResponseSerializer
+    queryset = models.DrawResponse.objects.filter(
+        draw__turn__current_turn=True,
+        draw__turn__game__status=GameStatus.ACTIVE,
+        draw__status=DrawStatus.PROPOSED,
+    )
+
+    def get_user_nation_state(self):
+        draw = models.Draw.objects.get(id=self.kwargs['draw'])
+        return models.NationState.objects.filter(
+            turn=draw.turn,
+            user=self.request.user.id,
+        ).first()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user_nation_state'] = self.get_user_nation_state()
+        return context
+
+    def create(self, request, *args, **kwargs):
+        draw = models.Draw.objects.get(id=kwargs['draw'])
+        nation = models.Nation.objects.get(
+            nationstate__user=request.user,
+            nationstate__turn=draw.turn,
+        )
+        defaults = {
+            'draw': draw.id,
+            'nation': nation.id,
+            'user': request.user.id,
+        }
+        request.data.update(defaults)
+        return super().create(request, *args, **kwargs)
+
+    def check_object_permissions(self, request, draw_response):
+        draw = self.kwargs['draw']
+        turn = models.Turn.objects.get(draws=draw)
+        nation = models.NationState.objects.get(
+            user=request.user,
+            turn=turn
+        ).nation
+        if nation != draw_response.nation:
+            raise exceptions.PermissionDenied(
+                detail='Cannot cancel another nation\'s draw response.'
             )

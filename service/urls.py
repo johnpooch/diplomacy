@@ -49,6 +49,36 @@ urlpatterns = [
         views.ListVariants.as_view(),
         name='list-variants'
     ),
+    re_path(
+        r'surrender/(?P<turn>[0-9]+)/(?P<pk>[0-9]+)',
+        views.ToggleSurrenderView.as_view(),
+        name='cancel-surrender',
+    ),
+    re_path(
+        r'surrender/(?P<turn>[0-9]+)',
+        views.ToggleSurrenderView.as_view(),
+        name='surrender',
+    ),
+    re_path(
+        r'cancel-draw/(?P<turn>[0-9]+)/(?P<pk>[0-9]+)',
+        views.CancelDraw.as_view(),
+        name='cancel-draw',
+    ),
+    re_path(
+        r'propose-draw/(?P<turn>[0-9]+)',
+        views.ProposeDraw.as_view(),
+        name='propose-draw',
+    ),
+    re_path(
+        r'draw-response/(?P<draw>[0-9]+)/(?P<pk>[0-9]+)',
+        views.DrawResponse.as_view(),
+        name='cancel-draw-response',
+    ),
+    re_path(
+        r'draw-response/(?P<draw>[0-9]+)',
+        views.DrawResponse.as_view(),
+        name='draw-response',
+    ),
     path(
         'password_reset/',
         include('django_rest_passwordreset.urls', namespace='password_reset')

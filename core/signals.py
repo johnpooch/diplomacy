@@ -9,6 +9,7 @@ from django.utils.text import slugify
 from django_rest_passwordreset.signals import reset_password_token_created
 
 from core import models
+from core.models.base import DrawStatus, GameStatus
 from core.models.mixins import AutoSlug
 from core.utils.models import super_receiver
 
@@ -57,6 +58,20 @@ def set_nation_uid_if_not_set(sender, instance, **kwargs):
 def set_territory_uid_if_not_set(sender, instance, **kwargs):
     if not instance.uid:
         set_uid(instance)
+
+
+@receiver(signals.post_save, sender=models.DrawResponse)
+def set_draw_status_once_all_responses_submitted(sender, instance, **kwargs):
+    if instance.draw.status == DrawStatus.PROPOSED:
+        instance.draw.set_status()
+
+
+@receiver(signals.post_save, sender=models.Draw)
+def set_game_state_if_draw_accepted(sender, instance, **kwargs):
+    game = instance.turn.game
+    if instance.status == DrawStatus.ACCEPTED and game.status != GameStatus.ENDED:
+        nations = [*instance.nations.all(), instance.proposed_by]
+        game.set_winners(*nations)
 
 
 @receiver(reset_password_token_created)

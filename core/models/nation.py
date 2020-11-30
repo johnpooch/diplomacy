@@ -4,7 +4,7 @@ from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 
-from core.models.base import PerTurnModel, Phase
+from core.models.base import PerTurnModel, Phase, SurrenderStatus
 
 
 class Nation(models.Model):
@@ -40,10 +40,29 @@ class Nation(models.Model):
         return {}
 
 
+class NationStateQuerySet(models.QuerySet):
+
+    def exclude_civil_disorder(self):
+        """
+        A NationState instance is considered in civil_disorder if it does not
+        have a user controlling it or the user is surrendering.
+        """
+        qs = self
+        return qs.filter(
+            user__isnull=False,
+        ).exclude(
+            surrenders__status=SurrenderStatus.PENDING,
+        )
+
+
+class NationStateManager(models.Manager.from_queryset(NationStateQuerySet)):
+    pass
+
+
 class NationState(PerTurnModel):
     """
     Through model between `Turn`, `User`, and `Nation`. Represents the
-    state of a nation in during a turn.
+    state of a nation during a turn.
     """
     nation = models.ForeignKey(
         'Nation',
@@ -59,14 +78,52 @@ class NationState(PerTurnModel):
     orders_finalized = models.BooleanField(
         default=False,
     )
-    surrendered = models.BooleanField(
-        default=False,
-    )
 
-    # TODO add unique together for turn and name
+    objects = NationStateManager()
+    # TODO add orders finalized at
+
+    # TODO add unique together for turn and nation
 
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
+
+    def copy_to_new_turn(self, turn):
+        """
+        Create a copy of the instance for the next turn. Created when the turn
+        ends and a new turn is created.
+        """
+        # Set user to None if pending surrender at end of turn
+        if self.user_surrendering:
+            self.user = None
+        self.turn = turn
+        self.orders_finalized = False
+        self.pk = None
+        self.save()
+        return self
+
+    @property
+    def civil_disorder(self):
+        """
+        Whether any user can control the nation. Special rules take effect when
+        a nation is in civil disorder.
+
+        Returns:
+            * `bool`
+        """
+        return (not self.user) or self.user_surrendering
+
+    @property
+    def user_surrendering(self):
+        """
+        Whether the user that is currently in control of the nation state has
+        decided to surrender.
+
+        Returns:
+            * `bool`
+        """
+        return self.surrenders.filter(
+            status=SurrenderStatus.PENDING
+        ).exists()
 
     @property
     def meets_victory_conditions(self):
@@ -202,3 +259,7 @@ class NationState(PerTurnModel):
             num_orders = max(self.num_builds, self.num_disbands)
             return max(0, num_orders - self.orders.count())
         return self.pieces_to_order.count() - self.orders.count()
+
+
+def get_combined_strength(nation_states):
+    return sum([ns.supply_centers.count() for ns in nation_states])
