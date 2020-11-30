@@ -1,8 +1,19 @@
 from django.contrib.auth.models import User
+from django.utils import timezone
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 
 from core import models
-from core.models.base import OrderType, Phase
+from core.models.base import DrawStatus, OrderType, Phase, SurrenderStatus
+
+from . import validators as custom_validators
+
+
+def get_nation_state_from_draw(data):
+    return models.NationState.objects.get(
+        turn=data.get('draw').turn,
+        nation=data.get('proposed_by')
+    )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,6 +32,111 @@ class PieceSerializer(serializers.ModelSerializer):
             'type',
             'nation',
         )
+
+
+class SurrenderSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Surrender
+        fields = (
+            'id',
+            'nation_state',
+            'user',
+            'status',
+            'replaced_by',
+            'resolved_at',
+            'created_at',
+        )
+
+    def create(self, validated_data):
+        nation_state = validated_data['nation_state']
+        return models.Surrender.objects.create(
+            user=self.context['request'].user,
+            nation_state=nation_state,
+        )
+
+    def update(self, surrender, validated_data):
+        surrender.status = SurrenderStatus.CANCELED
+        surrender.resolved_at = timezone.now()
+        surrender.save()
+        return surrender
+
+
+class CreateDrawSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Draw
+        fields = (
+            'id',
+            'proposed_by',
+            'proposed_by_user',
+            'proposed_at',
+            'nations',
+            'status',
+            'turn',
+            'resolved_at',
+        )
+        validators = [
+            custom_validators.DistinctNationsValidator(),
+            custom_validators.NotSurrenderingValidator(),
+            custom_validators.NationsInVariantValidator(),
+            custom_validators.NationsActiveValidator(),
+            custom_validators.OneProposedDrawValidator(),
+            custom_validators.ProposedDrawStrengthValidator(),
+            custom_validators.DrawNationCountValidator(),
+        ]
+        extra_kwargs = {
+            'turn': {
+                'validators': [custom_validators.CurrentTurnValidator()]
+            },
+        }
+
+
+class CancelDrawSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Draw
+        fields = (
+            'id',
+            'proposed_by',
+            'proposed_by_user',
+            'proposed_at',
+            'nations',
+            'status',
+            'turn',
+            'resolved_at',
+        )
+
+    def update(self, draw, validated_data):
+        draw.status = DrawStatus.CANCELED
+        draw.save()
+        return draw
+
+
+class DrawResponseSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.DrawResponse
+        fields = (
+            'id',
+            'draw',
+            'nation',
+            'user',
+            'response',
+            'created_at',
+        )
+        validators = [
+            custom_validators.NotSurrenderingValidator(),
+            UniqueTogetherValidator(
+                queryset=models.DrawResponse.objects.all(),
+                fields=['nation', 'draw']
+            )
+        ]
+        extra_kwargs = {
+            'draw': {
+                'validators': [custom_validators.DrawProposedValidator()]
+            },
+        }
 
 
 class PieceStateSerializer(serializers.ModelSerializer):
@@ -79,24 +195,20 @@ class TerritoryStateSerializer(serializers.ModelSerializer):
 
 class NationSerializer(serializers.ModelSerializer):
 
-    flag_as_data = serializers.SerializerMethodField()
-
     class Meta:
         model = models.Nation
         fields = (
             'id',
             'name',
-            'flag_as_data',
         )
-
-    def get_flag_as_data(self, nation):
-        return nation.flag_as_data
 
 
 class PublicNationStateSerializer(serializers.ModelSerializer):
 
     orders_finalized = serializers.SerializerMethodField()
     num_orders_remaining = serializers.SerializerMethodField()
+    num_supply_centers = serializers.SerializerMethodField()
+    surrenders = SurrenderSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.NationState
@@ -106,14 +218,18 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'nation',
             'orders_finalized',
             'num_orders_remaining',
-            'surrendered',
+            'num_supply_centers',
             'supply_delta',
             'num_builds',
             'num_disbands',
+            'surrenders',
         )
         read_only_fields = (
             'nation',
         )
+
+    def get_num_supply_centers(self, nation_state):
+        return nation_state.supply_centers.count()
 
     def get_orders_finalized(self, nation_state):
         request = self.context.get('request')
@@ -142,9 +258,30 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
+
+    def update(self, instance, validated_data):
+        """
+        Set nation's `orders_finalized` field. Process game if turn is ready.
+        """
+        instance.orders_finalized = not(instance.orders_finalized)
+        instance.save()
+        if instance.turn.ready_to_process:
+            instance.turn.game.process()
+        return instance
+
+
+class ToggleSurrenderSerializer(PublicNationStateSerializer):
+
+    def update(self, nation_state, validated_data):
+        nation_state.turn.toggle_surrender(nation_state.user)
+        return nation_state
+
+
 class PrivateNationStateSerializer(serializers.ModelSerializer):
 
     build_territories = serializers.SerializerMethodField()
+    surrenders = SurrenderSerializer(many=True)
 
     class Meta:
         model = models.NationState
@@ -152,13 +289,13 @@ class PrivateNationStateSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'nation',
-            'surrendered',
             'orders_finalized',
             'num_orders_remaining',
             'supply_delta',
             'build_territories',
             'num_builds',
             'num_disbands',
+            'surrenders',
         )
 
     def get_build_territories(self, nation_state):
@@ -184,6 +321,7 @@ class VariantSerializer(serializers.ModelSerializer):
             'name',
             'territories',
             'nations',
+            'num_supply_centers_to_win',
         )
 
 
@@ -269,6 +407,28 @@ class OrderSerializer(serializers.ModelSerializer):
         return data
 
 
+class DrawSerializer(serializers.ModelSerializer):
+
+    draw_responses = DrawResponseSerializer(
+        many=True,
+        source='drawresponse_set'
+    )
+
+    class Meta:
+        model = models.Draw
+        fields = (
+            'id',
+            'turn',
+            'nations',
+            'proposed_by',
+            'proposed_by_user',
+            'status',
+            'proposed_at',
+            'resolved_at',
+            'draw_responses'
+        )
+
+
 class TurnSerializer(serializers.ModelSerializer):
 
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
@@ -278,6 +438,7 @@ class TurnSerializer(serializers.ModelSerializer):
     phase = serializers.CharField(source='get_phase_display')
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
+    draws = DrawSerializer(many=True)
 
     class Meta:
         model = models.Turn
@@ -293,6 +454,7 @@ class TurnSerializer(serializers.ModelSerializer):
             'piece_states',
             'nation_states',
             'orders',
+            'draws',
         )
 
     def get_next_turn(self, obj):
@@ -316,6 +478,7 @@ class TurnSerializer(serializers.ModelSerializer):
 class ListNationStatesSerializer(serializers.ModelSerializer):
 
     user = UserSerializer()
+    surrenders = SurrenderSerializer(many=True)
 
     class Meta:
         model = models.NationState
@@ -323,6 +486,7 @@ class ListNationStatesSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'nation',
+            'surrenders',
         )
 
 
@@ -361,6 +525,7 @@ class ListVariantsSerializer(serializers.ModelSerializer):
             'name',
             'territories',
             'nations',
+            'num_supply_centers_to_win',
         )
 
 
@@ -413,10 +578,10 @@ class ListGamesSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
-    participants = UserSerializer(many=True, read_only=True)
     current_turn = serializers.SerializerMethodField()
-    winners = PublicNationStateSerializer(many=True, read_only=True)
+    participants = UserSerializer(many=True, read_only=True)
     pieces = PieceSerializer(many=True)
+    winners = PublicNationStateSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Game
@@ -475,8 +640,9 @@ class GameSerializer(serializers.ModelSerializer):
 
 class GameStateSerializer(serializers.ModelSerializer):
 
-    turns = TurnSerializer(many=True)
+    participants = UserSerializer(many=True, read_only=True)
     pieces = PieceSerializer(many=True)
+    turns = TurnSerializer(many=True)
 
     class Meta:
         model = models.Game
@@ -489,19 +655,5 @@ class GameStateSerializer(serializers.ModelSerializer):
             'variant',
             'pieces',
             'status',
+            'participants',
         )
-
-
-class NationFlagSerializer(serializers.ModelSerializer):
-
-    flag_as_data = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Nation
-        fields = (
-            'id',
-            'flag_as_data',
-        )
-
-    def get_flag_as_data(self, nation):
-        return nation.flag_as_data

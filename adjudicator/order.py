@@ -1,16 +1,17 @@
 from . import decisions, check
+from .convoy_chain import get_convoy_chains
 from .decisions import Outcomes
 from .decisions.attack_strength import AttackStrength
+from .state import register
 
 
 class Order:
 
-    def __init__(self, _id, nation, source):
-        self.id = _id
+    @register
+    def __init__(self, state, id, nation, source, *args, **kwargs):
+        self.id = id
         self.nation = nation
         self.source = source
-        self.piece = None
-        self.hold_support_orders = set()
 
         self.outcome = Outcomes.UNRESOLVED
         self.outcome_verbose = None
@@ -18,6 +19,7 @@ class Order:
         self.illegal = False
         self.illegal_code = None
         self.illegal_verbose = None
+        self.state = state
 
     def __str__(self):
         piece_type = self.piece.__class__.__name__.lower()
@@ -44,8 +46,22 @@ class Order:
         )
 
     @property
+    def piece(self):
+        return next(
+            iter([p for p in self.state.pieces if p.territory == self.source]),
+            None
+        )
+
+    @property
     def legal(self):
         return not self.illegal
+
+    @property
+    def hold_support_orders(self):
+        return [
+            o for o in self.state.orders if isinstance(o, Support)
+            and o.aux == self.source and o.target == self.source
+        ]
 
     def resolve(self):
         if not self.outcome == Outcomes.UNRESOLVED:
@@ -92,6 +108,17 @@ class Order:
         return [s for s in self.hold_support_orders if s.outcome in args]
 
 
+class DummyHold(Order):
+    """
+    Represents a hold order for a piece which did not receive an order. Does
+    not get registered to the state.
+    """
+    def __init__(self, state, nation, source):
+        self.nation = nation
+        self.source = source
+        self.state = state
+
+
 class Hold(Order):
 
     checks = [
@@ -111,20 +138,41 @@ class Move(Order):
         check.FleetCanReachTargetCoastal,
     ]
 
-    def __init__(self, _id, nation, source, target, target_coast=None, via_convoy=False):
-        super().__init__(_id, nation, source)
+    @register
+    def __init__(self, state, id, nation, source, target, target_coast=None, **kwargs):
+        super().__init__(state, id, nation, source)
         self.target = target
         self.target_coast = target_coast
-        self.via_convoy = via_convoy
-        self.move_support_orders = set()
-        self.convoy_chains = []
+        self.via_convoy = kwargs.get('via_convoy', False)
 
         self.attack_strength_decision = decisions.AttackStrength(self)
         self.prevent_strength_decision = decisions.PreventStrength(self)
         self.defend_strength_decision = decisions.DefendStrength(self)
         self.path_decision = decisions.Path(self)
 
+    @property
+    def convoy_chains(self):
+        if not self.via_convoy:
+            return []
+        eligible_convoys = [
+            o for o in self.state.orders if isinstance(o, Convoy)
+            and o.aux == self.source and o.target == self.target
+        ]
+        # print([c.outcome for c in eligible_convoys])
+        return get_convoy_chains(self.source, self.target, eligible_convoys)
+
+    @property
+    def move_support_orders(self):
+        return [
+            o for o in self.state.orders if isinstance(o, Support)
+            and o.aux == self.source and o.target == self.target
+        ]
+
     def check_succeeds(self):
+
+        if self.path_decision() != Outcomes.PATH:
+            return False
+
         min_attack_strength, _ = AttackStrength(self)()
         _, max_to_beat = self._get_strength_to_beat()
         max_prevent = max(
@@ -213,8 +261,9 @@ class Support(Order):
         check.CanReachTargetWithoutConvoy,
     ]
 
-    def __init__(self, _id, nation, source, aux, target):
-        super().__init__(_id, nation, source)
+    @register
+    def __init__(self, state, id, nation, source, aux, target, *args, **kwargs):
+        super().__init__(state, id, nation, source)
         self.aux = aux
         self.target = target
 
@@ -268,10 +317,17 @@ class Convoy(Order):
         check.AtSea,
     ]
 
-    def __init__(self, _id, nation, source, aux, target):
-        super().__init__(_id, nation, source)
+    @register
+    def __init__(self, state, id, nation, source, aux, target, **kwargs):
+        super().__init__(state, id, nation, source)
         self.aux = aux
         self.target = target
+
+    def resolve(self):
+        if self.piece.dislodged_decision == Outcomes.DISLODGED:
+            self.outcome = Outcomes.FAILS
+        if self.piece.dislodged_decision == Outcomes.SUSTAINS:
+            self.outcome = Outcomes.SUCCEEDS
 
 
 class Retreat(Order):
@@ -283,8 +339,8 @@ class Retreat(Order):
         check.CanReachTargetWithoutConvoy,
     ]
 
-    def __init__(self, _id, nation, source, target, target_coast=None):
-        super().__init__(_id, nation, source)
+    def __init__(self, state, id, nation, source, target, target_coast=None, **kwargs):
+        super().__init__(state, id, nation, source)
         self.target = target
         self.target_coast = target_coast
 
@@ -310,8 +366,8 @@ class Build(Order):
         check.SourceNamedCoastNotSpecified,
     ]
 
-    def __init__(self, _id, nation, source, piece_type, named_coast=None):
-        super().__init__(_id, nation, source)
+    def __init__(self, state, id, nation, source, piece_type, named_coast=None):
+        super().__init__(state, id, nation, source)
         self.piece_type = piece_type
         self.named_coast = named_coast
 

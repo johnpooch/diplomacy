@@ -1,57 +1,56 @@
-
 import unittest
+
 from adjudicator.named_coast import NamedCoast
 from adjudicator.order import Move, Support
-from adjudicator.state import State
 from adjudicator.territory import CoastalTerritory, SeaTerritory, InlandTerritory
 from adjudicator.piece import Army, Fleet
 
+from .base import AdjudicatorTestCaseMixin
 
-class TerritoryTestCase(unittest.TestCase):
-    def setUp(self):
-        self.state = State()
+
+class TerritoryTestCase(AdjudicatorTestCaseMixin, unittest.TestCase):
+    pass
 
 
 class TestString(TerritoryTestCase):
 
     def test_string(self):
-        t = CoastalTerritory(1, 'London', 'England', [], [])
+        t = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
         self.assertEqual(str(t), 'London')
 
 
 class TestNeighbours(TerritoryTestCase):
 
-    def test_neighbours(self):
-        london = CoastalTerritory(1, 'London', 'England', [2], [])
-        wales = CoastalTerritory(2, 'Wales', 'England', [1], [])
-        paris = InlandTerritory(3, 'Paris', 'France', [])
-        self.state.register(london, wales, paris)
+    state_path = 'adjudicator.territory.state'
 
-        self.assertEqual(london.neighbours, {wales})
-        self.assertEqual(wales.neighbours, {london})
+    def test_neighbours(self):
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [2], [])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [1], [])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'France', [])
+
+        self.assertEqual(london.neighbours, [wales])
+        self.assertEqual(wales.neighbours, [london])
         self.assertFalse(paris in london.neighbours)
 
 
 class TestSharedCoasts(TerritoryTestCase):
 
     def test_shared_coasts(self):
-        london = CoastalTerritory(1, 'London', 'England', [2], [2])
-        wales = CoastalTerritory(2, 'Wales', 'England', [1], [1])
-        paris = InlandTerritory(3, 'Paris', 'France', [])
-        self.state.register(london, wales, paris)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [2], [2])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [1], [1])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'France', [])
 
-        self.assertEqual(london.shared_coasts, {wales})
-        self.assertEqual(wales.shared_coasts, {london})
+        self.assertEqual(london.shared_coasts, [wales])
+        self.assertEqual(wales.shared_coasts, [london])
         self.assertFalse(paris in london.neighbours)
 
 
 class TestAdjacentTo(TerritoryTestCase):
 
     def test_neighbours(self):
-        london = CoastalTerritory(1, 'London', 'England', [2], [])
-        wales = CoastalTerritory(2, 'Wales', 'England', [1], [])
-        paris = InlandTerritory(3, 'Paris', 'France', [])
-        self.state.register(london, wales, paris)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [2], [])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [1], [])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'France', [])
 
         self.assertTrue(london.adjacent_to(wales))
         self.assertFalse(london.adjacent_to(paris))
@@ -60,14 +59,12 @@ class TestAdjacentTo(TerritoryTestCase):
 class TestPiece(TerritoryTestCase):
 
     def test_piece(self):
-        london = CoastalTerritory(1, 'London', 'England', [], [])
-        wales = CoastalTerritory(2, 'Wales', 'England', [], [])
-        paris = InlandTerritory(3, 'Paris', 'France', [])
-        self.state.register(london, wales, paris)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [], [])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'France', [])
 
-        army_london = Army(0, 'England', london)
-        army_wales = Army(0, 'England', wales)
-        self.state.register(army_london, army_wales)
+        army_london = Army(self.state, 0, 'England', london)
+        army_wales = Army(self.state, 0, 'England', wales)
 
         self.assertEqual(army_london, london.piece)
         self.assertEqual(army_wales, wales.piece)
@@ -77,14 +74,12 @@ class TestPiece(TerritoryTestCase):
 class TestFriendlyPieceExists(TerritoryTestCase):
 
     def test_friendly_piece_exists(self):
-        london = CoastalTerritory(1, 'London', 'England', [], [])
-        wales = CoastalTerritory(2, 'Wales', 'England', [], [])
-        paris = InlandTerritory(3, 'Paris', 'France', [])
-        self.state.register(london, wales, paris)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [], [])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'France', [])
 
-        army_london = Army(0, 'England', london)
-        army_wales = Army(0, 'France', wales)
-        self.state.register(army_london, army_wales)
+        Army(self.state, 0, 'England', london)
+        Army(self.state, 0, 'France', wales)
 
         self.assertTrue(london.friendly_piece_exists('England'))
         self.assertFalse(wales.friendly_piece_exists('England'))
@@ -94,12 +89,10 @@ class TestFriendlyPieceExists(TerritoryTestCase):
 class TestOccupied(TerritoryTestCase):
 
     def test_occupied(self):
-        london = CoastalTerritory(1, 'London', 'England', [], [])
-        wales = CoastalTerritory(2, 'Wales', 'England', [], [])
-        self.state.register(london, wales)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [], [])
 
-        army_london = Army(0, 'England', london)
-        self.state.register(army_london)
+        Army(self.state, 0, 'England', london)
 
         self.assertTrue(london.occupied)
         self.assertFalse(wales.occupied)
@@ -108,14 +101,12 @@ class TestOccupied(TerritoryTestCase):
 class TestOccupiedBy(TerritoryTestCase):
 
     def test_occupied_by(self):
-        london = CoastalTerritory(1, 'London', 'England', [], [])
-        wales = CoastalTerritory(2, 'Wales', 'England', [], [])
-        paris = InlandTerritory(3, 'Paris', 'England', [])
-        self.state.register(london, wales, paris)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
+        wales = CoastalTerritory(self.state, 2, 'Wales', 'England', [], [])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'England', [])
 
-        army_london = Army(0, 'England', london)
-        army_paris = Army(0, 'France', paris)
-        self.state.register(army_london, army_paris)
+        Army(self.state, 0, 'England', london)
+        Army(self.state, 0, 'France', paris)
 
         self.assertTrue(london.occupied_by('England'))
         self.assertFalse(wales.occupied_by('England'))
@@ -125,40 +116,34 @@ class TestOccupiedBy(TerritoryTestCase):
 class TestAccessibleByPieceType(TerritoryTestCase):
 
     def test_coastal(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [], [])
-        english_channel = SeaTerritory(2, 'English Channel', [])
-        brest = CoastalTerritory(3, 'Brest', 'France', [], [])
-        self.state.register(picardy, english_channel, brest)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [], [])
+        english_channel = SeaTerritory(self.state, 2, 'English Channel', [])
+        brest = CoastalTerritory(self.state, 3, 'Brest', 'France', [], [])
 
-        army = Army(0, 'England', picardy)
-        fleet = Fleet(0, 'France', english_channel)
-        self.state.register(army, fleet)
+        army = Army(self.state, 0, 'England', picardy)
+        fleet = Fleet(self.state, 0, 'France', english_channel)
 
         self.assertTrue(brest.accessible_by_piece_type(army))
         self.assertTrue(brest.accessible_by_piece_type(fleet))
 
     def test_inland(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [], [])
-        english_channel = SeaTerritory(2, 'English Channel', [])
-        paris = InlandTerritory(3, 'Paris', 'France', [])
-        self.state.register(picardy, english_channel, paris)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [], [])
+        english_channel = SeaTerritory(self.state, 2, 'English Channel', [])
+        paris = InlandTerritory(self.state, 3, 'Paris', 'France', [])
 
-        army = Army(0, 'England', picardy)
-        fleet = Fleet(0, 'France', english_channel)
-        self.state.register(army, fleet)
+        army = Army(self.state, 0, 'England', picardy)
+        fleet = Fleet(self.state, 0, 'France', english_channel)
 
         self.assertTrue(paris.accessible_by_piece_type(army))
         self.assertFalse(paris.accessible_by_piece_type(fleet))
 
     def test_sea(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [], [])
-        english_channel = SeaTerritory(2, 'English Channel', [])
-        irish_sea = SeaTerritory(3, 'Irish Sea', [])
-        self.state.register(picardy, english_channel, irish_sea)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [], [])
+        english_channel = SeaTerritory(self.state, 2, 'English Channel', [])
+        irish_sea = SeaTerritory(self.state, 3, 'Irish Sea', [])
 
-        army = Army(0, 'England', picardy)
-        fleet = Fleet(0, 'France', english_channel)
-        self.state.register(army, fleet)
+        army = Army(self.state, 0, 'England', picardy)
+        fleet = Fleet(self.state, 0, 'France', english_channel)
 
         self.assertFalse(irish_sea.accessible_by_piece_type(army))
         self.assertTrue(irish_sea.accessible_by_piece_type(fleet))
@@ -167,55 +152,52 @@ class TestAccessibleByPieceType(TerritoryTestCase):
 class TestAttackingPieces(TerritoryTestCase):
 
     def test_attacking_pieces_none(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [], [])
-        self.state.register(picardy)
-        self.assertEqual(picardy.attacking_pieces, set())
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [], [])
+        self.assertEqual(picardy.attacking_pieces, [])
 
     def test_attacking_piece_exists(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [2], [])
-        paris = InlandTerritory(2, 'Paris', 'France', [1])
-        army_paris = Army(0, 'France', paris)
-        move = Move(0, 'France', paris, picardy)
-        self.state.register(picardy, paris, army_paris, move)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [2], [])
+        paris = InlandTerritory(self.state, 2, 'Paris', 'France', [1])
+        army_paris = Army(self.state, 0, 'France', paris)
+        Move(self.state, 0, 'France', paris, picardy)
 
-        self.assertEqual(picardy.attacking_pieces, {army_paris})
+        self.assertEqual(picardy.attacking_pieces, [army_paris])
 
     def test_multiple_attacking_piece_exist(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [2, 3], [])
-        paris = InlandTerritory(2, 'Paris', 'France', [1])
-        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
-        army_paris = Army(0, 'France', paris)
-        fleet_brest = Fleet(0, 'France', brest)
-        move_1 = Move(0, 'France', paris, picardy)
-        move_2 = Move(0, 'France', brest, picardy)
-        self.state.register(picardy, paris, brest, army_paris, fleet_brest,
-                            move_1, move_2)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [2, 3], [])
+        paris = InlandTerritory(self.state, 2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(self.state, 3, 'Brest', 'France', [1], [])
+        army_paris = Army(self.state, 0, 'France', paris)
+        fleet_brest = Fleet(self.state, 0, 'France', brest)
+        Move(self.state, 0, 'France', paris, picardy)
+        Move(self.state, 0, 'France', brest, picardy)
 
-        self.assertEqual(picardy.attacking_pieces, {army_paris, fleet_brest})
+        self.assertEqual(
+            set(picardy.attacking_pieces),
+            set([army_paris, fleet_brest])
+        )
 
     def test_supporting_piece_not_included(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [2, 3], [])
-        paris = InlandTerritory(2, 'Paris', 'France', [1])
-        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
-        fleet_brest = Fleet(0, 'France', brest)
-        support = Support(0, 'France', paris, brest, picardy)
-        move = Move(0, 'France', brest, picardy)
-        self.state.register(picardy, paris, brest, fleet_brest, move, support)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [2, 3], [])
+        paris = InlandTerritory(self.state, 2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(self.state, 3, 'Brest', 'France', [1], [])
+        fleet_brest = Fleet(self.state, 0, 'France', brest)
+        Support(self.state, 0, 'France', paris, brest, picardy)
+        Move(self.state, 0, 'France', brest, picardy)
 
-        self.assertEqual(picardy.attacking_pieces, {fleet_brest})
+        self.assertEqual(picardy.attacking_pieces, [fleet_brest])
 
 
 class TestForeignAttackingPieces(TerritoryTestCase):
 
     def test_foeign_attacking_pieces(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [2], [])
-        paris = InlandTerritory(2, 'Paris', 'France', [1])
-        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
-        army_paris = Army(0, 'England', paris)
-        fleet_brest = Fleet(0, 'France', brest)
-        move_1 = Move(0, 'England', paris, picardy)
-        move_2 = Move(0, 'France', brest, picardy)
-        self.state.register(picardy, paris, brest, army_paris, fleet_brest, move_1, move_2)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [2], [])
+        paris = InlandTerritory(self.state, 2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(self.state, 3, 'Brest', 'France', [1], [])
+        army_paris = Army(self.state, 0, 'England', paris)
+        Fleet(self.state, 0, 'France', brest)
+        Move(self.state, 0, 'England', paris, picardy)
+        Move(self.state, 0, 'France', brest, picardy)
 
         self.assertEqual(
             picardy.foreign_attacking_pieces('France'),
@@ -226,14 +208,13 @@ class TestForeignAttackingPieces(TerritoryTestCase):
 class TestOtherAttackingPieces(TerritoryTestCase):
 
     def test_other_attacking_pieces(self):
-        picardy = CoastalTerritory(1, 'Picardy', 'France', [2], [])
-        paris = InlandTerritory(2, 'Paris', 'France', [1])
-        brest = CoastalTerritory(3, 'Brest', 'France', [1], [])
-        army_paris = Army(0, 'England', paris)
-        fleet_brest = Fleet(0, 'France', brest)
-        move_1 = Move(0, 'England', paris, picardy)
-        move_2 = Move(0, 'France', brest, picardy)
-        self.state.register(picardy, paris, brest, army_paris, fleet_brest, move_1, move_2)
+        picardy = CoastalTerritory(self.state, 1, 'Picardy', 'France', [2], [])
+        paris = InlandTerritory(self.state, 2, 'Paris', 'France', [1])
+        brest = CoastalTerritory(self.state, 3, 'Brest', 'France', [1], [])
+        army_paris = Army(self.state, 0, 'England', paris)
+        fleet_brest = Fleet(self.state, 0, 'France', brest)
+        Move(self.state, 0, 'England', paris, picardy)
+        Move(self.state, 0, 'France', brest, picardy)
 
         self.assertEqual(
             picardy.other_attacking_pieces(fleet_brest),
@@ -244,19 +225,17 @@ class TestOtherAttackingPieces(TerritoryTestCase):
 class TestNamedCoasts(TerritoryTestCase):
 
     def test_named_coast(self):
-        london = CoastalTerritory(1, 'London', 'England', [], [])
-        spain = CoastalTerritory(2, 'Spain', None, [], [])
-        spain_north_coast = NamedCoast(1, 'North Coast', spain, [])
-        self.state.register(london, spain, spain_north_coast)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
+        spain = CoastalTerritory(self.state, 2, 'Spain', None, [], [])
+        spain_north_coast = NamedCoast(self.state, 1, 'North Coast', spain, [])
 
-        self.assertEqual(spain.named_coasts, {spain_north_coast})
-        self.assertEqual(london.named_coasts, set())
+        self.assertEqual(spain.named_coasts, [spain_north_coast])
+        self.assertEqual(london.named_coasts, [])
 
     def test_is_complex(self):
-        london = CoastalTerritory(1, 'London', 'England', [], [])
-        spain = CoastalTerritory(2, 'Spain', None, [], [])
-        spain_north_coast = NamedCoast(1, 'North Coast', spain, [])
-        self.state.register(london, spain, spain_north_coast)
+        london = CoastalTerritory(self.state, 1, 'London', 'England', [], [])
+        spain = CoastalTerritory(self.state, 2, 'Spain', None, [], [])
+        NamedCoast(self.state, 1, 'North Coast', spain, [])
 
         self.assertTrue(spain.is_complex)
         self.assertFalse(london.is_complex)

@@ -25,6 +25,10 @@ class Variant(models.Model):
         null=False,
         default=18,
     )
+    max_nations_in_draw = models.PositiveIntegerField(
+        null=False,
+        default=4,
+    )
     starting_year = models.PositiveIntegerField(
         null=False,
         default=1901,

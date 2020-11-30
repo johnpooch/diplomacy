@@ -6,8 +6,7 @@
         "turn": 13,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -17,8 +16,7 @@
         "turn": 13,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -28,8 +26,7 @@
         "turn": 13,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -39,8 +36,7 @@
         "turn": 13,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -50,8 +46,7 @@
         "turn": 13,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -61,8 +56,7 @@
         "turn": 13,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -72,8 +66,7 @@
         "turn": 13,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -83,8 +76,7 @@
         "turn": 14,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -94,8 +86,7 @@
         "turn": 14,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -105,8 +96,7 @@
         "turn": 14,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -116,8 +106,7 @@
         "turn": 14,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -127,8 +116,7 @@
         "turn": 14,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -138,8 +126,7 @@
         "turn": 14,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -149,8 +136,7 @@
         "turn": 14,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -160,8 +146,7 @@
         "turn": 15,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -171,8 +156,7 @@
         "turn": 15,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -182,8 +166,7 @@
         "turn": 15,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -193,8 +176,7 @@
         "turn": 15,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -204,8 +186,7 @@
         "turn": 15,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -215,8 +196,7 @@
         "turn": 15,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -226,8 +206,7 @@
         "turn": 15,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -237,8 +216,7 @@
         "turn": 16,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -248,8 +226,7 @@
         "turn": 16,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -259,8 +236,7 @@
         "turn": 16,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -270,8 +246,7 @@
         "turn": 16,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -281,8 +256,7 @@
         "turn": 16,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -292,8 +266,7 @@
         "turn": 16,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -303,8 +276,7 @@
         "turn": 16,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -314,8 +286,7 @@
         "turn": 17,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -325,8 +296,7 @@
         "turn": 17,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -336,8 +306,7 @@
         "turn": 17,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -347,8 +316,7 @@
         "turn": 17,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -358,8 +326,7 @@
         "turn": 17,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -369,8 +336,7 @@
         "turn": 17,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -380,8 +346,7 @@
         "turn": 17,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -391,8 +356,7 @@
         "turn": 18,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -402,8 +366,7 @@
         "turn": 18,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -413,8 +376,7 @@
         "turn": 18,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -424,8 +386,7 @@
         "turn": 18,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -435,8 +396,7 @@
         "turn": 18,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -446,8 +406,7 @@
         "turn": 18,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -457,8 +416,7 @@
         "turn": 18,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -468,8 +426,7 @@
         "turn": 19,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -479,8 +436,7 @@
         "turn": 19,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -490,8 +446,7 @@
         "turn": 19,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -501,8 +456,7 @@
         "turn": 19,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -512,8 +466,7 @@
         "turn": 19,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -523,8 +476,7 @@
         "turn": 19,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -534,8 +486,7 @@
         "turn": 19,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -545,8 +496,7 @@
         "turn": 20,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -556,8 +506,7 @@
         "turn": 20,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -567,8 +516,7 @@
         "turn": 20,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -578,8 +526,7 @@
         "turn": 20,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -589,8 +536,7 @@
         "turn": 20,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -600,8 +546,7 @@
         "turn": 20,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -611,8 +556,7 @@
         "turn": 20,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -622,8 +566,7 @@
         "turn": 21,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -633,8 +576,7 @@
         "turn": 21,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -644,8 +586,7 @@
         "turn": 21,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -655,8 +596,7 @@
         "turn": 21,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -666,8 +606,7 @@
         "turn": 21,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -677,8 +616,7 @@
         "turn": 21,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -688,8 +626,7 @@
         "turn": 21,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -699,8 +636,7 @@
         "turn": 22,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -710,8 +646,7 @@
         "turn": 22,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -721,8 +656,7 @@
         "turn": 22,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -732,8 +666,7 @@
         "turn": 22,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -743,8 +676,7 @@
         "turn": 22,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -754,8 +686,7 @@
         "turn": 22,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -765,8 +696,7 @@
         "turn": 22,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -776,8 +706,7 @@
         "turn": 23,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -787,8 +716,7 @@
         "turn": 23,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -798,8 +726,7 @@
         "turn": 23,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -809,8 +736,7 @@
         "turn": 23,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -820,8 +746,7 @@
         "turn": 23,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -831,8 +756,7 @@
         "turn": 23,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -842,8 +766,7 @@
         "turn": 23,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -853,8 +776,7 @@
         "turn": 24,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -864,8 +786,7 @@
         "turn": 24,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -875,8 +796,7 @@
         "turn": 24,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -886,8 +806,7 @@
         "turn": 24,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -897,8 +816,7 @@
         "turn": 24,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -908,8 +826,7 @@
         "turn": 24,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -919,8 +836,7 @@
         "turn": 24,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -930,8 +846,7 @@
         "turn": 25,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -941,8 +856,7 @@
         "turn": 25,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -952,8 +866,7 @@
         "turn": 25,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -963,8 +876,7 @@
         "turn": 25,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -974,8 +886,7 @@
         "turn": 25,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -985,8 +896,7 @@
         "turn": 25,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -996,8 +906,7 @@
         "turn": 25,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1007,8 +916,7 @@
         "turn": 26,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1018,8 +926,7 @@
         "turn": 26,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1029,8 +936,7 @@
         "turn": 26,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1040,8 +946,7 @@
         "turn": 26,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1051,8 +956,7 @@
         "turn": 26,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1062,8 +966,7 @@
         "turn": 26,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1073,8 +976,7 @@
         "turn": 26,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1084,8 +986,7 @@
         "turn": 27,
         "nation": 1,
         "user": 34,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1095,8 +996,7 @@
         "turn": 27,
         "nation": 2,
         "user": 31,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1106,8 +1006,7 @@
         "turn": 27,
         "nation": 3,
         "user": 36,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1117,8 +1016,7 @@
         "turn": 27,
         "nation": 4,
         "user": 37,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1128,8 +1026,7 @@
         "turn": 27,
         "nation": 5,
         "user": 33,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1139,8 +1036,7 @@
         "turn": 27,
         "nation": 6,
         "user": 35,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 },
 {
@@ -1150,8 +1046,7 @@
         "turn": 27,
         "nation": 7,
         "user": 32,
-        "orders_finalized": false,
-        "surrendered": false
+        "orders_finalized": false
     }
 }
 ]

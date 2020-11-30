@@ -1,4 +1,5 @@
 from adjudicator.decisions import Outcomes
+from .state import register
 
 
 class PieceTypes:
@@ -11,12 +12,13 @@ class Piece:
     is_army = False
     is_fleet = False
 
-    def __init__(self, _id, nation, territory, attacker_territory=None,
-                 retreating=False):
-        self.id = _id
+    @register
+    def __init__(self, state, id, nation, territory, attacker_territory=None,
+                 retreating=False, **kwargs):
+        self.state = state
+        self.id = id
         self.nation = nation
         self.territory = territory
-        self.order = None
         self.dislodged_decision = Outcomes.UNRESOLVED
         self.dislodged_by = None
         self.attacker_territory = attacker_territory
@@ -29,6 +31,18 @@ class Piece:
 
     def __repr__(self):
         return f'{self.__class__.__name__} {self.territory}'
+
+    @property
+    def order(self):
+        from adjudicator.order import DummyHold
+        return next(
+            iter([
+                o for o in self.state.orders
+                if o.source == self.territory
+                and o.nation == self.nation
+            ]),
+            DummyHold(self.state, self.nation, self.territory)
+        )
 
     @property
     def moves(self):
@@ -168,8 +182,8 @@ class Fleet(Piece):
 
     is_fleet = True
 
-    def __init__(self, _id, nation, territory, named_coast=None, retreating=False):
-        super().__init__(_id, nation, territory, retreating=retreating)
+    def __init__(self, state, id, nation, territory, named_coast=None, retreating=False):
+        super().__init__(state, id, nation, territory, retreating=retreating)
         self.named_coast = named_coast
 
     def can_reach(self, target, named_coast=None):
