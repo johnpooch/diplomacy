@@ -1,11 +1,11 @@
 from django.test import TestCase
 
-from core import models
-from core import factories
+from core import factories, models
 from core.models.base import GameStatus, Phase, Season
+from core.tests import DiplomacyTestCaseMixin
 
 
-class TestGame(TestCase):
+class TestGame(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
         self.variant = models.Variant.objects.get(identifier='standard')
@@ -106,21 +106,34 @@ class TestGame(TestCase):
         self.assertEqual(piece_states.filter(piece__nation__name='Turkey').count(), 3)
         self.assertEqual(piece_states.filter(piece__nation__name='Russia').count(), 4)
 
-    def test_set_winner(self):
+    def test_set_winners_one_winner(self):
         self.game.status = GameStatus.ACTIVE
         self.game.save()
-        turn = models.Turn.objects.create(
-            game=self.game,
-            phase=Phase.ORDER,
-            season=Season.FALL,
-            year=1901,
-        )
+        self.create_test_turn(game=self.game)
         france = self.variant.nations.get(name='France')
-        france_state = models.NationState.objects.create(
-            turn=turn,
-            nation=france,
-            user=self.users[0]
-        )
-        self.game.set_winner(france_state)
-        self.assertTrue(france_state in self.game.winners.all())
+        self.game.set_winners(france)
+        self.assertTrue(france in self.game.winners.all())
         self.assertEqual(self.game.status, GameStatus.ENDED)
+
+    def test_set_winners_multiple_winners(self):
+        self.game.status = GameStatus.ACTIVE
+        self.game.save()
+        self.create_test_turn(game=self.game)
+        france = self.variant.nations.get(name='France')
+        england = self.variant.nations.get(name='England')
+        self.game.set_winners(france, england)
+        self.assertTrue(france in self.game.winners.all())
+        self.assertTrue(england in self.game.winners.all())
+        self.assertEqual(self.game.status, GameStatus.ENDED)
+
+    def test_invalid_nation(self):
+        self.game.status = GameStatus.ACTIVE
+        self.game.save()
+        self.create_test_turn(game=self.game)
+        france = self.variant.nations.get(name='France')
+        other_variant = self.create_test_variant(name='Other')
+        other_nation = self.create_test_nation(variant=other_variant)
+        with self.assertRaises(ValueError):
+            self.game.set_winners(france, other_nation)
+        self.assertEqual(self.game.status, GameStatus.ACTIVE)
+        self.assertEqual(self.game.winners.all().count(), 0)

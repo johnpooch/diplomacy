@@ -63,6 +63,7 @@ class Territory(models.Model):
 
     class Meta:
         unique_together = ('name', 'variant')
+        verbose_name_plural = 'territories'
 
     def __str__(self):
         return self.name

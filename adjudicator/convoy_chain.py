@@ -13,12 +13,12 @@ class ConvoyChain:
 
     def resolve(self):
 
-        if all([c.piece.dislodged_decision == Outcomes.SUSTAINS for c in self.convoys]) and \
+        if all([c.outcome == Outcomes.SUCCEEDS for c in self.convoys]) and \
                 all([c.legal for c in self.convoys]):
             self.result = Outcomes.SUCCEEDS
             return
 
-        if any([c.piece.dislodged_decision == Outcomes.DISLODGED for c in self.convoys]) or \
+        if any([c.outcome == Outcomes.FAILS for c in self.convoys]) or \
                 any([c.illegal for c in self.convoys]):
             self.result = Outcomes.FAILS
             return

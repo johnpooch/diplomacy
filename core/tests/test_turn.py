@@ -2,9 +2,10 @@ from django.test import TestCase
 
 from core import factories, models
 from core.models.base import PieceType, Phase, Season
+from core.tests import DiplomacyTestCaseMixin
 
 
-class TestTurn(TestCase):
+class TestTurn(DiplomacyTestCaseMixin, TestCase):
 
     def setUp(self):
         self.variant = models.Variant.objects.get(identifier='standard')

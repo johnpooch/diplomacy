@@ -4,7 +4,9 @@ from django.utils import timezone
 
 from adjudicator import process_game_state
 
-from core.models.base import OrderType, OutcomeType, Phase, Season, TerritoryType
+from core.models.base import (
+    DrawStatus, OrderType, OutcomeType, Phase, Season, TerritoryType
+)
 
 
 possible_orders = {
@@ -95,11 +97,11 @@ class TurnManager(models.Manager):
 
             territory_state.save()
         for nation_state in previous_turn.nationstates.all():
-            # TODO account for nations which have been eliminated?
-            nation_state.turn = new_turn
-            nation_state.orders_finalized = False
-            nation_state.pk = None
-            nation_state.save()
+            nation_state.copy_to_new_turn(new_turn)
+        for draw in previous_turn.draws.all():
+            if draw.status == DrawStatus.PROPOSED:
+                draw.status = DrawStatus.EXPIRED
+                draw.save()
         new_turn.season, new_turn.phase, new_turn.year = \
             previous_turn.get_next_season_phase_and_year(new_turn)
         new_turn.save()
@@ -213,8 +215,9 @@ class Turn(models.Model):
         return None
 
     def process(self):
-        game_state_dict = self._to_game_state_dict()
-        outcome = process_game_state(game_state_dict)
+        from core.serializers import TurnSerializer
+        turn_data = TurnSerializer(self).data
+        outcome = process_game_state(turn_data)
         self.update_turn(outcome)
 
     def update_turn(self, outcome):
@@ -280,6 +283,10 @@ class Turn(models.Model):
                 piece.piece.turn_disbanded = self
                 piece.piece.save()
             piece.save()
+
+    def _ensure_current_turn(self):
+        if not self.current_turn:
+            raise ValueError('This is not the current turn of the game.')
 
     def _to_game_state_dict(self):
         """

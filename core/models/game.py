@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.manager import Manager
-from django.utils.timezone import now
+from django.utils import timezone
 
-from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
+from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode
 from core.models.mixins import AutoSlug
 
 
@@ -71,7 +71,7 @@ class Game(models.Model, AutoSlug):
         through='Participation',
     )
     winners = models.ManyToManyField(
-        'NationState',
+        'Nation',
     )
     private = models.BooleanField(
         default=False,
@@ -125,6 +125,9 @@ class Game(models.Model, AutoSlug):
 
     objects = GameManager()
 
+    def __str__(self):
+        return self.name
+
     @property
     def ended(self):
         """
@@ -166,7 +169,7 @@ class Game(models.Model, AutoSlug):
         self.create_initial_territory_states()
         self.create_initial_pieces()
         self.status = GameStatus.ACTIVE
-        self.initialized_at = now()
+        self.initialized_at = timezone.now()
         self.save()
 
     def create_initial_turn(self):
@@ -264,10 +267,18 @@ class Game(models.Model, AutoSlug):
         if winning_nation:
             self.set_winner(winning_nation)
 
-    def set_winner(self, nation_state):
+    def set_winners(self, *nations):
         """
-        End the game and set the winning nation.
+        End the game and set the winning nation(s).
+
+        Args:
+            * `nations` - one or more `Nation` instances.
         """
+        for nation in nations:
+            if nation.variant != self.variant:
+                raise ValueError(
+                    'Nation does not belong to the same variant as this game'
+                )
         self.status = GameStatus.ENDED
         self.save()
-        self.winners.add(nation_state)
+        self.winners.set(nations)

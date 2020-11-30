@@ -50,6 +50,9 @@ class Piece(HygienicModel):
         )
     )
 
+    def __str__(self):
+        return f'{self.type} ({self.nation}) {self.id}'
+
     @property
     def is_army(self):
         return self.type == PieceType.ARMY

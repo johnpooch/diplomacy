@@ -4,17 +4,17 @@ from adjudicator.decisions import Outcomes
 from adjudicator.order import Convoy, Hold, Move, Support
 from adjudicator.piece import Army, Fleet
 from adjudicator.processor import process
-from adjudicator.state import State
-from adjudicator.tests.data import NamedCoasts, Nations, Territories, register_all
+from adjudicator.tests.data import NamedCoasts, Nations, Territories
+
+from ..base import AdjudicatorTestCaseMixin
 
 
-class TestConvoyingToAdjacentPlaces(unittest.TestCase):
+class TestConvoyingToAdjacentPlaces(AdjudicatorTestCaseMixin, unittest.TestCase):
 
     def setUp(self):
-        self.state = State()
-        self.territories = Territories()
-        self.named_coasts = NamedCoasts(self.territories)
-        self.state = register_all(self.state, self.territories, self.named_coasts)
+        super().setUp()
+        self.territories = Territories(self.state)
+        self.named_coasts = NamedCoasts(self.state, self.territories)
 
     def test_two_units_can_swap_places_by_convoy(self):
         """
@@ -33,18 +33,14 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
 
         I prefer the 2000 rules, so the units are swapped.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.SKAGERRAK),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN, via_convoy=True),
-            Convoy(0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN, via_convoy=True),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.PATH)
@@ -75,18 +71,14 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         army in Norway will be convoyed and swap its place with the fleet in
         Sweden.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.RUSSIA, self.territories.SKAGERRAK),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.SKAGERRAK),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Convoy(0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Convoy(self.state, 0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.FAILS)
@@ -128,22 +120,18 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         the 1982 rule with the 2000 clarification. According to these rules the
         move from Picardy succeeds.
         """
-        pieces = [
-            Fleet(0, Nations.FRANCE, self.territories.BREST),
-            Army(0, Nations.FRANCE, self.territories.PICARDY),
-            Army(0, Nations.FRANCE, self.territories.BURGUNDY),
-            Fleet(0, Nations.FRANCE, self.territories.MID_ATLANTIC),
-            Fleet(0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL),
-        ]
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.BREST),
+        Army(self.state, 0, Nations.FRANCE, self.territories.PICARDY),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.MID_ATLANTIC),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL),
         orders = [
-            Move(0, Nations.FRANCE, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
-            Move(0, Nations.FRANCE, self.territories.PICARDY, self.territories.BELGIUM),
-            Support(0, Nations.FRANCE, self.territories.BURGUNDY, self.territories.PICARDY, self.territories.BELGIUM),
-            Support(0, Nations.FRANCE, self.territories.MID_ATLANTIC, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
-            Convoy(0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL, self.territories.PICARDY, self.territories.BELGIUM),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
+            Move(self.state, 0, Nations.FRANCE, self.territories.PICARDY, self.territories.BELGIUM),
+            Support(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY, self.territories.PICARDY, self.territories.BELGIUM),
+            Support(self.state, 0, Nations.FRANCE, self.territories.MID_ATLANTIC, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL, self.territories.PICARDY, self.territories.BELGIUM),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -194,23 +182,21 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         move from Picardy succeeds.
         """
         pieces = [
-            Fleet(0, Nations.FRANCE, self.territories.BREST),
-            Army(0, Nations.FRANCE, self.territories.PICARDY),
-            Army(0, Nations.FRANCE, self.territories.BURGUNDY),
-            Fleet(0, Nations.FRANCE, self.territories.MID_ATLANTIC),
-            Fleet(0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL),
-            Army(0, Nations.ENGLAND, self.territories.BELGIUM),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.BREST),
+            Army(self.state, 0, Nations.FRANCE, self.territories.PICARDY),
+            Army(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.MID_ATLANTIC),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.BELGIUM),
         ]
         orders = [
-            Move(0, Nations.FRANCE, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
-            Move(0, Nations.FRANCE, self.territories.PICARDY, self.territories.BELGIUM),
-            Support(0, Nations.FRANCE, self.territories.BURGUNDY, self.territories.PICARDY, self.territories.BELGIUM),
-            Support(0, Nations.FRANCE, self.territories.MID_ATLANTIC, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
-            Convoy(0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL, self.territories.PICARDY, self.territories.BELGIUM),
-            Move(0, Nations.ENGLAND, self.territories.BELGIUM, self.territories.PICARDY),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
+            Move(self.state, 0, Nations.FRANCE, self.territories.PICARDY, self.territories.BELGIUM),
+            Support(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY, self.territories.PICARDY, self.territories.BELGIUM),
+            Support(self.state, 0, Nations.FRANCE, self.territories.MID_ATLANTIC, self.territories.BREST, self.territories.ENGLISH_CHANNEL),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL, self.territories.PICARDY, self.territories.BELGIUM),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.BELGIUM, self.territories.PICARDY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -260,26 +246,22 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         a head to head battle and both the army in Edinburgh and Liverpool will
         not move.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.LIVERPOOL),
-            Fleet(0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL),
-            Army(0, Nations.GERMANY, self.territories.EDINBURGH),
-            Fleet(0, Nations.FRANCE, self.territories.IRISH_SEA),
-            Fleet(0, Nations.FRANCE, self.territories.NORTH_SEA),
-            Fleet(0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA),
-            Fleet(0, Nations.RUSSIA, self.territories.NORTH_ATLANTIC),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LIVERPOOL),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL),
+        Army(self.state, 0, Nations.GERMANY, self.territories.EDINBURGH),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.IRISH_SEA),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.NORTH_SEA),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.NORTH_ATLANTIC),
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.LIVERPOOL, self.territories.EDINBURGH),
-            Convoy(0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL, self.territories.LIVERPOOL, self.territories.EDINBURGH),
-            Move(0, Nations.GERMANY, self.territories.EDINBURGH, self.territories.LIVERPOOL),
-            Hold(0, Nations.FRANCE, self.territories.IRISH_SEA),
-            Hold(0, Nations.FRANCE, self.territories.NORTH_SEA),
-            Convoy(0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA, self.territories.LIVERPOOL, self.territories.EDINBURGH),
-            Convoy(0, Nations.RUSSIA, self.territories.NORTH_ATLANTIC, self.territories.LIVERPOOL, self.territories.EDINBURGH),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.LIVERPOOL, self.territories.EDINBURGH),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.ENGLISH_CHANNEL, self.territories.LIVERPOOL, self.territories.EDINBURGH),
+            Move(self.state, 0, Nations.GERMANY, self.territories.EDINBURGH, self.territories.LIVERPOOL),
+            Hold(self.state, 0, Nations.FRANCE, self.territories.IRISH_SEA),
+            Hold(self.state, 0, Nations.FRANCE, self.territories.NORTH_SEA),
+            Convoy(self.state, 0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA, self.territories.LIVERPOOL, self.territories.EDINBURGH),
+            Convoy(self.state, 0, Nations.RUSSIA, self.territories.NORTH_ATLANTIC, self.territories.LIVERPOOL, self.territories.EDINBURGH),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.FAILS)
@@ -315,20 +297,16 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         illegal. So, the order of the fleet in the Gulf of Bothnia is ignored
         and can not show the intent. There is no convoy, so no unit will move.
         """
-        pieces = [
-            Fleet(0, Nations.ENGLAND, self.territories.SKAGERRAK),
-            Fleet(0, Nations.ENGLAND, self.territories.NORWAY),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-            Fleet(0, Nations.RUSSIA, self.territories.GULF_OF_BOTHNIA),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.GULF_OF_BOTHNIA),
         orders = [
-            Convoy(0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
-            Convoy(0, Nations.RUSSIA, self.territories.GULF_OF_BOTHNIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Convoy(self.state, 0, Nations.RUSSIA, self.territories.GULF_OF_BOTHNIA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[1].outcome, Outcomes.FAILS)
@@ -363,18 +341,14 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         can only go by convoy. Since there is no convoy, the move from Belgium
         to Holland fails.
         """
-        pieces = [
-            Army(0, Nations.FRANCE, self.territories.BELGIUM),
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.ENGLAND, self.territories.HOLLAND),
-        ]
+        Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.HOLLAND),
         orders = [
-            Move(0, Nations.FRANCE, self.territories.BELGIUM, self.territories.HOLLAND, via_convoy=True),
-            Move(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.HELGOLAND_BIGHT),
-            Move(0, Nations.ENGLAND, self.territories.HOLLAND, self.territories.KIEL),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BELGIUM, self.territories.HOLLAND, via_convoy=True),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.HELGOLAND_BIGHT),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.HOLLAND, self.territories.KIEL),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.NO_PATH)
@@ -414,19 +388,17 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         route should be considered. The Russian army in Sweden is dislodged.
         """
         pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.SKAGERRAK),
-            Fleet(0, Nations.ENGLAND, self.territories.FINLAND),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.FINLAND),
+            Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
         ]
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Convoy(0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.FINLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -477,27 +449,25 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         move.
         """
         pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.DENMARK),
-            Fleet(0, Nations.ENGLAND, self.territories.FINLAND),
-            Fleet(0, Nations.GERMANY, self.territories.SKAGERRAK),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-            Fleet(0, Nations.RUSSIA, self.territories.BARRENTS_SEA),
-            Fleet(0, Nations.FRANCE, self.territories.NORWEGIAN_SEA),
-            Fleet(0, Nations.FRANCE, self.territories.NORTH_SEA),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.DENMARK),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.FINLAND),
+            Fleet(self.state, 0, Nations.GERMANY, self.territories.SKAGERRAK),
+            Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
+            Fleet(self.state, 0, Nations.RUSSIA, self.territories.BARRENTS_SEA),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.NORWEGIAN_SEA),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.NORTH_SEA),
         ]
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN, via_convoy=True),
-            Support(0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.FINLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Convoy(0, Nations.GERMANY, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
-            Support(0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
-            Move(0, Nations.FRANCE, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
-            Support(0, Nations.FRANCE, self.territories.NORTH_SEA, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN, via_convoy=True),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Convoy(self.state, 0, Nations.GERMANY, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Support(self.state, 0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.FRANCE, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
+            Support(self.state, 0, Nations.FRANCE, self.territories.NORTH_SEA, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -544,22 +514,18 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         the North Sea will dislodge the Russian fleet in Skagerrak and the army
         in Sweden will not advance.
         """
-        pieces = [
-            Fleet(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-            Fleet(0, Nations.RUSSIA, self.territories.SKAGERRAK),
-            Fleet(0, Nations.RUSSIA, self.territories.BARRENTS_SEA),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.SKAGERRAK),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.BARRENTS_SEA),
         orders = [
-            Support(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.NORTH_SEA, self.territories.SKAGERRAK),
-            Move(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.SKAGERRAK),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
-            Convoy(0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
-            Support(0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.NORTH_SEA, self.territories.SKAGERRAK),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.SKAGERRAK),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Convoy(self.state, 0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
+            Support(self.state, 0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -584,26 +550,22 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
 
         The armies in Liverpool and Edinburgh are swapped.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.LIVERPOOL),
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_ATLANTIC),
-            Fleet(0, Nations.ENGLAND, self.territories.NORWEGIAN_SEA),
-            Army(0, Nations.GERMANY, self.territories.EDINBURGH),
-            Fleet(0, Nations.GERMANY, self.territories.NORTH_SEA),
-            Fleet(0, Nations.GERMANY, self.territories.ENGLISH_CHANNEL),
-            Fleet(0, Nations.GERMANY, self.territories.IRISH_SEA),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LIVERPOOL),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_ATLANTIC),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORWEGIAN_SEA),
+        Army(self.state, 0, Nations.GERMANY, self.territories.EDINBURGH),
+        Fleet(self.state, 0, Nations.GERMANY, self.territories.NORTH_SEA),
+        Fleet(self.state, 0, Nations.GERMANY, self.territories.ENGLISH_CHANNEL),
+        Fleet(self.state, 0, Nations.GERMANY, self.territories.IRISH_SEA),
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.LIVERPOOL, self.territories.EDINBURGH, via_convoy=True),
-            Convoy(0, Nations.ENGLAND, self.territories.NORTH_ATLANTIC, self.territories.LIVERPOOL, self.territories.EDINBURGH),
-            Convoy(0, Nations.ENGLAND, self.territories.NORWEGIAN_SEA, self.territories.LIVERPOOL, self.territories.EDINBURGH),
-            Move(0, Nations.GERMANY, self.territories.EDINBURGH, self.territories.LIVERPOOL, via_convoy=True),
-            Convoy(0, Nations.GERMANY, self.territories.NORTH_SEA, self.territories.EDINBURGH, self.territories.LIVERPOOL),
-            Convoy(0, Nations.GERMANY, self.territories.ENGLISH_CHANNEL, self.territories.EDINBURGH, self.territories.LIVERPOOL),
-            Convoy(0, Nations.GERMANY, self.territories.IRISH_SEA, self.territories.EDINBURGH, self.territories.LIVERPOOL),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.LIVERPOOL, self.territories.EDINBURGH, via_convoy=True),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_ATLANTIC, self.territories.LIVERPOOL, self.territories.EDINBURGH),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORWEGIAN_SEA, self.territories.LIVERPOOL, self.territories.EDINBURGH),
+            Move(self.state, 0, Nations.GERMANY, self.territories.EDINBURGH, self.territories.LIVERPOOL, via_convoy=True),
+            Convoy(self.state, 0, Nations.GERMANY, self.territories.NORTH_SEA, self.territories.EDINBURGH, self.territories.LIVERPOOL),
+            Convoy(self.state, 0, Nations.GERMANY, self.territories.ENGLISH_CHANNEL, self.territories.EDINBURGH, self.territories.LIVERPOOL),
+            Convoy(self.state, 0, Nations.GERMANY, self.territories.IRISH_SEA, self.territories.EDINBURGH, self.territories.LIVERPOOL),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].path_decision(), Outcomes.PATH)
@@ -645,19 +607,17 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         that the army in Trieste is dislodged by the fleet in Albania.
         """
         pieces = [
-            Fleet(0, Nations.AUSTRIA, self.territories.ADRIATIC_SEA),
-            Army(0, Nations.AUSTRIA, self.territories.TRIESTE),
-            Army(0, Nations.ITALY, self.territories.VENICE),
-            Fleet(0, Nations.ITALY, self.territories.ALBANIA),
+            Fleet(self.state, 0, Nations.AUSTRIA, self.territories.ADRIATIC_SEA),
+            Army(self.state, 0, Nations.AUSTRIA, self.territories.TRIESTE),
+            Army(self.state, 0, Nations.ITALY, self.territories.VENICE),
+            Fleet(self.state, 0, Nations.ITALY, self.territories.ALBANIA),
         ]
         orders = [
-            Convoy(0, Nations.AUSTRIA, self.territories.ADRIATIC_SEA, self.territories.TRIESTE, self.territories.VENICE),
-            Move(0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.VENICE, via_convoy=True),
-            Support(0, Nations.ITALY, self.territories.VENICE, self.territories.ALBANIA, self.territories.TRIESTE),
-            Move(0, Nations.ITALY, self.territories.ALBANIA, self.territories.TRIESTE),
+            Convoy(self.state, 0, Nations.AUSTRIA, self.territories.ADRIATIC_SEA, self.territories.TRIESTE, self.territories.VENICE),
+            Move(self.state, 0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.VENICE, via_convoy=True),
+            Support(self.state, 0, Nations.ITALY, self.territories.VENICE, self.territories.ALBANIA, self.territories.TRIESTE),
+            Move(self.state, 0, Nations.ITALY, self.territories.ALBANIA, self.territories.TRIESTE),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(pieces[1].dislodged_decision, Outcomes.DISLODGED)
@@ -694,27 +654,25 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         and stays in the Norwegian Sea.
         """
         pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.DENMARK),
-            Fleet(0, Nations.ENGLAND, self.territories.FINLAND),
-            Fleet(0, Nations.FRANCE, self.territories.NORWEGIAN_SEA),
-            Fleet(0, Nations.FRANCE, self.territories.NORTH_SEA),
-            Fleet(0, Nations.GERMANY, self.territories.SKAGERRAK),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-            Fleet(0, Nations.RUSSIA, self.territories.BARRENTS_SEA),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.DENMARK),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.FINLAND),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.NORWEGIAN_SEA),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.NORTH_SEA),
+            Fleet(self.state, 0, Nations.GERMANY, self.territories.SKAGERRAK),
+            Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
+            Fleet(self.state, 0, Nations.RUSSIA, self.territories.BARRENTS_SEA),
         ]
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.FINLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.FRANCE, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
-            Support(0, Nations.FRANCE, self.territories.NORTH_SEA, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
-            Convoy(0, Nations.GERMANY, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY, via_convoy=True),
-            Support(0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.FRANCE, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
+            Support(self.state, 0, Nations.FRANCE, self.territories.NORTH_SEA, self.territories.NORWEGIAN_SEA, self.territories.NORWAY),
+            Convoy(self.state, 0, Nations.GERMANY, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY, via_convoy=True),
+            Support(self.state, 0, Nations.RUSSIA, self.territories.BARRENTS_SEA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -751,23 +709,21 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         stays in Yorkshire.
         """
         pieces = [
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.ENGLAND, self.territories.HOLLAND),
-            Army(0, Nations.ENGLAND, self.territories.YORKSHIRE),
-            Army(0, Nations.ENGLAND, self.territories.LONDON),
-            Fleet(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
-            Army(0, Nations.FRANCE, self.territories.BELGIUM),
+            Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.HOLLAND),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.YORKSHIRE),
+            Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+            Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
         ]
         orders = [
-            Convoy(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
-            Support(0, Nations.ENGLAND, self.territories.HOLLAND, self.territories.LONDON, self.territories.BELGIUM),
-            Move(0, Nations.ENGLAND, self.territories.YORKSHIRE, self.territories.LONDON),
-            Move(0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
-            Convoy(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
-            Move(0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.HOLLAND, self.territories.LONDON, self.territories.BELGIUM),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.YORKSHIRE, self.territories.LONDON),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
+            Convoy(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
@@ -807,26 +763,22 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         Sweden while the army in Sweden ends in Norway, because it is stronger
         then the fleet in the North Sea. This fleet will stay in the North Sea.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.DENMARK),
-            Fleet(0, Nations.ENGLAND, self.territories.BALTIC_SEA),
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-            Fleet(0, Nations.RUSSIA, self.territories.SKAGERRAK),
-            Fleet(0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.DENMARK),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.BALTIC_SEA),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.SKAGERRAK),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA),
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.BALTIC_SEA, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.NORWAY),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY, via_convoy=True),
-            Convoy(0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
-            Support(0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.BALTIC_SEA, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.NORWAY),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY, via_convoy=True),
+            Convoy(self.state, 0, Nations.RUSSIA, self.territories.SKAGERRAK, self.territories.SWEDEN, self.territories.NORWAY),
+            Support(self.state, 0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -854,26 +806,22 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
 
         Sweden and Norway are swapped, while the fleet in the North Sea will bounce.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY),
-            Fleet(0, Nations.ENGLAND, self.territories.DENMARK),
-            Fleet(0, Nations.ENGLAND, self.territories.BALTIC_SEA),
-            Fleet(0, Nations.ENGLAND, self.territories.SKAGERRAK),
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.RUSSIA, self.territories.SWEDEN),
-            Fleet(0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.DENMARK),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.BALTIC_SEA),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK),
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA),
         orders = [
-            Move(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN, via_convoy=True),
-            Support(0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
-            Support(0, Nations.ENGLAND, self.territories.BALTIC_SEA, self.territories.NORWAY, self.territories.SWEDEN),
-            Convoy(0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
-            Move(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.NORWAY),
-            Move(0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
-            Support(0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA, self.territories.SWEDEN, self.territories.NORWAY),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN, via_convoy=True),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.DENMARK, self.territories.NORWAY, self.territories.SWEDEN),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.BALTIC_SEA, self.territories.NORWAY, self.territories.SWEDEN),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.SKAGERRAK, self.territories.NORWAY, self.territories.SWEDEN),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.NORWAY),
+            Move(self.state, 0, Nations.RUSSIA, self.territories.SWEDEN, self.territories.NORWAY),
+            Support(self.state, 0, Nations.RUSSIA, self.territories.NORWEGIAN_SEA, self.territories.SWEDEN, self.territories.NORWAY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -902,28 +850,24 @@ class TestConvoyingToAdjacentPlaces(unittest.TestCase):
         Belgium and London are swapped, while the army in Yorkshire fails to
         move to London.
         """
-        pieces = [
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.ENGLAND, self.territories.HOLLAND),
-            Army(0, Nations.ENGLAND, self.territories.YORKSHIRE),
-            Army(0, Nations.ENGLAND, self.territories.LONDON),
-            Army(0, Nations.ENGLAND, self.territories.RUHR),
-            Fleet(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
-            Army(0, Nations.FRANCE, self.territories.BELGIUM),
-            Army(0, Nations.FRANCE, self.territories.WALES),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.HOLLAND),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.YORKSHIRE),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.RUHR),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
+        Army(self.state, 0, Nations.FRANCE, self.territories.WALES),
         orders = [
-            Convoy(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
-            Support(0, Nations.ENGLAND, self.territories.HOLLAND, self.territories.LONDON, self.territories.BELGIUM),
-            Move(0, Nations.ENGLAND, self.territories.YORKSHIRE, self.territories.LONDON),
-            Move(0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
-            Support(0, Nations.ENGLAND, self.territories.RUHR, self.territories.LONDON, self.territories.BELGIUM),
-            Convoy(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
-            Move(0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
-            Support(0, Nations.FRANCE, self.territories.WALES, self.territories.BELGIUM, self.territories.LONDON),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.HOLLAND, self.territories.LONDON, self.territories.BELGIUM),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.YORKSHIRE, self.territories.LONDON),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
+            Support(self.state, 0, Nations.ENGLAND, self.territories.RUHR, self.territories.LONDON, self.territories.BELGIUM),
+            Convoy(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
+            Support(self.state, 0, Nations.FRANCE, self.territories.WALES, self.territories.BELGIUM, self.territories.LONDON),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
