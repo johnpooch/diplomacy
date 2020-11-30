@@ -14,6 +14,8 @@ services:
       - MYSQL_USER=APP_USER
       - MYSQL_PASSWORD=APP_USER
       - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - backend
   diplomacy.service:
     volumes:
       - /Users/john/src/diplomacy/diplomacy:/opt/diplomacy/diplomacy
@@ -22,10 +24,13 @@ services:
       dockerfile: .docker/Dockerfile
       target: diplomacy-service
     environment:
+      - RUNTIMEINSTALL=1
       - RUNMIGRATIONS=1
       - WAITFOR=diplomacy.mysql:3306
     ports:
       - "127.0.0.1:8082:8000"
+    networks:
+      - backend
   diplomacy.worker:
     volumes:
       - /Users/john/src/diplomacy/diplomacy:/opt/diplomacy/diplomacy
@@ -34,8 +39,16 @@ services:
       dockerfile: .docker/Dockerfile
       target: diplomacy-worker
     environment:
+      - RUNTIMEINSTALL=1
       - WAITFOR=diplomacy.mysql:3306 diplomacy.rabbitmq:5672 diplomacy.service:8000
+    networks:
+      - backend
   diplomacy.rabbitmq:
     environment:
       - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log [{console,[{level,warning}]}]
     image: rabbitmq
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge

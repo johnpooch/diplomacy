@@ -1,11 +1,11 @@
 from django.test import TestCase
 
 from core import factories, models
-from core.models.base import PieceType, Phase, Season
+from core.models.base import DeadlineFrequency, PieceType, Phase, Season
 from core.tests import DiplomacyTestCaseMixin
 
 
-class TestTurn(DiplomacyTestCaseMixin, TestCase):
+class TestTurn(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
         self.variant = models.Variant.objects.get(identifier='standard')
@@ -133,6 +133,36 @@ class TestTurn(DiplomacyTestCaseMixin, TestCase):
         )
         self.assertEqual(france_state.supply_centers.count(), 18)
         self.assertTrue(turn.check_for_winning_nation())
+
+    def test_turn_end_none(self):
+        turn = self.create_test_turn(game=self.game)
+        self.assertIsNone(turn.turn_end)
+
+    def test_turn_end(self):
+        turn = self.create_test_turn(game=self.game, turn_end=True)
+        turn_end = models.TurnEnd.objects.get()
+        self.assertEqual(turn.turn_end, turn_end)
+
+    def test_deadline_order(self):
+        self.game.order_deadline = DeadlineFrequency.SEVEN_DAYS
+        self.game.save()
+        turn = self.create_test_turn(game=self.game)
+        self.assertEqual(turn.deadline, DeadlineFrequency.SEVEN_DAYS)
+
+    def test_deadline_retreat(self):
+        self.game.retreat_deadline = DeadlineFrequency.FIVE_DAYS
+        self.game.save()
+        turn = self.create_test_turn(
+            game=self.game,
+            phase=Phase.RETREAT_AND_DISBAND
+        )
+        self.assertEqual(turn.deadline, DeadlineFrequency.FIVE_DAYS)
+
+    def test_deadline_build(self):
+        self.game.build_deadline = DeadlineFrequency.THREE_DAYS
+        self.game.save()
+        turn = self.create_test_turn(game=self.game, phase=Phase.BUILD)
+        self.assertEqual(turn.deadline, DeadlineFrequency.THREE_DAYS)
 
 
 class TestLinkedTurns(TestCase):
@@ -282,3 +312,23 @@ class TestLinkedTurns(TestCase):
         self.assertEqual(turn, self.game_b_spring_order_turn)
         turn = models.Turn.get_previous(turn)
         self.assertIsNone(turn)
+
+
+class TestTurnManager(TestCase, DiplomacyTestCaseMixin):
+    def setUp(self):
+        self.variant = models.Variant.objects.get(identifier='standard')
+        self.user = factories.UserFactory()
+        self.game = self.create_test_game()
+        self.game.participants.add(self.user)
+
+    def test_new(self):
+        self.assertEqual(models.TurnEnd.objects.count(), 0)
+        turn = models.Turn.objects.new(
+            game=self.game,
+            phase=Phase.RETREAT_AND_DISBAND,
+            season=Season.FALL,
+            year=1901,
+        )
+        turn_end = models.TurnEnd.objects.get()
+        self.assertEqual(turn_end.turn, turn)
+        self.assertSimilarTimestamp(turn_end.datetime, self.tomorrow)

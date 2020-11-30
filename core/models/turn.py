@@ -1,5 +1,5 @@
 from django.apps import apps
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils import timezone
 
 from adjudicator import process_game_state
@@ -7,6 +7,7 @@ from adjudicator import process_game_state
 from core.models.base import (
     DrawStatus, OrderType, OutcomeType, Phase, Season, TerritoryType
 )
+from core.utils.date import timespan
 
 
 possible_orders = {
@@ -29,11 +30,23 @@ possible_orders = {
 
 class TurnManager(models.Manager):
 
+    def new(self, **kwargs):
+        """
+        Create a new `Turn` instance and also create a related `TurnEnd`
+        instance.
+        """
+        turn = self.create(**kwargs)
+        td = timespan.get_timespan(turn.deadline).timedelta
+        turn_end_dt = timezone.now() + td
+        TurnEnd.objects.new(turn, turn_end_dt)
+        return turn
+
     # TODO move this method outside manager
+    # TODO test
     def create_turn_from_previous_turn(self, previous_turn):
         # NOTE how about we make the turn have 0 year until finished
         piece_state_model = apps.get_model('core', 'PieceState')
-        new_turn = Turn.objects.create(
+        new_turn = self.new(
             game=previous_turn.game,
             year=0,
             season=Season.SPRING,
@@ -200,6 +213,22 @@ class Turn(models.Model):
                         return False
         return True
 
+    @property
+    def turn_end(self):
+        try:
+            return self.turnend
+        except TurnEnd.DoesNotExist:
+            return None
+
+    @property
+    def deadline(self):
+        if self.phase == Phase.ORDER:
+            return self.game.order_deadline
+        if self.phase == Phase.RETREAT_AND_DISBAND:
+            return self.game.retreat_deadline
+        if self.phase == Phase.BUILD:
+            return self.game.build_deadline
+
     def check_for_winning_nation(self):
         """
         Iterate through every nation and check if any nation satisfies the
@@ -220,11 +249,11 @@ class Turn(models.Model):
         outcome = process_game_state(turn_data)
         self.update_turn(outcome)
 
-    def update_turn(self, outcome):
+    def update_turn(self, outcome, processed_at=None):
         piece_state_model = apps.get_model('core', 'PieceState')
         piece_model = apps.get_model('core', 'Piece')
         self.processed = True
-        self.processed_at = timezone.now()
+        self.processed_at = processed_at or timezone.now()
         self.save()
         if self.phase in [Phase.RETREAT_AND_DISBAND, Phase.BUILD]:
             for order_data in outcome['orders']:
@@ -330,6 +359,41 @@ class Turn(models.Model):
         return Season.SPRING, Phase.ORDER, self.year + 1
 
 
+class TurnEndManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('datetime')
+
+    def new(self, turn, datetime):
+        """
+        Create a task to process a turn.
+
+        This method will set up an async task to run process_turn() at the
+        date given, and return the created TurnEnd object to represent
+        this task.
+
+        Args:
+            * `turn` - `Turn` - Turn to be processed.
+            * `datetime` - `datetime` - When the turn is to be processed.
+        """
+        from ..tasks import process_turn
+
+        if turn.turn_end:
+            raise IntegrityError(
+                'A TurnEnd for turn ID %d already exists.' % turn.id
+            )
+
+        task = process_turn.apply_async(
+            kwargs={
+                'turn_id': turn.id,
+                'processed_at': datetime,
+            },
+            eta=datetime,
+        )
+
+        return self.create(turn=turn, datetime=datetime, task_id=task.id)
+
+
 class TurnEnd(models.Model):
     """
     Represents the future end of a turn.
@@ -340,7 +404,6 @@ class TurnEnd(models.Model):
     """
     turn = models.OneToOneField(
         'Turn',
-        related_name='end',
         null=False,
         on_delete=models.CASCADE,
     )
@@ -351,3 +414,5 @@ class TurnEnd(models.Model):
         max_length=255,
         null=True,
     )
+
+    objects = TurnEndManager()

@@ -1,5 +1,6 @@
 bs4
 Django
+celery>=4.3,<5.0
 coverage
 dj-database-url
 django-cors-headers
