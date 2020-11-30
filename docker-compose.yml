@@ -1,5 +1,4 @@
-
-version: '3'
+version: '3.6'
 
 services:
   mailcatcher.smtp:
@@ -16,9 +15,27 @@ services:
       - MYSQL_PASSWORD=APP_USER
       - MYSQL_ROOT_PASSWORD=root
   diplomacy.service:
+    volumes:
+      - /Users/john/src/diplomacy/diplomacy:/opt/diplomacy/diplomacy
     build: 
       context: .
       dockerfile: .docker/Dockerfile
+      target: diplomacy-service
+    environment:
+      - RUNMIGRATIONS=1
+      - WAITFOR=diplomacy.mysql:3306
     ports:
       - "127.0.0.1:8082:8000"
-
+  diplomacy.worker:
+    volumes:
+      - /Users/john/src/diplomacy/diplomacy:/opt/diplomacy/diplomacy
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+      target: diplomacy-worker
+    environment:
+      - WAITFOR=diplomacy.mysql:3306 diplomacy.rabbitmq:5672 diplomacy.service:8000
+  diplomacy.rabbitmq:
+    environment:
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log [{console,[{level,warning}]}]
+    image: rabbitmq

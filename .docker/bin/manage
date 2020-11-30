@@ -1,0 +1,4 @@
+#!/bin/bash
+
+python "${INSTALL_DIR}/diplomacy/manage.py" $@
+exit $?

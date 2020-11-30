@@ -41,6 +41,7 @@ FIXTURE_DIRS = (
 
 CLIENT_URL = 'http://localhost:8000'
 
+CELERY_BROKER_URL = os.environ.get('AMQP_HOST', 'brockman.rabbitmq')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_AGE = 86400  # sec
