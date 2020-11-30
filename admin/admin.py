@@ -1,5 +1,12 @@
 from django.contrib import admin
-from . import models
+from django.contrib.admin import AdminSite
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+
+from core import models
+
+
+class DiplomacyAdminSite(AdminSite):
+    site_header = 'Diplomacy admin'
 
 
 class ReadOnly:
@@ -55,7 +62,10 @@ class GameAdmin(admin.ModelAdmin):
         'initialized_at',
         'variant',
     )
+    list_display = ('name', 'status')
     inlines = [TurnInline]
+    search_fields = ['name']
+    list_filter = ['status', 'private']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -68,12 +78,17 @@ class GameAdmin(admin.ModelAdmin):
 
 class TurnAdmin(ReadOnly, admin.ModelAdmin):
 
+    list_filter = (
+        ('game', RelatedDropdownFilter),
+    )
     inlines = [
         TerritoryStateInline,
         PieceStateInline,
     ]
 
 
-admin.site.register(models.Game, GameAdmin)
-admin.site.register(models.Turn, TurnAdmin)
-admin.site.register(models.Variant, VariantAdmin)
+admin_site = DiplomacyAdminSite(name='admin')
+
+admin_site.register(models.Game, GameAdmin)
+admin_site.register(models.Turn, TurnAdmin)
+admin_site.register(models.Variant, VariantAdmin)
