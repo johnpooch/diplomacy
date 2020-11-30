@@ -244,11 +244,11 @@ class Turn(models.Model):
                 return nation_state
         return None
 
-    def process(self):
+    def process(self, processed_at=None):
         from core.serializers import TurnSerializer
         turn_data = TurnSerializer(self).data
         outcome = process_game_state(turn_data)
-        self.update_turn(outcome)
+        self.update_turn(outcome, processed_at=None)
 
     def update_turn(self, outcome, processed_at=None):
         piece_state_model = apps.get_model('core', 'PieceState')
