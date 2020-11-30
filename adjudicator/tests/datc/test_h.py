@@ -4,31 +4,27 @@ from adjudicator.decisions import Outcomes
 from adjudicator.order import Retreat
 from adjudicator.piece import Army
 from adjudicator.processor import process
-from adjudicator.state import State
-from adjudicator.tests.data import NamedCoasts, Nations, Territories, register_all
+from adjudicator.tests.data import NamedCoasts, Nations, Territories
+
+from ..base import AdjudicatorTestCaseMixin
 
 
-class TestRetreating(unittest.TestCase):
+class TestRetreating(AdjudicatorTestCaseMixin, unittest.TestCase):
 
     def setUp(self):
-        self.state = State()
-        self.territories = Territories()
-        self.named_coasts = NamedCoasts(self.territories)
-        self.state = register_all(self.state, self.territories, self.named_coasts)
+        super().setUp()
+        self.territories = Territories(self.state)
+        self.named_coasts = NamedCoasts(self.state, self.territories)
 
     def test_unit_may_not_retreat_from_area_from_which_it_was_attacked(self):
         """
         Well, that would be of course stupid. Still, the adjudicator must be
         tested on this.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.SWEDEN),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.SWEDEN),
         orders = [
-            Retreat(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)
@@ -43,14 +39,10 @@ class TestRetreating(unittest.TestCase):
         Stand off prevents retreat to the area.
         """
         self.territories.SWEDEN.contested = True
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.FINLAND),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.FINLAND),
         orders = [
-            Retreat(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)
@@ -65,16 +57,12 @@ class TestRetreating(unittest.TestCase):
         """
         There can only be one unit in an area.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.ST_PETERSBURG),
-            Army(0, Nations.ENGLAND, self.territories.FINLAND, attacker_territory=self.territories.ST_PETERSBURG),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.ST_PETERSBURG),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, attacker_territory=self.territories.ST_PETERSBURG),
         orders = [
-            Retreat(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Retreat(0, Nations.ENGLAND, self.territories.FINLAND, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, self.territories.SWEDEN),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].legal)
@@ -87,18 +75,14 @@ class TestRetreating(unittest.TestCase):
         When three units retreat to the same area, then all three units are
         disbanded.
         """
-        pieces = [
-            Army(0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.ST_PETERSBURG),
-            Army(0, Nations.ENGLAND, self.territories.FINLAND, attacker_territory=self.territories.ST_PETERSBURG),
-            Army(0, Nations.RUSSIA, self.territories.DENMARK, attacker_territory=self.territories.KIEL),
-        ]
+        Army(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, attacker_territory=self.territories.ST_PETERSBURG),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, attacker_territory=self.territories.ST_PETERSBURG),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.DENMARK, attacker_territory=self.territories.KIEL),
         orders = [
-            Retreat(0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
-            Retreat(0, Nations.ENGLAND, self.territories.FINLAND, self.territories.SWEDEN),
-            Retreat(0, Nations.RUSSIA, self.territories.DENMARK, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.ENGLAND, self.territories.NORWAY, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.ENGLAND, self.territories.FINLAND, self.territories.SWEDEN),
+            Retreat(self.state, 0, Nations.RUSSIA, self.territories.DENMARK, self.territories.SWEDEN),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].legal)

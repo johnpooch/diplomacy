@@ -215,8 +215,9 @@ class Turn(models.Model):
         return None
 
     def process(self):
-        game_state_dict = self._to_game_state_dict()
-        outcome = process_game_state(game_state_dict)
+        from core.serializers import TurnSerializer
+        turn_data = TurnSerializer(self).data
+        outcome = process_game_state(turn_data)
         self.update_turn(outcome)
 
     def update_turn(self, outcome):

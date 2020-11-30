@@ -40,8 +40,10 @@ def process(state):
             support.resolve()
         for piece in unresolved_pieces:
             piece.update_dislodged_decision()
+        for convoy in unresolved_convoys:
+            convoy.resolve()
         # resolve fleet movements
-        unresolved_convoys = [c for c in convoys if c.piece.dislodged_decision == Outcomes.UNRESOLVED]
+        unresolved_convoys = [c for c in convoys if c.outcome == Outcomes.UNRESOLVED]
 
     # refresh after convoys resolved
     unresolved_moves = [m for m in moves if m.outcome == Outcomes.UNRESOLVED]
