@@ -220,12 +220,10 @@ class TestCircularMovement(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         Both convoys should succeed.
         """
-        pieces = [
-            Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
-            Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
-            Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
         orders = [
             Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
             Move(self.state, 0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
@@ -253,13 +251,11 @@ class TestCircularMovement(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         None of the units will succeed to move.
         """
-        pieces = [
-            Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
-            Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
-            Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
-            Army(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY),
         orders = [
             Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
             Move(self.state, 0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),

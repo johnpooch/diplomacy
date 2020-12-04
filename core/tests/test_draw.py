@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from core import models, signals
+from core import models
 from core.models.base import DrawStatus, DrawResponse, GameStatus
 from core.tests import DiplomacyTestCaseMixin
 

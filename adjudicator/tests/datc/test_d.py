@@ -138,12 +138,10 @@ class TestSupportsAndDislodges(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         The Russian move from Prussia to Berlin fails.
         """
-        pieces = [
-            Army(self.state, 0, Nations.GERMANY, self.territories.BERLIN),
-            Fleet(self.state, 0, Nations.GERMANY, self.territories.KIEL),
-            Fleet(self.state, 0, Nations.RUSSIA, self.territories.BALTIC_SEA),
-            Army(self.state, 0, Nations.RUSSIA, self.territories.PRUSSIA),
-        ]
+        Army(self.state, 0, Nations.GERMANY, self.territories.BERLIN),
+        Fleet(self.state, 0, Nations.GERMANY, self.territories.KIEL),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.BALTIC_SEA),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.PRUSSIA),
         orders = [
             Support(self.state, 0, Nations.GERMANY, self.territories.BERLIN, self.territories.KIEL, self.territories.KIEL),
             Support(self.state, 0, Nations.GERMANY, self.territories.KIEL, self.territories.BERLIN, self.territories.BERLIN),
@@ -172,13 +170,11 @@ class TestSupportsAndDislodges(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         The Russian move from Prussia to Berlin fails.
         """
-        pieces = [
-            Army(self.state, 0, Nations.GERMANY, self.territories.BERLIN),
-            Army(self.state, 0, Nations.GERMANY, self.territories.KIEL),
-            Army(self.state, 0, Nations.GERMANY, self.territories.MUNICH),
-            Fleet(self.state, 0, Nations.RUSSIA, self.territories.BALTIC_SEA),
-            Army(self.state, 0, Nations.RUSSIA, self.territories.PRUSSIA),
-        ]
+        Army(self.state, 0, Nations.GERMANY, self.territories.BERLIN),
+        Army(self.state, 0, Nations.GERMANY, self.territories.KIEL),
+        Army(self.state, 0, Nations.GERMANY, self.territories.MUNICH),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.BALTIC_SEA),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.PRUSSIA),
         orders = [
             Support(self.state, 0, Nations.GERMANY, self.territories.BERLIN, self.territories.MUNICH, self.territories.SILESIA),
             Support(self.state, 0, Nations.GERMANY, self.territories.KIEL, self.territories.BERLIN, self.territories.BERLIN),
@@ -1134,12 +1130,10 @@ class TestSupportsAndDislodges(AdjudicatorTestCaseMixin, unittest.TestCase):
         Due to the Russian support, the army in Serbia advances to Budapest.
         This enables Turkey to capture Serbia with the army in Bulgaria.
         """
-        pieces = [
-            Army(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA),
-            Army(self.state, 0, Nations.AUSTRIA, self.territories.VIENNA),
-            Army(self.state, 0, Nations.RUSSIA, self.territories.GALICIA),
-            Army(self.state, 0, Nations.TURKEY, self.territories.BULGARIA),
-        ]
+        Army(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA),
+        Army(self.state, 0, Nations.AUSTRIA, self.territories.VIENNA),
+        Army(self.state, 0, Nations.RUSSIA, self.territories.GALICIA),
+        Army(self.state, 0, Nations.TURKEY, self.territories.BULGARIA),
         orders = [
             Move(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA, self.territories.BUDAPEST),
             Move(self.state, 0, Nations.AUSTRIA, self.territories.VIENNA, self.territories.BUDAPEST),
