@@ -81,7 +81,7 @@ class PieceSerializer(BaseSerializer):
         required=False,
         allow_null=True
     )
-    dislodged_decision = serializers.CharField(required=False)
+    dislodged = serializers.BooleanField(required=False)
     dislodged_by = PieceField(required=False)
     destroyed = serializers.BooleanField(required=False)
     destroyed_message = serializers.CharField(required=False)

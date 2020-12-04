@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from core import models
+from core.game import process_turn
 from core.models.base import GameStatus, OrderType, Phase, Season, TerritoryType
 
 
@@ -71,8 +72,7 @@ class TestProcessGame(TestCase):
             source=paris,
             target=picardy,
         )
-        self.game.process()
-        new_turn = self.game.get_current_turn()
+        new_turn = process_turn(turn)
         self.assertEqual(new_turn.year, 1900)
         self.assertEqual(new_turn.phase, Phase.ORDER)
         self.assertEqual(new_turn.season, Season.FALL)

@@ -30,6 +30,7 @@ def process(state):
     unresolved_pieces = [p for p in pieces if p.dislodged_decision == Outcomes.UNRESOLVED]
     unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
 
+
     unresolved_convoys = [c for c in convoys if c.piece.dislodged_decision == Outcomes.UNRESOLVED]
     while unresolved_convoys:
         unresolved_supports = [s for s in supports if s.outcome == Outcomes.UNRESOLVED]
