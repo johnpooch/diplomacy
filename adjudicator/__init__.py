@@ -1,4 +1,3 @@
-from adjudicator.order import Hold
 from adjudicator.processor import process
 from adjudicator.serializers import GameSerializer
 from adjudicator.state import State

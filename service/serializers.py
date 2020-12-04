@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from core import models
+from core.game import process_turn
 from core.models.base import DrawStatus, OrderType, Phase, SurrenderStatus
 
 from . import validators as custom_validators
@@ -267,7 +268,7 @@ class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
         instance.orders_finalized = not(instance.orders_finalized)
         instance.save()
         if instance.turn.ready_to_process:
-            instance.turn.game.process()
+            process_turn(instance.turn)
         return instance
 
 

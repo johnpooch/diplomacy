@@ -56,4 +56,3 @@ class Command(BaseCommand):
         except KeyboardInterrupt:
             self.stop_celery()
             sys.exit(0)
-

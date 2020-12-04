@@ -2,11 +2,16 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from core import models
+from core.game import process_turn
 from core.models.base import GameStatus, OutcomeType, OrderType, Phase, \
     Season, TerritoryType
+from core.tests import DiplomacyTestCaseMixin
 
 
-class TestProcessTurn(TestCase):
+class TestProcessTurn(TestCase, DiplomacyTestCaseMixin):
+
+    def setUp(self):
+        self.patch_process_turn_apply_async()
 
     def test_process_turn(self):
         user = User.objects.create(username='Test User')
@@ -69,7 +74,8 @@ class TestProcessTurn(TestCase):
             source=paris,
             target=picardy,
         )
-        game_state_dict = turn._to_game_state_dict()
+        from core.serializers import TurnSerializer
+        game_state_dict = TurnSerializer(turn).data
         expected_keys = ['orders', 'territories', 'named_coasts', 'pieces', 'phase', 'variant']
         self.assertTrue(all([e in game_state_dict.keys() for e in expected_keys]))
         self.assertEqual(len(game_state_dict['territories']), 2)
@@ -77,7 +83,7 @@ class TestProcessTurn(TestCase):
         self.assertEqual(len(game_state_dict['named_coasts']), 0)
         self.assertEqual(game_state_dict['variant'], 'standard')
 
-        turn.process()
+        process_turn(turn)
         turn.refresh_from_db()
         self.assertTrue(turn.processed)
         order.refresh_from_db()
@@ -175,24 +181,18 @@ class TestProcessTurn(TestCase):
         paris.neighbours.add(picardy)
         picardy.neighbours.add(burgundy)
         paris.neighbours.add(burgundy)
-        game.process()
-        turn.refresh_from_db()
+        process_turn(turn)
         burgundy_state.refresh_from_db()
         paris_order.refresh_from_db()
         picardy_order.refresh_from_db()
+        turn.refresh_from_db()
         self.assertTrue(turn.processed)
         self.assertTrue(burgundy_state.bounce_occurred)
         self.assertEqual(paris_order.outcome, OutcomeType.FAILS)
         self.assertEqual(picardy_order.outcome, OutcomeType.FAILS)
 
-        new_turn = game.get_current_turn()
-        new_burgundy_state = new_turn.territorystates.get(
-            territory__name=burgundy_state.territory.name
-        )
-        self.assertEqual(new_burgundy_state.contested, True)
 
-
-class TestPieceDestroyed(TestCase):
+class TestPieceDestroyed(TestCase, DiplomacyTestCaseMixin):
 
     fixtures = [
         'prod/standard/variant',
@@ -200,6 +200,9 @@ class TestPieceDestroyed(TestCase):
         'prod/standard/territory',
         'prod/standard/named_coast',
     ]
+
+    def setUp(self):
+        self.patch_process_turn_apply_async()
 
     def test_piece_destroyed(self):
         user = User.objects.create(username='Test User')
@@ -307,7 +310,7 @@ class TestPieceDestroyed(TestCase):
             target=brest,
             aux=paris,
         )
-        game.process()
+        new_turn = process_turn(turn)
         turn.refresh_from_db()
         army_brest_state.refresh_from_db()
         paris_order.refresh_from_db()
@@ -322,6 +325,5 @@ class TestPieceDestroyed(TestCase):
             army_brest_state.destroyed_message,
             'Destroyed because piece cannot retreat to any neighboring territories.'
         )
-        new_turn = game.get_current_turn()
         with self.assertRaises(models.PieceState.DoesNotExist):
             new_turn.piecestates.get(piece=army_brest)

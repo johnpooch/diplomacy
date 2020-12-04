@@ -203,6 +203,14 @@ class DiplomacyTestCaseMixin:
             territory_state.save()
         return territory_state
 
+    def create_test_named_coast(self, save=True, **kwargs):
+        if 'parent' not in kwargs:
+            kwargs['parent'] = self.create_test_territory()
+        named_coast = models.NamedCoast(**kwargs)
+        if save:
+            named_coast.save()
+        return named_coast
+
     def create_test_draw(self, save=True, **kwargs):
         if 'turn' not in kwargs:
             kwargs['turn'] = self.create_test_turn()

@@ -2,8 +2,9 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.base import HygienicModel, PerTurnModel, \
-    PieceType
+from core.models.base import (
+    HygienicModel, OrderType, OutcomeType, PerTurnModel, PieceType
+)
 
 
 class Piece(HygienicModel):
@@ -137,6 +138,18 @@ class PieceState(PerTurnModel):
         # make fixtures use title instead of using `title()`
         return f'{self.piece.type} {str(self.territory)} ({self.piece.nation})'
 
+    @property
+    def successful_move_order(self):
+        """
+        Get the successful move or retreat order for a piece state if one
+        exists.
+        """
+        return self.territory.source_orders.filter(
+            nation=self.piece.nation,
+            outcome=OutcomeType.SUCCEEDS,
+            type__in=[OrderType.MOVE, OrderType.RETREAT]
+        ).first()
+
     def clean(self):
         super().clean()
         if self.piece.is_fleet:
@@ -161,15 +174,30 @@ class PieceState(PerTurnModel):
                     )
                 })
 
-    def to_dict(self):
-        data = {
-            '_id': self.pk,
-            'type': self.piece.type,
-            'nation': self.piece.nation.id,
-            'territory_id': self.territory.id,
-            'named_coast_id': getattr(self.named_coast, 'id', None),
-            'retreating': self.must_retreat,
+    def copy_to_new_turn(self, turn):
+        """
+        Create a copy of the instance for the next turn. Created when the turn
+        ends and a new turn is created.
+
+        Args:
+            * `turn` - `Turn` - The new turn instance that the piece is being
+              copied to.
+        """
+        # If piece disbanded or destroyed do not create a new piece state
+        if self.piece.turn_disbanded or self.destroyed:
+            return None
+        piece_data = {
+            'piece': self.piece,
+            'territory': self.territory,
+            'named_coast': self.named_coast,
+            'must_retreat': False,
         }
-        if self.attacker_territory:
-            data['attacker_territory'] = self.attacker_territory.id
-        return data
+        move_order = self.successful_move_order
+        if move_order:
+            piece_data['territory'] = move_order.target
+            piece_data['named_coast'] = move_order.target_coast
+
+        # if piece dislodged set next piece to must_retreat
+        if self.dislodged:
+            piece_data['must_retreat'] = True
+        return turn.piecestates.create(**piece_data)

@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-from celery.result import AsyncResult
 from django.db import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
@@ -11,7 +10,7 @@ from core.tests import DiplomacyTestCaseMixin
 from core.models.base import Phase, Season
 
 
-process_path = 'core.models.Turn.process'
+process_path = 'core.tasks._process_turn'
 
 
 class TestTurnEnd(TestCase, DiplomacyTestCaseMixin):
@@ -64,7 +63,7 @@ class TestTurnEnd(TestCase, DiplomacyTestCaseMixin):
         turn.refresh_from_db()
 
         self.assertTrue(turn.processed)
-        self.assertEqual(turn.processed_at, datetime)
+        self.assertSimilarTimestamp(turn.processed_at, datetime)
         self.assertEqual(1, len(models.TurnEnd.objects.all()))
 
     def test_process_standalone(self):
@@ -73,7 +72,7 @@ class TestTurnEnd(TestCase, DiplomacyTestCaseMixin):
         process_turn(turn_id=turn.id, processed_at=datetime)
         turn.refresh_from_db()
         self.assertTrue(turn.processed)
-        self.assertEqual(turn.processed_at, datetime)
+        self.assertSimilarTimestamp(turn.processed_at, datetime)
 
     def test_turn_end_duplication(self):
         turn = self.create_turn()

@@ -10,6 +10,7 @@ django-filter
 django-rest-knox
 django-rest-passwordreset
 djangorestframework
+drf-writable-nested
 factory_boy
 faker
 lxml

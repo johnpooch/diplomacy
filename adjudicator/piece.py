@@ -88,6 +88,10 @@ class Piece:
         attacking_pieces = list(self.territory.attacking_pieces)
         return [p for p in attacking_pieces if p.order.outcome == Outcomes.SUCCEEDS]
 
+    @property
+    def dislodged(self):
+        return self.dislodged_decision == Outcomes.DISLODGED
+
     def set_dislodged_decision(self, outcome, dislodged_by=None):
         self.dislodged_decision = outcome
         self.dislodged_by = dislodged_by
@@ -124,21 +128,6 @@ class Piece:
             if accessible and unoccupied and uncontested:
                 return True
         return False
-
-    def to_dict(self):
-        data = {
-            'id': self.id,
-            'dislodged_decision': self.dislodged_decision,
-            'dislodged_by': None,
-            'attacker_territory': None,
-            'destroyed': self.destroyed,
-            'destroyed_message': self.destroyed_message,
-        }
-        if self.dislodged_by:
-            data['dislodged_by'] = self.dislodged_by.id
-        if self.attacker_territory:
-            data['attacker_territory'] = self.attacker_territory.id
-        return data
 
 
 class Army(Piece):
