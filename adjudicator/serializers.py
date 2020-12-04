@@ -18,7 +18,7 @@ class PieceField(serializers.IntegerField):
 
 class BaseSerializer(serializers.Serializer):
 
-    type = serializers.CharField(allow_null=True)
+    type = serializers.CharField(allow_null=True, write_only=True)
 
     @property
     def state(self):
@@ -41,14 +41,14 @@ class TerritorySerializer(BaseSerializer):
     }
 
     bounce_occurred = serializers.BooleanField(required=False)
-    contested = serializers.BooleanField(required=False)
-    controlled_by = serializers.IntegerField(required=False, allow_null=True)
+    contested = serializers.BooleanField(required=False, write_only=True)
+    controlled_by = serializers.IntegerField(required=False, allow_null=True, write_only=True)
     id = serializers.IntegerField()
-    name = serializers.CharField()
-    nationality = serializers.IntegerField(required=False, allow_null=True)
-    neighbours = serializers.ListField()
-    shared_coasts = serializers.ListField(required=False)
-    supply_center = serializers.BooleanField(required=False)
+    name = serializers.CharField(write_only=True)
+    nationality = serializers.IntegerField(required=False, allow_null=True, write_only=True)
+    neighbours = serializers.ListField(write_only=True)
+    shared_coasts = serializers.ListField(required=False, write_only=True)
+    supply_center = serializers.BooleanField(required=False, write_only=True)
 
 
 class NamedCoastSerializer(serializers.Serializer):
@@ -86,9 +86,9 @@ class PieceSerializer(BaseSerializer):
     destroyed = serializers.BooleanField(required=False)
     destroyed_message = serializers.CharField(required=False)
     id = serializers.IntegerField()
-    nation = serializers.IntegerField()
-    retreating = serializers.BooleanField(required=False)
-    territory = TerritoryField()
+    nation = serializers.IntegerField(write_only=True)
+    retreating = serializers.BooleanField(required=False, write_only=True)
+    territory = TerritoryField(write_only=True)
 
     def create(self, validated_data):
         territory_id = validated_data['territory']
@@ -111,18 +111,18 @@ class OrderSerializer(BaseSerializer):
         'build': order.Build,
     }
 
-    aux = TerritoryField(required=False, allow_null=True)
+    aux = TerritoryField(required=False, allow_null=True, write_only=True)
     id = serializers.IntegerField()
     illegal = serializers.BooleanField(required=False)
     illegal_code = serializers.CharField(required=False, allow_null=True)
     illegal_verbose = serializers.CharField(required=False, allow_null=True)
     outcome = serializers.CharField(required=False)
-    nation = serializers.IntegerField()
-    piece_type = serializers.CharField(required=False, allow_null=True)
-    source = TerritoryField()
-    target = TerritoryField(required=False, allow_null=True)
-    target_coast = serializers.IntegerField(required=False, allow_null=True)
-    via_convoy = serializers.BooleanField(required=False)
+    nation = serializers.IntegerField(write_only=True)
+    piece_type = serializers.CharField(required=False, allow_null=True, write_only=True)
+    source = TerritoryField(write_only=True)
+    target = TerritoryField(required=False, allow_null=True, write_only=True)
+    target_coast = serializers.IntegerField(required=False, allow_null=True, write_only=True)
+    via_convoy = serializers.BooleanField(required=False, write_only=True)
 
     def create(self, validated_data):
         source_id = validated_data['source']
@@ -141,7 +141,7 @@ class OrderSerializer(BaseSerializer):
 
 class GameSerializer(serializers.Serializer):
 
-    named_coasts = NamedCoastSerializer(many=True)
+    named_coasts = NamedCoastSerializer(many=True, write_only=True)
     orders = OrderSerializer(many=True)
     pieces = PieceSerializer(many=True)
     territories = TerritorySerializer(many=True)
