@@ -34,6 +34,7 @@ class TestProcessTurn(TestCase, DiplomacyTestCaseMixin):
             variant=variant,
             name='France',
         )
+        self.create_test_nation_state(nation=france, turn=turn, user=user)
         paris = models.Territory.objects.create(
             variant=variant,
             name='Paris',
@@ -110,6 +111,7 @@ class TestProcessTurn(TestCase, DiplomacyTestCaseMixin):
             variant=variant,
             name='France',
         )
+        self.create_test_nation_state(nation=france, turn=turn, user=user)
         paris = models.Territory.objects.create(
             variant=variant,
             name='Paris',
@@ -190,140 +192,3 @@ class TestProcessTurn(TestCase, DiplomacyTestCaseMixin):
         self.assertTrue(burgundy_state.bounce_occurred)
         self.assertEqual(paris_order.outcome, OutcomeType.FAILS)
         self.assertEqual(picardy_order.outcome, OutcomeType.FAILS)
-
-
-class TestPieceDestroyed(TestCase, DiplomacyTestCaseMixin):
-
-    fixtures = [
-        'prod/standard/variant',
-        'prod/standard/nation',
-        'prod/standard/territory',
-        'prod/standard/named_coast',
-    ]
-
-    def setUp(self):
-        self.patch_process_turn_apply_async()
-
-    def test_piece_destroyed(self):
-        user = User.objects.create(username='Test User')
-        variant = models.Variant.objects.get()
-        game = models.Game.objects.create(
-            variant=variant,
-            name='Test Game',
-            description='Test Description',
-            status=GameStatus.ACTIVE,
-            num_players=7,
-            created_by=user,
-        )
-        turn = models.Turn.objects.create(
-            game=game,
-            season=Season.SPRING,
-            phase=Phase.ORDER,
-            year=1900,
-        )
-        france = models.Nation.objects.get(
-            name='France',
-        )
-        england = models.Nation.objects.get(
-            name='England',
-        )
-        paris = models.Territory.objects.get(
-            name='paris',
-        )
-        models.TerritoryState.objects.create(
-            territory=paris,
-            turn=turn,
-            controlled_by=france,
-        )
-        picardy = models.Territory.objects.get(
-            name='picardy',
-        )
-        models.TerritoryState.objects.create(
-            territory=picardy,
-            turn=turn,
-            controlled_by=france,
-        )
-        gascony = models.Territory.objects.get(
-            name='gascony',
-        )
-        models.TerritoryState.objects.create(
-            territory=gascony,
-            turn=turn,
-            controlled_by=france,
-        )
-        brest = models.Territory.objects.get(
-            name='brest',
-        )
-        models.TerritoryState.objects.create(
-            territory=brest,
-            turn=turn,
-            controlled_by=france,
-        )
-        army_brest = models.Piece.objects.create(
-            game=game,
-            nation=england,
-        )
-        army_brest_state = models.PieceState.objects.create(
-            piece=army_brest,
-            turn=turn,
-            territory=brest,
-        )
-        army_gascony = models.Piece.objects.create(
-            game=game,
-            nation=france,
-        )
-        models.PieceState.objects.create(
-            piece=army_gascony,
-            turn=turn,
-            territory=gascony,
-        )
-        army_paris = models.Piece.objects.create(
-            game=game,
-            nation=france,
-        )
-        army_paris_state = models.PieceState.objects.create(
-            piece=army_paris,
-            turn=turn,
-            territory=paris,
-        )
-        army_picardy = models.Piece.objects.create(
-            game=game,
-            nation=france,
-        )
-        models.PieceState.objects.create(
-            piece=army_picardy,
-            turn=turn,
-            territory=picardy,
-        )
-        paris_order = models.Order.objects.create(
-            turn=turn,
-            nation=france,
-            type=OrderType.MOVE,
-            source=paris,
-            target=brest,
-        )
-        picardy_order = models.Order.objects.create(
-            turn=turn,
-            nation=france,
-            type=OrderType.SUPPORT,
-            source=picardy,
-            target=brest,
-            aux=paris,
-        )
-        new_turn = process_turn(turn)
-        turn.refresh_from_db()
-        army_brest_state.refresh_from_db()
-        paris_order.refresh_from_db()
-        picardy_order.refresh_from_db()
-        self.assertTrue(turn.processed)
-        self.assertEqual(picardy_order.outcome, OutcomeType.SUCCEEDS)
-        self.assertEqual(paris_order.outcome, OutcomeType.SUCCEEDS)
-        self.assertTrue(army_brest_state.dislodged)
-        self.assertEqual(army_brest_state.dislodged_by, army_paris_state)
-        self.assertTrue(army_brest_state.destroyed)
-        self.assertEqual(
-            army_brest_state.destroyed_message,
-            'Destroyed because piece cannot retreat to any neighboring territories.'
-        )
-        with self.assertRaises(models.PieceState.DoesNotExist):
-            new_turn.piecestates.get(piece=army_brest)

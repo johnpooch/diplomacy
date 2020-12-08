@@ -21,6 +21,7 @@ class Piece:
         self.territory = territory
         self.dislodged_decision = Outcomes.UNRESOLVED
         self.dislodged_by = None
+        self.dislodged_from = None
         self.attacker_territory = attacker_territory
         self.retreating = retreating
         self.destroyed = False
@@ -97,7 +98,7 @@ class Piece:
         self.dislodged_by = dislodged_by
         if dislodged_by:
             if not dislodged_by.order.via_convoy:
-                self.attacker_territory = dislodged_by.territory
+                self.dislodged_from = dislodged_by.territory
         return self.dislodged_decision
 
     def update_dislodged_decision(self):

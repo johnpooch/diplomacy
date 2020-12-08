@@ -132,23 +132,19 @@ class TerritoryState(PerTurnModel):
     bounce_occurred = models.BooleanField(
         default=False,
     )
+    captured_by = models.ForeignKey(
+        'Nation',
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='captured_territories',
+    )
 
     def copy_to_new_turn(self, turn):
         self.pk = None
         # if end of fall orders process change of possession.
-        if (
-            self.turn.phase == Phase.ORDER
-            and self.turn.season == Season.FALL
-            and not self.territory.type == TerritoryType.SEA
-        ):
-            try:
-                occupying_piece = self.turn.piecestates.get(
-                    territory=self.territory,
-                    must_retreat=False
-                )
-                self.controlled_by = occupying_piece.piece.nation
-            except ObjectDoesNotExist:
-                pass
+        if self.captured_by:
+            self.controlled_by = self.captured_by
+        self.captured_by = None
 
         self.contested = self.bounce_occurred
         self.bounce_occurred = False

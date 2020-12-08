@@ -12,7 +12,13 @@ class TestCreateTurnFromPreviousTurn(TestCase, DiplomacyTestCaseMixin):
     def setUp(self):
         self.variant = self.create_test_variant()
         self.game = self.create_test_game(variant=self.variant)
-        self.turn = self.create_test_turn(game=self.game, processed=True)
+        self.turn = self.create_test_turn(
+            game=self.game,
+            processed=True,
+            next_phase=Phase.ORDER,
+            next_season=Season.FALL,
+            next_year=1900,
+        )
         self.patch_process_turn_apply_async()
 
     def test_new_turn_correct_season_phase_year(self):

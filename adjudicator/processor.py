@@ -1,3 +1,5 @@
+from adjudicator.base import Season, Phase
+from adjudicator.territory import LandTerritory
 from adjudicator.decisions import Outcomes
 from adjudicator.paradoxes import find_circular_movements
 
@@ -100,4 +102,41 @@ def process(state):
             build.outcome = Outcomes.SUCCEEDS
         else:
             build.outcome = Outcomes.FAILS
-    return orders
+
+    # TODO test
+    # TODO split into sub function
+    # Set captured_by for territories if fall orders
+    if state.season == Season.FALL and state.phase == Phase.ORDER:
+        # Find all pieces that are not dislodged
+        non_dislodged_pieces = [p for p in state.pieces if not p.dislodged]
+        for piece in non_dislodged_pieces:
+            if piece.nation != piece.territory.nation:
+                piece.territory.captured_by = piece.nation
+        # Find all successful move orders
+        successful_move_orders = [
+            m for m in state.orders
+            if m.is_move and m.outcome == Outcomes.SUCCEEDS
+        ]
+        for move in successful_move_orders:
+            if move.piece.nation != move.target.nation:
+                move.target.captured_by = piece.nation
+
+    # Determine the next season, phase and year.
+    state.next_season, state.next_phase, state.next_year = \
+        get_next_season_phase_and_year(state)
+    return state
+
+
+def get_next_season_phase_and_year(state):
+    if any(p for p in state.pieces if p.dislodged and not p.destroyed):
+        return state.season, Phase.RETREAT, state.year
+
+    if state.season == Season.SPRING:
+        return Season.FALL, Phase.ORDER, state.year
+
+    if state.season == Season.FALL and not state.phase == Phase.BUILD:
+        for nation in state.nations:
+            # TODO check for civil disorder nation
+            if nation.next_turn_supply_delta != 0:
+                return state.season, Phase.BUILD, state.year
+    return Season.SPRING, Phase.ORDER, state.year + 1

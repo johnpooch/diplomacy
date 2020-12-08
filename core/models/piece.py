@@ -99,6 +99,18 @@ class PieceState(PerTurnModel):
         on_delete=models.CASCADE,
         related_name='piece_dislodged',
     )
+    dislodged_from = models.OneToOneField(
+        'Territory',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        help_text=_(
+            'True if the piece was dislodged via a land attack during this '
+            'turn. The piece\'s attacker_territory field will be set to this '
+            'value next turn.'
+        ),
+        related_name='pieces_dislodged_from_here',
+    )
     destroyed = models.BooleanField(
         default=False
     )
@@ -120,8 +132,9 @@ class PieceState(PerTurnModel):
         null=True,
         on_delete=models.CASCADE,
         help_text=_(
-            'If the piece was dislodged via a land attack, the piece cannot '
-            'to the attacking piece\'s territory.'
+            'True if the piece was dislodged via a land attack in the '
+            'previous turn. During this turn the piece cannot to the '
+            'attacking piece\'s territory.'
         )
     )
 
@@ -197,7 +210,10 @@ class PieceState(PerTurnModel):
             piece_data['territory'] = move_order.target
             piece_data['named_coast'] = move_order.target_coast
 
-        # if piece dislodged set next piece to must_retreat
+        # if piece dislodged set next piece to must_retreat. Record where the
+        # piece was attacked from. The piece will not be able to retreat to
+        # that territory next turn.
         if self.dislodged:
             piece_data['must_retreat'] = True
+            piece_data['attacker_territory'] = self.dislodged_from
         return turn.piecestates.create(**piece_data)

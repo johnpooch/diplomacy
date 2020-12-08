@@ -5,7 +5,7 @@ the `adjudicator` module.
 from adjudicator import process_game_state
 
 from core import models
-from core.models.base import DrawStatus, OrderType, OutcomeType, Phase, Season
+from core.models.base import DrawStatus, OrderType, OutcomeType, Phase
 from core.serializers import TurnSerializer
 
 
@@ -122,13 +122,11 @@ def create_new_pieces(turn):
 
 def create_turn_from_previous_turn(turn):
 
-    # We need to create the turn new turn to create related objects but we
-    # don't know what year, season, and phase the turn will be until later.
     new_turn = models.Turn.objects.new(
         game=turn.game,
-        year=0,
-        season=Season.SPRING,
-        phase=Phase.ORDER,
+        year=turn.next_year,
+        season=turn.next_season,
+        phase=turn.next_phase,
         current_turn=True,
     )
 
@@ -140,26 +138,4 @@ def create_turn_from_previous_turn(turn):
     for nation_state in turn.nationstates.all():
         nation_state.copy_to_new_turn(new_turn)
 
-    # Determine next turn season, phase, and year
-    new_turn.season, new_turn.phase, new_turn.year = \
-        get_next_season_phase_and_year(turn, new_turn)
-    new_turn.save()
-
     return new_turn
-
-
-def get_next_season_phase_and_year(old_turn, new_turn):
-    if not old_turn.processed:
-        raise ValueError('Cannot get next phase until order is processed.')
-
-    if old_turn.piecestates.filter(dislodged=True).exists():
-        return old_turn.season, Phase.RETREAT_AND_DISBAND, old_turn.year
-
-    if old_turn.season == Season.SPRING:
-        return Season.FALL, Phase.ORDER, old_turn.year
-
-    if old_turn.season == Season.FALL and not old_turn.phase == Phase.BUILD:
-        for nation_state in new_turn.nationstates.all():
-            if abs(nation_state.supply_delta):
-                return old_turn.season, Phase.BUILD, old_turn.year
-    return Season.SPRING, Phase.ORDER, old_turn.year + 1
