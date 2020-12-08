@@ -1,5 +1,4 @@
 from adjudicator.base import Season, Phase
-from adjudicator.territory import LandTerritory
 from adjudicator.decisions import Outcomes
 from adjudicator.paradoxes import find_circular_movements
 

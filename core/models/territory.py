@@ -1,9 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from core.models.base import (
-    PerTurnModel, PieceType, Phase, Season, TerritoryType
-)
+from core.models.base import PerTurnModel, PieceType, TerritoryType
 
 
 class Territory(models.Model):

@@ -3,7 +3,6 @@ import unittest
 from adjudicator.base import Phase, Season
 from adjudicator.nation import Nation
 from adjudicator.piece import Army
-from adjudicator.territory import InlandTerritory
 from adjudicator.processor import get_next_season_phase_and_year
 from .base import AdjudicatorTestCaseMixin
 
