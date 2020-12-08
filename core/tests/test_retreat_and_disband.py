@@ -79,6 +79,9 @@ class TestRetreatAndDisband(TestCase):
             source=piece_state.territory,
         )
         outcome = {
+            'next_phase': Phase.ORDER,
+            'next_season': Season.FALL,
+            'next_year': 1900,
             'orders': [
                 {
                     'id': order.id,
@@ -93,3 +96,6 @@ class TestRetreatAndDisband(TestCase):
         self.assertEqual(piece.turn_disbanded, self.retreat_turn)
         new_turn = create_turn_from_previous_turn(updated_turn)
         self.assertEqual(new_turn.piecestates.count(), 0)
+        self.assertEqual(new_turn.year, 1900)
+        self.assertEqual(new_turn.phase, Phase.ORDER)
+        self.assertEqual(new_turn.season, Season.FALL)

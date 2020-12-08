@@ -4,9 +4,10 @@ from django.test import TestCase
 from core import models
 from core.game import process_turn
 from core.models.base import GameStatus, OrderType, Phase, Season, TerritoryType
+from core.tests import DiplomacyTestCaseMixin
 
 
-class TestProcessGame(TestCase):
+class TestProcessGame(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
         self.user = User.objects.create(username='Test User')
@@ -32,6 +33,7 @@ class TestProcessGame(TestCase):
             variant=self.variant,
             name='France',
         )
+        self.create_test_nation_state(nation=france, turn=turn, user=self.user)
         paris = models.Territory.objects.create(
             variant=self.variant,
             name='Paris',

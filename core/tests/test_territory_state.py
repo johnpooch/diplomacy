@@ -76,12 +76,7 @@ class TestTerritoryState(TestCase, DiplomacyTestCaseMixin):
             turn=self.fall_turn,
             contested=True,
             controlled_by=self.england,
-        )
-        piece = self.create_test_piece(game=self.game, nation=self.france)
-        self.create_test_piece_state(
-            turn=self.fall_turn,
-            piece=piece,
-            territory=territory_state.territory,
+            captured_by=self.france,
         )
         new_territory_state = territory_state.copy_to_new_turn(self.build_turn)
         self.assertEqual(new_territory_state.controlled_by, self.france)

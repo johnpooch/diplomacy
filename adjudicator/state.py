@@ -1,11 +1,19 @@
 class State:
 
-    def __init__(self):
+    def __init__(self, season, phase, year):
         self.subscribers = set()
+        self.season = season
+        self.phase = phase
+        self.year = year
 
     def register(self, *observers):
         for observer in observers:
             self.subscribers.add(observer)
+
+    @property
+    def nations(self):
+        from adjudicator.nation import Nation
+        return [n for n in self.subscribers if isinstance(n, Nation)]
 
     @property
     def territories(self):

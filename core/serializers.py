@@ -39,6 +39,34 @@ class ReadOnlyModelSerializer(serializers.ModelSerializer):
         return fields
 
 
+class NationSerializer(BaseChildSerializer):
+
+    class Meta:
+        model = models.Nation
+        fields = (
+            'id',
+            'name',
+        )
+
+
+class NationStateSerializer(BaseChildSerializer):
+
+    nation = NationSerializer(read_only=True)
+
+    class Meta:
+        model = models.NationState
+        fields = (
+            'nation',
+        )
+
+    def to_representation(self, obj):
+        representation = super().to_representation(obj)
+        nation_representation = representation.pop('nation')
+        for key in nation_representation:
+            representation[key] = nation_representation[key]
+        return representation
+
+
 class NamedCoastSerializer(ReadOnlyModelSerializer, BaseChildSerializer):
 
     class Meta:
@@ -78,12 +106,14 @@ class PieceStateSerializer(BaseChildSerializer):
             'destroyed_message',
             'dislodged',
             'dislodged_by',
+            'dislodged_from',
         )
         extra_kwargs = {
             'destroyed': {'write_only': True},
             'destroyed_message': {'write_only': True},
             'dislodged': {'write_only': True},
             'dislodged_by': {'write_only': True},
+            'dislodged_from': {'write_only': True},
         }
 
     def get_retreating(self, obj):
@@ -123,6 +153,7 @@ class TerritoryStateSerializer(BaseChildSerializer):
         model = models.TerritoryState
         fields = (
             'bounce_occurred',
+            'captured_by',
             'contested',
             'controlled_by',
             'territory',
@@ -132,6 +163,7 @@ class TerritoryStateSerializer(BaseChildSerializer):
         )
         extra_kwargs = {
             'bounce_occurred': {'write_only': True},
+            'captured_by': {'write_only': True},
         }
 
     def to_representation(self, obj):
@@ -185,21 +217,37 @@ class TurnSerializer(NestedUpdateMixin, serializers.ModelSerializer):
         source='territorystates'
     )
     orders = OrderSerializer(many=True)
+    nations = NationStateSerializer(
+        many=True,
+        source='nationstates',
+    )
     variant = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Turn
         fields = (
             'id',
-            'territories',
-            'pieces',
+            'next_phase',
+            'next_season',
+            'next_year',
             'orders',
             'phase',
+            'pieces',
+            'season',
+            'territories',
+            'nations',
             'variant',
+            'year',
         )
         read_only_fields = (
             'phase',
+            'season',
         )
+        extra_kwargs = {
+            'next_phase': {'write_only': True},
+            'next_season': {'write_only': True},
+            'next_year': {'write_only': True},
+        }
 
     def __init__(self, *args, **kwargs):
         # Ensure that updates are always partial to avoid modifying other
@@ -238,6 +286,15 @@ class TurnSerializer(NestedUpdateMixin, serializers.ModelSerializer):
                 str(related_instance.territory.pk): related_instance
                 for related_instance in model_class.objects.filter(
                     territory__pk__in=pk_list
+                )
+            }
+            return instances
+        if model_class == models.NationState:
+            pk_list = self._extract_related_pks(field, related_data)
+            instances = {
+                str(related_instance.nation.pk): related_instance
+                for related_instance in model_class.objects.filter(
+                    nation__pk__in=pk_list
                 )
             }
             return instances

@@ -58,6 +58,19 @@ class Turn(models.Model):
     year = models.PositiveIntegerField(
         null=False,
     )
+    next_season = models.CharField(
+        max_length=7,
+        choices=Season.CHOICES,
+        null=True,
+    )
+    next_phase = models.CharField(
+        max_length=20,
+        choices=Phase.CHOICES,
+        null=True,
+    )
+    next_year = models.PositiveIntegerField(
+        null=True,
+    )
     current_turn = models.BooleanField(
         default=True,
     )
