@@ -17,8 +17,6 @@ services:
     networks:
       - backend
   diplomacy.service:
-    volumes:
-      - /Users/john/src/diplomacy/diplomacy:/opt/diplomacy/diplomacy
     build: 
       context: .
       dockerfile: .docker/Dockerfile
@@ -27,13 +25,9 @@ services:
       - RUNTIMEINSTALL=1
       - RUNMIGRATIONS=1
       - WAITFOR=diplomacy.mysql:3306
-    ports:
-      - "127.0.0.1:8082:8000"
     networks:
       - backend
   diplomacy.worker:
-    volumes:
-      - /Users/john/src/diplomacy/diplomacy:/opt/diplomacy/diplomacy
     build:
       context: .
       dockerfile: .docker/Dockerfile
