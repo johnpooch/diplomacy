@@ -15,6 +15,9 @@ from core.models.base import (
 from service import validators
 
 
+serializer_process_turn_path = 'service.serializers.process_turn'
+
+
 def set_processed(self, processed_at=None):
     self.processed = True
     self.processed_at = processed_at or timezone.now()
@@ -825,7 +828,7 @@ class TestFinalizeOrders(APITestCase):
 
     def test_can_finalize_orders_with_no_orders(self):
         self.client.force_authenticate(user=self.user)
-        with mock.patch('core.models.Turn.process', set_processed):
+        with mock.patch(serializer_process_turn_path, set_processed):
             response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
@@ -838,7 +841,7 @@ class TestFinalizeOrders(APITestCase):
             nation=self.nation_state.nation,
             source=self.territory
         )
-        with mock.patch('core.models.Turn.process', set_processed):
+        with mock.patch(serializer_process_turn_path, set_processed):
             response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
@@ -848,7 +851,7 @@ class TestFinalizeOrders(APITestCase):
         self.client.force_authenticate(user=self.user)
         turn = self.game.get_current_turn()
         turn.nationstates.set([self.nation_state])
-        with mock.patch('core.models.Turn.process', set_processed):
+        with mock.patch(serializer_process_turn_path, set_processed):
             response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()

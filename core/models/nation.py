@@ -78,6 +78,7 @@ class NationState(PerTurnModel):
     orders_finalized = models.BooleanField(
         default=False,
     )
+    # TODO As well as supply delta we should get num_orders to give.
 
     objects = NationStateManager()
     # TODO add orders finalized at
@@ -156,7 +157,10 @@ class NationState(PerTurnModel):
             * QuerySet of `PieceState` instances.
         """
         PieceState = apps.get_model('core', 'PieceState')
-        return PieceState.objects.filter(turn=self.turn, piece__nation=self.nation)
+        return PieceState.objects.filter(
+            turn=self.turn,
+            piece__nation=self.nation,
+        )
 
     @property
     def supply_centers(self):
@@ -176,8 +180,8 @@ class NationState(PerTurnModel):
     def unoccupied_controlled_home_supply_centers(self):
         """
         Get supply centers inside national borders that are under the control
-        of the nation and are not occupied. Used for determining where to
-        build.
+        of the nation and are not occupied. Used by serializers to determine
+        where a user nation build.
 
         Returns:
             * Queryset of `TerritoryState` instances
@@ -235,23 +239,15 @@ class NationState(PerTurnModel):
         Returns:
             * Queryset of `PieceState` instances.
         """
-        PieceState = apps.get_model(
-            app_label='core',
-            model_name='PieceState'
-        )
         # Can only order pieces which must retreat during retreat phase
         if self.turn.phase == Phase.RETREAT_AND_DISBAND:
-            return PieceState.objects.filter(
-                turn=self.turn,
+            return self.turn.piecestates.filter(
                 piece__nation=self.nation,
                 must_retreat=True,
             )
         if self.turn.phase == Phase.BUILD:
             raise Exception('Should not be called during build phase')
-        return PieceState.objects.filter(
-            turn=self.turn,
-            piece__nation=self.nation,
-        )
+        return self.turn.piecestates.filter(piece__nation=self.nation)
 
     @property
     def num_orders_remaining(self):

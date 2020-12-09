@@ -1,8 +1,6 @@
-import inspect
-
-from adjudicator.territory import CoastalTerritory, InlandTerritory, \
-    SeaTerritory, Territory
 from adjudicator.named_coast import NamedCoast
+from adjudicator.territory import CoastalTerritory, InlandTerritory, \
+    SeaTerritory
 
 
 class Nations:

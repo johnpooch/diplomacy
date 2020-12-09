@@ -1,8 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from core.models.base import PerTurnModel, PieceType, \
-    TerritoryType
+from core.models.base import PerTurnModel, PieceType, TerritoryType
 
 
 class Territory(models.Model):
@@ -131,18 +130,22 @@ class TerritoryState(PerTurnModel):
     bounce_occurred = models.BooleanField(
         default=False,
     )
+    captured_by = models.ForeignKey(
+        'Nation',
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='captured_territories',
+    )
 
-    def to_dict(self):
-        territory = self.territory
-        return {
-            '_id': territory.id,
-            'type': territory.type,
-            'name': territory.name,
-            'neighbour_ids': list(territory.neighbours.all().values_list('pk', flat=True)),
-            'shared_coast_ids': list(territory.shared_coasts.all().values_list('pk', flat=True)),
-            'supply_center': territory.supply_center,
-            'nationality': getattr(territory.nationality, 'id', None),
-            'controlled_by': getattr(territory.nationality, 'id', None),
-            'named_coasts': [n.to_dict() for n in territory.named_coasts.all()],
-            'contested': self.contested,
-        }
+    def copy_to_new_turn(self, turn):
+        self.pk = None
+        # if end of fall orders process change of possession.
+        if self.captured_by:
+            self.controlled_by = self.captured_by
+        self.captured_by = None
+
+        self.contested = self.bounce_occurred
+        self.bounce_occurred = False
+        self.turn = turn
+        self.save()
+        return self

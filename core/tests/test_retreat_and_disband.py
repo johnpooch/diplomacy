@@ -1,8 +1,8 @@
 from django.test import TestCase
 
-from core import models
-from core import factories
+from core import factories, models
 from core.models.base import OrderType, Phase, PieceType, Season
+from core.game import create_turn_from_previous_turn, update_turn
 
 
 class TestRetreatAndDisband(TestCase):
@@ -79,6 +79,9 @@ class TestRetreatAndDisband(TestCase):
             source=piece_state.territory,
         )
         outcome = {
+            'next_phase': Phase.ORDER,
+            'next_season': Season.FALL,
+            'next_year': 1900,
             'orders': [
                 {
                     'id': order.id,
@@ -88,13 +91,11 @@ class TestRetreatAndDisband(TestCase):
                 }
             ]
         }
-        self.retreat_turn.update_turn(outcome)
+        updated_turn = update_turn(self.retreat_turn, outcome)
         piece.refresh_from_db()
         self.assertEqual(piece.turn_disbanded, self.retreat_turn)
-        new_turn = models.Turn.objects.create_turn_from_previous_turn(
-            self.retreat_turn
-        )
+        new_turn = create_turn_from_previous_turn(updated_turn)
         self.assertEqual(new_turn.piecestates.count(), 0)
-
-    def test_pieces_which_are_dislodged_must_retreat_next_turn(self):
-        pass
+        self.assertEqual(new_turn.year, 1900)
+        self.assertEqual(new_turn.phase, Phase.ORDER)
+        self.assertEqual(new_turn.season, Season.FALL)

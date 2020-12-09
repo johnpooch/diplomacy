@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from core import models
-from core import factories
+from core import factories, models
+from core.game import update_turn
 from core.models.base import OrderType, Phase, PieceType, Season
 
 
@@ -260,7 +260,7 @@ class TestBuild(TestCase):
                 }
             ]
         }
-        self.turn.update_turn(outcome)
+        update_turn(self.turn, outcome)
         piece_state = models.PieceState.objects.get()
         self.assertEqual(piece_state.piece.turn_created, self.turn)
         self.assertEqual(piece_state.piece.nation, self.nation)
@@ -305,7 +305,7 @@ class TestBuild(TestCase):
                 }
             ]
         }
-        self.turn.update_turn(outcome)
+        update_turn(self.turn, outcome)
         # only one piece exists, i.e. new one not created
         retrieved_piece = models.Piece.objects.get()
         self.assertEqual(retrieved_piece, piece)
@@ -349,7 +349,7 @@ class TestBuild(TestCase):
                 }
             ]
         }
-        self.turn.update_turn(outcome)
+        update_turn(self.turn, outcome)
         # only one piece exists, i.e. new one not created
         piece.refresh_from_db()
         self.assertEqual(piece.turn_disbanded, self.turn)

@@ -2,6 +2,7 @@ from celery import shared_task
 from django.db import transaction
 
 from . import models
+from .game import process_turn as _process_turn
 
 
 @shared_task
@@ -18,7 +19,7 @@ def process_turn(turn_id, processed_at):
 
     try:
         with transaction.atomic():
-            turn.game.process(processed_at)
+            _process_turn(turn)
     except Exception:
         pass
     finally:

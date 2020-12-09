@@ -3,7 +3,6 @@ import unittest
 from adjudicator.named_coast import NamedCoast
 from adjudicator.order import Move
 from adjudicator.piece import Army, Fleet
-from adjudicator.state import State
 from adjudicator.territory import CoastalTerritory, InlandTerritory, SeaTerritory
 
 from .base import AdjudicatorTestCaseMixin
@@ -80,17 +79,13 @@ class TestCanReachFleet(AdjudicatorTestCaseMixin, unittest.TestCase):
         self.rome = CoastalTerritory(self.state, 8, 'Rome', 'Italy', [9], [])
         self.apulia = CoastalTerritory(self.state, 9, 'Apulia', 'Italy', [8], [])
 
-        self.spain = CoastalTerritory(self.state, 
-            10, 'Spain', None, [11, 12, 13, 14], [11, 12])
+        self.spain = CoastalTerritory(self.state, 10, 'Spain', None, [11, 12, 13, 14], [11, 12])
         self.gascony = CoastalTerritory(self.state, 11, 'Gascony', 'France', [10], [])
-        self.marseilles = CoastalTerritory(self.state, 
-            12, 'Marseilles', 'France', [10], [10])
+        self.marseilles = CoastalTerritory(self.state, 12, 'Marseilles', 'France', [10], [10])
         self.mid_atlantic = SeaTerritory(self.state, 13, 'Mid Atlantic', [10])
         self.gulf_of_lyon = SeaTerritory(self.state, 14, 'Gulf of Lyon', [10])
-        self.spain_north_coast = NamedCoast(self.state, 
-            1, 'North Coast', self.spain, [self.gascony, self.mid_atlantic])
-        self.spain_south_coast = NamedCoast(self.state, 
-            2, 'South Coast', self.spain, [self.marseilles, self.gulf_of_lyon, self.marseilles])
+        self.spain_north_coast = NamedCoast(self.state, 1, 'North Coast', self.spain, [self.gascony, self.mid_atlantic])
+        self.spain_south_coast = NamedCoast(self.state, 2, 'South Coast', self.spain, [self.marseilles, self.gulf_of_lyon, self.marseilles])
 
         to_register = [self.paris, self.london, self.wales,
                        self.english_channel, self.brest, self.rome,

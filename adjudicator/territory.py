@@ -163,6 +163,7 @@ class LandTerritory(Territory):
         self.nationality = nationality
         self.supply_center = supply_center
         self.controlled_by = controlled_by
+        self.captured_by = None
 
 
 class CoastalTerritory(LandTerritory):
