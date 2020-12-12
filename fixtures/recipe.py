@@ -339,10 +339,10 @@ class Game:
         self._populate_territory_map(variant, territory_data)
         self._populate_named_coast_map(variant, named_coast_data)
 
-        self.log('Creating users for \'{self.game_name}\'...')
+        self.log(f'Creating users for \'{self.game_name}\'...')
         users = self.create_users(game_data['num_players'])
 
-        self.log('Creating game \'{self.game_name}\'...')
+        self.log(f'Creating game \'{self.game_name}\'...')
         game_data['created_by'] = users[-1]
         game = self.create_game(variant, game_data)
 

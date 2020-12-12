@@ -14,7 +14,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -33,7 +33,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -52,7 +52,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -71,7 +71,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -90,7 +90,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -109,7 +109,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -128,7 +128,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -147,7 +147,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -166,7 +166,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -185,7 +185,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -204,7 +204,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -223,7 +223,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -242,7 +242,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -261,7 +261,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -280,7 +280,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -299,7 +299,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -318,7 +318,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -337,7 +337,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -356,7 +356,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -375,7 +375,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -394,7 +394,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -413,7 +413,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -432,7 +432,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -451,7 +451,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -470,7 +470,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -489,7 +489,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -508,7 +508,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -527,7 +527,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -546,7 +546,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -565,7 +565,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -584,7 +584,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -603,7 +603,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -622,7 +622,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -641,7 +641,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -660,7 +660,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -679,7 +679,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -698,7 +698,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -717,7 +717,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -736,7 +736,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -755,7 +755,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -774,7 +774,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -793,7 +793,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -812,7 +812,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -831,7 +831,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -850,7 +850,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -869,7 +869,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -888,7 +888,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -907,7 +907,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -926,7 +926,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -945,7 +945,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -964,7 +964,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -983,7 +983,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1002,7 +1002,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1021,7 +1021,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1040,7 +1040,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1059,7 +1059,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1078,7 +1078,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1097,7 +1097,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1116,7 +1116,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1135,7 +1135,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1154,7 +1154,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1173,7 +1173,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1192,7 +1192,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1211,7 +1211,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1230,7 +1230,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1249,7 +1249,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1268,7 +1268,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1287,7 +1287,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1306,7 +1306,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1325,7 +1325,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1344,7 +1344,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1363,7 +1363,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1382,7 +1382,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1401,7 +1401,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1420,7 +1420,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1439,7 +1439,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1458,7 +1458,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1477,7 +1477,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1496,7 +1496,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1515,7 +1515,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1534,7 +1534,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1553,7 +1553,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1572,7 +1572,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1591,7 +1591,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1610,7 +1610,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1629,7 +1629,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1648,7 +1648,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1667,7 +1667,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1686,7 +1686,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1705,7 +1705,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1724,7 +1724,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1743,7 +1743,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1762,7 +1762,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1781,7 +1781,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1800,7 +1800,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1819,7 +1819,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1838,7 +1838,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1857,7 +1857,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1876,7 +1876,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1895,7 +1895,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1914,7 +1914,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1933,7 +1933,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1952,7 +1952,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1971,7 +1971,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -1990,7 +1990,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2009,7 +2009,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2028,7 +2028,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2047,7 +2047,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2066,7 +2066,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2085,7 +2085,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2104,7 +2104,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2123,7 +2123,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2142,7 +2142,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2161,7 +2161,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2180,7 +2180,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2199,7 +2199,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2218,7 +2218,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2237,7 +2237,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2256,7 +2256,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2275,7 +2275,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2294,7 +2294,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2313,7 +2313,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2332,7 +2332,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2351,7 +2351,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2370,7 +2370,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2389,7 +2389,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2408,7 +2408,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2427,7 +2427,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2446,7 +2446,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2465,7 +2465,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2484,7 +2484,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2503,7 +2503,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2522,7 +2522,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2541,7 +2541,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2560,7 +2560,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2579,7 +2579,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2598,7 +2598,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2617,7 +2617,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2636,7 +2636,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2655,7 +2655,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2674,7 +2674,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2693,7 +2693,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2712,7 +2712,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2731,7 +2731,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2750,7 +2750,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2769,7 +2769,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2788,7 +2788,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2807,7 +2807,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2826,7 +2826,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2845,7 +2845,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2864,7 +2864,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2883,7 +2883,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2902,7 +2902,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2921,7 +2921,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2940,7 +2940,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2959,7 +2959,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2978,7 +2978,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -2997,7 +2997,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3016,7 +3016,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3035,7 +3035,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3054,7 +3054,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3073,7 +3073,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3092,7 +3092,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3111,7 +3111,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3130,7 +3130,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3149,7 +3149,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3168,7 +3168,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3187,7 +3187,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3206,7 +3206,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3225,7 +3225,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3244,7 +3244,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3263,7 +3263,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3282,7 +3282,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3301,7 +3301,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3320,7 +3320,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3339,7 +3339,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3358,7 +3358,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3377,7 +3377,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3396,7 +3396,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3415,7 +3415,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3434,7 +3434,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3453,7 +3453,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3472,7 +3472,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3491,7 +3491,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3510,7 +3510,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3529,7 +3529,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3548,7 +3548,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3567,7 +3567,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3586,7 +3586,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3605,7 +3605,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3624,7 +3624,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3643,7 +3643,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3662,7 +3662,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3681,7 +3681,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3700,7 +3700,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3719,7 +3719,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3738,7 +3738,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3757,7 +3757,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3776,7 +3776,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3795,7 +3795,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3814,7 +3814,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3833,7 +3833,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3852,7 +3852,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3871,7 +3871,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3890,7 +3890,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3909,7 +3909,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3928,7 +3928,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3947,7 +3947,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3966,7 +3966,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -3985,7 +3985,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4004,7 +4004,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4023,7 +4023,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4042,7 +4042,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4061,7 +4061,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4080,7 +4080,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4099,7 +4099,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4118,7 +4118,7 @@
         "via_convoy": false,
         "outcome": "unresolved",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4137,7 +4137,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4156,7 +4156,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4175,7 +4175,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4194,7 +4194,7 @@
         "via_convoy": false,
         "outcome": "succeeds",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4213,7 +4213,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 },
@@ -4232,7 +4232,7 @@
         "via_convoy": false,
         "outcome": "fails",
         "outcome_verbose": null,
-        "legal": true,
+        "illegal": false,
         "illegal_verbose": null
     }
 }
