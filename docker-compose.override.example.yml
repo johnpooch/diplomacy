@@ -1,5 +1,13 @@
-version: '3.6'
+version: '3'
 services:
   mailcatcher.smtp:
     ports:
       - '127.0.0.1:1080:1080'
+  diplomacy.service:
+    volumes:
+      - /path/to/diplomacy:/opt/diplomacy/diplomacy
+    ports:
+      - "127.0.0.1:8082:8000"
+  diplomacy.worker:
+    volumes:
+      - /path/to/diplomacy:/opt/diplomacy/diplomacy
