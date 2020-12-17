@@ -444,6 +444,8 @@ class TurnSerializer(serializers.ModelSerializer):
         model = models.Turn
         fields = (
             'id',
+            'next_turn',
+            'previous_turn',
             'current_turn',
             'year',
             'season',
@@ -454,6 +456,14 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
             'draws',
         )
+
+    def get_next_turn(self, obj):
+        turn = models.Turn.get_next(obj)
+        return getattr(turn, 'id', None)
+
+    def get_previous_turn(self, obj):
+        turn = models.Turn.get_previous(obj)
+        return getattr(turn, 'id', None)
 
 
 class ListNationStatesSerializer(serializers.ModelSerializer):
