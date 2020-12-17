@@ -31,13 +31,11 @@ def set_to_current_turn(sender, instance, **kwargs):
     """
     Set game's current turn to `current_turn=False` before creating new turn.
     """
-    try:
-        old_turn = instance.game.get_current_turn()
+    old_turn = instance.game.get_current_turn()
+    if old_turn:
         if not old_turn == instance:
             old_turn.current_turn = False
             old_turn.save()
-    except models.Turn.DoesNotExist:
-        pass
 
 
 @super_receiver(signals.pre_save, base_class=AutoSlug)

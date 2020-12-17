@@ -24,8 +24,7 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
 
     def test_create_initial_turn(self):
         self.assertFalse(self.game.turns.all())
-        with self.assertRaises(models.Turn.DoesNotExist):
-            self.assertFalse(self.game.get_current_turn())
+        self.assertIsNone(self.game.get_current_turn())
         self.game.create_initial_turn()
 
         # New Turn instance created
