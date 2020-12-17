@@ -18,6 +18,8 @@ services:
       - backend
   diplomacy.service:
     build: 
+      args:
+        - ENV=dev
       context: .
       dockerfile: .docker/Dockerfile
       target: diplomacy-service
@@ -29,6 +31,8 @@ services:
       - backend
   diplomacy.worker:
     build:
+      args:
+        - ENV=dev
       context: .
       dockerfile: .docker/Dockerfile
       target: diplomacy-worker

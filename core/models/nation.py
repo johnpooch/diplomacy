@@ -48,10 +48,10 @@ class NationStateQuerySet(models.QuerySet):
         have a user controlling it or the user is surrendering.
         """
         qs = self
-        return qs.filter(
-            user__isnull=False,
-        ).exclude(
-            surrenders__status=SurrenderStatus.PENDING,
+        return (
+            qs
+            .filter(user__isnull=False)
+            .exclude(surrenders__status=SurrenderStatus.PENDING)
         )
 
 
@@ -156,9 +156,7 @@ class NationState(PerTurnModel):
         Returns:
             * QuerySet of `PieceState` instances.
         """
-        PieceState = apps.get_model('core', 'PieceState')
-        return PieceState.objects.filter(
-            turn=self.turn,
+        return self.turn.piecestates.filter(
             piece__nation=self.nation,
         )
 

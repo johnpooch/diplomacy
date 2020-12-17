@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import exceptions, filters, generics, status, views
@@ -51,6 +52,12 @@ class ListGames(CamelCase, generics.ListAPIView):
     queryset = (
         models.Game.objects.all()
         .select_related('variant')
+        .prefetch_related(
+            'participants',
+            'turns__nationstates__user',
+            'turns__nationstates__surrenders',
+            'turns__turnend',
+        )
         .order_by('-created_at')
     )
     serializer_class = serializers.ListGamesSerializer
@@ -80,7 +87,13 @@ class ListGames(CamelCase, generics.ListAPIView):
 
 class ListVariants(CamelCase, generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Variant.objects.all()
+    queryset = (
+        models.Variant.objects.all()
+        .prefetch_related(
+            'territories__named_coasts',
+            'nations',
+        )
+    )
     serializer_class = serializers.ListVariantsSerializer
 
 
@@ -97,9 +110,28 @@ class CreateGameView(CamelCase, generics.CreateAPIView):
 
 class GameStateView(CamelCase, BaseMixin, generics.RetrieveAPIView):
 
+    previous_orders = models.Order.objects.filter(
+        turn__current_turn=False,
+    )
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
-    queryset = models.Game.objects.all()
+    queryset = (
+        models.Game.objects.all()
+        .prefetch_related(
+            'participants',
+            'pieces',
+            'turns__nationstates__user',
+            'turns__nationstates__surrenders',
+            'turns__piecestates',
+            'turns__territorystates__territory',
+            'turns__turnend',
+            Prefetch(
+                'turns__orders',
+                queryset=previous_orders,
+                to_attr='previous_orders'
+            ),
+        )
+    )
     lookup_field = 'slug'
 
 

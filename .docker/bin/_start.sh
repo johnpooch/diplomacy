@@ -2,9 +2,7 @@
 
 if (( $RUNTIMEINSTALL )); then
     echo Installing any changed requirements...
-    pushd $SITE_NAME
-    install-requirements $ENV
-    popd
+    .docker/deploy/install_requirements.sh $ENV
 fi
 
 if [ $RUNMIGRATIONS ]; then

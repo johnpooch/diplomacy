@@ -221,8 +221,8 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'num_orders_remaining',
             'num_supply_centers',
             'supply_delta',
-            'num_builds',
-            'num_disbands',
+            # 'num_builds',
+            # 'num_disbands',
             'surrenders',
         )
         read_only_fields = (
@@ -232,6 +232,7 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
     def get_num_supply_centers(self, nation_state):
         return nation_state.supply_centers.count()
 
+    # TODO make orders finalized a separate view
     def get_orders_finalized(self, nation_state):
         request = self.context.get('request')
         if request:
@@ -435,18 +436,14 @@ class TurnSerializer(serializers.ModelSerializer):
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = PublicNationStateSerializer(many=True, source='nationstates')
-    orders = serializers.SerializerMethodField()
+    orders = OrderSerializer(many=True, source='previous_orders')
     phase = serializers.CharField(source='get_phase_display')
-    next_turn = serializers.SerializerMethodField()
-    previous_turn = serializers.SerializerMethodField()
     draws = DrawSerializer(many=True)
 
     class Meta:
         model = models.Turn
         fields = (
             'id',
-            'next_turn',
-            'previous_turn',
             'current_turn',
             'year',
             'season',
@@ -457,23 +454,6 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
             'draws',
         )
-
-    def get_next_turn(self, obj):
-        turn = models.Turn.get_next(obj)
-        return getattr(turn, 'id', None)
-
-    def get_previous_turn(self, obj):
-        turn = models.Turn.get_previous(obj)
-        return getattr(turn, 'id', None)
-
-    def get_orders(self, obj):
-        # Only get orders for previous turns
-        qs = models.Order.objects.filter(
-            turn__current_turn=False,
-            turn=obj
-        )
-        serializer = OrderSerializer(instance=qs, many=True)
-        return serializer.data
 
 
 class ListNationStatesSerializer(serializers.ModelSerializer):
@@ -570,11 +550,10 @@ class ListGamesSerializer(serializers.ModelSerializer):
         )
 
     def get_current_turn(self, game):
-        try:
-            current_turn = game.get_current_turn()
+        current_turn = game.get_current_turn()
+        if current_turn:
             return ListTurnSerializer(current_turn).data
-        except models.Turn.DoesNotExist:
-            return None
+        return None
 
 
 class GameSerializer(serializers.ModelSerializer):

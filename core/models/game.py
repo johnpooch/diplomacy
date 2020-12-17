@@ -254,7 +254,10 @@ class Game(models.Model, AutoSlug):
         Returns:
             * `Turn`
         """
-        return self.turns.get(current_turn=True)
+        return next(
+            iter(t for t in self.turns.all() if t.current_turn),
+            None
+        )
 
     def set_winners(self, *nations):
         """
