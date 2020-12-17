@@ -438,12 +438,16 @@ class TurnSerializer(serializers.ModelSerializer):
     nation_states = PublicNationStateSerializer(many=True, source='nationstates')
     orders = OrderSerializer(many=True, source='previous_orders')
     phase = serializers.CharField(source='get_phase_display')
+    next_turn = serializers.SerializerMethodField()
+    previous_turn = serializers.SerializerMethodField()
     draws = DrawSerializer(many=True)
 
     class Meta:
         model = models.Turn
         fields = (
             'id',
+            'next_turn',
+            'previous_turn',
             'current_turn',
             'year',
             'season',
@@ -454,6 +458,14 @@ class TurnSerializer(serializers.ModelSerializer):
             'orders',
             'draws',
         )
+
+    def get_next_turn(self, obj):
+        turn = models.Turn.get_next(obj)
+        return getattr(turn, 'id', None)
+
+    def get_previous_turn(self, obj):
+        turn = models.Turn.get_previous(obj)
+        return getattr(turn, 'id', None)
 
 
 class ListNationStatesSerializer(serializers.ModelSerializer):
