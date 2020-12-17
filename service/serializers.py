@@ -221,8 +221,8 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'num_orders_remaining',
             'num_supply_centers',
             'supply_delta',
-            # 'num_builds',
-            # 'num_disbands',
+            'num_builds',
+            'num_disbands',
             'surrenders',
         )
         read_only_fields = (
