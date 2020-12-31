@@ -153,9 +153,10 @@ class ToggleJoinGame(generics.UpdateAPIView):
                 )
 
 
-class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
+class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
+    queryset = models.Order.objects.all()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -191,6 +192,19 @@ class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+
+class DestroyOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.OrderSerializer
+
+    def check_object_permissions(self, request, order):
+        user_nation_state = self.get_user_nation_state()
+        # TODO check if you can delete another order from a different game
+        if order.nation != user_nation_state.nation:
+            raise exceptions.PermissionDenied(
+                detail='Order does not belong to this user.'
+            )
 
 
 class ListOrdersView(CamelCase, BaseMixin, generics.ListAPIView):

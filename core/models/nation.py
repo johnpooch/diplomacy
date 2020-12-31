@@ -247,6 +247,12 @@ class NationState(PerTurnModel):
         return self.turn.piecestates.filter(piece__nation=self.nation)
 
     @property
+    def num_orders(self):
+        if self.turn.phase == Phase.BUILD:
+            return max(self.num_builds, self.num_disbands)
+        return self.pieces_to_order.count()
+
+    @property
     def num_orders_remaining(self):
         if self.turn.phase == Phase.BUILD:
             num_orders = max(self.num_builds, self.num_disbands)

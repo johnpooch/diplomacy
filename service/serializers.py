@@ -207,7 +207,6 @@ class NationSerializer(serializers.ModelSerializer):
 class PublicNationStateSerializer(serializers.ModelSerializer):
 
     orders_finalized = serializers.SerializerMethodField()
-    num_orders_remaining = serializers.SerializerMethodField()
     num_supply_centers = serializers.SerializerMethodField()
     surrenders = SurrenderSerializer(many=True, read_only=True)
 
@@ -218,7 +217,7 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'user',
             'nation',
             'orders_finalized',
-            'num_orders_remaining',
+            'num_orders',
             'num_supply_centers',
             'supply_delta',
             'num_builds',
@@ -457,6 +456,7 @@ class TurnSerializer(serializers.ModelSerializer):
             'nation_states',
             'orders',
             'draws',
+            'turnend',
         )
 
     def get_next_turn(self, obj):
