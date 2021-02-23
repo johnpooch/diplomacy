@@ -261,6 +261,13 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
 
 class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
 
+    class Meta:
+        model = models.NationState
+        fields = (
+            'id',
+            'orders_finalized',
+        )
+
     def update(self, instance, validated_data):
         """
         Set nation's `orders_finalized` field. Process game if turn is ready.
