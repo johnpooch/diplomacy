@@ -158,7 +158,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 FIXTURE_DIRS = (
     '/code/fixtures',
 )
-# NOTE non Docker setup
-# FIXTURE_DIRS = (
-#     'fixtures',
-# )

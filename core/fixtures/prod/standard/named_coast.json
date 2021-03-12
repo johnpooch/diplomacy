@@ -1,10 +1,9 @@
 [
 {
     "model": "core.namedcoast",
-    "pk": 1,
+    "pk": "standard-bulgaria-east-coast",
     "fields": {
         "name": "bulgaria east coast",
-        "uid": "standard-bulgaria-east-coast",
         "map_abbreviation": "ec",
         "parent": 73,
         "piece_starts_here": false,
@@ -17,10 +16,9 @@
 },
 {
     "model": "core.namedcoast",
-    "pk": 2,
+    "pk": "standard-bulgaria-south-coast",
     "fields": {
         "name": "bulgaria south coast",
-        "uid": "standard-bulgaria-south-coast",
         "map_abbreviation": "sc",
         "parent": 73,
         "piece_starts_here": false,
@@ -33,10 +31,9 @@
 },
 {
     "model": "core.namedcoast",
-    "pk": 3,
+    "pk": "standard-spain-north-coast",
     "fields": {
         "name": "spain north coast",
-        "uid": "standard-spain-north-coast",
         "map_abbreviation": "nc",
         "parent": 74,
         "piece_starts_here": false,
@@ -49,10 +46,9 @@
 },
 {
     "model": "core.namedcoast",
-    "pk": 4,
+    "pk": "standard-spain-south-coast",
     "fields": {
         "name": "spain south coast",
-        "uid": "standard-spain-south-coast",
         "map_abbreviation": "sc",
         "parent": 74,
         "piece_starts_here": false,
@@ -67,10 +63,9 @@
 },
 {
     "model": "core.namedcoast",
-    "pk": 5,
+    "pk": "standard-st-petersburg-north-coast",
     "fields": {
         "name": "st. petersburg north coast",
-        "uid": "standard-st-petersburg-north-coast",
         "map_abbreviation": "nc",
         "parent": 75,
         "piece_starts_here": false,
@@ -82,10 +77,9 @@
 },
 {
     "model": "core.namedcoast",
-    "pk": 6,
+    "pk": "standard-st-petersburg-south-coast",
     "fields": {
         "name": "st. petersburg south coast",
-        "uid": "standard-st-petersburg-south-coast",
         "map_abbreviation": "sc",
         "parent": 75,
         "piece_starts_here": true,

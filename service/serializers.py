@@ -146,6 +146,7 @@ class PieceStateSerializer(serializers.ModelSerializer):
         model = models.PieceState
         fields = (
             'id',
+            'turn',
             'piece',
             'territory',
             'named_coast',
@@ -175,7 +176,6 @@ class TerritorySerializer(serializers.ModelSerializer):
         model = models.Territory
         fields = (
             'id',
-            'uid',
             'name',
             'type',
             'supply_center',
@@ -326,6 +326,7 @@ class VariantSerializer(serializers.ModelSerializer):
         model = models.Variant
         fields = (
             'id',
+            'identifier',
             'name',
             'territories',
             'nations',
@@ -386,8 +387,6 @@ class OrderTurnSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
 
-    turn = OrderTurnSerializer(read_only=True)
-
     class Meta:
         model = models.Order
         fields = (
@@ -404,6 +403,7 @@ class OrderSerializer(serializers.ModelSerializer):
         )
         read_only_fields = (
             'nation',
+            'turn',
         )
 
     def validate(self, data):
@@ -452,6 +452,7 @@ class TurnSerializer(serializers.ModelSerializer):
         model = models.Turn
         fields = (
             'id',
+            'game',
             'next_turn',
             'previous_turn',
             'current_turn',

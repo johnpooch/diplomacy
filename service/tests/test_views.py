@@ -24,7 +24,11 @@ def set_processed(self, processed_at=None):
     self.save()
 
 
-class TestGetGames(APITestCase):
+class BaseTestCase(APITestCase, DiplomacyTestCaseMixin):
+    pass
+
+
+class TestGetGames(BaseTestCase):
 
     max_diff = None
 
@@ -42,7 +46,7 @@ class TestGetGames(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestGetCreateGame(APITestCase):
+class TestGetCreateGame(BaseTestCase):
 
     def test_get_create_game(self):
         """
@@ -67,7 +71,7 @@ class TestGetCreateGame(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestCreateGame(APITestCase):
+class TestCreateGame(BaseTestCase):
 
     def test_post_invalid_game(self):
         """
@@ -89,7 +93,7 @@ class TestCreateGame(APITestCase):
         """
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
-        variant = models.Variant.objects.get(identifier='standard')
+        variant = models.Variant.objects.get(id='standard')
 
         data = {
             'name': 'Test Game',
@@ -116,12 +120,12 @@ class TestCreateGame(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestJoinGame(APITestCase):
+class TestJoinGame(BaseTestCase):
 
     def setUp(self):
         self.data = {}
         self.user = factories.UserFactory()
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.game = models.Game.objects.create(
             status=GameStatus.PENDING,
             variant=self.variant,
@@ -181,7 +185,7 @@ class TestJoinGame(APITestCase):
         mock_initialize.assert_called()
 
 
-class TestGetGameState(APITestCase):
+class TestGetGameState(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -265,7 +269,7 @@ class TestGetGameState(APITestCase):
         self.assertFalse(response.data['turns'][0]['orders'])
 
 
-class TestListOrders(APITestCase):
+class TestListOrders(BaseTestCase):
     def setUp(self):
         self.user = factories.UserFactory()
         self.client.force_authenticate(user=self.user)
@@ -370,7 +374,7 @@ class TestListOrders(APITestCase):
         self.assertEqual(response.data[0]['nation'], self.nation.id)
 
 
-class TestCreateOrder(APITestCase):
+class TestCreateOrder(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -464,19 +468,18 @@ class TestCreateOrder(APITestCase):
             year=1900,
             current_turn=True,
         )
-        nation_state = factories.NationStateFactory(
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.nation_state = self.create_test_nation_state(nation=self.nation, user=self.user, turn=self.game.get_current_turn())
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
             turn=self.game.get_current_turn(),
-            user=self.user,
-        )
-        territory_state = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-            controlled_by=nation_state.nation,
+            controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
         models.PieceState.objects.all().delete()
-        territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
-            'target': territory.id,
+            'target': self.territory.id,
             'type': OrderType.RETREAT,
         }
         response = self.client.post(self.url, self.data, format='json')
@@ -493,11 +496,7 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
 
-        territory_state = factories.TerritoryStateFactory(
-            turn=self.turn,
-            controlled_by=self.nation_state.nation,
-        )
-        territory = territory_state.territory
+        territory = self.create_test_territory(variant=self.variant)
         self.data = {
             'source': self.territory.id,
             'target': territory.id,
@@ -517,15 +516,18 @@ class TestCreateOrder(APITestCase):
             year=1900,
             current_turn=True,
         )
-        nation_state = factories.NationStateFactory(
+        nation = self.create_test_nation(variant=self.variant)
+        nation_state = self.create_test_nation_state(
             turn=self.game.get_current_turn(),
             user=self.user,
+            nation=nation,
         )
-        territory_state = factories.TerritoryStateFactory(
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
             turn=self.game.get_current_turn(),
             controlled_by=nation_state.nation,
+            territory=self.territory,
         )
-        self.territory = territory_state.territory
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -539,14 +541,10 @@ class TestCreateOrder(APITestCase):
         )
         self.nation_state.turn = turn
         self.nation_state.save()
-        territory_state = factories.TerritoryStateFactory(
-            turn=turn,
-            controlled_by=self.nation_state.nation,
-        )
+        territory = self.create_test_territory(variant=self.variant)
         self.piece_state.turn = turn
         self.piece_state.must_retreat = True
         self.piece_state.save()
-        territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
             'target': territory.id,
@@ -565,16 +563,17 @@ class TestCreateOrder(APITestCase):
         )
         self.nation_state.turn = turn
         self.nation_state.save()
-        territory_state = factories.TerritoryStateFactory(
-            turn=turn,
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
+            turn=self.game.get_current_turn(),
             controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
         self.piece_state.turn = turn
         self.piece_state.save()
-        territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
-            'target': territory.id,
+            'target': self.territory.id,
             'type': OrderType.RETREAT,
         }
         response = self.client.post(self.url, self.data, format='json')
@@ -774,7 +773,7 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class TestFinalizeOrders(APITestCase):
+class TestFinalizeOrders(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -802,11 +801,12 @@ class TestFinalizeOrders(APITestCase):
             turn=turn,
             user=self.user,
         )
-        territory_state = factories.TerritoryStateFactory(
-            turn=turn,
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
+            turn=self.game.get_current_turn(),
             controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
-        self.territory = territory_state.territory
         self.url = reverse(
             'toggle-finalize-orders',
             args=[self.nation_state.id]
@@ -858,7 +858,7 @@ class TestFinalizeOrders(APITestCase):
         self.assertTrue(self.nation_state.orders_finalized)
 
 
-class TestUnfinalizeOrders(APITestCase):
+class TestUnfinalizeOrders(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -887,11 +887,12 @@ class TestUnfinalizeOrders(APITestCase):
             user=self.user,
             orders_finalized=True,
         )
-        territory_state = factories.TerritoryStateFactory(
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
             turn=self.game.get_current_turn(),
             controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
-        self.territory = territory_state.territory
         self.url = reverse(
             'toggle-finalize-orders',
             args=[self.nation_state.id]
@@ -935,7 +936,7 @@ class TestUnfinalizeOrders(APITestCase):
         self.assertFalse(self.nation_state.orders_finalized)
 
 
-class TestSurrender(APITestCase, DiplomacyTestCaseMixin):
+class TestSurrender(BaseTestCase, DiplomacyTestCaseMixin):
 
     view_name = 'surrender'
 
@@ -981,7 +982,7 @@ class TestSurrender(APITestCase, DiplomacyTestCaseMixin):
         )
 
 
-class TestCancelSurrender(APITestCase, DiplomacyTestCaseMixin):
+class TestCancelSurrender(BaseTestCase, DiplomacyTestCaseMixin):
 
     view_name = 'cancel-surrender'
 
@@ -1022,7 +1023,7 @@ class TestCancelSurrender(APITestCase, DiplomacyTestCaseMixin):
         )
 
 
-class TestProposeDraw(APITestCase, DiplomacyTestCaseMixin):
+class TestProposeDraw(BaseTestCase, DiplomacyTestCaseMixin):
 
     view_name = 'propose-draw'
 
@@ -1111,7 +1112,7 @@ class TestProposeDraw(APITestCase, DiplomacyTestCaseMixin):
         self.assertEqual(str(error), validators.CurrentTurnValidator.message)
 
     def test_nations_not_in_variant(self):
-        other_variant = self.create_test_variant(name='Other variant')
+        other_variant = self.create_test_variant(id='other-variant', name='Other variant')
         other_variant_nation = self.create_test_nation(variant=other_variant)
         data = {
             'nations': [other_variant_nation.id, self.germany.id]
@@ -1224,7 +1225,7 @@ class TestProposeDraw(APITestCase, DiplomacyTestCaseMixin):
         self.assertTrue(draw.proposed_at)
 
 
-class TestCancelDraw(APITestCase, DiplomacyTestCaseMixin):
+class TestCancelDraw(BaseTestCase, DiplomacyTestCaseMixin):
 
     view_name = 'cancel-draw'
 
@@ -1304,7 +1305,7 @@ class TestCancelDraw(APITestCase, DiplomacyTestCaseMixin):
         self.assertEqual(draw.status, DrawStatus.CANCELED)
 
 
-class TestDrawResponse(APITestCase, DiplomacyTestCaseMixin):
+class TestDrawResponse(BaseTestCase, DiplomacyTestCaseMixin):
 
     view_name = 'draw-response'
 
@@ -1434,7 +1435,7 @@ class TestDrawResponse(APITestCase, DiplomacyTestCaseMixin):
         self.assertTrue(draw_response.created_at)
 
 
-class TestCancelDrawResponse(APITestCase, DiplomacyTestCaseMixin):
+class TestCancelDrawResponse(BaseTestCase, DiplomacyTestCaseMixin):
 
     view_name = 'cancel-draw-response'
 

@@ -41,8 +41,8 @@ urlpatterns = [
         name='orders'
     ),
     re_path(
-        r'game/(?P<slug>[_\-\w]+)/destroy-order/(?P<pk>[0-9]+)$',
-        views.CreateOrderView.as_view(),
+        r'game/order/(?P<pk>[0-9]+)$',
+        views.DestroyOrderView.as_view(),
         name='destroy-order'
     ),
     re_path(

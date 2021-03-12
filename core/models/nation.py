@@ -10,6 +10,12 @@ class Nation(models.Model):
     """
     Represents a playable nation in the game, e.g. 'France'.
     """
+    id = models.CharField(
+        max_length=100,
+        null=False,
+        primary_key=True,
+        editable=False,
+    )
     name = models.CharField(
         max_length=15,
     )
@@ -18,11 +24,6 @@ class Nation(models.Model):
         null=False,
         related_name='nations',
         on_delete=models.CASCADE,
-    )
-    uid = models.CharField(
-        max_length=100,
-        null=False,
-        unique=True,
     )
     flag = models.TextField()
 

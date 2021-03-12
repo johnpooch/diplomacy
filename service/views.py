@@ -17,7 +17,7 @@ def get_game_filter_choices():
         'gameStatuses': models.base.GameStatus.CHOICES,
         'nationChoiceModes': models.base.NationChoiceMode.CHOICES,
         'deadlines': models.base.DeadlineFrequency.CHOICES,
-        'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
+        'variants': [(v.uid, str(v)) for v in models.Variant.objects.all()],
     }
 
 
@@ -103,7 +103,7 @@ class CreateGameView(CamelCase, generics.CreateAPIView):
     serializer_class = serializers.CreateGameSerializer
 
     def create(self, request, *args, **kwargs):
-        defaults = {'variant': 1, 'num_players': 7}
+        defaults = {'variant': 'standard', 'num_players': 7}
         request.data.update(defaults)
         return super().create(request, *args, **kwargs)
 
@@ -194,17 +194,18 @@ class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView, generics.Des
         )
 
 
-class DestroyOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
+class DestroyOrderView(CamelCase, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
+    queryset = models.Order.objects.all()
 
-    def check_object_permissions(self, request, order):
-        user_nation_state = self.get_user_nation_state()
-        # TODO check if you can delete another order from a different game
-        if order.nation != user_nation_state.nation:
-            raise exceptions.PermissionDenied(
-                detail='Order does not belong to this user.'
-            )
+    # def check_object_permissions(self, request, order):
+    #     user_nation_state = self.get_user_nation_state()
+    #     # TODO check if you can delete another order from a different game
+    #     if order.nation != user_nation_state.nation:
+    #         raise exceptions.PermissionDenied(
+    #             detail='Order does not belong to this user.'
+    #         )
 
 
 class ListOrdersView(CamelCase, BaseMixin, generics.ListAPIView):

@@ -17,7 +17,7 @@ class TestSetTurnEnd(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
         self.out = StringIO()
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.game = models.Game.objects.create(
             name='Test game',
             variant=self.variant,

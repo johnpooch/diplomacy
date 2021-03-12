@@ -9,7 +9,7 @@ from core.tests import DiplomacyTestCaseMixin
 class TestGame(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.users = []
         for i in range(7):
             self.users.append(factories.UserFactory())

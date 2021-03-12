@@ -8,7 +8,7 @@ from core.game import create_turn_from_previous_turn, update_turn
 class TestRetreatAndDisband(TestCase):
 
     def setUp(self):
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.user = factories.UserFactory()
         self.game = models.Game.objects.create(
             name='Test game',

@@ -22,7 +22,7 @@ TURKEY = 'Turkey'
 
 class Game:
 
-    variant_identifier = None
+    variant_id = None
     game = None
     test_user_nation = None
     year = None
@@ -406,7 +406,7 @@ class Game:
 
 class StandardGame(Game):
     game = 'game_1'
-    variant_identifier = 'standard'
+    variant_id = 'standard'
 
 
 class FirstTurn(StandardGame):
@@ -414,7 +414,7 @@ class FirstTurn(StandardGame):
     This game has just started. Test user is playing as England.
     """
     game = 'game_1'
-    variant_identifier = 'standard'
+    variant_id = 'standard'
     year = 1901
     season = Season.SPRING
     phase = Phase.ORDER

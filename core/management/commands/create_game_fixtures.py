@@ -30,6 +30,6 @@ class Command(BaseCommand):
             recipes = recipe_conf.values()
         for recipe in recipes:
             variant = models.Variant.objects.get(
-                identifier=recipe.variant_identifier
+                id=recipe.variant_id
             )
             recipe(self.stdout.write).bake(variant)
