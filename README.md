@@ -46,8 +46,8 @@ development. Follow the docs to get Docker and Docker Compose installed.
 Run the following commands from the root directory to create local copies of
 configuration files:
 
-* Run `cp project/settings/local.example.py project/settings/local.py
-* Run `cp docker-compose.override.yml.example docker-compose.override.yml`
+* Run `cp project/settings/local.example.py project/settings/local.py`
+* Run `cp docker-compose.override.example.yml docker-compose.override.yml`
 
 ### Bring up local copy
 
@@ -59,7 +59,7 @@ configuration files:
 
 ## Loading fixtures for development
 
-To load the fixtures run `make reset_db && make dev_fixtures && superuser` from the root directory
+To load the fixtures run `make reset_db && make dev_fixtures && make superuser` from the root directory
 (outside container). This resets the database, builds the fixtures in
 `fixtures/dev` and creates a superuser with the following credentials:
 ```
