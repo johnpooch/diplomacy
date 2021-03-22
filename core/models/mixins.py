@@ -21,7 +21,7 @@ class AutoSlug:
     (or an overridden form in admin), otherwise validation errors will prevent
     you from saving.
 
-    Relies on the add_automatic_slug receiver in brockman.core.signals to work.
+    Relies on the add_automatic_slug receiver in diplomacy.core.signals to work.
     """
     autoslug_field = 'slug'
     autoslug_populate_from = 'name'
