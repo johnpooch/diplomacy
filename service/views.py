@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import exceptions, filters, generics, status, views
@@ -16,7 +17,7 @@ def get_game_filter_choices():
         'gameStatuses': models.base.GameStatus.CHOICES,
         'nationChoiceModes': models.base.NationChoiceMode.CHOICES,
         'deadlines': models.base.DeadlineFrequency.CHOICES,
-        'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
+        'variants': [(v.uid, str(v)) for v in models.Variant.objects.all()],
     }
 
 
@@ -51,6 +52,12 @@ class ListGames(CamelCase, generics.ListAPIView):
     queryset = (
         models.Game.objects.all()
         .select_related('variant')
+        .prefetch_related(
+            'participants',
+            'turns__nationstates__user',
+            'turns__nationstates__surrenders',
+            'turns__turnend',
+        )
         .order_by('-created_at')
     )
     serializer_class = serializers.ListGamesSerializer
@@ -80,7 +87,13 @@ class ListGames(CamelCase, generics.ListAPIView):
 
 class ListVariants(CamelCase, generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = models.Variant.objects.all()
+    queryset = (
+        models.Variant.objects.all()
+        .prefetch_related(
+            'territories__named_coasts',
+            'nations',
+        )
+    )
     serializer_class = serializers.ListVariantsSerializer
 
 
@@ -90,16 +103,35 @@ class CreateGameView(CamelCase, generics.CreateAPIView):
     serializer_class = serializers.CreateGameSerializer
 
     def create(self, request, *args, **kwargs):
-        defaults = {'variant': 1, 'num_players': 7}
+        defaults = {'variant': 'standard', 'num_players': 7}
         request.data.update(defaults)
         return super().create(request, *args, **kwargs)
 
 
 class GameStateView(CamelCase, BaseMixin, generics.RetrieveAPIView):
 
+    previous_orders = models.Order.objects.filter(
+        turn__current_turn=False,
+    )
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
-    queryset = models.Game.objects.all()
+    queryset = (
+        models.Game.objects.all()
+        .prefetch_related(
+            'participants',
+            'pieces',
+            'turns__nationstates__user',
+            'turns__nationstates__surrenders',
+            'turns__piecestates',
+            'turns__territorystates__territory',
+            'turns__turnend',
+            Prefetch(
+                'turns__orders',
+                queryset=previous_orders,
+                to_attr='previous_orders'
+            ),
+        )
+    )
     lookup_field = 'slug'
 
 
@@ -121,9 +153,10 @@ class ToggleJoinGame(generics.UpdateAPIView):
                 )
 
 
-class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
+class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView, generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.OrderSerializer
+    queryset = models.Order.objects.all()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -159,6 +192,20 @@ class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+
+class DestroyOrderView(CamelCase, generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.OrderSerializer
+    queryset = models.Order.objects.all()
+
+    # def check_object_permissions(self, request, order):
+    #     user_nation_state = self.get_user_nation_state()
+    #     # TODO check if you can delete another order from a different game
+    #     if order.nation != user_nation_state.nation:
+    #         raise exceptions.PermissionDenied(
+    #             detail='Order does not belong to this user.'
+    #         )
 
 
 class ListOrdersView(CamelCase, BaseMixin, generics.ListAPIView):

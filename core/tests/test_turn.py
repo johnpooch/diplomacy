@@ -8,7 +8,7 @@ from core.tests import DiplomacyTestCaseMixin
 class TestTurn(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.user = factories.UserFactory()
         self.game = models.Game.objects.create(
             name='Test game',
@@ -316,7 +316,7 @@ class TestLinkedTurns(TestCase):
 
 class TestTurnManager(TestCase, DiplomacyTestCaseMixin):
     def setUp(self):
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.user = factories.UserFactory()
         self.game = self.create_test_game()
         self.game.participants.add(self.user)

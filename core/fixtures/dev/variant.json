@@ -2,7 +2,7 @@
   {
     "fields": {
       "name": "Standard",
-      "identifier": "standard"
+      "id": "standard"
     },
     "model": "core.variant",
     "pk": 1

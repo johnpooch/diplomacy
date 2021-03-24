@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
         "name": "adriatic sea",
-        "uid": "standard-adriatic-sea",
+        "id": "standard-adriatic-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -26,7 +26,7 @@
     "pk": 2,
     "fields": {
         "name": "aegean sea",
-        "uid": "standard-aegean-sea",
+        "id": "standard-aegean-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -50,7 +50,7 @@
     "pk": 3,
     "fields": {
         "name": "baltic sea",
-        "uid": "standard-baltic-sea",
+        "id": "standard-baltic-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -73,7 +73,7 @@
     "pk": 4,
     "fields": {
         "name": "barents sea",
-        "uid": "standard-barents-sea",
+        "id": "standard-barents-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -93,7 +93,7 @@
     "pk": 5,
     "fields": {
         "name": "black sea",
-        "uid": "standard-black-sea",
+        "id": "standard-black-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -116,7 +116,7 @@
     "pk": 6,
     "fields": {
         "name": "gulf of bothnia",
-        "uid": "standard-gulf-of-bothnia",
+        "id": "standard-gulf-of-bothnia",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -138,7 +138,7 @@
     "pk": 7,
     "fields": {
         "name": "eastern mediterranean",
-        "uid": "standard-eastern-mediterranean",
+        "id": "standard-eastern-mediterranean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -159,7 +159,7 @@
     "pk": 8,
     "fields": {
         "name": "english channel",
-        "uid": "standard-english-channel",
+        "id": "standard-english-channel",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -184,7 +184,7 @@
     "pk": 9,
     "fields": {
         "name": "gulf of lyon",
-        "uid": "standard-gulf-of-lyon",
+        "id": "standard-gulf-of-lyon",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -207,7 +207,7 @@
     "pk": 10,
     "fields": {
         "name": "helgoland bight",
-        "uid": "standard-helgoland-bight",
+        "id": "standard-helgoland-bight",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -228,7 +228,7 @@
     "pk": 11,
     "fields": {
         "name": "ionian sea",
-        "uid": "standard-ionian-sea",
+        "id": "standard-ionian-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -254,7 +254,7 @@
     "pk": 12,
     "fields": {
         "name": "irish sea",
-        "uid": "standard-irish-sea",
+        "id": "standard-irish-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -276,7 +276,7 @@
     "pk": 13,
     "fields": {
         "name": "mid-atlantic ocean",
-        "uid": "standard-mid-atlantic-ocean",
+        "id": "standard-mid-atlantic-ocean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -302,7 +302,7 @@
     "pk": 14,
     "fields": {
         "name": "north atlantic ocean",
-        "uid": "standard-north-atlantic-ocean",
+        "id": "standard-north-atlantic-ocean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -324,7 +324,7 @@
     "pk": 15,
     "fields": {
         "name": "norwegian sea",
-        "uid": "standard-norwegian-sea",
+        "id": "standard-norwegian-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -347,7 +347,7 @@
     "pk": 16,
     "fields": {
         "name": "north sea",
-        "uid": "standard-north-sea",
+        "id": "standard-north-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -375,7 +375,7 @@
     "pk": 17,
     "fields": {
         "name": "skagerrak",
-        "uid": "standard-skagerrak",
+        "id": "standard-skagerrak",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -396,7 +396,7 @@
     "pk": 18,
     "fields": {
         "name": "tyrrhenian sea",
-        "uid": "standard-tyrrhenian-sea",
+        "id": "standard-tyrrhenian-sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -420,7 +420,7 @@
     "pk": 19,
     "fields": {
         "name": "western mediterranean",
-        "uid": "standard-western-mediterranean",
+        "id": "standard-western-mediterranean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -443,7 +443,7 @@
     "pk": 20,
     "fields": {
         "name": "albania",
-        "uid": "standard-albania",
+        "id": "standard-albania",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -468,7 +468,7 @@
     "pk": 21,
     "fields": {
         "name": "ankara",
-        "uid": "standard-ankara",
+        "id": "standard-ankara",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -492,7 +492,7 @@
     "pk": 22,
     "fields": {
         "name": "apulia",
-        "uid": "standard-apulia",
+        "id": "standard-apulia",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -517,7 +517,7 @@
     "pk": 23,
     "fields": {
         "name": "armenia",
-        "uid": "standard-armenia",
+        "id": "standard-armenia",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -541,7 +541,7 @@
     "pk": 24,
     "fields": {
         "name": "berlin",
-        "uid": "standard-berlin",
+        "id": "standard-berlin",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -566,7 +566,7 @@
     "pk": 25,
     "fields": {
         "name": "belgium",
-        "uid": "standard-belgium",
+        "id": "standard-belgium",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -592,7 +592,7 @@
     "pk": 26,
     "fields": {
         "name": "brest",
-        "uid": "standard-brest",
+        "id": "standard-brest",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -617,7 +617,7 @@
     "pk": 27,
     "fields": {
         "name": "clyde",
-        "uid": "standard-clyde",
+        "id": "standard-clyde",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -642,7 +642,7 @@
     "pk": 28,
     "fields": {
         "name": "constantinople",
-        "uid": "standard-constantinople",
+        "id": "standard-constantinople",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -667,7 +667,7 @@
     "pk": 29,
     "fields": {
         "name": "denmark",
-        "uid": "standard-denmark",
+        "id": "standard-denmark",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -693,7 +693,7 @@
     "pk": 30,
     "fields": {
         "name": "edinburgh",
-        "uid": "standard-edinburgh",
+        "id": "standard-edinburgh",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -718,7 +718,7 @@
     "pk": 31,
     "fields": {
         "name": "finland",
-        "uid": "standard-finland",
+        "id": "standard-finland",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -741,7 +741,7 @@
     "pk": 32,
     "fields": {
         "name": "gascony",
-        "uid": "standard-gascony",
+        "id": "standard-gascony",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -766,7 +766,7 @@
     "pk": 33,
     "fields": {
         "name": "greece",
-        "uid": "standard-greece",
+        "id": "standard-greece",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -791,7 +791,7 @@
     "pk": 34,
     "fields": {
         "name": "holland",
-        "uid": "standard-holland",
+        "id": "standard-holland",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -816,7 +816,7 @@
     "pk": 35,
     "fields": {
         "name": "kiel",
-        "uid": "standard-kiel",
+        "id": "standard-kiel",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -844,7 +844,7 @@
     "pk": 36,
     "fields": {
         "name": "london",
-        "uid": "standard-london",
+        "id": "standard-london",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -868,7 +868,7 @@
     "pk": 37,
     "fields": {
         "name": "livonia",
-        "uid": "standard-livonia",
+        "id": "standard-livonia",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -893,7 +893,7 @@
     "pk": 38,
     "fields": {
         "name": "liverpool",
-        "uid": "standard-liverpool",
+        "id": "standard-liverpool",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -919,7 +919,7 @@
     "pk": 39,
     "fields": {
         "name": "marseilles",
-        "uid": "standard-marseilles",
+        "id": "standard-marseilles",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -943,7 +943,7 @@
     "pk": 40,
     "fields": {
         "name": "north africa",
-        "uid": "standard-north-africa",
+        "id": "standard-north-africa",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -965,7 +965,7 @@
     "pk": 41,
     "fields": {
         "name": "naples",
-        "uid": "standard-naples",
+        "id": "standard-naples",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -989,7 +989,7 @@
     "pk": 42,
     "fields": {
         "name": "norway",
-        "uid": "standard-norway",
+        "id": "standard-norway",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1015,7 +1015,7 @@
     "pk": 43,
     "fields": {
         "name": "picardy",
-        "uid": "standard-picardy",
+        "id": "standard-picardy",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -1040,7 +1040,7 @@
     "pk": 44,
     "fields": {
         "name": "piedmont",
-        "uid": "standard-piedmont",
+        "id": "standard-piedmont",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1065,7 +1065,7 @@
     "pk": 45,
     "fields": {
         "name": "portugal",
-        "uid": "standard-portugal",
+        "id": "standard-portugal",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1084,7 +1084,7 @@
     "pk": 46,
     "fields": {
         "name": "rome",
-        "uid": "standard-rome",
+        "id": "standard-rome",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1109,7 +1109,7 @@
     "pk": 47,
     "fields": {
         "name": "rumania",
-        "uid": "standard-rumania",
+        "id": "standard-rumania",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1135,7 +1135,7 @@
     "pk": 48,
     "fields": {
         "name": "prussia",
-        "uid": "standard-prussia",
+        "id": "standard-prussia",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1160,7 +1160,7 @@
     "pk": 49,
     "fields": {
         "name": "sevastopol",
-        "uid": "standard-sevastopol",
+        "id": "standard-sevastopol",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1185,7 +1185,7 @@
     "pk": 50,
     "fields": {
         "name": "smyrna",
-        "uid": "standard-smyrna",
+        "id": "standard-smyrna",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -1211,7 +1211,7 @@
     "pk": 51,
     "fields": {
         "name": "sweden",
-        "uid": "standard-sweden",
+        "id": "standard-sweden",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1238,7 +1238,7 @@
     "pk": 52,
     "fields": {
         "name": "syria",
-        "uid": "standard-syria",
+        "id": "standard-syria",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -1260,7 +1260,7 @@
     "pk": 53,
     "fields": {
         "name": "trieste",
-        "uid": "standard-trieste",
+        "id": "standard-trieste",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1288,7 +1288,7 @@
     "pk": 54,
     "fields": {
         "name": "tunis",
-        "uid": "standard-tunis",
+        "id": "standard-tunis",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1311,7 +1311,7 @@
     "pk": 55,
     "fields": {
         "name": "tuscany",
-        "uid": "standard-tuscany",
+        "id": "standard-tuscany",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1336,7 +1336,7 @@
     "pk": 56,
     "fields": {
         "name": "venice",
-        "uid": "standard-venice",
+        "id": "standard-venice",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1364,7 +1364,7 @@
     "pk": 57,
     "fields": {
         "name": "wales",
-        "uid": "standard-wales",
+        "id": "standard-wales",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -1389,7 +1389,7 @@
     "pk": 58,
     "fields": {
         "name": "yorkshire",
-        "uid": "standard-yorkshire",
+        "id": "standard-yorkshire",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -1414,7 +1414,7 @@
     "pk": 59,
     "fields": {
         "name": "bohemia",
-        "uid": "standard-bohemia",
+        "id": "standard-bohemia",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1436,7 +1436,7 @@
     "pk": 60,
     "fields": {
         "name": "budapest",
-        "uid": "standard-budapest",
+        "id": "standard-budapest",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1458,7 +1458,7 @@
     "pk": 61,
     "fields": {
         "name": "burgundy",
-        "uid": "standard-burgundy",
+        "id": "standard-burgundy",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -1482,7 +1482,7 @@
     "pk": 62,
     "fields": {
         "name": "galicia",
-        "uid": "standard-galicia",
+        "id": "standard-galicia",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1506,7 +1506,7 @@
     "pk": 63,
     "fields": {
         "name": "moscow",
-        "uid": "standard-moscow",
+        "id": "standard-moscow",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1529,7 +1529,7 @@
     "pk": 64,
     "fields": {
         "name": "munich",
-        "uid": "standard-munich",
+        "id": "standard-munich",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1553,7 +1553,7 @@
     "pk": 65,
     "fields": {
         "name": "paris",
-        "uid": "standard-paris",
+        "id": "standard-paris",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -1577,7 +1577,7 @@
     "pk": 66,
     "fields": {
         "name": "ruhr",
-        "uid": "standard-ruhr",
+        "id": "standard-ruhr",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1599,7 +1599,7 @@
     "pk": 67,
     "fields": {
         "name": "serbia",
-        "uid": "standard-serbia",
+        "id": "standard-serbia",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1622,7 +1622,7 @@
     "pk": 68,
     "fields": {
         "name": "silesia",
-        "uid": "standard-silesia",
+        "id": "standard-silesia",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1645,7 +1645,7 @@
     "pk": 69,
     "fields": {
         "name": "tyrolia",
-        "uid": "standard-tyrolia",
+        "id": "standard-tyrolia",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1668,7 +1668,7 @@
     "pk": 70,
     "fields": {
         "name": "ukraine",
-        "uid": "standard-ukraine",
+        "id": "standard-ukraine",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1690,7 +1690,7 @@
     "pk": 71,
     "fields": {
         "name": "vienna",
-        "uid": "standard-vienna",
+        "id": "standard-vienna",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1712,7 +1712,7 @@
     "pk": 72,
     "fields": {
         "name": "warsaw",
-        "uid": "standard-warsaw",
+        "id": "standard-warsaw",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1735,7 +1735,7 @@
     "pk": 73,
     "fields": {
         "name": "bulgaria",
-        "uid": "standard-bulgaria",
+        "id": "standard-bulgaria",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1762,7 +1762,7 @@
     "pk": 74,
     "fields": {
         "name": "spain",
-        "uid": "standard-spain",
+        "id": "standard-spain",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1791,7 +1791,7 @@
     "pk": 75,
     "fields": {
         "name": "st. petersburg",
-        "uid": "standard-st-petersburg",
+        "id": "standard-st-petersburg",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,

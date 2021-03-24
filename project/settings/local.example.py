@@ -48,3 +48,18 @@ SESSION_COOKIE_AGE = 86400  # sec
 SESSION_COOKIE_DOMAIN = None
 SESSION_COOKIE_NAME = 'DSESSIONID'
 SESSION_COOKIE_SECURE = False
+
+
+if DEBUG and not TESTING:
+    def show_toolbar(request):
+        """
+        Default function to determine whether to show the toolbar on a given page.
+        """
+        return True
+
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+    }
+
+    INSTALLED_APPS = INSTALLED_APPS + ['debug_toolbar', 'django_extensions']
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE

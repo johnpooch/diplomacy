@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
     'corsheaders',
     'django_filters',
     'rest_framework',
@@ -159,7 +158,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 FIXTURE_DIRS = (
     '/code/fixtures',
 )
-# NOTE non Docker setup
-# FIXTURE_DIRS = (
-#     'fixtures',
-# )

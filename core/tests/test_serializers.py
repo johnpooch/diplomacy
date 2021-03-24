@@ -19,7 +19,7 @@ class BaseTurnSerializerTestCase(BaseSerializerTestCase):
     serializer_class = serializers.TurnSerializer
 
     def setUp(self):
-        self.variant = models.Variant.objects.get(identifier='standard')
+        self.variant = models.Variant.objects.get(id='standard')
         self.user = factories.UserFactory()
         self.england = self.variant.nations.get(name='England')
         self.france = self.variant.nations.get(name='France')

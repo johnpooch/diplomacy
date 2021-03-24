@@ -8,14 +8,16 @@ class Territory(models.Model):
     """
     Represents an area in the game map that can be occupied.
     """
-    name = models.CharField(
-        max_length=50,
-        null=False,
-    )
-    uid = models.CharField(
+    id = models.CharField(
         max_length=100,
         null=False,
         unique=True,
+        primary_key=True,
+        editable=False,
+    )
+    name = models.CharField(
+        max_length=50,
+        null=False,
     )
     controlled_by_initial = models.ForeignKey(
         'Nation',

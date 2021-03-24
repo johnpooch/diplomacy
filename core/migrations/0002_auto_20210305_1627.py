@@ -3,6 +3,7 @@ import json
 
 from django.conf import settings
 from django.db import migrations
+from django.utils.text import slugify
 
 
 def get_fixture_data(location, file_name):
@@ -20,10 +21,7 @@ def add_standard_game_data(apps, schema_editor):
     Variant = apps.get_model('core', 'Variant')
     Nation = apps.get_model('core', 'Nation')
     Territory = apps.get_model('core', 'Territory')
-    MapData = apps.get_model('core', 'MapData')
-    TerritoryMapData = apps.get_model('core', 'TerritoryMapData')
     NamedCoast = apps.get_model('core', 'NamedCoast')
-    NamedCoastMapData = apps.get_model('core', 'NamedCoastMapData')
 
     variant_data = get_fixture_data(location, 'variant.json')[0]['fields']
     variant = Variant.objects.create(**variant_data)
@@ -33,6 +31,7 @@ def add_standard_game_data(apps, schema_editor):
         nation_pk = item['pk']
         data = item['fields']
         data['variant'] = variant
+        data['id'] = slugify('-'.join([variant.name, data['name']]))
         nation = Nation.objects.create(**data)
         nation_map[nation_pk] = nation
 
@@ -41,6 +40,7 @@ def add_standard_game_data(apps, schema_editor):
         territory_pk = item['pk']
         data = deepcopy(item['fields'])
         data['variant'] = variant
+        data['id'] = slugify('-'.join([variant.name, data['name']]))
         data.pop('neighbours')
         data.pop('shared_coasts')
         controlled_by_initial = data['controlled_by_initial']
@@ -61,25 +61,12 @@ def add_standard_game_data(apps, schema_editor):
         territory.neighbours.set(neighbours)
         territory.shared_coasts.set(shared_coasts)
 
-    map_data_data = get_fixture_data(location, 'map_data.json')[0]['fields']
-    map_data_data['variant'] = variant
-    map_data = MapData.objects.create(**map_data_data)
-
-    territory_map_data = get_fixture_data(location, 'territory_map_data.json')
-
-    for item in territory_map_data:
-        data = item['fields']
-        data['map_data'] = map_data
-        territory = data.get('territory')
-        if territory:
-            data['territory'] = territory_map[territory]
-        TerritoryMapData.objects.create(**data)
-
     named_coast_data = get_fixture_data(location, 'named_coast.json')
     for item in named_coast_data:
         named_coast_pk = item['pk']
         data = deepcopy(item['fields'])
         data['parent'] = territory_map[data['parent']]
+        data['id'] = slugify('-'.join([data['parent'].variant.name, data['name']]))
         data.pop('neighbours')
         named_coast = NamedCoast.objects.create(**data)
         named_coast_map[named_coast_pk] = named_coast
@@ -96,16 +83,15 @@ def add_standard_game_data(apps, schema_editor):
 
     for item in named_coast_map_data:
         data = item['fields']
-        data['map_data'] = map_data
         named_coast = data.get('named_coast')
         if named_coast:
             data['named_coast'] = named_coast_map[named_coast]
-        NamedCoastMapData.objects.create(**data)
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ('core', '0005_merge_20200726_1240'),
+        ('core', '0001_initial'),
     ]
 
     operations = [

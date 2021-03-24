@@ -14,14 +14,14 @@ from core.models.mixins import AutoSlug
 from core.utils.models import super_receiver
 
 
-def set_uid(instance):
+def set_id(instance):
     """
-    In tests we don't want to have to manually set the uid when creating
+    In tests we don't want to have to manually set the id when creating
     nations and territories. This combines the instance name and the variant
-    name to create the uid automatically before saving.
+    name to create the id automatically before saving.
     """
     time = str(timezone.now())
-    instance.uid = slugify(
+    instance.id = slugify(
         '-'.join(['test', instance.variant.name, instance.name, time])
     )
 
@@ -31,13 +31,11 @@ def set_to_current_turn(sender, instance, **kwargs):
     """
     Set game's current turn to `current_turn=False` before creating new turn.
     """
-    try:
-        old_turn = instance.game.get_current_turn()
+    old_turn = instance.game.get_current_turn()
+    if old_turn:
         if not old_turn == instance:
             old_turn.current_turn = False
             old_turn.save()
-    except models.Turn.DoesNotExist:
-        pass
 
 
 @super_receiver(signals.pre_save, base_class=AutoSlug)
@@ -49,15 +47,15 @@ def add_automatic_slug(sender, instance, **kwargs):
 
 
 @receiver(signals.pre_save, sender=models.Nation)
-def set_nation_uid_if_not_set(sender, instance, **kwargs):
-    if not instance.uid:
-        set_uid(instance)
+def set_nation_id_if_not_set(sender, instance, **kwargs):
+    if not instance.id:
+        set_id(instance)
 
 
 @receiver(signals.pre_save, sender=models.Territory)
-def set_territory_uid_if_not_set(sender, instance, **kwargs):
-    if not instance.uid:
-        set_uid(instance)
+def set_territory_id_if_not_set(sender, instance, **kwargs):
+    if not instance.id:
+        set_id(instance)
 
 
 @receiver(signals.post_save, sender=models.DrawResponse)

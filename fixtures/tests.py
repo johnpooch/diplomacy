@@ -14,7 +14,7 @@ class TestGame(Game):
     """
     Test docstring.
     """
-    variant_identifier = 'test'
+    variant_id = 'test'
     year = 1901
     season = Season.FALL
     phase = Phase.BUILD
@@ -27,7 +27,7 @@ class TestRecipe(TestCase, DiplomacyTestCaseMixin):
         self.recipe = TestGame(stdout.write)
         self.variant = models.Variant.objects.create(
             name='Test variant',
-            identifier='test-variant',
+            id='test-variant',
         )
 
     def test_name(self):

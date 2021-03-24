@@ -25,7 +25,7 @@ possible_orders = {
 }
 
 
-class Territory(fields.Int):
+class Territory(fields.String):
     def _serialize(self, value, attr, obj, **kwargs):
         if value:
             return value.id
@@ -40,7 +40,7 @@ class Piece(fields.Int):
 
 
 class NationSchema(Schema):
-    id = fields.Int(required=True)
+    id = fields.String(required=True)
     name = fields.String(load_only=True)
     next_turn_supply_delta = fields.Int()
     next_turn_supply_center_count = fields.Int()
@@ -48,7 +48,7 @@ class NationSchema(Schema):
 
 
 class NamedCoastSchema(Schema):
-    id = fields.Int(required=True)
+    id = fields.String(required=True)
     parent = Territory(required=True)
     neighbours = fields.List(Territory(), required=True)
     name = fields.String(missing=None)
@@ -61,7 +61,7 @@ class PieceSchema(Schema):
         validate=validate.OneOf(PieceType.CHOICES),
         load_only=True,
     )
-    nation = fields.Int(required=True, load_only=True)
+    nation = fields.String(required=True, load_only=True)
     territory = Territory(required=True, load_only=True)
     named_coast = fields.Int(missing=None, load_only=True)
     retreating = fields.Boolean(missing=False, load_only=True)
@@ -79,7 +79,7 @@ class OrderSchema(Schema):
         required=True,
         validate=validate.OneOf(OrderType.CHOICES),
     )
-    nation = fields.Int(required=True, load_only=True)
+    nation = fields.String(required=True, load_only=True)
     source = Territory(required=True, load_only=True)
     target = Territory(missing=None, load_only=True)
     aux = Territory(missing=None, load_only=True)
@@ -110,7 +110,7 @@ class OrderSchema(Schema):
 
 
 class TerritorySchema(Schema):
-    id = fields.Int(required=True)
+    id = fields.String(required=True)
     type = fields.String(
         required=True,
         validate=validate.OneOf(TerritoryType.CHOICES),
@@ -118,8 +118,8 @@ class TerritorySchema(Schema):
     )
     neighbours = fields.List(Territory(), required=True, load_only=True)
     shared_coasts = fields.List(Territory(), missing=[], load_only=True)
-    nationality = fields.Int(missing=None, load_only=True)
-    controlled_by = fields.Int(missing=None, load_only=True)
+    nationality = fields.String(missing=None, load_only=True)
+    controlled_by = fields.String(missing=None, load_only=True)
     contested = fields.Boolean(missing=False, load_only=True)
     name = fields.String(missing=None, load_only=True)
     supply_center = fields.Boolean(missing=False, load_only=True)
@@ -136,7 +136,7 @@ class TurnSchema(Schema):
     )
     season = fields.String(required=True, load_only=True)
     year = fields.Int(required=True, load_only=True)
-    variant = fields.Str(missing=Variant.STANDARD)
+    variant = fields.String(missing=Variant.STANDARD)
     territories = fields.Nested(TerritorySchema(many=True), required=True)
     orders = fields.Nested(OrderSchema(many=True), required=True)
     pieces = fields.Nested(PieceSchema(many=True), required=True)

@@ -1,6 +1,5 @@
 import json
 
-from django.apps import apps
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -11,6 +10,12 @@ class Nation(models.Model):
     """
     Represents a playable nation in the game, e.g. 'France'.
     """
+    id = models.CharField(
+        max_length=100,
+        null=False,
+        primary_key=True,
+        editable=False,
+    )
     name = models.CharField(
         max_length=15,
     )
@@ -19,11 +24,6 @@ class Nation(models.Model):
         null=False,
         related_name='nations',
         on_delete=models.CASCADE,
-    )
-    uid = models.CharField(
-        max_length=100,
-        null=False,
-        unique=True,
     )
     flag = models.TextField()
 
@@ -48,10 +48,10 @@ class NationStateQuerySet(models.QuerySet):
         have a user controlling it or the user is surrendering.
         """
         qs = self
-        return qs.filter(
-            user__isnull=False,
-        ).exclude(
-            surrenders__status=SurrenderStatus.PENDING,
+        return (
+            qs
+            .filter(user__isnull=False)
+            .exclude(surrenders__status=SurrenderStatus.PENDING)
         )
 
 
@@ -156,9 +156,7 @@ class NationState(PerTurnModel):
         Returns:
             * QuerySet of `PieceState` instances.
         """
-        PieceState = apps.get_model('core', 'PieceState')
-        return PieceState.objects.filter(
-            turn=self.turn,
+        return self.turn.piecestates.filter(
             piece__nation=self.nation,
         )
 
@@ -248,6 +246,12 @@ class NationState(PerTurnModel):
         if self.turn.phase == Phase.BUILD:
             raise Exception('Should not be called during build phase')
         return self.turn.piecestates.filter(piece__nation=self.nation)
+
+    @property
+    def num_orders(self):
+        if self.turn.phase == Phase.BUILD:
+            return max(self.num_builds, self.num_disbands)
+        return self.pieces_to_order.count()
 
     @property
     def num_orders_remaining(self):

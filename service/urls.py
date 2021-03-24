@@ -29,6 +29,7 @@ urlpatterns = [
         views.ToggleFinalizeOrdersView.as_view(),
         name='toggle-finalize-orders'
     ),
+    # TODO these three should be a ViewSet
     re_path(
         r'game/(?P<slug>[_\-\w]+)/order$',
         views.CreateOrderView.as_view(),
@@ -38,6 +39,11 @@ urlpatterns = [
         r'game/(?P<pk>[0-9]+)/orders$',
         views.ListOrdersView.as_view(),
         name='orders'
+    ),
+    re_path(
+        r'game/order/(?P<pk>[0-9]+)$',
+        views.DestroyOrderView.as_view(),
+        name='destroy-order'
     ),
     re_path(
         r'game/(?P<slug>[_\-\w]+)$',

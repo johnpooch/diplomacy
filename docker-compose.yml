@@ -3,6 +3,8 @@ version: '3.6'
 services:
   mailcatcher.smtp:
     image: schickling/mailcatcher
+    networks:
+      - backend
   diplomacy.mysql:
     image: 'mariadb:latest'
     restart: always
@@ -18,6 +20,8 @@ services:
       - backend
   diplomacy.service:
     build: 
+      args:
+        - ENV=dev
       context: .
       dockerfile: .docker/Dockerfile
       target: diplomacy-service
@@ -29,6 +33,8 @@ services:
       - backend
   diplomacy.worker:
     build:
+      args:
+        - ENV=dev
       context: .
       dockerfile: .docker/Dockerfile
       target: diplomacy-worker
