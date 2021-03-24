@@ -76,7 +76,7 @@ You can sign into the client and the service using these credentials.
 
 **Note** this set up has been tested with Windows
 
-#### Prerequisites 
+#### Prerequisites
 
 Ensure that you have installed `virtualenv` and `make`.
 
