@@ -18,3 +18,8 @@ superuser:
 	docker exec -it diplomacy_diplomacy.service_1 \
 		./manage.py shell -c "from django.contrib.auth.models import User; \
 		User.objects.create_superuser('admin', 'admin@example.com', 'admin')"
+
+fixtures_local:
+	python manage.py create_game_fixtures
+	python manage.py shell -c "from django.contrib.auth.models import User; \
+	User.objects.create_superuser('admin', 'admin@example.com', 'admin')"

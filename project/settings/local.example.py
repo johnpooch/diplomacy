@@ -9,6 +9,10 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
 )
 
+EMAIL_HOST = 'mailcatcher.smtp'
+EMAIL_PORT = '1025'
+
+# NOTE Docker setup
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -20,20 +24,19 @@ DATABASES = {
     },
 }
 
-EMAIL_HOST = 'mailcatcher.smtp'
-EMAIL_PORT = '1025'
-
 # NOTE non Docker setup
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase',
+#         'NAME': 'local_database',
 #     }
 # }
 
+# NOTE Docker setup
 FIXTURE_DIRS = (
     '/code/fixtures',
 )
+
 # NOTE non Docker setup
 # FIXTURE_DIRS = (
 #     'fixtures',
