@@ -1,8 +1,6 @@
 name: Lint
 
-on:
-  pull_request:
-    branches: [ master, develop ]
+on: push
 
 jobs:
   flake8_py3:
