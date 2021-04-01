@@ -27,3 +27,5 @@ docker-compose.override.yml
 # celery beat schedule file
 celerybeat-schedule
 .vscode
+
+local_database
