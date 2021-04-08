@@ -1,0 +1,442 @@
+[
+{
+    "model": "core.order",
+    "pk": 1,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-england",
+        "type": "move",
+        "source": "standard-edinburgh",
+        "target": "standard-norwegian-sea",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 2,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-england",
+        "type": "move",
+        "source": "standard-liverpool",
+        "target": "standard-yorkshire",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 3,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-england",
+        "type": "move",
+        "source": "standard-london",
+        "target": "standard-north-sea",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 4,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-france",
+        "type": "hold",
+        "source": "standard-marseilles",
+        "target": null,
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "unresolved",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 5,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-france",
+        "type": "move",
+        "source": "standard-paris",
+        "target": "standard-picardy",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 6,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-france",
+        "type": "move",
+        "source": "standard-brest",
+        "target": "standard-english-channel",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 7,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-italy",
+        "type": "move",
+        "source": "standard-venice",
+        "target": "standard-tyrolia",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 8,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-italy",
+        "type": "move",
+        "source": "standard-rome",
+        "target": "standard-tuscany",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 9,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-italy",
+        "type": "move",
+        "source": "standard-naples",
+        "target": "standard-ionian-sea",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 10,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-germany",
+        "type": "move",
+        "source": "standard-munich",
+        "target": "standard-burgundy",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 11,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-germany",
+        "type": "move",
+        "source": "standard-berlin",
+        "target": "standard-kiel",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 12,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-germany",
+        "type": "move",
+        "source": "standard-kiel",
+        "target": "standard-holland",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 13,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-austria-hungary",
+        "type": "move",
+        "source": "standard-vienna",
+        "target": "standard-trieste",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 14,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-austria-hungary",
+        "type": "move",
+        "source": "standard-trieste",
+        "target": "standard-albania",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 15,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-austria-hungary",
+        "type": "move",
+        "source": "standard-budapest",
+        "target": "standard-rumania",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 16,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-turkey",
+        "type": "move",
+        "source": "standard-constantinople",
+        "target": "standard-bulgaria",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 17,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-turkey",
+        "type": "move",
+        "source": "standard-ankara",
+        "target": "standard-black-sea",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "fails",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 18,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-turkey",
+        "type": "move",
+        "source": "standard-smyrna",
+        "target": "standard-constantinople",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 19,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-russia",
+        "type": "move",
+        "source": "standard-moscow",
+        "target": "standard-st-petersburg",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 20,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-russia",
+        "type": "move",
+        "source": "standard-st-petersburg",
+        "target": "standard-gulf-of-bothnia",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 21,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-russia",
+        "type": "move",
+        "source": "standard-warsaw",
+        "target": "standard-ukraine",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "succeeds",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+},
+{
+    "model": "core.order",
+    "pk": 22,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-russia",
+        "type": "move",
+        "source": "standard-sevastopol",
+        "target": "standard-black-sea",
+        "target_coast": null,
+        "aux": null,
+        "piece_type": null,
+        "via_convoy": false,
+        "outcome": "fails",
+        "outcome_verbose": null,
+        "illegal": false,
+        "illegal_code": null,
+        "illegal_verbose": null
+    }
+}
+]

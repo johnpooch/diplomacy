@@ -435,7 +435,7 @@ class RetreatTurn(StandardGame):
     """
     year = 1901
     season = Season.FALL
-    phase = Phase.RETREAT_AND_DISBAND
+    phase = Phase.RETREAT
     test_user_nation = AUSTRIA
 
 

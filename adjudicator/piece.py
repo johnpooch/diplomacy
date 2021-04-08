@@ -13,8 +13,7 @@ class Piece:
     is_fleet = False
 
     @register
-    def __init__(self, state, id, nation, territory, attacker_territory=None,
-                 retreating=False, **kwargs):
+    def __init__(self, state, id, nation, territory, **kwargs):
         self.state = state
         self.id = id
         self.nation = nation
@@ -22,8 +21,8 @@ class Piece:
         self.dislodged_decision = Outcomes.UNRESOLVED
         self.dislodged_by = None
         self.dislodged_from = None
-        self.attacker_territory = attacker_territory
-        self.retreating = retreating
+        self.attacker_territory = kwargs.get('attacker_territory')
+        self.retreating = kwargs.get('retreating', False)
         self.destroyed = False
         self.destroyed_message = None
 
@@ -172,8 +171,8 @@ class Fleet(Piece):
 
     is_fleet = True
 
-    def __init__(self, state, id, nation, territory, named_coast=None, retreating=False):
-        super().__init__(state, id, nation, territory, retreating=retreating)
+    def __init__(self, *args, named_coast=None, **kwargs):
+        super().__init__(*args, **kwargs)
         self.named_coast = named_coast
 
     def can_reach(self, target, named_coast=None):

@@ -19,12 +19,12 @@ class TestRetreatAndDisband(TestCase):
         self.game.participants.add(self.user)
         self.retreat_turn = models.Turn.objects.create(
             game=self.game,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.FALL,
             year=1901,
         )
 
-    def test_only_retreat_and_disband_orders_are_available(self):
+    def test_only_retreat_orders_are_available(self):
         self.assertEqual(
             self.retreat_turn.possible_order_types,
             [OrderType.RETREAT, OrderType.DISBAND]

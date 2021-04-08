@@ -340,6 +340,7 @@ class TestSerializeTurn(BaseTurnSerializerTestCase):
         named_coast_keys = sorted(data['named_coasts'][0].keys())
 
         expected_named_coast_keys = [
+            'id',
             'name',
             'neighbours',
             'parent',

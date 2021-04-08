@@ -21,7 +21,7 @@ class TestTurn(TestCase, DiplomacyTestCaseMixin):
     def test_ready_to_process_retreat(self):
         retreat_turn = models.Turn.objects.create(
             game=self.game,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.FALL,
             year=1901,
         )
@@ -154,7 +154,7 @@ class TestTurn(TestCase, DiplomacyTestCaseMixin):
         self.game.save()
         turn = self.create_test_turn(
             game=self.game,
-            phase=Phase.RETREAT_AND_DISBAND
+            phase=Phase.RETREAT
         )
         self.assertEqual(turn.deadline, DeadlineFrequency.FIVE_DAYS)
 
@@ -196,13 +196,13 @@ class TestLinkedTurns(TestCase):
         )
         self.game_a_spring_retreat_turn = models.Turn.objects.create(
             game=self.game_a,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.SPRING,
             year=1901,
         )
         self.game_b_spring_retreat_turn = models.Turn.objects.create(
             game=self.game_b,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.SPRING,
             year=1901,
         )
@@ -220,13 +220,13 @@ class TestLinkedTurns(TestCase):
         )
         self.game_a_fall_retreat_turn = models.Turn.objects.create(
             game=self.game_a,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.FALL,
             year=1901,
         )
         self.game_b_fall_retreat_turn = models.Turn.objects.create(
             game=self.game_b,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.FALL,
             year=1901,
         )
@@ -325,7 +325,7 @@ class TestTurnManager(TestCase, DiplomacyTestCaseMixin):
         self.assertEqual(models.TurnEnd.objects.count(), 0)
         turn = models.Turn.objects.new(
             game=self.game,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             season=Season.FALL,
             year=1901,
         )

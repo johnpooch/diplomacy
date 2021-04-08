@@ -114,10 +114,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('season', models.CharField(choices=[('fall', 'Fall'), ('spring', 'Spring')], max_length=7)),
-                ('phase', models.CharField(choices=[('order', 'Order'), ('retreat_and_disband', 'Retreat and Disband'), ('build', 'Build')], max_length=20)),
+                ('phase', models.CharField(choices=[('order', 'Order'), ('retreat', 'Retreat'), ('build', 'Build')], max_length=20)),
                 ('year', models.PositiveIntegerField()),
                 ('next_season', models.CharField(choices=[('fall', 'Fall'), ('spring', 'Spring')], max_length=7, null=True)),
-                ('next_phase', models.CharField(choices=[('order', 'Order'), ('retreat_and_disband', 'Retreat and Disband'), ('build', 'Build')], max_length=20, null=True)),
+                ('next_phase', models.CharField(choices=[('order', 'Order'), ('retreat', 'Retreat'), ('build', 'Build')], max_length=20, null=True)),
                 ('next_year', models.PositiveIntegerField(null=True)),
                 ('current_turn', models.BooleanField(default=True)),
                 ('processed', models.BooleanField(default=False)),
@@ -136,7 +136,7 @@ class Migration(migrations.Migration):
                 ('max_nations_in_draw', models.PositiveIntegerField(default=4)),
                 ('starting_year', models.PositiveIntegerField(default=1901)),
                 ('starting_season', models.CharField(choices=[('fall', 'Fall'), ('spring', 'Spring')], default='spring', max_length=100)),
-                ('starting_phase', models.CharField(choices=[('order', 'Order'), ('retreat_and_disband', 'Retreat and Disband'), ('build', 'Build')], default='order', max_length=100)),
+                ('starting_phase', models.CharField(choices=[('order', 'Order'), ('retreat', 'Retreat'), ('build', 'Build')], default='order', max_length=100)),
             ],
         ),
         migrations.CreateModel(

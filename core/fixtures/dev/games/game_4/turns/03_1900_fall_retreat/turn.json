@@ -5,7 +5,7 @@
         "fields": {
             "game": 1,
             "season": "fall",
-            "phase": "retreat_and_disband",
+            "phase": "retreat",
             "year": 1901,
             "current_turn": false,
             "processed": true,

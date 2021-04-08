@@ -1,0 +1,902 @@
+[
+{
+    "model": "core.territorystate",
+    "pk": 1,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-adriatic-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 2,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-aegean-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 3,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-baltic-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 4,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-barents-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 5,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-black-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": true,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 6,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-gulf-of-bothnia",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 7,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-eastern-mediterranean",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 8,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-english-channel",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 9,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-gulf-of-lyon",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 10,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-helgoland-bight",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 11,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-ionian-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 12,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-irish-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 13,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-mid-atlantic-ocean",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 14,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-north-atlantic-ocean",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 15,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-norwegian-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 16,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-north-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 17,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-skagerrak",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 18,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-tyrrhenian-sea",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 19,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-western-mediterranean",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 20,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-albania",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 21,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-ankara",
+        "controlled_by": "standard-turkey",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 22,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-apulia",
+        "controlled_by": "standard-italy",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 23,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-armenia",
+        "controlled_by": "standard-turkey",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 24,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-berlin",
+        "controlled_by": "standard-germany",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 25,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-belgium",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 26,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-brest",
+        "controlled_by": "standard-france",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 27,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-clyde",
+        "controlled_by": "standard-england",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 28,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-constantinople",
+        "controlled_by": "standard-turkey",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 29,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-denmark",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 30,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-edinburgh",
+        "controlled_by": "standard-england",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 31,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-finland",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 32,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-gascony",
+        "controlled_by": "standard-france",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 33,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-greece",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 34,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-holland",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 35,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-kiel",
+        "controlled_by": "standard-germany",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 36,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-london",
+        "controlled_by": "standard-england",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 37,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-livonia",
+        "controlled_by": "standard-russia",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 38,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-liverpool",
+        "controlled_by": "standard-england",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 39,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-marseilles",
+        "controlled_by": "standard-france",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 40,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-north-africa",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 41,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-naples",
+        "controlled_by": "standard-italy",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 42,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-norway",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 43,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-picardy",
+        "controlled_by": "standard-france",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 44,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-piedmont",
+        "controlled_by": "standard-italy",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 45,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-portugal",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 46,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-rome",
+        "controlled_by": "standard-italy",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 47,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-rumania",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 48,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-prussia",
+        "controlled_by": "standard-germany",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 49,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-sevastopol",
+        "controlled_by": "standard-russia",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 50,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-smyrna",
+        "controlled_by": "standard-turkey",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 51,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-sweden",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 52,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-syria",
+        "controlled_by": "standard-turkey",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 53,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-trieste",
+        "controlled_by": "standard-austria-hungary",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 54,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-tunis",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 55,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-tuscany",
+        "controlled_by": "standard-italy",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 56,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-venice",
+        "controlled_by": "standard-italy",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 57,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-wales",
+        "controlled_by": "standard-england",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 58,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-yorkshire",
+        "controlled_by": "standard-england",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 59,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-bohemia",
+        "controlled_by": "standard-austria-hungary",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 60,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-budapest",
+        "controlled_by": "standard-austria-hungary",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 61,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-burgundy",
+        "controlled_by": "standard-france",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 62,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-galicia",
+        "controlled_by": "standard-austria-hungary",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 63,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-moscow",
+        "controlled_by": "standard-russia",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 64,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-munich",
+        "controlled_by": "standard-germany",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 65,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-paris",
+        "controlled_by": "standard-france",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 66,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-ruhr",
+        "controlled_by": "standard-germany",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 67,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-serbia",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 68,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-silesia",
+        "controlled_by": "standard-germany",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 69,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-tyrolia",
+        "controlled_by": "standard-austria-hungary",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 70,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-ukraine",
+        "controlled_by": "standard-russia",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 71,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-vienna",
+        "controlled_by": "standard-austria-hungary",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 72,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-warsaw",
+        "controlled_by": "standard-russia",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 73,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-bulgaria",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 74,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-spain",
+        "controlled_by": null,
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+},
+{
+    "model": "core.territorystate",
+    "pk": 75,
+    "fields": {
+        "turn": 1,
+        "territory": "standard-st-petersburg",
+        "controlled_by": "standard-russia",
+        "contested": false,
+        "bounce_occurred": false,
+        "captured_by": null
+    }
+}
+]

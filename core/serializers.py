@@ -72,6 +72,7 @@ class NamedCoastSerializer(ReadOnlyModelSerializer, BaseChildSerializer):
     class Meta:
         model = models.NamedCoast
         fields = (
+            'id',
             'name',
             'parent',
             'neighbours',
@@ -284,8 +285,8 @@ class TurnSerializer(NestedUpdateMixin, serializers.ModelSerializer):
             pk_list = self._extract_related_pks(field, related_data)
             instances = {
                 str(related_instance.territory.pk): related_instance
-                for related_instance in model_class.objects.filter(
-                    territory__pk__in=pk_list
+                for related_instance in self.instance.territorystates.filter(
+                    territory__pk__in=pk_list,
                 )
             }
             return instances
@@ -293,8 +294,8 @@ class TurnSerializer(NestedUpdateMixin, serializers.ModelSerializer):
             pk_list = self._extract_related_pks(field, related_data)
             instances = {
                 str(related_instance.nation.pk): related_instance
-                for related_instance in model_class.objects.filter(
-                    nation__pk__in=pk_list
+                for related_instance in self.instance.nationstates.filter(
+                    nation__pk__in=pk_list,
                 )
             }
             return instances
