@@ -1,4 +1,5 @@
 from . import decisions
+from .state import register
 
 
 class Territory:
@@ -7,18 +8,13 @@ class Territory:
     is_inland = False
     is_sea = False
 
-    def __init__(self, _id, name, neighbour_ids, contested=False):
-        self.id = _id
+    @register
+    def __init__(self, state, id, name, neighbours, contested=False, **kwargs):
+        self.state = state
+        self.id = id
         self.name = name
-        self.neighbour_ids = neighbour_ids
-
-        self.pieces = set()
-        self.neighbours = set()
-        self.named_coasts = set()
-        self.attacking_pieces = set()
-        self.retreating_pieces = set()
+        self.neighbour_ids = neighbours
         self.contested = contested
-
         self.bounce_occurred = False
 
     def __str__(self):
@@ -26,6 +22,30 @@ class Territory:
 
     def __repr__(self):
         return f'{self.name} - {self.__class__.__name__}'
+
+    @property
+    def neighbours(self):
+        return [t for t in self.state.territories if t.id in self.neighbour_ids]
+
+    @property
+    def pieces(self):
+        return [p for p in self.state.pieces if p.territory == self]
+
+    @property
+    def attacking_pieces(self):
+        from adjudicator.order import Move
+        return [o.piece for o in self.state.orders if isinstance(o, Move)
+                and o.target == self and o.piece]
+
+    @property
+    def retreating_pieces(self):
+        from adjudicator.order import Retreat
+        return [o.piece for o in self.state.orders if isinstance(o, Retreat)
+                and o.target == self and o.piece]
+
+    @property
+    def named_coasts(self):
+        return [s for s in self.state.named_coasts if s.parent == self]
 
     @property
     def piece(self):
@@ -114,11 +134,7 @@ class Territory:
         Returns:
             * `list` of `Piece` instances.
         """
-        other_attacking_pieces = list(self.attacking_pieces)
-        for p in other_attacking_pieces:
-            if p == piece:
-                other_attacking_pieces.remove(p)
-        return other_attacking_pieces
+        return [p for p in self.attacking_pieces if p != piece]
 
     def other_retreating_pieces(self, piece):
         """
@@ -131,8 +147,7 @@ class Territory:
         Returns:
             * `list` of `Piece` instances.
         """
-        other_retreating_pieces = list(self.retreating_pieces)
-        return [p for p in other_retreating_pieces if p != piece]
+        return [p for p in self.retreating_pieces if p != piece]
 
     def to_dict(self):
         return {
@@ -143,25 +158,30 @@ class Territory:
 
 class LandTerritory(Territory):
 
-    def __init__(self, _id, name, nationality, neighbour_ids, supply_center=False, controlled_by=None, **kwargs):
-        super().__init__(_id, name, neighbour_ids, **kwargs)
+    def __init__(self, state, id, name, nationality, neighbours, supply_center=False, controlled_by=None, **kwargs):
+        super().__init__(state, id, name, neighbours, **kwargs)
         self.nationality = nationality
         self.supply_center = supply_center
         self.controlled_by = controlled_by
+        self.captured_by = None
 
 
 class CoastalTerritory(LandTerritory):
 
     is_coastal = True
 
-    def __init__(self, _id, name, nationality, neighbour_ids, shared_coast_ids, **kwargs):
-        super().__init__(_id, name, nationality, neighbour_ids, **kwargs)
-        self.shared_coast_ids = shared_coast_ids
-        self.shared_coasts = set()
+    def __init__(self, state, id, name, nationality, neighbours, shared_coasts, **kwargs):
+        super().__init__(state, id, name, nationality, neighbours, **kwargs)
+        self.shared_coast_ids = shared_coasts
 
     @staticmethod
     def accessible_by_piece_type(piece):
         return True
+
+    @property
+    def shared_coasts(self):
+        return [t for t in self.state.subscribers
+                if isinstance(t, Territory) and t.id in self.shared_coast_ids]
 
     @property
     def is_complex(self):

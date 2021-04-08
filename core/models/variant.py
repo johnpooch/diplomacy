@@ -8,6 +8,12 @@ class Variant(models.Model):
     Represents a variant of diplomacy. The main variant of the game is the
     standard variant but there are other variants like 'Versailles'.
     """
+    id = models.CharField(
+        null=False,
+        max_length=100,
+        primary_key=True,
+        editable=False,
+    )
     name = models.CharField(
         null=False,
         max_length=100,
@@ -19,6 +25,10 @@ class Variant(models.Model):
     num_supply_centers_to_win = models.PositiveIntegerField(
         null=False,
         default=18,
+    )
+    max_nations_in_draw = models.PositiveIntegerField(
+        null=False,
+        default=4,
     )
     starting_year = models.PositiveIntegerField(
         null=False,

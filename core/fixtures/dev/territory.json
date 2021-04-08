@@ -1,0 +1,1741 @@
+[
+{
+    "model": "core.territory",
+    "pk": "standard-adriatic-sea",
+    "fields": {
+        "name": "adriatic sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-albania",
+            "standard-apulia",
+            "standard-ionian-sea",
+            "standard-trieste",
+            "standard-venice"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-aegean-sea",
+    "fields": {
+        "name": "aegean sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-black-sea",
+            "standard-bulgaria",
+            "standard-constantinople",
+            "standard-eastern-mediterranean",
+            "standard-greece",
+            "standard-ionian-sea",
+            "standard-smyrna"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-albania",
+    "fields": {
+        "name": "albania",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-adriatic-sea",
+            "standard-greece",
+            "standard-ionian-sea",
+            "standard-serbia",
+            "standard-trieste"
+        ],
+        "shared_coasts": [
+            "standard-greece",
+            "standard-trieste"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-ankara",
+    "fields": {
+        "name": "ankara",
+        "controlled_by_initial": "standard-turkey",
+        "variant": "standard",
+        "nationality": "standard-turkey",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-armenia",
+            "standard-black-sea",
+            "standard-constantinople",
+            "standard-smyrna"
+        ],
+        "shared_coasts": [
+            "standard-armenia",
+            "standard-constantinople"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-apulia",
+    "fields": {
+        "name": "apulia",
+        "controlled_by_initial": "standard-italy",
+        "variant": "standard",
+        "nationality": "standard-italy",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-adriatic-sea",
+            "standard-ionian-sea",
+            "standard-naples",
+            "standard-rome",
+            "standard-venice"
+        ],
+        "shared_coasts": [
+            "standard-naples",
+            "standard-venice"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-armenia",
+    "fields": {
+        "name": "armenia",
+        "controlled_by_initial": "standard-turkey",
+        "variant": "standard",
+        "nationality": "standard-turkey",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-ankara",
+            "standard-sevastopol",
+            "standard-smyrna",
+            "standard-syria"
+        ],
+        "shared_coasts": [
+            "standard-ankara",
+            "standard-sevastopol"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-baltic-sea",
+    "fields": {
+        "name": "baltic sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-berlin",
+            "standard-denmark",
+            "standard-gulf-of-bothnia",
+            "standard-kiel",
+            "standard-prussia",
+            "standard-sweden"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-barents-sea",
+    "fields": {
+        "name": "barents sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-norway",
+            "standard-norwegian-sea",
+            "standard-st-petersburg"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-belgium",
+    "fields": {
+        "name": "belgium",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-burgundy",
+            "standard-english-channel",
+            "standard-holland",
+            "standard-north-sea",
+            "standard-picardy",
+            "standard-ruhr"
+        ],
+        "shared_coasts": [
+            "standard-holland",
+            "standard-picardy"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-berlin",
+    "fields": {
+        "name": "berlin",
+        "controlled_by_initial": "standard-germany",
+        "variant": "standard",
+        "nationality": "standard-germany",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-kiel",
+            "standard-munich",
+            "standard-prussia",
+            "standard-silesia"
+        ],
+        "shared_coasts": [
+            "standard-kiel",
+            "standard-prussia"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-black-sea",
+    "fields": {
+        "name": "black sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-ankara",
+            "standard-armenia",
+            "standard-bulgaria",
+            "standard-constantinople",
+            "standard-rumania",
+            "standard-sevastopol"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-bohemia",
+    "fields": {
+        "name": "bohemia",
+        "controlled_by_initial": "standard-austria-hungary",
+        "variant": "standard",
+        "nationality": "standard-austria-hungary",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-galicia",
+            "standard-munich",
+            "standard-silesia",
+            "standard-tyrolia",
+            "standard-vienna"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-brest",
+    "fields": {
+        "name": "brest",
+        "controlled_by_initial": "standard-france",
+        "variant": "standard",
+        "nationality": "standard-france",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-english-channel",
+            "standard-gascony",
+            "standard-mid-atlantic-ocean",
+            "standard-paris",
+            "standard-picardy"
+        ],
+        "shared_coasts": [
+            "standard-gascony",
+            "standard-picardy"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-budapest",
+    "fields": {
+        "name": "budapest",
+        "controlled_by_initial": "standard-austria-hungary",
+        "variant": "standard",
+        "nationality": "standard-austria-hungary",
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-galicia",
+            "standard-rumania",
+            "standard-serbia",
+            "standard-trieste",
+            "standard-vienna"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-bulgaria",
+    "fields": {
+        "name": "bulgaria",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-aegean-sea",
+            "standard-black-sea",
+            "standard-constantinople",
+            "standard-greece",
+            "standard-rumania",
+            "standard-serbia"
+        ],
+        "shared_coasts": [
+            "standard-constantinople",
+            "standard-greece",
+            "standard-rumania"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-burgundy",
+    "fields": {
+        "name": "burgundy",
+        "controlled_by_initial": "standard-france",
+        "variant": "standard",
+        "nationality": "standard-france",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-belgium",
+            "standard-gascony",
+            "standard-marseilles",
+            "standard-munich",
+            "standard-paris",
+            "standard-picardy",
+            "standard-ruhr"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-clyde",
+    "fields": {
+        "name": "clyde",
+        "controlled_by_initial": "standard-england",
+        "variant": "standard",
+        "nationality": "standard-england",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-edinburgh",
+            "standard-irish-sea",
+            "standard-liverpool",
+            "standard-north-atlantic-ocean",
+            "standard-norwegian-sea"
+        ],
+        "shared_coasts": [
+            "standard-edinburgh",
+            "standard-liverpool"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-constantinople",
+    "fields": {
+        "name": "constantinople",
+        "controlled_by_initial": "standard-turkey",
+        "variant": "standard",
+        "nationality": "standard-turkey",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-aegean-sea",
+            "standard-ankara",
+            "standard-black-sea",
+            "standard-bulgaria",
+            "standard-smyrna"
+        ],
+        "shared_coasts": [
+            "standard-ankara",
+            "standard-smyrna"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-denmark",
+    "fields": {
+        "name": "denmark",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-helgoland-bight",
+            "standard-kiel",
+            "standard-north-sea",
+            "standard-skagerrak",
+            "standard-sweden"
+        ],
+        "shared_coasts": [
+            "standard-kiel",
+            "standard-sweden"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-eastern-mediterranean",
+    "fields": {
+        "name": "eastern mediterranean",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-aegean-sea",
+            "standard-ionian-sea",
+            "standard-smyrna",
+            "standard-syria"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-edinburgh",
+    "fields": {
+        "name": "edinburgh",
+        "controlled_by_initial": "standard-england",
+        "variant": "standard",
+        "nationality": "standard-england",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-clyde",
+            "standard-liverpool",
+            "standard-north-sea",
+            "standard-norwegian-sea",
+            "standard-yorkshire"
+        ],
+        "shared_coasts": [
+            "standard-clyde",
+            "standard-yorkshire"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-english-channel",
+    "fields": {
+        "name": "english channel",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-belgium",
+            "standard-brest",
+            "standard-irish-sea",
+            "standard-london",
+            "standard-mid-atlantic-ocean",
+            "standard-north-sea",
+            "standard-picardy",
+            "standard-wales"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-finland",
+    "fields": {
+        "name": "finland",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-gulf-of-bothnia",
+            "standard-norway",
+            "standard-st-petersburg",
+            "standard-sweden"
+        ],
+        "shared_coasts": [
+            "standard-sweden"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-galicia",
+    "fields": {
+        "name": "galicia",
+        "controlled_by_initial": "standard-austria-hungary",
+        "variant": "standard",
+        "nationality": "standard-austria-hungary",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-bohemia",
+            "standard-budapest",
+            "standard-rumania",
+            "standard-silesia",
+            "standard-ukraine",
+            "standard-vienna",
+            "standard-warsaw"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-gascony",
+    "fields": {
+        "name": "gascony",
+        "controlled_by_initial": "standard-france",
+        "variant": "standard",
+        "nationality": "standard-france",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-brest",
+            "standard-burgundy",
+            "standard-marseilles",
+            "standard-mid-atlantic-ocean",
+            "standard-paris",
+            "standard-spain"
+        ],
+        "shared_coasts": [
+            "standard-brest"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-greece",
+    "fields": {
+        "name": "greece",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-aegean-sea",
+            "standard-albania",
+            "standard-bulgaria",
+            "standard-ionian-sea",
+            "standard-serbia"
+        ],
+        "shared_coasts": [
+            "standard-albania",
+            "standard-bulgaria"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-gulf-of-bothnia",
+    "fields": {
+        "name": "gulf of bothnia",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-finland",
+            "standard-livonia",
+            "standard-st-petersburg",
+            "standard-sweden"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-gulf-of-lyon",
+    "fields": {
+        "name": "gulf of lyon",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-marseilles",
+            "standard-piedmont",
+            "standard-spain",
+            "standard-tuscany",
+            "standard-tyrrhenian-sea",
+            "standard-western-mediterranean"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-helgoland-bight",
+    "fields": {
+        "name": "helgoland bight",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-denmark",
+            "standard-holland",
+            "standard-kiel",
+            "standard-north-sea"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-holland",
+    "fields": {
+        "name": "holland",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-belgium",
+            "standard-helgoland-bight",
+            "standard-kiel",
+            "standard-north-sea",
+            "standard-ruhr"
+        ],
+        "shared_coasts": [
+            "standard-belgium",
+            "standard-kiel"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-ionian-sea",
+    "fields": {
+        "name": "ionian sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-adriatic-sea",
+            "standard-aegean-sea",
+            "standard-albania",
+            "standard-apulia",
+            "standard-eastern-mediterranean",
+            "standard-greece",
+            "standard-naples",
+            "standard-tunis",
+            "standard-tyrrhenian-sea"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-irish-sea",
+    "fields": {
+        "name": "irish sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-english-channel",
+            "standard-liverpool",
+            "standard-mid-atlantic-ocean",
+            "standard-north-atlantic-ocean",
+            "standard-wales"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-kiel",
+    "fields": {
+        "name": "kiel",
+        "controlled_by_initial": "standard-germany",
+        "variant": "standard",
+        "nationality": "standard-germany",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-berlin",
+            "standard-denmark",
+            "standard-helgoland-bight",
+            "standard-holland",
+            "standard-munich",
+            "standard-ruhr"
+        ],
+        "shared_coasts": [
+            "standard-berlin",
+            "standard-denmark",
+            "standard-holland"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-liverpool",
+    "fields": {
+        "name": "liverpool",
+        "controlled_by_initial": "standard-england",
+        "variant": "standard",
+        "nationality": "standard-england",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-clyde",
+            "standard-edinburgh",
+            "standard-irish-sea",
+            "standard-north-atlantic-ocean",
+            "standard-wales",
+            "standard-yorkshire"
+        ],
+        "shared_coasts": [
+            "standard-clyde",
+            "standard-wales"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-livonia",
+    "fields": {
+        "name": "livonia",
+        "controlled_by_initial": "standard-russia",
+        "variant": "standard",
+        "nationality": "standard-russia",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-gulf-of-bothnia",
+            "standard-moscow",
+            "standard-prussia",
+            "standard-st-petersburg",
+            "standard-warsaw"
+        ],
+        "shared_coasts": [
+            "standard-prussia"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-london",
+    "fields": {
+        "name": "london",
+        "controlled_by_initial": "standard-england",
+        "variant": "standard",
+        "nationality": "standard-england",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-english-channel",
+            "standard-north-sea",
+            "standard-wales",
+            "standard-yorkshire"
+        ],
+        "shared_coasts": [
+            "standard-wales",
+            "standard-yorkshire"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-marseilles",
+    "fields": {
+        "name": "marseilles",
+        "controlled_by_initial": "standard-france",
+        "variant": "standard",
+        "nationality": "standard-france",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-burgundy",
+            "standard-gascony",
+            "standard-gulf-of-lyon",
+            "standard-piedmont",
+            "standard-spain"
+        ],
+        "shared_coasts": [
+            "standard-piedmont"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-mid-atlantic-ocean",
+    "fields": {
+        "name": "mid-atlantic ocean",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-brest",
+            "standard-english-channel",
+            "standard-gascony",
+            "standard-irish-sea",
+            "standard-north-africa",
+            "standard-north-atlantic-ocean",
+            "standard-portugal",
+            "standard-spain",
+            "standard-western-mediterranean"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-moscow",
+    "fields": {
+        "name": "moscow",
+        "controlled_by_initial": "standard-russia",
+        "variant": "standard",
+        "nationality": "standard-russia",
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-livonia",
+            "standard-rumania",
+            "standard-sevastopol",
+            "standard-st-petersburg",
+            "standard-ukraine",
+            "standard-warsaw"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-munich",
+    "fields": {
+        "name": "munich",
+        "controlled_by_initial": "standard-germany",
+        "variant": "standard",
+        "nationality": "standard-germany",
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-berlin",
+            "standard-bohemia",
+            "standard-burgundy",
+            "standard-kiel",
+            "standard-ruhr",
+            "standard-silesia",
+            "standard-tyrolia"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-naples",
+    "fields": {
+        "name": "naples",
+        "controlled_by_initial": "standard-italy",
+        "variant": "standard",
+        "nationality": "standard-italy",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-apulia",
+            "standard-ionian-sea",
+            "standard-rome",
+            "standard-tyrrhenian-sea"
+        ],
+        "shared_coasts": [
+            "standard-apulia",
+            "standard-rome"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-north-africa",
+    "fields": {
+        "name": "north africa",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-mid-atlantic-ocean",
+            "standard-tunis",
+            "standard-western-mediterranean"
+        ],
+        "shared_coasts": [
+            "standard-tunis"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-north-atlantic-ocean",
+    "fields": {
+        "name": "north atlantic ocean",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-clyde",
+            "standard-irish-sea",
+            "standard-liverpool",
+            "standard-mid-atlantic-ocean",
+            "standard-norwegian-sea"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-north-sea",
+    "fields": {
+        "name": "north sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-belgium",
+            "standard-denmark",
+            "standard-edinburgh",
+            "standard-english-channel",
+            "standard-helgoland-bight",
+            "standard-holland",
+            "standard-london",
+            "standard-norway",
+            "standard-norwegian-sea",
+            "standard-skagerrak",
+            "standard-yorkshire"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-norway",
+    "fields": {
+        "name": "norway",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-barents-sea",
+            "standard-finland",
+            "standard-north-sea",
+            "standard-norwegian-sea",
+            "standard-skagerrak",
+            "standard-st-petersburg",
+            "standard-sweden"
+        ],
+        "shared_coasts": [
+            "standard-sweden"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-norwegian-sea",
+    "fields": {
+        "name": "norwegian sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-barents-sea",
+            "standard-clyde",
+            "standard-edinburgh",
+            "standard-north-atlantic-ocean",
+            "standard-north-sea",
+            "standard-norway"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-paris",
+    "fields": {
+        "name": "paris",
+        "controlled_by_initial": "standard-france",
+        "variant": "standard",
+        "nationality": "standard-france",
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-brest",
+            "standard-burgundy",
+            "standard-gascony",
+            "standard-picardy",
+            "standard-ruhr",
+            "standard-silesia",
+            "standard-tyrolia"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-picardy",
+    "fields": {
+        "name": "picardy",
+        "controlled_by_initial": "standard-france",
+        "variant": "standard",
+        "nationality": "standard-france",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-belgium",
+            "standard-brest",
+            "standard-burgundy",
+            "standard-english-channel",
+            "standard-paris"
+        ],
+        "shared_coasts": [
+            "standard-belgium",
+            "standard-brest"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-piedmont",
+    "fields": {
+        "name": "piedmont",
+        "controlled_by_initial": "standard-italy",
+        "variant": "standard",
+        "nationality": "standard-italy",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-gulf-of-lyon",
+            "standard-marseilles",
+            "standard-tuscany",
+            "standard-tyrolia",
+            "standard-venice"
+        ],
+        "shared_coasts": [
+            "standard-marseilles",
+            "standard-tuscany"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-portugal",
+    "fields": {
+        "name": "portugal",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-mid-atlantic-ocean",
+            "standard-spain"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-prussia",
+    "fields": {
+        "name": "prussia",
+        "controlled_by_initial": "standard-germany",
+        "variant": "standard",
+        "nationality": "standard-germany",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-berlin",
+            "standard-livonia",
+            "standard-silesia",
+            "standard-warsaw"
+        ],
+        "shared_coasts": [
+            "standard-berlin",
+            "standard-livonia"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-rome",
+    "fields": {
+        "name": "rome",
+        "controlled_by_initial": "standard-italy",
+        "variant": "standard",
+        "nationality": "standard-italy",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-apulia",
+            "standard-naples",
+            "standard-tuscany",
+            "standard-tyrrhenian-sea",
+            "standard-venice"
+        ],
+        "shared_coasts": [
+            "standard-naples",
+            "standard-tuscany"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-ruhr",
+    "fields": {
+        "name": "ruhr",
+        "controlled_by_initial": "standard-germany",
+        "variant": "standard",
+        "nationality": "standard-germany",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-belgium",
+            "standard-burgundy",
+            "standard-holland",
+            "standard-kiel",
+            "standard-munich"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-rumania",
+    "fields": {
+        "name": "rumania",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-black-sea",
+            "standard-budapest",
+            "standard-bulgaria",
+            "standard-galicia",
+            "standard-serbia",
+            "standard-sevastopol",
+            "standard-ukraine"
+        ],
+        "shared_coasts": [
+            "standard-sevastopol"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-serbia",
+    "fields": {
+        "name": "serbia",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-albania",
+            "standard-budapest",
+            "standard-bulgaria",
+            "standard-greece",
+            "standard-rumania",
+            "standard-trieste"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-sevastopol",
+    "fields": {
+        "name": "sevastopol",
+        "controlled_by_initial": "standard-russia",
+        "variant": "standard",
+        "nationality": "standard-russia",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-armenia",
+            "standard-black-sea",
+            "standard-moscow",
+            "standard-rumania",
+            "standard-ukraine"
+        ],
+        "shared_coasts": [
+            "standard-armenia",
+            "standard-rumania"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-silesia",
+    "fields": {
+        "name": "silesia",
+        "controlled_by_initial": "standard-germany",
+        "variant": "standard",
+        "nationality": "standard-germany",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-berlin",
+            "standard-bohemia",
+            "standard-galicia",
+            "standard-munich",
+            "standard-prussia",
+            "standard-warsaw"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-skagerrak",
+    "fields": {
+        "name": "skagerrak",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-denmark",
+            "standard-north-sea",
+            "standard-norway",
+            "standard-sweden"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-smyrna",
+    "fields": {
+        "name": "smyrna",
+        "controlled_by_initial": "standard-turkey",
+        "variant": "standard",
+        "nationality": "standard-turkey",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-aegean-sea",
+            "standard-ankara",
+            "standard-armenia",
+            "standard-constantinople",
+            "standard-eastern-mediterranean",
+            "standard-syria"
+        ],
+        "shared_coasts": [
+            "standard-constantinople",
+            "standard-syria"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-spain",
+    "fields": {
+        "name": "spain",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-gascony",
+            "standard-gulf-of-lyon",
+            "standard-marseilles",
+            "standard-mid-atlantic-ocean",
+            "standard-portugal",
+            "standard-western-mediterranean"
+        ],
+        "shared_coasts": [
+            "standard-gascony",
+            "standard-gulf-of-lyon",
+            "standard-marseilles",
+            "standard-mid-atlantic-ocean",
+            "standard-portugal"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-st-petersburg",
+    "fields": {
+        "name": "st. petersburg",
+        "controlled_by_initial": "standard-russia",
+        "variant": "standard",
+        "nationality": "standard-russia",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-barents-sea",
+            "standard-finland",
+            "standard-gulf-of-bothnia",
+            "standard-livonia",
+            "standard-moscow",
+            "standard-norway"
+        ],
+        "shared_coasts": [
+            "standard-finland",
+            "standard-livonia",
+            "standard-norway"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-sweden",
+    "fields": {
+        "name": "sweden",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-baltic-sea",
+            "standard-denmark",
+            "standard-finland",
+            "standard-gulf-of-bothnia",
+            "standard-norway",
+            "standard-skagerrak"
+        ],
+        "shared_coasts": [
+            "standard-denmark",
+            "standard-finland",
+            "standard-norway"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-syria",
+    "fields": {
+        "name": "syria",
+        "controlled_by_initial": "standard-turkey",
+        "variant": "standard",
+        "nationality": "standard-turkey",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-armenia",
+            "standard-eastern-mediterranean",
+            "standard-smyrna"
+        ],
+        "shared_coasts": [
+            "standard-smyrna"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-trieste",
+    "fields": {
+        "name": "trieste",
+        "controlled_by_initial": "standard-austria-hungary",
+        "variant": "standard",
+        "nationality": "standard-austria-hungary",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "fleet",
+        "neighbours": [
+            "standard-adriatic-sea",
+            "standard-albania",
+            "standard-budapest",
+            "standard-serbia",
+            "standard-syria",
+            "standard-tyrolia",
+            "standard-venice",
+            "standard-vienna"
+        ],
+        "shared_coasts": [
+            "standard-albania",
+            "standard-venice"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-tunis",
+    "fields": {
+        "name": "tunis",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-ionian-sea",
+            "standard-north-africa",
+            "standard-tyrrhenian-sea",
+            "standard-western-mediterranean"
+        ],
+        "shared_coasts": [
+            "standard-north-africa"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-tuscany",
+    "fields": {
+        "name": "tuscany",
+        "controlled_by_initial": "standard-italy",
+        "variant": "standard",
+        "nationality": "standard-italy",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-gulf-of-lyon",
+            "standard-piedmont",
+            "standard-rome",
+            "standard-tyrrhenian-sea",
+            "standard-venice"
+        ],
+        "shared_coasts": [
+            "standard-piedmont",
+            "standard-rome"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-tyrolia",
+    "fields": {
+        "name": "tyrolia",
+        "controlled_by_initial": "standard-austria-hungary",
+        "variant": "standard",
+        "nationality": "standard-austria-hungary",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-bohemia",
+            "standard-munich",
+            "standard-piedmont",
+            "standard-trieste",
+            "standard-venice",
+            "standard-vienna"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-tyrrhenian-sea",
+    "fields": {
+        "name": "tyrrhenian sea",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-gulf-of-lyon",
+            "standard-ionian-sea",
+            "standard-naples",
+            "standard-rome",
+            "standard-tunis",
+            "standard-tuscany",
+            "standard-western-mediterranean"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-ukraine",
+    "fields": {
+        "name": "ukraine",
+        "controlled_by_initial": "standard-russia",
+        "variant": "standard",
+        "nationality": "standard-russia",
+        "type": "inland",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-galicia",
+            "standard-moscow",
+            "standard-rumania",
+            "standard-sevastopol",
+            "standard-warsaw"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-venice",
+    "fields": {
+        "name": "venice",
+        "controlled_by_initial": "standard-italy",
+        "variant": "standard",
+        "nationality": "standard-italy",
+        "type": "coastal",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-adriatic-sea",
+            "standard-apulia",
+            "standard-piedmont",
+            "standard-rome",
+            "standard-trieste",
+            "standard-tuscany",
+            "standard-tyrolia",
+            "standard-tyrrhenian-sea"
+        ],
+        "shared_coasts": [
+            "standard-apulia",
+            "standard-trieste"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-vienna",
+    "fields": {
+        "name": "vienna",
+        "controlled_by_initial": "standard-austria-hungary",
+        "variant": "standard",
+        "nationality": "standard-austria-hungary",
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-bohemia",
+            "standard-budapest",
+            "standard-galicia",
+            "standard-trieste",
+            "standard-tyrolia"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-wales",
+    "fields": {
+        "name": "wales",
+        "controlled_by_initial": "standard-england",
+        "variant": "standard",
+        "nationality": "standard-england",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-english-channel",
+            "standard-irish-sea",
+            "standard-liverpool",
+            "standard-london",
+            "standard-yorkshire"
+        ],
+        "shared_coasts": [
+            "standard-liverpool",
+            "standard-london"
+        ]
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-warsaw",
+    "fields": {
+        "name": "warsaw",
+        "controlled_by_initial": "standard-russia",
+        "variant": "standard",
+        "nationality": "standard-russia",
+        "type": "inland",
+        "supply_center": true,
+        "initial_piece_type": "army",
+        "neighbours": [
+            "standard-galicia",
+            "standard-livonia",
+            "standard-moscow",
+            "standard-prussia",
+            "standard-silesia",
+            "standard-ukraine"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-western-mediterranean",
+    "fields": {
+        "name": "western mediterranean",
+        "controlled_by_initial": null,
+        "variant": "standard",
+        "nationality": null,
+        "type": "sea",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-gulf-of-lyon",
+            "standard-mid-atlantic-ocean",
+            "standard-north-africa",
+            "standard-spain",
+            "standard-tunis",
+            "standard-tyrrhenian-sea"
+        ],
+        "shared_coasts": []
+    }
+},
+{
+    "model": "core.territory",
+    "pk": "standard-yorkshire",
+    "fields": {
+        "name": "yorkshire",
+        "controlled_by_initial": "standard-england",
+        "variant": "standard",
+        "nationality": "standard-england",
+        "type": "coastal",
+        "supply_center": false,
+        "initial_piece_type": null,
+        "neighbours": [
+            "standard-edinburgh",
+            "standard-liverpool",
+            "standard-london",
+            "standard-north-sea",
+            "standard-wales"
+        ],
+        "shared_coasts": [
+            "standard-edinburgh",
+            "standard-london"
+        ]
+    }
+}
+]

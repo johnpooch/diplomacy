@@ -1,0 +1,93 @@
+[
+{
+    "model": "core.namedcoast",
+    "pk": "standard-bulgaria-east-coast",
+    "fields": {
+        "name": "bulgaria east coast",
+        "map_abbreviation": "ec",
+        "parent": "standard-bulgaria",
+        "piece_starts_here": false,
+        "neighbours": [
+            "standard-black-sea",
+            "standard-constantinople",
+            "standard-rumania"
+        ]
+    }
+},
+{
+    "model": "core.namedcoast",
+    "pk": "standard-bulgaria-south-coast",
+    "fields": {
+        "name": "bulgaria south coast",
+        "map_abbreviation": "sc",
+        "parent": "standard-bulgaria",
+        "piece_starts_here": false,
+        "neighbours": [
+            "standard-aegean-sea",
+            "standard-constantinople",
+            "standard-greece"
+        ]
+    }
+},
+{
+    "model": "core.namedcoast",
+    "pk": "standard-spain-north-coast",
+    "fields": {
+        "name": "spain north coast",
+        "map_abbreviation": "nc",
+        "parent": "standard-spain",
+        "piece_starts_here": false,
+        "neighbours": [
+            "standard-gascony",
+            "standard-mid-atlantic-ocean",
+            "standard-portugal"
+        ]
+    }
+},
+{
+    "model": "core.namedcoast",
+    "pk": "standard-spain-south-coast",
+    "fields": {
+        "name": "spain south coast",
+        "map_abbreviation": "sc",
+        "parent": "standard-spain",
+        "piece_starts_here": false,
+        "neighbours": [
+            "standard-gulf-of-lyon",
+            "standard-marseilles",
+            "standard-mid-atlantic-ocean",
+            "standard-portugal",
+            "standard-western-mediterranean"
+        ]
+    }
+},
+{
+    "model": "core.namedcoast",
+    "pk": "standard-st-petersburg-north-coast",
+    "fields": {
+        "name": "st. petersburg north coast",
+        "map_abbreviation": "nc",
+        "parent": "standard-st-petersburg",
+        "piece_starts_here": false,
+        "neighbours": [
+            "standard-barents-sea",
+            "standard-norway"
+        ]
+    }
+},
+{
+    "model": "core.namedcoast",
+    "pk": "standard-st-petersburg-south-coast",
+    "fields": {
+        "name": "st. petersburg south coast",
+        "map_abbreviation": "sc",
+        "parent": "standard-st-petersburg",
+        "piece_starts_here": true,
+        "neighbours": [
+            "standard-finland",
+            "standard-gulf-of-bothnia",
+            "standard-livonia"
+        ]
+    }
+}
+]

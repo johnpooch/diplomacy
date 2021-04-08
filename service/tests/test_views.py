@@ -2,41 +2,39 @@ from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from core import factories, models
-from core.models.base import GameStatus, OrderType, Phase, PieceType, Season
-from service import serializers
+from core.tests import DiplomacyTestCaseMixin
+from core.models.base import (
+    DrawStatus, DrawResponse, GameStatus, OrderType, Phase, PieceType, Season,
+    SurrenderStatus
+)
+from service import validators
 
 
-def set_processed(self):
+serializer_process_turn_path = 'service.serializers.process_turn'
+
+
+def set_processed(self, processed_at=None):
     self.processed = True
+    self.processed_at = processed_at or timezone.now()
     self.save()
 
 
-class TestGetGames(APITestCase):
+class BaseTestCase(APITestCase, DiplomacyTestCaseMixin):
+    pass
+
+
+class TestGetGames(BaseTestCase):
+
+    max_diff = None
 
     def setUp(self):
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
-
-    def test_get_all_games(self):
-        """
-        Gets all games including pending, active, and ended games.
-        """
-        games = [
-            factories.GameFactory(status=GameStatus.PENDING),
-            factories.GameFactory(status=GameStatus.ACTIVE),
-            factories.GameFactory(status=GameStatus.ENDED),
-        ]
-
-        url = reverse('list-games')
-        response = self.client.get(url, format='json')
-
-        expected_data = [serializers.GameSerializer(game).data for game in games]
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_data)
 
     def test_get_all_games_unauthenticated(self):
         """
@@ -48,7 +46,7 @@ class TestGetGames(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestGetCreateGame(APITestCase):
+class TestGetCreateGame(BaseTestCase):
 
     def test_get_create_game(self):
         """
@@ -73,7 +71,7 @@ class TestGetCreateGame(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestCreateGame(APITestCase):
+class TestCreateGame(BaseTestCase):
 
     def test_post_invalid_game(self):
         """
@@ -95,7 +93,7 @@ class TestCreateGame(APITestCase):
         """
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
-        variant = factories.VariantFactory()
+        variant = models.Variant.objects.get(id='standard')
 
         data = {
             'name': 'Test Game',
@@ -122,12 +120,12 @@ class TestCreateGame(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
-class TestJoinGame(APITestCase):
+class TestJoinGame(BaseTestCase):
 
     def setUp(self):
         self.data = {}
         self.user = factories.UserFactory()
-        self.variant = factories.VariantFactory()
+        self.variant = models.Variant.objects.get(id='standard')
         self.game = models.Game.objects.create(
             status=GameStatus.PENDING,
             variant=self.variant,
@@ -135,7 +133,7 @@ class TestJoinGame(APITestCase):
             created_by=self.user,
             num_players=7
         )
-        self.url = reverse('toggle-join-game', args=[self.game.id])
+        self.url = reverse('toggle-join-game', args=[self.game.slug])
 
     def test_join_game_unauthorized(self):
         """
@@ -187,12 +185,12 @@ class TestJoinGame(APITestCase):
         mock_initialize.assert_called()
 
 
-class TestGetGameState(APITestCase):
+class TestGetGameState(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
         self.client.force_authenticate(user=self.user)
-        self.variant = models.Variant.objects.create(name='standard')
+        self.variant = models.Variant.objects.create(name='test')
         self.game = models.Game.objects.create(
             variant=self.variant,
             name='Test game',
@@ -237,7 +235,7 @@ class TestGetGameState(APITestCase):
             piece=self.piece,
             territory=self.territory,
         )
-        self.url = reverse('game-state', args=[self.game.id])
+        self.url = reverse('game-state', args=[self.game.slug])
 
     def test_get_game_state_unauthorized(self):
         self.client.logout()
@@ -271,7 +269,7 @@ class TestGetGameState(APITestCase):
         self.assertFalse(response.data['turns'][0]['orders'])
 
 
-class TestListOrders(APITestCase):
+class TestListOrders(BaseTestCase):
     def setUp(self):
         self.user = factories.UserFactory()
         self.client.force_authenticate(user=self.user)
@@ -322,7 +320,7 @@ class TestListOrders(APITestCase):
             piece=self.piece,
             territory=self.territory,
         )
-        self.url = reverse('orders', args=[self.game.id])
+        self.url = reverse('orders', args=[self.turn.id])
 
     def test_no_orders(self):
         response = self.client.get(self.url, format='json')
@@ -376,7 +374,7 @@ class TestListOrders(APITestCase):
         self.assertEqual(response.data[0]['nation'], self.nation.id)
 
 
-class TestCreateOrder(APITestCase):
+class TestCreateOrder(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -431,7 +429,7 @@ class TestCreateOrder(APITestCase):
         self.data = {
             'source': self.territory.id,
         }
-        self.url = reverse('order', args=[self.game.id])
+        self.url = reverse('order', args=[self.game.slug])
 
     def test_get(self):
         response = self.client.get(self.url, self.data, format='json')
@@ -462,27 +460,26 @@ class TestCreateOrder(APITestCase):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_create_order_no_orders_left_retreat_and_disband(self):
+    def test_create_order_no_orders_left_retreat(self):
         models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
-        nation_state = factories.NationStateFactory(
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.nation_state = self.create_test_nation_state(nation=self.nation, user=self.user, turn=self.game.get_current_turn())
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
             turn=self.game.get_current_turn(),
-            user=self.user,
-        )
-        territory_state = factories.TerritoryStateFactory(
-            turn=self.game.get_current_turn(),
-            controlled_by=nation_state.nation,
+            controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
         models.PieceState.objects.all().delete()
-        territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
-            'target': territory.id,
+            'target': self.territory.id,
             'type': OrderType.RETREAT,
         }
         response = self.client.post(self.url, self.data, format='json')
@@ -499,11 +496,7 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(models.Order.objects.get())  # object created
 
-        territory_state = factories.TerritoryStateFactory(
-            turn=self.turn,
-            controlled_by=self.nation_state.nation,
-        )
-        territory = territory_state.territory
+        territory = self.create_test_territory(variant=self.variant)
         self.data = {
             'source': self.territory.id,
             'target': territory.id,
@@ -519,19 +512,22 @@ class TestCreateOrder(APITestCase):
         models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
-        nation_state = factories.NationStateFactory(
+        nation = self.create_test_nation(variant=self.variant)
+        nation_state = self.create_test_nation_state(
             turn=self.game.get_current_turn(),
             user=self.user,
+            nation=nation,
         )
-        territory_state = factories.TerritoryStateFactory(
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
             turn=self.game.get_current_turn(),
             controlled_by=nation_state.nation,
+            territory=self.territory,
         )
-        self.territory = territory_state.territory
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -539,20 +535,16 @@ class TestCreateOrder(APITestCase):
         turn = models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
         self.nation_state.turn = turn
         self.nation_state.save()
-        territory_state = factories.TerritoryStateFactory(
-            turn=turn,
-            controlled_by=self.nation_state.nation,
-        )
+        territory = self.create_test_territory(variant=self.variant)
         self.piece_state.turn = turn
         self.piece_state.must_retreat = True
         self.piece_state.save()
-        territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
             'target': territory.id,
@@ -565,22 +557,23 @@ class TestCreateOrder(APITestCase):
         turn = models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
         self.nation_state.turn = turn
         self.nation_state.save()
-        territory_state = factories.TerritoryStateFactory(
-            turn=turn,
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
+            turn=self.game.get_current_turn(),
             controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
         self.piece_state.turn = turn
         self.piece_state.save()
-        territory = territory_state.territory
         self.data = {
             'source': self.territory.id,
-            'target': territory.id,
+            'target': self.territory.id,
             'type': OrderType.RETREAT,
         }
         response = self.client.post(self.url, self.data, format='json')
@@ -780,95 +773,7 @@ class TestCreateOrder(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class TestDeleteOrder(APITestCase):
-
-    def setUp(self):
-        self.user = factories.UserFactory()
-        self.client.force_authenticate(user=self.user)
-
-        self.variant = factories.VariantFactory()
-        self.game = models.Game.objects.create(
-            status=GameStatus.ACTIVE,
-            variant=self.variant,
-            name='Test Game',
-            created_by=self.user,
-            num_players=7
-        )
-        self.game.participants.add(self.user)
-        self.turn = models.Turn.objects.create(
-            game=self.game,
-            year=1901,
-            phase=Phase.ORDER,
-            season=Season.SPRING,
-        )
-        self.nation = models.Nation.objects.create(
-            variant=self.variant,
-            name='Test Nation',
-        )
-        self.nation_state = models.NationState.objects.create(
-            nation=self.nation,
-            turn=self.turn,
-            user=self.user,
-        )
-        self.territory = models.Territory.objects.create(
-            variant=self.variant,
-            name='Paris',
-            nationality=self.nation,
-            supply_center=True,
-        )
-        self.territory_state = models.TerritoryState.objects.create(
-            territory=self.territory,
-            turn=self.turn,
-            controlled_by=self.nation_state.nation,
-        )
-        self.territory = self.territory_state.territory
-        self.piece = models.Piece.objects.create(
-            game=self.game,
-            nation=self.nation_state.nation,
-            type=PieceType.ARMY,
-        )
-        self.piece_state = models.PieceState.objects.create(
-            turn=self.turn,
-            piece=self.piece,
-            territory=self.territory,
-        )
-        self.order = models.Order.objects.create(
-            turn=self.turn,
-            source=self.territory,
-            nation=self.nation
-        )
-        self.url = reverse('order', args=[self.game.id, self.order.id])
-
-    def test_delete_order_valid(self):
-        response = self.client.delete(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        with self.assertRaises(models.Order.DoesNotExist):
-            self.assertTrue(models.Order.objects.get())
-
-    def test_delete_order_no_order(self):
-        url = reverse('order', args=[self.game.id, 200])
-        response = self.client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-    def test_delete_other_players_order(self):
-        other_user = factories.UserFactory()
-        self.game.participants.add(other_user)
-        self.client.force_authenticate(user=other_user)
-        nation = models.Nation.objects.create(
-            variant=self.variant,
-            name='Test Nation',
-        )
-        models.NationState.objects.create(
-            nation=nation,
-            turn=self.turn,
-            user=other_user,
-        )
-        response = self.client.delete(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertTrue(models.Order.objects.get())
-
-
-class TestFinalizeOrders(APITestCase):
+class TestFinalizeOrders(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -896,11 +801,12 @@ class TestFinalizeOrders(APITestCase):
             turn=turn,
             user=self.user,
         )
-        territory_state = factories.TerritoryStateFactory(
-            turn=turn,
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
+            turn=self.game.get_current_turn(),
             controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
-        self.territory = territory_state.territory
         self.url = reverse(
             'toggle-finalize-orders',
             args=[self.nation_state.id]
@@ -922,7 +828,7 @@ class TestFinalizeOrders(APITestCase):
 
     def test_can_finalize_orders_with_no_orders(self):
         self.client.force_authenticate(user=self.user)
-        with mock.patch('core.models.Turn.process', set_processed):
+        with mock.patch(serializer_process_turn_path, set_processed):
             response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
@@ -935,7 +841,7 @@ class TestFinalizeOrders(APITestCase):
             nation=self.nation_state.nation,
             source=self.territory
         )
-        with mock.patch('core.models.Turn.process', set_processed):
+        with mock.patch(serializer_process_turn_path, set_processed):
             response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
@@ -945,14 +851,14 @@ class TestFinalizeOrders(APITestCase):
         self.client.force_authenticate(user=self.user)
         turn = self.game.get_current_turn()
         turn.nationstates.set([self.nation_state])
-        with mock.patch('core.models.Turn.process', set_processed):
+        with mock.patch(serializer_process_turn_path, set_processed):
             response = self.client.put(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertTrue(self.nation_state.orders_finalized)
 
 
-class TestUnfinalizeOrders(APITestCase):
+class TestUnfinalizeOrders(BaseTestCase):
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -981,11 +887,12 @@ class TestUnfinalizeOrders(APITestCase):
             user=self.user,
             orders_finalized=True,
         )
-        territory_state = factories.TerritoryStateFactory(
+        self.territory = self.create_test_territory(variant=self.variant)
+        self.territory_state = self.create_test_territory_state(
             turn=self.game.get_current_turn(),
             controlled_by=self.nation_state.nation,
+            territory=self.territory,
         )
-        self.territory = territory_state.territory
         self.url = reverse(
             'toggle-finalize-orders',
             args=[self.nation_state.id]
@@ -1027,3 +934,584 @@ class TestUnfinalizeOrders(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.nation_state.refresh_from_db()
         self.assertFalse(self.nation_state.orders_finalized)
+
+
+class TestSurrender(BaseTestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'surrender'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.game.participants.add(self.user)
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.url = reverse(self.view_name, args=[self.turn.id])
+        self.data = {}
+
+    def test_surrender_when_not_participant(self):
+        self.game.participants.all().delete()
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_surrender_when_game_not_active(self):
+        self.client.force_authenticate(user=self.user)
+        self.game.status = GameStatus.PENDING
+        self.game.save()
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_surrender(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        models.Surrender.objects.get(
+            user=self.nation_state.user,
+            nation_state=self.nation_state,
+            status=SurrenderStatus.PENDING,
+        )
+
+
+class TestCancelSurrender(BaseTestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'cancel-surrender'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.game.participants.add(self.user)
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.surrender = models.Surrender.objects.create(
+            user=self.nation_state.user,
+            nation_state=self.nation_state,
+            status=SurrenderStatus.PENDING,
+        )
+        self.url = reverse(
+            self.view_name,
+            args=[self.turn.id, self.surrender.id]
+        )
+        self.data = {}
+
+    def test_cancel_surrender(self):
+        self.client.force_authenticate(user=self.user)
+        response = self.client.patch(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        models.Surrender.objects.get(
+            user=self.nation_state.user,
+            nation_state=self.nation_state,
+            status=SurrenderStatus.CANCELED,
+        )
+
+
+class TestProposeDraw(BaseTestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'propose-draw'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.england = self.create_test_nation(
+            variant=self.variant,
+            name='England'
+        )
+        self.france = self.create_test_nation(
+            variant=self.variant,
+            name='France'
+        )
+        self.germany = self.create_test_nation(
+            variant=self.variant,
+            name='Germany'
+        )
+        self.italy = self.create_test_nation(
+            variant=self.variant,
+            name='Italy'
+        )
+        self.austria = self.create_test_nation(
+            variant=self.variant,
+            name='Austria-Hungary',
+        )
+        self.turkey = self.create_test_nation(
+            variant=self.variant,
+            name='Turkey',
+        )
+        self.russia = self.create_test_nation(
+            variant=self.variant,
+            name='Russia',
+        )
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.game.participants.add(self.user)
+        self.nation_state = self.create_test_nation_state(
+            nation=self.england,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.url = reverse(self.view_name, args=[self.turn.id])
+        self.client.force_authenticate(user=self.user)
+
+    def test_proposing_player_surrendering(self):
+        data = {
+            'nations': [self.france.id, self.germany.id, self.italy.id]
+        }
+        self.surrender = models.Surrender.objects.create(
+            user=self.user,
+            nation_state=self.nation_state,
+            status=SurrenderStatus.PENDING,
+        )
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.NotSurrenderingValidator.message
+        )
+
+    def test_not_current_turn(self):
+        self.turn.current_turn = False
+        self.turn.save()
+        data = {
+            'nations': [self.france.id, self.germany.id, self.italy.id]
+        }
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['turn'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(str(error), validators.CurrentTurnValidator.message)
+
+    def test_game_not_active(self):
+        self.game.status = GameStatus.ENDED
+        self.game.save()
+        data = {
+            'nations': [self.france.id, self.germany.id, self.italy.id]
+        }
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['turn'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(str(error), validators.CurrentTurnValidator.message)
+
+    def test_nations_not_in_variant(self):
+        other_variant = self.create_test_variant(id='other-variant', name='Other variant')
+        other_variant_nation = self.create_test_nation(variant=other_variant)
+        data = {
+            'nations': [other_variant_nation.id, self.germany.id]
+        }
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.NationsInVariantValidator.message
+        )
+
+    def test_nations_not_in_civil_disorder(self):
+        self.germany.user = None
+        self.germany.save()
+        data = {'nations': [self.germany.id]}
+        models.NationState.objects.create(turn=self.turn, nation=self.germany)
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(str(error), validators.NationsActiveValidator.message)
+
+    def test_already_proposed_draw(self):
+        self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.england,
+            proposed_by_user=self.user,
+        )
+        data = {'nations': [self.germany.id]}
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.OneProposedDrawValidator.message,
+        )
+
+    def test_proposed_players_not_enough_strength(self):
+        data = {'nations': [self.germany.id]}
+        self.create_test_nation_state(turn=self.turn, nation=self.germany)
+        self.create_test_nation_state(turn=self.turn, nation=self.england)
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            (
+                validators.ProposedDrawStrengthValidator.message
+                % self.variant.num_supply_centers_to_win
+            ),
+        )
+
+    @patch('service.validators.get_combined_strength')
+    def test_too_many_nations(self, mock_get_combined_strength):
+        data = {
+            'nations': [
+                self.france.id, self.germany.id, self.italy.id, self.russia.id
+            ]
+        }
+        mock_get_combined_strength.return_value = 20
+        self.create_test_nation_state(turn=self.turn, nation=self.england)
+        self.create_test_nation_state(turn=self.turn, nation=self.france)
+        self.create_test_nation_state(turn=self.turn, nation=self.germany)
+        self.create_test_nation_state(turn=self.turn, nation=self.italy)
+        self.create_test_nation_state(turn=self.turn, nation=self.russia)
+
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            (
+                validators.DrawNationCountValidator.message
+                % self.variant.max_nations_in_draw
+            ),
+        )
+
+    def test_duplicate_nations(self):
+        data = {'nations': [self.france.id, self.france.id]}
+        self.create_test_nation_state(turn=self.turn, nation=self.england)
+        self.create_test_nation_state(turn=self.turn, nation=self.france)
+
+        response = self.client.post(self.url, data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.DistinctNationsValidator.message,
+        )
+
+    @patch('service.validators.get_combined_strength')
+    def test_propose_draw(self, mock_get_combined_strength):
+        nations = [self.france, self.germany, self.italy]
+        data = {'nations': [n.id for n in nations]}
+        mock_get_combined_strength.return_value = 20
+        self.create_test_nation_state(turn=self.turn, nation=self.england)
+        self.create_test_nation_state(turn=self.turn, nation=self.france)
+        self.create_test_nation_state(turn=self.turn, nation=self.germany)
+        self.create_test_nation_state(turn=self.turn, nation=self.italy)
+
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        draw = models.Draw.objects.get()
+        draw_nations = list(draw.nations.all())
+        for nation in nations:
+            self.assertTrue(nation in draw_nations)
+        self.assertEqual(draw.proposed_by, self.england)
+        self.assertEqual(draw.proposed_by_user, self.user)
+        self.assertEqual(draw.turn, self.turn)
+        self.assertTrue(draw.proposed_at)
+
+
+class TestCancelDraw(BaseTestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'cancel-draw'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.other_user = self.create_test_user()
+        self.england = self.create_test_nation(
+            variant=self.variant,
+            name='England',
+        )
+        self.france = self.create_test_nation(
+            variant=self.variant,
+            name='France',
+        )
+        self.game.participants.add(self.user)
+        self.england_nation_state = self.create_test_nation_state(
+            nation=self.england,
+            turn=self.turn,
+            user=self.user,
+        )
+        self.france_nation_state = self.create_test_nation_state(
+            nation=self.france,
+            turn=self.turn,
+            user=self.other_user,
+        )
+        self.data = {}
+        self.client.force_authenticate(user=self.user)
+
+    def test_cannot_cancel_another_players_draw(self):
+        draw = self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.france,
+            proposed_by_user=self.other_user,
+        )
+        url = reverse(self.view_name, args=[self.turn.id, draw.id])
+        response = self.client.patch(url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_cannot_cancel_accepted_draw(self):
+        draw = self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.england,
+            proposed_by_user=self.user,
+            status=DrawStatus.ACCEPTED,
+        )
+        url = reverse(self.view_name, args=[self.turn.id, draw.id])
+        response = self.client.patch(url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cannot_cancel_rejected_draw(self):
+        draw = self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.england,
+            proposed_by_user=self.user,
+            status=DrawStatus.REJECTED,
+        )
+        url = reverse(self.view_name, args=[self.turn.id, draw.id])
+        response = self.client.patch(url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cancel_draw(self):
+        draw = self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.england,
+            proposed_by_user=self.user,
+        )
+        url = reverse(self.view_name, args=[self.turn.id, draw.id])
+        response = self.client.patch(url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        draw.refresh_from_db()
+        self.assertEqual(draw.status, DrawStatus.CANCELED)
+
+
+class TestDrawResponse(BaseTestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'draw-response'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.england = self.create_test_nation(
+            variant=self.variant,
+            name='England'
+        )
+        self.france = self.create_test_nation(
+            variant=self.variant,
+            name='France',
+        )
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.other_user = self.create_test_user()
+        self.england_nation_state = self.create_test_nation_state(
+            turn=self.turn,
+            nation=self.england,
+            user=self.user,
+        )
+        self.game.participants.add(self.user)
+        self.draw = self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.france,
+            proposed_by_user=self.other_user,
+        )
+        self.data = {'response': DrawResponse.ACCEPTED}
+        self.url = reverse(self.view_name, args=[self.draw.id])
+        self.client.force_authenticate(user=self.user)
+
+    def test_cannot_accept_draw_if_surrendering(self):
+        self.surrender = models.Surrender.objects.create(
+            user=self.user,
+            nation_state=self.england_nation_state,
+            status=SurrenderStatus.PENDING,
+        )
+        response = self.client.post(self.url, self.data, format='json')
+        error = response.data['non_field_errors'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.NotSurrenderingValidator.message
+        )
+
+    def test_invalid_response_type(self):
+        self.data['response'] = 'invalid'
+        response = self.client.post(self.url, self.data, format='json')
+        error = response.data['response'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            '"invalid" is not a valid choice.'
+        )
+
+    def test_accept_draw_already_accepting(self):
+        models.DrawResponse.objects.create(
+            draw=self.draw,
+            nation=self.england,
+            user=self.user,
+            response=DrawResponse.ACCEPTED,
+        )
+        response = self.client.post(self.url, self.data, format='json')
+        error = response.data['draw'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.DrawProposedValidator.message,
+        )
+
+    def test_accept_draw_already_rejecting(self):
+        models.DrawResponse.objects.create(
+            draw=self.draw,
+            nation=self.england,
+            user=self.user,
+            response=DrawResponse.REJECTED,
+        )
+        response = self.client.post(self.url, self.data, format='json')
+        error = response.data['draw'][0]
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            str(error),
+            validators.DrawProposedValidator.message,
+        )
+
+    def test_cannot_accept_canceled_draw(self):
+        self.draw.status = DrawStatus.CANCELED
+        self.draw.save()
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cannot_accept_rejected_draw(self):
+        self.draw.status = DrawStatus.REJECTED
+        self.draw.save()
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cannot_accept_accepted_draw(self):
+        self.draw.status = DrawStatus.ACCEPTED
+        self.draw.save()
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_accept_draw(self):
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        draw_response = models.DrawResponse.objects.get()
+        self.assertEqual(draw_response.draw, self.draw)
+        self.assertEqual(draw_response.nation, self.england)
+        self.assertEqual(draw_response.user, self.user)
+        self.assertEqual(draw_response.response, DrawResponse.ACCEPTED)
+        self.assertTrue(draw_response.created_at)
+
+    def test_reject_draw(self):
+        self.data['response'] = DrawResponse.REJECTED
+        response = self.client.post(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        draw_response = models.DrawResponse.objects.get()
+        self.assertEqual(draw_response.draw, self.draw)
+        self.assertEqual(draw_response.nation, self.england)
+        self.assertEqual(draw_response.user, self.user)
+        self.assertEqual(draw_response.response, DrawResponse.REJECTED)
+        self.assertTrue(draw_response.created_at)
+
+
+class TestCancelDrawResponse(BaseTestCase, DiplomacyTestCaseMixin):
+
+    view_name = 'cancel-draw-response'
+
+    def setUp(self):
+        self.patch_set_status()
+        self.patch_set_winners()
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.england = self.create_test_nation(
+            variant=self.variant,
+            name='England'
+        )
+        self.france = self.create_test_nation(
+            variant=self.variant,
+            name='France',
+        )
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.other_user = self.create_test_user()
+        self.england_nation_state = self.create_test_nation_state(
+            turn=self.turn,
+            nation=self.england,
+            user=self.user,
+        )
+        self.game.participants.add(self.user)
+        self.draw = self.create_test_draw(
+            turn=self.turn,
+            proposed_by=self.france,
+            proposed_by_user=self.other_user,
+        )
+        self.draw_response = models.DrawResponse.objects.create(
+            draw=self.draw,
+            user=self.user,
+            nation=self.england,
+            response=DrawResponse.ACCEPTED,
+        )
+        self.data = {'response': DrawResponse.ACCEPTED}
+        self.client.force_authenticate(user=self.user)
+
+    def test_draw_does_not_exist(self):
+        self.url = reverse(
+            self.view_name,
+            args=[self.draw.id, self.draw_response.id + 1]
+        )
+        response = self.client.delete(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_other_players_response(self):
+        self.draw_response.nation = self.france
+        self.draw_response.user = self.other_user
+        self.draw_response.save()
+        self.url = reverse(
+            self.view_name,
+            args=[self.draw.id, self.draw_response.id]
+        )
+        response = self.client.delete(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_cancel_after_draw_accepted(self):
+        self.draw.status = DrawStatus.ACCEPTED
+        self.draw.save()
+        self.url = reverse(
+            self.view_name,
+            args=[self.draw.id, self.draw_response.id]
+        )
+        response = self.client.delete(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cancel_response(self):
+        self.url = reverse(
+            self.view_name,
+            args=[self.draw.id, self.draw_response.id]
+        )
+        response = self.client.delete(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(models.DrawResponse.objects.count(), 0)

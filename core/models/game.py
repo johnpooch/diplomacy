@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.manager import Manager
-from django.utils.timezone import now
+from django.utils import timezone
 
-from core.models.base import NationChoiceMode, GameStatus, DeadlineFrequency
+from core.models.base import DeadlineFrequency, GameStatus, NationChoiceMode
+from core.models.mixins import AutoSlug
 
 
 class GameQuerySet(models.QuerySet):
@@ -34,7 +35,7 @@ class GameManager(Manager.from_queryset(GameQuerySet)):
     pass
 
 
-class Game(models.Model):
+class Game(models.Model, AutoSlug):
 
     variant = models.ForeignKey(
         'Variant',
@@ -45,6 +46,13 @@ class Game(models.Model):
     name = models.CharField(
         max_length=50,
         null=False
+    )
+    slug = models.CharField(
+        max_length=255,
+        null=False,
+        blank=True,
+        db_index=True,
+        unique=True,
     )
     description = models.CharField(
         max_length=1000,
@@ -63,7 +71,7 @@ class Game(models.Model):
         through='Participation',
     )
     winners = models.ManyToManyField(
-        'NationState',
+        'Nation',
     )
     private = models.BooleanField(
         default=False,
@@ -105,6 +113,7 @@ class Game(models.Model):
     )
     created_by = models.ForeignKey(
         User,
+        null=True,
         on_delete=models.CASCADE,
         related_name='created_games',
     )
@@ -116,6 +125,9 @@ class Game(models.Model):
     )
 
     objects = GameManager()
+
+    def __str__(self):
+        return self.name
 
     @property
     def ended(self):
@@ -158,7 +170,7 @@ class Game(models.Model):
         self.create_initial_territory_states()
         self.create_initial_pieces()
         self.status = GameStatus.ACTIVE
-        self.initialized_at = now()
+        self.initialized_at = timezone.now()
         self.save()
 
     def create_initial_turn(self):
@@ -170,7 +182,7 @@ class Game(models.Model):
         """
         variant = self.variant
         turn_model = apps.get_model('core', 'Turn')
-        return turn_model.objects.create(
+        return turn_model.objects.new(
             game=self,
             year=variant.starting_year,
             season=variant.starting_season,
@@ -242,24 +254,23 @@ class Game(models.Model):
         Returns:
             * `Turn`
         """
-        return self.turns.get(current_turn=True)
-
-    def process(self):
-        current_turn = self.get_current_turn()
-        current_turn.process()
-        turn_model = apps.get_model('core', 'Turn')
-        new_turn = turn_model.objects.create_turn_from_previous_turn(
-            current_turn
+        return next(
+            iter(t for t in self.turns.all() if t.current_turn),
+            None
         )
-        # check win conditions
-        winning_nation = new_turn.check_for_winning_nation()
-        if winning_nation:
-            self.set_winner(winning_nation)
 
-    def set_winner(self, nation_state):
+    def set_winners(self, *nations):
         """
-        End the game and set the winning nation.
+        End the game and set the winning nation(s).
+
+        Args:
+            * `nations` - one or more `Nation` instances.
         """
+        for nation in nations:
+            if nation.variant != self.variant:
+                raise ValueError(
+                    'Nation does not belong to the same variant as this game'
+                )
         self.status = GameStatus.ENDED
         self.save()
-        self.winners.add(nation_state)
+        self.winners.set(nations)

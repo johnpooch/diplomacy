@@ -4,17 +4,17 @@ from adjudicator.decisions import Outcomes
 from adjudicator.order import Convoy, Move, Support
 from adjudicator.piece import Army, Fleet
 from adjudicator.processor import process
-from adjudicator.state import State
-from adjudicator.tests.data import NamedCoasts, Nations, Territories, register_all
+from adjudicator.tests.data import NamedCoasts, Nations, Territories
+
+from ..base import AdjudicatorTestCaseMixin
 
 
-class TestCircularMovement(unittest.TestCase):
+class TestCircularMovement(AdjudicatorTestCaseMixin, unittest.TestCase):
 
     def setUp(self):
-        self.state = State()
-        self.territories = Territories()
-        self.named_coasts = NamedCoasts(self.territories)
-        self.state = register_all(self.state, self.territories, self.named_coasts)
+        super().setUp()
+        self.territories = Territories(self.state)
+        self.named_coasts = NamedCoasts(self.state, self.territories)
 
     def test_three_army_circular_movement(self):
         """
@@ -27,18 +27,14 @@ class TestCircularMovement(unittest.TestCase):
 
         All three units will move.
         """
-        pieces = [
-            Fleet(0, Nations.TURKEY, self.territories.ANKARA),
-            Army(0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
-            Army(0, Nations.TURKEY, self.territories.SMYRNA)
-        ]
+        Fleet(self.state, 0, Nations.TURKEY, self.territories.ANKARA),
+        Army(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
+        Army(self.state, 0, Nations.TURKEY, self.territories.SMYRNA)
         orders = [
-            Move(0, Nations.TURKEY, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
-            Move(0, Nations.TURKEY, self.territories.CONSTANTINOPLE, self.territories.SMYRNA),
-            Move(0, Nations.TURKEY, self.territories.SMYRNA, self.territories.ANKARA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
+            Move(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE, self.territories.SMYRNA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.SMYRNA, self.territories.ANKARA),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -58,20 +54,16 @@ class TestCircularMovement(unittest.TestCase):
         Of course the three units will move, but knowing how programs are
         written, this can confuse the adjudicator.
         """
-        pieces = [
-            Fleet(0, Nations.TURKEY, self.territories.ANKARA),
-            Army(0, Nations.TURKEY, self.territories.BULGARIA),
-            Army(0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
-            Army(0, Nations.TURKEY, self.territories.SMYRNA)
-        ]
+        Fleet(self.state, 0, Nations.TURKEY, self.territories.ANKARA),
+        Army(self.state, 0, Nations.TURKEY, self.territories.BULGARIA),
+        Army(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
+        Army(self.state, 0, Nations.TURKEY, self.territories.SMYRNA)
         orders = [
-            Move(0, Nations.TURKEY, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
-            Move(0, Nations.TURKEY, self.territories.CONSTANTINOPLE, self.territories.SMYRNA),
-            Move(0, Nations.TURKEY, self.territories.SMYRNA, self.territories.ANKARA),
-            Support(0, Nations.TURKEY, self.territories.BULGARIA, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
+            Move(self.state, 0, Nations.TURKEY, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
+            Move(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE, self.territories.SMYRNA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.SMYRNA, self.territories.ANKARA),
+            Support(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -91,21 +83,17 @@ class TestCircularMovement(unittest.TestCase):
 
         Every unit will keep its place.
         """
-        pieces = [
-            Fleet(0, Nations.TURKEY, self.territories.ANKARA),
-            Army(0, Nations.TURKEY, self.territories.BULGARIA),
-            Army(0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
-            Army(0, Nations.TURKEY, self.territories.SMYRNA)
-        ]
+        Fleet(self.state, 0, Nations.TURKEY, self.territories.ANKARA),
+        Army(self.state, 0, Nations.TURKEY, self.territories.BULGARIA),
+        Army(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
+        Army(self.state, 0, Nations.TURKEY, self.territories.SMYRNA)
         orders = [
-            Move(0, Nations.TURKEY, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
-            Move(0, Nations.TURKEY, self.territories.CONSTANTINOPLE, self.territories.SMYRNA),
-            Move(0, Nations.TURKEY, self.territories.SMYRNA, self.territories.ANKARA),
-            Move(0, Nations.TURKEY, self.territories.BULGARIA, self.territories.CONSTANTINOPLE),
+            Move(self.state, 0, Nations.TURKEY, self.territories.ANKARA, self.territories.CONSTANTINOPLE),
+            Move(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE, self.territories.SMYRNA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.SMYRNA, self.territories.ANKARA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, self.territories.CONSTANTINOPLE),
         ]
 
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.FAILS)
@@ -136,26 +124,24 @@ class TestCircularMovement(unittest.TestCase):
         movement succeeds. The Austrian and Turkish armies will advance.
         """
         pieces = [
-            Army(0, Nations.AUSTRIA, self.territories.TRIESTE),
-            Army(0, Nations.AUSTRIA, self.territories.SERBIA),
-            Army(0, Nations.TURKEY, self.territories.BULGARIA),
-            Fleet(0, Nations.TURKEY, self.territories.AEGEAN_SEA),
-            Fleet(0, Nations.TURKEY, self.territories.IONIAN_SEA),
-            Fleet(0, Nations.TURKEY, self.territories.ADRIATIC_SEA),
-            Fleet(0, Nations.ITALY, self.territories.NAPLES),
+            Army(self.state, 0, Nations.AUSTRIA, self.territories.TRIESTE),
+            Army(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA),
+            Army(self.state, 0, Nations.TURKEY, self.territories.BULGARIA),
+            Fleet(self.state, 0, Nations.TURKEY, self.territories.AEGEAN_SEA),
+            Fleet(self.state, 0, Nations.TURKEY, self.territories.IONIAN_SEA),
+            Fleet(self.state, 0, Nations.TURKEY, self.territories.ADRIATIC_SEA),
+            Fleet(self.state, 0, Nations.ITALY, self.territories.NAPLES),
         ]
         orders = [
-            Move(0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.SERBIA),
-            Move(0, Nations.AUSTRIA, self.territories.SERBIA, self.territories.BULGARIA),
-            Move(0, Nations.TURKEY, self.territories.BULGARIA, self.territories.TRIESTE, via_convoy=True),
-            Convoy(0, Nations.TURKEY, self.territories.AEGEAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
-            Convoy(0, Nations.TURKEY, self.territories.IONIAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
-            Convoy(0, Nations.TURKEY, self.territories.ADRIATIC_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
-            Move(0, Nations.ITALY, self.territories.NAPLES, self.territories.IONIAN_SEA),
+            Move(self.state, 0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.SERBIA),
+            Move(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA, self.territories.BULGARIA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, self.territories.TRIESTE, via_convoy=True),
+            Convoy(self.state, 0, Nations.TURKEY, self.territories.AEGEAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
+            Convoy(self.state, 0, Nations.TURKEY, self.territories.IONIAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
+            Convoy(self.state, 0, Nations.TURKEY, self.territories.ADRIATIC_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
+            Move(self.state, 0, Nations.ITALY, self.territories.NAPLES, self.territories.IONIAN_SEA),
         ]
 
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.SUCCEEDS)
@@ -190,35 +176,31 @@ class TestCircularMovement(unittest.TestCase):
         will not move.
         """
         pieces = [
-            Army(0, Nations.AUSTRIA, self.territories.TRIESTE),
-            Army(0, Nations.AUSTRIA, self.territories.SERBIA),
-            Army(0, Nations.TURKEY, self.territories.BULGARIA),
-            Fleet(0, Nations.TURKEY, self.territories.AEGEAN_SEA),
-            Fleet(0, Nations.TURKEY, self.territories.IONIAN_SEA),
-            Fleet(0, Nations.TURKEY, self.territories.ADRIATIC_SEA),
-            Fleet(0, Nations.ITALY, self.territories.NAPLES),
-            Fleet(0, Nations.ITALY, self.territories.TUNIS),
+            Army(self.state, 0, Nations.AUSTRIA, self.territories.TRIESTE),
+            Army(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA),
+            Army(self.state, 0, Nations.TURKEY, self.territories.BULGARIA),
+            Fleet(self.state, 0, Nations.TURKEY, self.territories.AEGEAN_SEA),
+            Fleet(self.state, 0, Nations.TURKEY, self.territories.IONIAN_SEA),
+            Fleet(self.state, 0, Nations.TURKEY, self.territories.ADRIATIC_SEA),
+            Fleet(self.state, 0, Nations.ITALY, self.territories.NAPLES),
+            Fleet(self.state, 0, Nations.ITALY, self.territories.TUNIS),
         ]
         orders = [
-            Move(0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.SERBIA),
-            Move(0, Nations.AUSTRIA, self.territories.SERBIA, self.territories.BULGARIA),
-            Move(0, Nations.TURKEY, self.territories.BULGARIA, self.territories.TRIESTE, via_convoy=True),
-            Convoy(0, Nations.TURKEY, self.territories.AEGEAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
-            Convoy(0, Nations.TURKEY, self.territories.IONIAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
-            Convoy(0, Nations.TURKEY, self.territories.ADRIATIC_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
-            Move(0, Nations.ITALY, self.territories.NAPLES, self.territories.IONIAN_SEA),
-            Support(0, Nations.ITALY, self.territories.TUNIS, self.territories.NAPLES, self.territories.IONIAN_SEA),
+            Move(self.state, 0, Nations.AUSTRIA, self.territories.TRIESTE, self.territories.SERBIA),
+            Move(self.state, 0, Nations.AUSTRIA, self.territories.SERBIA, self.territories.BULGARIA),
+            Move(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, self.territories.TRIESTE, via_convoy=True),
+            Convoy(self.state, 0, Nations.TURKEY, self.territories.AEGEAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
+            Convoy(self.state, 0, Nations.TURKEY, self.territories.IONIAN_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
+            Convoy(self.state, 0, Nations.TURKEY, self.territories.ADRIATIC_SEA, self.territories.BULGARIA, self.territories.TRIESTE),
+            Move(self.state, 0, Nations.ITALY, self.territories.NAPLES, self.territories.IONIAN_SEA),
+            Support(self.state, 0, Nations.ITALY, self.territories.TUNIS, self.territories.NAPLES, self.territories.IONIAN_SEA),
         ]
 
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[0].outcome, Outcomes.FAILS)
         self.assertEqual(orders[1].outcome, Outcomes.FAILS)
         self.assertEqual(orders[2].outcome, Outcomes.FAILS)
-        self.assertEqual(pieces[3].dislodged_decision, Outcomes.SUSTAINS)
-        self.assertEqual(pieces[4].dislodged_decision, Outcomes.DISLODGED)
         self.assertEqual(pieces[4].dislodged_by, pieces[6])
         self.assertEqual(pieces[5].dislodged_decision, Outcomes.SUSTAINS)
         self.assertEqual(orders[6].outcome, Outcomes.SUCCEEDS)
@@ -238,21 +220,17 @@ class TestCircularMovement(unittest.TestCase):
 
         Both convoys should succeed.
         """
-        pieces = [
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.ENGLAND, self.territories.LONDON),
-            Fleet(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
-            Army(0, Nations.FRANCE, self.territories.BELGIUM),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
         orders = [
-            Convoy(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
-            Move(0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
-            Convoy(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
-            Move(0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
+            Convoy(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
         ]
 
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[1].outcome, Outcomes.SUCCEEDS)
@@ -273,23 +251,19 @@ class TestCircularMovement(unittest.TestCase):
 
         None of the units will succeed to move.
         """
-        pieces = [
-            Fleet(0, Nations.ENGLAND, self.territories.NORTH_SEA),
-            Army(0, Nations.ENGLAND, self.territories.LONDON),
-            Fleet(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
-            Army(0, Nations.FRANCE, self.territories.BELGIUM),
-            Army(0, Nations.FRANCE, self.territories.BURGUNDY),
-        ]
+        Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA),
+        Army(self.state, 0, Nations.ENGLAND, self.territories.LONDON),
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BELGIUM),
+        Army(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY),
         orders = [
-            Convoy(0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
-            Move(0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
-            Convoy(0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
-            Move(0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
-            Move(0, Nations.FRANCE, self.territories.BURGUNDY, self.territories.BELGIUM),
+            Convoy(self.state, 0, Nations.ENGLAND, self.territories.NORTH_SEA, self.territories.LONDON, self.territories.BELGIUM),
+            Move(self.state, 0, Nations.ENGLAND, self.territories.LONDON, self.territories.BELGIUM, via_convoy=True),
+            Convoy(self.state, 0, Nations.FRANCE, self.territories.ENGLISH_CHANNEL, self.territories.BELGIUM, self.territories.LONDON),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BELGIUM, self.territories.LONDON, via_convoy=True),
+            Move(self.state, 0, Nations.FRANCE, self.territories.BURGUNDY, self.territories.BELGIUM),
         ]
 
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertEqual(orders[1].outcome, Outcomes.FAILS)

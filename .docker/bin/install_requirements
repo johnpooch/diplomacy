@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+pip install --user -r requirements.txt --index-url https://pypi.gamer-network.net/gamernetwork/dev/+simple/
+
+ENV=$1
+
+if [ "$ENV" == "dev" ]
+then
+    pip install --user -r dev_requirements.txt
+fi

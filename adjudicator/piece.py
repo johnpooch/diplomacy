@@ -1,4 +1,5 @@
 from adjudicator.decisions import Outcomes
+from .state import register
 
 
 class PieceTypes:
@@ -11,16 +12,17 @@ class Piece:
     is_army = False
     is_fleet = False
 
-    def __init__(self, _id, nation, territory, attacker_territory=None,
-                 retreating=False):
-        self.id = _id
+    @register
+    def __init__(self, state, id, nation, territory, **kwargs):
+        self.state = state
+        self.id = id
         self.nation = nation
         self.territory = territory
-        self.order = None
         self.dislodged_decision = Outcomes.UNRESOLVED
         self.dislodged_by = None
-        self.attacker_territory = attacker_territory
-        self.retreating = retreating
+        self.dislodged_from = None
+        self.attacker_territory = kwargs.get('attacker_territory')
+        self.retreating = kwargs.get('retreating', False)
         self.destroyed = False
         self.destroyed_message = None
 
@@ -29,6 +31,18 @@ class Piece:
 
     def __repr__(self):
         return f'{self.__class__.__name__} {self.territory}'
+
+    @property
+    def order(self):
+        from adjudicator.order import DummyHold
+        return next(
+            iter([
+                o for o in self.state.orders
+                if o.source == self.territory
+                and o.nation == self.nation
+            ]),
+            DummyHold(self.state, self.nation, self.territory)
+        )
 
     @property
     def moves(self):
@@ -74,12 +88,16 @@ class Piece:
         attacking_pieces = list(self.territory.attacking_pieces)
         return [p for p in attacking_pieces if p.order.outcome == Outcomes.SUCCEEDS]
 
+    @property
+    def dislodged(self):
+        return self.dislodged_decision == Outcomes.DISLODGED
+
     def set_dislodged_decision(self, outcome, dislodged_by=None):
         self.dislodged_decision = outcome
         self.dislodged_by = dislodged_by
         if dislodged_by:
             if not dislodged_by.order.via_convoy:
-                self.attacker_territory = dislodged_by.territory
+                self.dislodged_from = dislodged_by.territory
         return self.dislodged_decision
 
     def update_dislodged_decision(self):
@@ -110,21 +128,6 @@ class Piece:
             if accessible and unoccupied and uncontested:
                 return True
         return False
-
-    def to_dict(self):
-        data = {
-            'id': self.id,
-            'dislodged_decision': self.dislodged_decision,
-            'dislodged_by': None,
-            'attacker_territory': None,
-            'destroyed': self.destroyed,
-            'destroyed_message': self.destroyed_message,
-        }
-        if self.dislodged_by:
-            data['dislodged_by'] = self.dislodged_by.id
-        if self.attacker_territory:
-            data['attacker_territory'] = self.attacker_territory.id
-        return data
 
 
 class Army(Piece):
@@ -168,8 +171,8 @@ class Fleet(Piece):
 
     is_fleet = True
 
-    def __init__(self, _id, nation, territory, named_coast=None, retreating=False):
-        super().__init__(_id, nation, territory, retreating=retreating)
+    def __init__(self, *args, named_coast=None, **kwargs):
+        super().__init__(*args, **kwargs)
         self.named_coast = named_coast
 
     def can_reach(self, target, named_coast=None):

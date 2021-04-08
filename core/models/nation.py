@@ -1,39 +1,72 @@
-from django.apps import apps
+import json
+
 from django.contrib.auth.models import User
 from django.db import models
 
-from core.models.base import PerTurnModel, Phase
+from core.models.base import PerTurnModel, Phase, SurrenderStatus
 
 
 class Nation(models.Model):
     """
     Represents a playable nation in the game, e.g. 'France'.
     """
+    id = models.CharField(
+        max_length=100,
+        null=False,
+        primary_key=True,
+        editable=False,
+    )
+    name = models.CharField(
+        max_length=15,
+    )
     variant = models.ForeignKey(
         'Variant',
         null=False,
         related_name='nations',
         on_delete=models.CASCADE,
     )
-    name = models.CharField(
-        max_length=15,
-    )
+    flag = models.TextField()
 
-    # TODO add unique together for variant and name
+    class Meta:
+        unique_together = ('name', 'variant')
 
     def __str__(self):
         return self.name
+
+    @property
+    def flag_as_data(self):
+        if self.flag:
+            return json.loads(self.flag)
+        return {}
+
+
+class NationStateQuerySet(models.QuerySet):
+
+    def exclude_civil_disorder(self):
+        """
+        A NationState instance is considered in civil_disorder if it does not
+        have a user controlling it or the user is surrendering.
+        """
+        qs = self
+        return (
+            qs
+            .filter(user__isnull=False)
+            .exclude(surrenders__status=SurrenderStatus.PENDING)
+        )
+
+
+class NationStateManager(models.Manager.from_queryset(NationStateQuerySet)):
+    pass
 
 
 class NationState(PerTurnModel):
     """
     Through model between `Turn`, `User`, and `Nation`. Represents the
-    state of a nation in during a turn.
+    state of a nation during a turn.
     """
     nation = models.ForeignKey(
         'Nation',
         null=False,
-        related_name='+',
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
@@ -45,14 +78,53 @@ class NationState(PerTurnModel):
     orders_finalized = models.BooleanField(
         default=False,
     )
-    surrendered = models.BooleanField(
-        default=False,
-    )
+    # TODO As well as supply delta we should get num_orders to give.
 
-    # TODO add unique together for turn and name
+    objects = NationStateManager()
+    # TODO add orders finalized at
+
+    # TODO add unique together for turn and nation
 
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
+
+    def copy_to_new_turn(self, turn):
+        """
+        Create a copy of the instance for the next turn. Created when the turn
+        ends and a new turn is created.
+        """
+        # Set user to None if pending surrender at end of turn
+        if self.user_surrendering:
+            self.user = None
+        self.turn = turn
+        self.orders_finalized = False
+        self.pk = None
+        self.save()
+        return self
+
+    @property
+    def civil_disorder(self):
+        """
+        Whether any user can control the nation. Special rules take effect when
+        a nation is in civil disorder.
+
+        Returns:
+            * `bool`
+        """
+        return (not self.user) or self.user_surrendering
+
+    @property
+    def user_surrendering(self):
+        """
+        Whether the user that is currently in control of the nation state has
+        decided to surrender.
+
+        Returns:
+            * `bool`
+        """
+        return self.surrenders.filter(
+            status=SurrenderStatus.PENDING
+        ).exists()
 
     @property
     def meets_victory_conditions(self):
@@ -84,8 +156,9 @@ class NationState(PerTurnModel):
         Returns:
             * QuerySet of `PieceState` instances.
         """
-        PieceState = apps.get_model('core', 'PieceState')
-        return PieceState.objects.filter(turn=self.turn, piece__nation=self.nation)
+        return self.turn.piecestates.filter(
+            piece__nation=self.nation,
+        )
 
     @property
     def supply_centers(self):
@@ -105,8 +178,8 @@ class NationState(PerTurnModel):
     def unoccupied_controlled_home_supply_centers(self):
         """
         Get supply centers inside national borders that are under the control
-        of the nation and are not occupied. Used for determining where to
-        build.
+        of the nation and are not occupied. Used by serializers to determine
+        where a user nation build.
 
         Returns:
             * Queryset of `TerritoryState` instances
@@ -164,23 +237,21 @@ class NationState(PerTurnModel):
         Returns:
             * Queryset of `PieceState` instances.
         """
-        PieceState = apps.get_model(
-            app_label='core',
-            model_name='PieceState'
-        )
         # Can only order pieces which must retreat during retreat phase
-        if self.turn.phase == Phase.RETREAT_AND_DISBAND:
-            return PieceState.objects.filter(
-                turn=self.turn,
+        if self.turn.phase == Phase.RETREAT:
+            return self.turn.piecestates.filter(
                 piece__nation=self.nation,
                 must_retreat=True,
             )
         if self.turn.phase == Phase.BUILD:
             raise Exception('Should not be called during build phase')
-        return PieceState.objects.filter(
-            turn=self.turn,
-            piece__nation=self.nation,
-        )
+        return self.turn.piecestates.filter(piece__nation=self.nation)
+
+    @property
+    def num_orders(self):
+        if self.turn.phase == Phase.BUILD:
+            return max(self.num_builds, self.num_disbands)
+        return self.pieces_to_order.count()
 
     @property
     def num_orders_remaining(self):
@@ -188,3 +259,7 @@ class NationState(PerTurnModel):
             num_orders = max(self.num_builds, self.num_disbands)
             return max(0, num_orders - self.orders.count())
         return self.pieces_to_order.count() - self.orders.count()
+
+
+def get_combined_strength(nation_states):
+    return sum([ns.supply_centers.count() for ns in nation_states])

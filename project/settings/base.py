@@ -33,17 +33,18 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'django_admin_listfilter_dropdown',
+    'admin.apps.DiplomacyAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_extensions',
     'corsheaders',
     'django_filters',
     'rest_framework',
     'knox',
+    'django_rest_passwordreset',
     'adjudicator',
     'core',
     'service',
@@ -140,6 +141,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
@@ -152,12 +157,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 FIXTURE_DIRS = (
     '/code/fixtures',
-)
-# NOTE non Docker setup
-# FIXTURE_DIRS = (
-#     'fixtures',
-# )
-
-SHELL_PLUS_PRE_IMPORTS = (
-    ('core.factories', '*'),
 )

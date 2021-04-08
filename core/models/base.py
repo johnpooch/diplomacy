@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from core.utils.date.timespan import timespans
+
 
 class NationChoiceMode:
     RANDOM = 'random'
@@ -14,19 +16,43 @@ class NationChoiceMode:
 
 
 class DeadlineFrequency:
-    TWELVE_HOURS = 'twelve_hours'
-    TWENTY_FOUR_HOURS = 'twenty_four_hours'
-    TWO_DAYS = 'two_days'
-    THREE_DAYS = 'three_days'
-    FIVE_DAYS = 'five_days'
-    SEVEN_DAYS = 'seven_days'
+    TWELVE_HOURS = timespans.TWELVE_HOURS.db_string
+    TWENTY_FOUR_HOURS = timespans.TWENTY_FOUR_HOURS.db_string
+    TWO_DAYS = timespans.TWO_DAYS.db_string
+    THREE_DAYS = timespans.THREE_DAYS.db_string
+    FIVE_DAYS = timespans.FIVE_DAYS.db_string
+    SEVEN_DAYS = timespans.SEVEN_DAYS.db_string
     CHOICES = (
-        (TWELVE_HOURS, '12 hours'),
-        (TWENTY_FOUR_HOURS, '24 hours'),
-        (TWO_DAYS, '2 days'),
-        (THREE_DAYS, '3 days'),
-        (FIVE_DAYS, '5 days'),
-        (SEVEN_DAYS, '7 days'),
+        timespans.TWELVE_HOURS.as_choice,
+        timespans.TWENTY_FOUR_HOURS.as_choice,
+        timespans.TWO_DAYS.as_choice,
+        timespans.THREE_DAYS.as_choice,
+        timespans.FIVE_DAYS.as_choice,
+        timespans.SEVEN_DAYS.as_choice,
+    )
+
+
+class DrawResponse:
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    CHOICES = (
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+    )
+
+
+class DrawStatus:
+    PROPOSED = 'proposed'
+    CANCELED = 'canceled'
+    ACCEPTED = 'accepted'
+    REJECTED = 'rejected'
+    EXPIRED = 'expired'
+    CHOICES = (
+        (PROPOSED, 'Proposed'),
+        (CANCELED, 'Canceled'),
+        (ACCEPTED, 'Accepted'),
+        (REJECTED, 'Rejected'),
+        (EXPIRED, 'Expired'),
     )
 
 
@@ -103,11 +129,11 @@ class TerritoryDisplayType:
 
 class Phase:
     ORDER = 'order'
-    RETREAT_AND_DISBAND = 'retreat_and_disband'
+    RETREAT = 'retreat'
     BUILD = 'build'
     CHOICES = (
         (ORDER, 'Order'),
-        (RETREAT_AND_DISBAND, 'Retreat and Disband'),
+        (RETREAT, 'Retreat'),
         (BUILD, 'Build')
     )
 
@@ -127,6 +153,17 @@ class Season:
     CHOICES = (
         (FALL, 'Fall'),
         (SPRING, 'Spring'),
+    )
+
+
+class SurrenderStatus:
+    PENDING = 'pending'
+    CANCELED = 'canceled'
+    FULFILLED = 'fulfilled'
+    CHOICES = (
+        (PENDING, 'Pending'),
+        (CANCELED, 'Canceled'),
+        (FULFILLED, 'Fulfilled'),
     )
 
 

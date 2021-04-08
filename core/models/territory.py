@@ -1,14 +1,20 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
-from core.models.base import PerTurnModel, PieceType, \
-    TerritoryType
+from core.models.base import PerTurnModel, PieceType, TerritoryType
 
 
 class Territory(models.Model):
     """
     Represents an area in the game map that can be occupied.
     """
+    id = models.CharField(
+        max_length=100,
+        null=False,
+        unique=True,
+        primary_key=True,
+        editable=False,
+    )
     name = models.CharField(
         max_length=50,
         null=False,
@@ -55,6 +61,10 @@ class Territory(models.Model):
         null=True,
         choices=PieceType.CHOICES,
     )
+
+    class Meta:
+        unique_together = ('name', 'variant')
+        verbose_name_plural = 'territories'
 
     def __str__(self):
         return self.name
@@ -122,18 +132,22 @@ class TerritoryState(PerTurnModel):
     bounce_occurred = models.BooleanField(
         default=False,
     )
+    captured_by = models.ForeignKey(
+        'Nation',
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='captured_territories',
+    )
 
-    def to_dict(self):
-        territory = self.territory
-        return {
-            '_id': territory.id,
-            'type': territory.type,
-            'name': territory.name,
-            'neighbour_ids': list(territory.neighbours.all().values_list('pk', flat=True)),
-            'shared_coast_ids': list(territory.shared_coasts.all().values_list('pk', flat=True)),
-            'supply_center': territory.supply_center,
-            'nationality': getattr(territory.nationality, 'id', None),
-            'controlled_by': getattr(territory.nationality, 'id', None),
-            'named_coasts': [n.to_dict() for n in territory.named_coasts.all()],
-            'contested': self.contested,
-        }
+    def copy_to_new_turn(self, turn):
+        self.pk = None
+        # if end of fall orders process change of possession.
+        if self.captured_by:
+            self.controlled_by = self.captured_by
+        self.captured_by = None
+
+        self.contested = self.bounce_occurred
+        self.bounce_occurred = False
+        self.turn = turn
+        self.save()
+        return self

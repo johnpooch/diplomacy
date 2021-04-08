@@ -36,20 +36,24 @@ This project consists of the following main components:
 These instructions will get you started with a copy of the project up on your
 local machine for development and testing purposes.
 
-### Prerequisites
+### Docker set up
 
-We use [Docker][docker] and [Docker Compose][docker-compose] in local
+#### Prerequisites
+
+This set up uses [Docker][docker] and [Docker Compose][docker-compose] for local
 development. Follow the docs to get Docker and Docker Compose installed.
 
-### Configuration
+**Note** the docker set up has only been tested for Unix systems. If you are using Windows, follow the non-docker set up instructions.
+
+#### Configuration
 
 Run the following commands from the root directory to create local copies of
 configuration files:
 
-* Run `cp project/settings/local.example.py project/settings/local.py
-* Run `cp docker-compose.override.yml.example docker-compose.override.yml`
+* Run `cp project/settings/local.example.py project/settings/local.py`
+* Run `cp docker-compose.override.example.yml docker-compose.override.yml`
 
-### Bring up local copy
+#### Bring up local copy
 
 * Run `docker-compose up` to bring up the project (You can run detached by
   adding `-d` flag)
@@ -57,9 +61,9 @@ configuration files:
   service container by running `docker exec -it diplomacy_diplomacy.service_1`
   and then running whatever command you like.
 
-## Loading fixtures for development
+#### Loading fixtures for development
 
-To load the fixtures run `make reset_db && make dev_fixtures && superuser` from the root directory
+To load the fixtures run `make reset_db && make dev_fixtures && make superuser` from the root directory
 (outside container). This resets the database, builds the fixtures in
 `fixtures/dev` and creates a superuser with the following credentials:
 ```
@@ -68,6 +72,71 @@ Pw: admin
 ```
 You can sign into the client and the service using these credentials.
 
+### Non-docker set up
+
+**Note** this set up has been tested with Windows
+
+#### Prerequisites
+
+Ensure that you have installed `virtualenv` and `make`.
+
+#### Virtual environent
+
+Create a virtual environment:
+```
+python -m virtualenv venv
+```
+Activate the virtual environment:
+```
+# Unix
+source venv/bin/activate
+
+# Windows - Note if you are using the terminal in VSCode you can select the
+# python interpreter at the bottom left of the screen (requires Python extension)
+venv\Scripts\activate.bat
+```
+
+Install requirements:
+```
+pip install --user -r requirements.txt -r dev_requirements.txt
+```
+
+#### Configuration
+
+Run the following command from the root directory to create local copies of
+configuration files:
+```
+# Unix
+cp project/settings/local.example.py project/settings/local.py
+
+# Windows
+cp .\project\settings\local.example.py .\project\settings\local.py
+```
+
+Open the `local.py` file and edit uncomment each section labeled "non Docker setup" and comment out the sections labeled "Docker setup"
+
+#### Bring up development server
+
+Run the development server on port 8082. This is what the client expects during deevelopment.
+```
+# Unix
+python ./manage.py runserver localhost:8082
+
+# Windows
+python .\manage.py runserver localhost:8082
+```
+
+#### Loading fixtures for development
+
+To load the fixtures run `make fixtures_local` from the root directory. This builds the fixtures in
+`fixtures/dev` and creates a superuser with the following credentials:
+```
+Username: admin
+Pw: admin
+```
+You can sign into the client and the service using these credentials.
+
+
 ## Running the tests
 
 From within the service container run `python3 manage.py test`.
@@ -75,7 +144,7 @@ From within the service container run `python3 manage.py test`.
 ### Linting
 
 Run flake8 to check for code style problems. Run `flake8 .` from the project
-root. Any code style warning they will be displayed.
+root. If there are code style problems they will be displayed.
 
 ## Test Coverage
 

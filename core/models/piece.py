@@ -2,8 +2,9 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext as _
 
-from core.models.base import HygienicModel, PerTurnModel, \
-    PieceType
+from core.models.base import (
+    HygienicModel, OrderType, OutcomeType, PerTurnModel, PieceType
+)
 
 
 class Piece(HygienicModel):
@@ -50,6 +51,9 @@ class Piece(HygienicModel):
         )
     )
 
+    def __str__(self):
+        return f'{self.type} ({self.nation}) {self.id}'
+
     @property
     def is_army(self):
         return self.type == PieceType.ARMY
@@ -95,6 +99,18 @@ class PieceState(PerTurnModel):
         on_delete=models.CASCADE,
         related_name='piece_dislodged',
     )
+    dislodged_from = models.OneToOneField(
+        'Territory',
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        help_text=_(
+            'True if the piece was dislodged via a land attack during this '
+            'turn. The piece\'s attacker_territory field will be set to this '
+            'value next turn.'
+        ),
+        related_name='pieces_dislodged_from_here',
+    )
     destroyed = models.BooleanField(
         default=False
     )
@@ -116,8 +132,9 @@ class PieceState(PerTurnModel):
         null=True,
         on_delete=models.CASCADE,
         help_text=_(
-            'If the piece was dislodged via a land attack, the piece cannot '
-            'to the attacking piece\'s territory.'
+            'True if the piece was dislodged via a land attack in the '
+            'previous turn. During this turn the piece cannot to the '
+            'attacking piece\'s territory.'
         )
     )
 
@@ -133,6 +150,18 @@ class PieceState(PerTurnModel):
         # TODO Fix this up and make it used in all the error messages. Also
         # make fixtures use title instead of using `title()`
         return f'{self.piece.type} {str(self.territory)} ({self.piece.nation})'
+
+    @property
+    def successful_move_order(self):
+        """
+        Get the successful move or retreat order for a piece state if one
+        exists.
+        """
+        return self.territory.source_orders.filter(
+            nation=self.piece.nation,
+            outcome=OutcomeType.SUCCEEDS,
+            type__in=[OrderType.MOVE, OrderType.RETREAT]
+        ).first()
 
     def clean(self):
         super().clean()
@@ -158,15 +187,33 @@ class PieceState(PerTurnModel):
                     )
                 })
 
-    def to_dict(self):
-        data = {
-            '_id': self.pk,
-            'type': self.piece.type,
-            'nation': self.piece.nation.id,
-            'territory_id': self.territory.id,
-            'named_coast_id': getattr(self.named_coast, 'id', None),
-            'retreating': self.must_retreat,
+    def copy_to_new_turn(self, turn):
+        """
+        Create a copy of the instance for the next turn. Created when the turn
+        ends and a new turn is created.
+
+        Args:
+            * `turn` - `Turn` - The new turn instance that the piece is being
+              copied to.
+        """
+        # If piece disbanded or destroyed do not create a new piece state
+        if self.piece.turn_disbanded or self.destroyed:
+            return None
+        piece_data = {
+            'piece': self.piece,
+            'territory': self.territory,
+            'named_coast': self.named_coast,
+            'must_retreat': False,
         }
-        if self.attacker_territory:
-            data['attacker_territory'] = self.attacker_territory.id
-        return data
+        move_order = self.successful_move_order
+        if move_order:
+            piece_data['territory'] = move_order.target
+            piece_data['named_coast'] = move_order.target_coast
+
+        # if piece dislodged set next piece to must_retreat. Record where the
+        # piece was attacked from. The piece will not be able to retreat to
+        # that territory next turn.
+        if self.dislodged:
+            piece_data['must_retreat'] = True
+            piece_data['attacker_territory'] = self.dislodged_from
+        return turn.piecestates.create(**piece_data)

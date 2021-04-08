@@ -3,17 +3,17 @@ import unittest
 from adjudicator.order import Build
 from adjudicator.piece import Army, Fleet, PieceTypes
 from adjudicator.processor import process
-from adjudicator.state import State
-from adjudicator.tests.data import NamedCoasts, Nations, Territories, register_all
+from adjudicator.tests.data import NamedCoasts, Nations, Territories
+
+from ..base import AdjudicatorTestCaseMixin
 
 
-class TestRetreating(unittest.TestCase):
+class TestBuilding(AdjudicatorTestCaseMixin, unittest.TestCase):
 
     def setUp(self):
-        self.state = State()
-        self.territories = Territories()
-        self.named_coasts = NamedCoasts(self.territories)
-        self.state = register_all(self.state, self.territories, self.named_coasts)
+        super().setUp()
+        self.territories = Territories(self.state)
+        self.named_coasts = NamedCoasts(self.state, self.territories)
 
     def test_fleets_cannot_be_built_inland(self):
         """
@@ -29,10 +29,8 @@ class TestRetreating(unittest.TestCase):
         I prefer that the build fails.
         """
         orders = [
-            Build(0, Nations.RUSSIA, self.territories.MOSCOW, PieceTypes.FLEET),
+            Build(self.state, 0, Nations.RUSSIA, self.territories.MOSCOW, PieceTypes.FLEET),
         ]
-        self.state.register(*orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)
@@ -53,14 +51,10 @@ class TestRetreating(unittest.TestCase):
 
         Build fails.
         """
-        pieces = [
-            Army(0, Nations.GERMANY, self.territories.BERLIN),
-        ]
+        Army(self.state, 0, Nations.GERMANY, self.territories.BERLIN),
         orders = [
-            Build(0, Nations.GERMANY, self.territories.BERLIN, PieceTypes.ARMY),
+            Build(self.state, 0, Nations.GERMANY, self.territories.BERLIN, PieceTypes.ARMY),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)
@@ -83,14 +77,10 @@ class TestRetreating(unittest.TestCase):
 
         Build fails.
         """
-        pieces = [
-            Fleet(0, Nations.RUSSIA, self.territories.ST_PETERSBURG, self.named_coasts.ST_PETERSBURG_NC),
-        ]
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.ST_PETERSBURG, named_coast=self.named_coasts.ST_PETERSBURG_NC),
         orders = [
-            Build(0, Nations.RUSSIA, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
+            Build(self.state, 0, Nations.RUSSIA, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
         ]
-        self.state.register(*pieces, *orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)
@@ -107,10 +97,8 @@ class TestRetreating(unittest.TestCase):
         """
         self.territories.ST_PETERSBURG.controlled_by = Nations.GERMANY
         orders = [
-            Build(0, Nations.RUSSIA, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
+            Build(self.state, 0, Nations.RUSSIA, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
         ]
-        self.state.register(*orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)
@@ -128,10 +116,8 @@ class TestRetreating(unittest.TestCase):
         """
         self.territories.ST_PETERSBURG.controlled_by = Nations.GERMANY
         orders = [
-            Build(0, Nations.GERMANY, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
+            Build(self.state, 0, Nations.GERMANY, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
         ]
-        self.state.register(*orders)
-        self.state.post_register_updates()
         process(self.state)
 
         self.assertTrue(orders[0].illegal)

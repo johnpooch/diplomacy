@@ -1,0 +1,15 @@
+[
+{
+    "model": "core.variant",
+    "pk": 1,
+    "fields": {
+        "name": "Standard",
+        "identifier": "standard",
+        "max_num_players": 7,
+        "num_supply_centers_to_win": 18,
+        "starting_year": 1901,
+        "starting_season": "spring",
+        "starting_phase": "order"
+    }
+}
+]

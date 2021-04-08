@@ -1,7 +1,10 @@
-
-version: '3'
+version: '3.6'
 
 services:
+  mailcatcher.smtp:
+    image: schickling/mailcatcher
+    networks:
+      - backend
   diplomacy.mysql:
     image: 'mariadb:latest'
     restart: always
@@ -13,10 +16,39 @@ services:
       - MYSQL_USER=APP_USER
       - MYSQL_PASSWORD=APP_USER
       - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - backend
   diplomacy.service:
     build: 
+      args:
+        - ENV=dev
       context: .
       dockerfile: .docker/Dockerfile
-    ports:
-      - "127.0.0.1:8082:8000"
-
+      target: diplomacy-service
+    environment:
+      - RUNTIMEINSTALL=1
+      - RUNMIGRATIONS=1
+      - WAITFOR=diplomacy.mysql:3306
+    networks:
+      - backend
+  diplomacy.worker:
+    build:
+      args:
+        - ENV=dev
+      context: .
+      dockerfile: .docker/Dockerfile
+      target: diplomacy-worker
+    environment:
+      - RUNTIMEINSTALL=1
+      - WAITFOR=diplomacy.mysql:3306 diplomacy.rabbitmq:5672 diplomacy.service:8000
+    networks:
+      - backend
+  diplomacy.rabbitmq:
+    environment:
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log [{console,[{level,warning}]}]
+    image: rabbitmq
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge

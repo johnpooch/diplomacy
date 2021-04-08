@@ -22,7 +22,7 @@ class Order(PerTurnModel):
     source = models.ForeignKey(
         'Territory',
         on_delete=models.CASCADE,
-        related_name='+',
+        related_name='source_orders',
         null=False,
         blank=False,
     )
@@ -68,8 +68,13 @@ class Order(PerTurnModel):
         null=True,
         blank=True,
     )
-    legal = models.BooleanField(
-        default=True,
+    illegal = models.BooleanField(
+        default=False,
+    )
+    illegal_code = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
     )
     illegal_verbose = models.CharField(
         max_length=500,
