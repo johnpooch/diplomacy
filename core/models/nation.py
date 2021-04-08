@@ -238,7 +238,7 @@ class NationState(PerTurnModel):
             * Queryset of `PieceState` instances.
         """
         # Can only order pieces which must retreat during retreat phase
-        if self.turn.phase == Phase.RETREAT_AND_DISBAND:
+        if self.turn.phase == Phase.RETREAT:
             return self.turn.piecestates.filter(
                 piece__nation=self.nation,
                 must_retreat=True,

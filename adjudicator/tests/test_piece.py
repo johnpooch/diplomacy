@@ -125,22 +125,22 @@ class TestCanReachFleet(AdjudicatorTestCaseMixin, unittest.TestCase):
         self.assertFalse(fleet.can_reach(self.apulia))
 
     def test_named_coast_to_coastal(self):
-        fleet = Fleet(self.state, 0, 'England', self.spain, self.spain_north_coast)
+        fleet = Fleet(self.state, 0, 'England', self.spain, named_coast=self.spain_north_coast)
         self.state.register(fleet)
         self.assertTrue(fleet.can_reach(self.gascony))
 
     def test_named_coast_to_coastal_non_neighbouring(self):
-        fleet = Fleet(self.state, 0, 'England', self.spain, self.spain_north_coast)
+        fleet = Fleet(self.state, 0, 'England', self.spain, named_coast=self.spain_north_coast)
         self.state.register(fleet)
         self.assertFalse(fleet.can_reach(self.marseilles))
 
     def test_named_coast_to_sea(self):
-        fleet = Fleet(self.state, 0, 'England', self.spain, self.spain_north_coast)
+        fleet = Fleet(self.state, 0, 'England', self.spain, named_coast=self.spain_north_coast)
         self.state.register(fleet)
         self.assertTrue(fleet.can_reach(self.mid_atlantic))
 
     def test_named_coast_to_sea_non_neighbouring(self):
-        fleet = Fleet(self.state, 0, 'England', self.spain, self.spain_north_coast)
+        fleet = Fleet(self.state, 0, 'England', self.spain, named_coast=self.spain_north_coast)
         self.state.register(fleet)
         self.assertFalse(fleet.can_reach(self.gulf_of_lyon))
 

@@ -63,7 +63,7 @@ class PieceSchema(Schema):
     )
     nation = fields.String(required=True, load_only=True)
     territory = Territory(required=True, load_only=True)
-    named_coast = fields.Int(missing=None, load_only=True)
+    named_coast = fields.String(missing=None, load_only=True)
     retreating = fields.Boolean(missing=False, load_only=True)
     attacker_territory = Territory(missing=None, load_only=True)
     destroyed = fields.Boolean(missing=False, dump_only=True)
@@ -202,7 +202,6 @@ class TurnSchema(Schema):
         nation_fields = {
             'orders': ['nation'],
             'pieces': ['nation'],
-            'named_coasts': ['parent', 'neighbours'],
             'territories': ['nationality', 'controlled_by'],
         }
         for k, field_names in nation_fields.items():

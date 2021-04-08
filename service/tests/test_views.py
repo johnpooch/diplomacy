@@ -460,11 +460,11 @@ class TestCreateOrder(BaseTestCase):
         response = self.client.post(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_create_order_no_orders_left_retreat_and_disband(self):
+    def test_create_order_no_orders_left_retreat(self):
         models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
@@ -512,7 +512,7 @@ class TestCreateOrder(BaseTestCase):
         models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
@@ -535,7 +535,7 @@ class TestCreateOrder(BaseTestCase):
         turn = models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )
@@ -557,7 +557,7 @@ class TestCreateOrder(BaseTestCase):
         turn = models.Turn.objects.create(
             game=self.game,
             season=Season.SPRING,
-            phase=Phase.RETREAT_AND_DISBAND,
+            phase=Phase.RETREAT,
             year=1900,
             current_turn=True,
         )

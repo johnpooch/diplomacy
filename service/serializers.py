@@ -30,8 +30,9 @@ class PieceSerializer(serializers.ModelSerializer):
         model = models.Piece
         fields = (
             'id',
-            'type',
             'nation',
+            'turn_created',
+            'type',
         )
 
 
@@ -442,7 +443,7 @@ class TurnSerializer(serializers.ModelSerializer):
     territory_states = TerritoryStateSerializer(many=True, source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
     nation_states = PublicNationStateSerializer(many=True, source='nationstates')
-    orders = OrderSerializer(many=True, source='previous_orders')
+    orders = OrderSerializer(many=True, source='public_orders')
     phase = serializers.CharField(source='get_phase_display')
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()

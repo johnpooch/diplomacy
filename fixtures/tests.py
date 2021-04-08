@@ -147,7 +147,7 @@ class TestRecipe(TestCase, DiplomacyTestCaseMixin):
                 'pk': 10,
                 'game': 5,
                 'season': 'fall',
-                'phase': 'retreat_and_disband',
+                'phase': 'retreat',
                 'year': 1901,
                 'current_turn': True,
                 'processed': False,
@@ -162,7 +162,7 @@ class TestRecipe(TestCase, DiplomacyTestCaseMixin):
         turn_data = [
             {
                 'season': 'fall',
-                'phase': 'retreat_and_disband',
+                'phase': 'retreat',
                 'year': 1901,
             }
         ]

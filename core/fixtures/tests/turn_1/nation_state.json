@@ -1,0 +1,72 @@
+[
+{
+    "model": "core.nationstate",
+    "pk": 1,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-england",
+        "user": 7,
+        "orders_finalized": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 2,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-france",
+        "user": 1,
+        "orders_finalized": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 3,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-germany",
+        "user": 2,
+        "orders_finalized": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 4,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-austria-hungary",
+        "user": 3,
+        "orders_finalized": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 5,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-italy",
+        "user": 4,
+        "orders_finalized": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 6,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-russia",
+        "user": 5,
+        "orders_finalized": false
+    }
+},
+{
+    "model": "core.nationstate",
+    "pk": 7,
+    "fields": {
+        "turn": 1,
+        "nation": "standard-turkey",
+        "user": 6,
+        "orders_finalized": false
+    }
+}
+]

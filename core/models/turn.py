@@ -12,7 +12,7 @@ possible_orders = {
         OrderType.HOLD,
         OrderType.SUPPORT
     ],
-    Phase.RETREAT_AND_DISBAND: [
+    Phase.RETREAT: [
         OrderType.RETREAT,
         OrderType.DISBAND
     ],
@@ -124,6 +124,12 @@ class Turn(models.Model):
         return possible_orders[self.phase]
 
     @property
+    def public_orders(self):
+        if self.current_turn:
+            return self.orders.none()
+        return self.orders.all()
+
+    @property
     def ready_to_process(self):
         """
         Determine whether all nations which need to finalize their orders have
@@ -153,7 +159,7 @@ class Turn(models.Model):
     def deadline(self):
         if self.phase == Phase.ORDER:
             return self.game.order_deadline
-        if self.phase == Phase.RETREAT_AND_DISBAND:
+        if self.phase == Phase.RETREAT:
             return self.game.retreat_deadline
         if self.phase == Phase.BUILD:
             return self.game.build_deadline

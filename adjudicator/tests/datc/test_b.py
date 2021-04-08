@@ -128,7 +128,7 @@ class TestCoastalIssues(AdjudicatorTestCaseMixin, unittest.TestCase):
         """
         pieces = [
             Fleet(self.state, 0, Nations.FRANCE, self.territories.MARSEILLES),
-            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_NC),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, named_coast=self.named_coasts.SPAIN_NC),
             Fleet(self.state, 0, Nations.ITALY, self.territories.GULF_OF_LYON)
         ]
 
@@ -169,7 +169,7 @@ class TestCoastalIssues(AdjudicatorTestCaseMixin, unittest.TestCase):
         pieces = [
             Fleet(self.state, 0, Nations.ENGLAND, self.territories.NORTH_ATLANTIC),
             Fleet(self.state, 0, Nations.ENGLAND, self.territories.IRISH_SEA),
-            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_NC),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, named_coast=self.named_coasts.SPAIN_NC),
             Fleet(self.state, 0, Nations.FRANCE, self.territories.MID_ATLANTIC),
             Fleet(self.state, 0, Nations.ITALY, self.territories.GULF_OF_LYON),
         ]
@@ -286,7 +286,7 @@ class TestCoastalIssues(AdjudicatorTestCaseMixin, unittest.TestCase):
         The move fails.
         """
         # Not really relevant because can't specify source coast
-        Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_NC)
+        Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, named_coast=self.named_coasts.SPAIN_NC)
         move = Move(self.state, 0, Nations.FRANCE, self.territories.SPAIN, self.territories.SPAIN, self.named_coasts.SPAIN_SC)
 
         process(self.state)
@@ -331,7 +331,7 @@ class TestCoastalIssues(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         Both moves fail.
         """
-        Fleet(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, self.named_coasts.BULGARIA_SC),
+        Fleet(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, named_coast=self.named_coasts.BULGARIA_SC),
         Fleet(self.state, 0, Nations.TURKEY, self.territories.CONSTANTINOPLE),
         orders = [
             Move(self.state, 0, Nations.TURKEY, self.territories.BULGARIA, self.territories.CONSTANTINOPLE),

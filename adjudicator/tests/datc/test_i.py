@@ -77,7 +77,7 @@ class TestBuilding(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         Build fails.
         """
-        Fleet(self.state, 0, Nations.RUSSIA, self.territories.ST_PETERSBURG, self.named_coasts.ST_PETERSBURG_NC),
+        Fleet(self.state, 0, Nations.RUSSIA, self.territories.ST_PETERSBURG, named_coast=self.named_coasts.ST_PETERSBURG_NC),
         orders = [
             Build(self.state, 0, Nations.RUSSIA, self.territories.ST_PETERSBURG, PieceTypes.FLEET, self.named_coasts.ST_PETERSBURG_SC),
         ]

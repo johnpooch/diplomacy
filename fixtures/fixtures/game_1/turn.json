@@ -33,7 +33,7 @@
     "fields": {
         "game": 7,
         "season": "fall",
-        "phase": "retreat_and_disband",
+        "phase": "retreat",
         "year": 1901,
         "current_turn": false,
         "processed": true,
@@ -75,7 +75,7 @@
     "fields": {
         "game": 7,
         "season": "spring",
-        "phase": "retreat_and_disband",
+        "phase": "retreat",
         "year": 1902,
         "current_turn": false,
         "processed": true,
@@ -131,7 +131,7 @@
     "fields": {
         "game": 7,
         "season": "spring",
-        "phase": "retreat_and_disband",
+        "phase": "retreat",
         "year": 1903,
         "current_turn": false,
         "processed": true,
@@ -159,7 +159,7 @@
     "fields": {
         "game": 7,
         "season": "fall",
-        "phase": "retreat_and_disband",
+        "phase": "retreat",
         "year": 1903,
         "current_turn": false,
         "processed": true,
@@ -201,7 +201,7 @@
     "fields": {
         "game": 7,
         "season": "spring",
-        "phase": "retreat_and_disband",
+        "phase": "retreat",
         "year": 1904,
         "current_turn": true,
         "processed": false,

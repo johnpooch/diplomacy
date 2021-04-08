@@ -245,7 +245,7 @@ class TestBasicChecks(AdjudicatorTestCaseMixin, unittest.TestCase):
 
         Move fails. An army can go from Rome to Venice, but a fleet can not.
         """
-        Fleet(self.state, 0, Nations.ITALY, self.territories.ROME, self.territories.VENICE)
+        Fleet(self.state, 0, Nations.ITALY, self.territories.ROME)
         order = Move(self.state, 0, Nations.ITALY, self.territories.ROME, self.territories.VENICE)
 
         process(self.state)

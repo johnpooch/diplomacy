@@ -129,11 +129,11 @@ class TerritoryDisplayType:
 
 class Phase:
     ORDER = 'order'
-    RETREAT_AND_DISBAND = 'retreat_and_disband'
+    RETREAT = 'retreat'
     BUILD = 'build'
     CHOICES = (
         (ORDER, 'Order'),
-        (RETREAT_AND_DISBAND, 'Retreat and Disband'),
+        (RETREAT, 'Retreat'),
         (BUILD, 'Build')
     )
 

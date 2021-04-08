@@ -117,6 +117,7 @@ class DummyHold(Order):
         self.nation = nation
         self.source = source
         self.state = state
+        self.outcome = Outcomes.SUCCEEDS
 
 
 class Hold(Order):
@@ -124,6 +125,10 @@ class Hold(Order):
     checks = [
         check.SourcePieceBelongsToNation,
     ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.outcome = Outcomes.SUCCEEDS
 
 
 class Move(Order):
@@ -158,7 +163,6 @@ class Move(Order):
             o for o in self.state.orders if isinstance(o, Convoy)
             and o.aux == self.source and o.target == self.target
         ]
-        # print([c.outcome for c in eligible_convoys])
         return get_convoy_chains(self.source, self.target, eligible_convoys)
 
     @property

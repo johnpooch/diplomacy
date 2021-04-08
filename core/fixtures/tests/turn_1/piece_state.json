@@ -1,0 +1,376 @@
+[
+{
+    "model": "core.piecestate",
+    "pk": 1,
+    "fields": {
+        "turn": 1,
+        "piece": 1,
+        "territory": "standard-ankara",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 2,
+    "fields": {
+        "turn": 1,
+        "piece": 2,
+        "territory": "standard-berlin",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 3,
+    "fields": {
+        "turn": 1,
+        "piece": 3,
+        "territory": "standard-brest",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 4,
+    "fields": {
+        "turn": 1,
+        "piece": 4,
+        "territory": "standard-constantinople",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 5,
+    "fields": {
+        "turn": 1,
+        "piece": 5,
+        "territory": "standard-edinburgh",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 6,
+    "fields": {
+        "turn": 1,
+        "piece": 6,
+        "territory": "standard-kiel",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 7,
+    "fields": {
+        "turn": 1,
+        "piece": 7,
+        "territory": "standard-london",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 8,
+    "fields": {
+        "turn": 1,
+        "piece": 8,
+        "territory": "standard-liverpool",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 9,
+    "fields": {
+        "turn": 1,
+        "piece": 9,
+        "territory": "standard-marseilles",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 10,
+    "fields": {
+        "turn": 1,
+        "piece": 10,
+        "territory": "standard-naples",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 11,
+    "fields": {
+        "turn": 1,
+        "piece": 11,
+        "territory": "standard-rome",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 12,
+    "fields": {
+        "turn": 1,
+        "piece": 12,
+        "territory": "standard-sevastopol",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 13,
+    "fields": {
+        "turn": 1,
+        "piece": 13,
+        "territory": "standard-smyrna",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 14,
+    "fields": {
+        "turn": 1,
+        "piece": 14,
+        "territory": "standard-trieste",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 15,
+    "fields": {
+        "turn": 1,
+        "piece": 15,
+        "territory": "standard-venice",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 16,
+    "fields": {
+        "turn": 1,
+        "piece": 16,
+        "territory": "standard-budapest",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 17,
+    "fields": {
+        "turn": 1,
+        "piece": 17,
+        "territory": "standard-moscow",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 18,
+    "fields": {
+        "turn": 1,
+        "piece": 18,
+        "territory": "standard-munich",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 19,
+    "fields": {
+        "turn": 1,
+        "piece": 19,
+        "territory": "standard-paris",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 20,
+    "fields": {
+        "turn": 1,
+        "piece": 20,
+        "territory": "standard-vienna",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 21,
+    "fields": {
+        "turn": 1,
+        "piece": 21,
+        "territory": "standard-warsaw",
+        "named_coast": null,
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+},
+{
+    "model": "core.piecestate",
+    "pk": 22,
+    "fields": {
+        "turn": 1,
+        "piece": 22,
+        "territory": "standard-st-petersburg",
+        "named_coast": "standard-st-petersburg-south-coast",
+        "dislodged": false,
+        "dislodged_by": null,
+        "dislodged_from": null,
+        "destroyed": false,
+        "destroyed_message": null,
+        "must_retreat": false,
+        "attacker_territory": null
+    }
+}
+]

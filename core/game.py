@@ -2,11 +2,16 @@
 Functions relating to processing and updating the game. Interacts with
 the `adjudicator` module.
 """
+import logging
+
 from adjudicator import process_game_state
 
 from core import models
 from core.models.base import DrawStatus, OrderType, OutcomeType, Phase
 from core.serializers import TurnSerializer
+
+
+logger = logging.getLogger(__name__)
 
 
 def process_turn(turn):
@@ -15,11 +20,19 @@ def process_turn(turn):
     the turn the adjudicator. Update the turn based on the adjudicator
     response.
     """
+    logger.info('Processing turn: {}'.format(turn))
     turn_data = TurnSerializer(turn).data
     outcome = process_game_state(turn_data)
-    updated_turn = update_turn(turn, outcome)
+    logger.info('Turn processed by adjudicator')
 
+    logger.info('Updating turn based on adjudicator outcome')
+    updated_turn = update_turn(turn, outcome)
+    logger.info('Turn updated: {}'.format(updated_turn))
+
+    logger.info('Creating a new turn based on the updated turn')
     new_turn = create_turn_from_previous_turn(updated_turn)
+    logger.info('New turn created: {}'.format(new_turn))
+
     # check win conditions
     winning_nation = new_turn.check_for_winning_nation()
     if winning_nation:
@@ -39,7 +52,7 @@ def update_turn(turn, data):
 
     # Additional updates to the turn that aren't handled during deserialization
     destroy_pieces(turn)
-    if turn.phase in [Phase.RETREAT_AND_DISBAND, Phase.BUILD]:
+    if turn.phase in [Phase.RETREAT, Phase.BUILD]:
         disband_pieces(turn)
     if turn.phase == Phase.BUILD:
         create_new_pieces(turn)

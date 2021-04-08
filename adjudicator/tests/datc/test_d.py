@@ -849,7 +849,7 @@ class TestSupportsAndDislodges(AdjudicatorTestCaseMixin, unittest.TestCase):
         pieces = [
             Fleet(self.state, 0, Nations.ITALY, self.territories.GULF_OF_LYON),
             Fleet(self.state, 0, Nations.ITALY, self.territories.WESTERN_MEDITERRANEAN),
-            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_NC),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, named_coast=self.named_coasts.SPAIN_NC),
             Fleet(self.state, 0, Nations.FRANCE, self.territories.MARSEILLES),
         ]
         orders = [
@@ -889,7 +889,7 @@ class TestSupportsAndDislodges(AdjudicatorTestCaseMixin, unittest.TestCase):
         """
         pieces = [
             Army(self.state, 0, Nations.FRANCE, self.territories.MARSEILLES),
-            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, self.named_coasts.SPAIN_SC),
+            Fleet(self.state, 0, Nations.FRANCE, self.territories.SPAIN, named_coast=self.named_coasts.SPAIN_SC),
             Fleet(self.state, 0, Nations.ITALY, self.territories.GULF_OF_LYON),
             Fleet(self.state, 0, Nations.TURKEY, self.territories.WESTERN_MEDITERRANEAN),
             Fleet(self.state, 0, Nations.TURKEY, self.territories.TYRRHENIAN_SEA),
