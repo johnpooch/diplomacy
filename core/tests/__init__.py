@@ -1,7 +1,9 @@
+import random
 from unittest.mock import patch
 
 from celery.result import AsyncResult
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.utils import timezone
 
 from core import models
@@ -62,13 +64,17 @@ class DiplomacyTestCaseMixin:
         self.addCleanup(self.set_winners_patcher.stop)
 
     def create_test_user(self, save=True, **kwargs):
-        kwargs.setdefault('username', timezone.now().isoformat())
+        kwargs.setdefault('username', timezone.now().isoformat() + str(random.randint(10000, 99999)))
         kwargs.setdefault('email', timezone.now().isoformat() + '@test.com')
         kwargs.setdefault('first_name', 'test')
         kwargs.setdefault('first_name', 'test')
         user = User(**kwargs)
         if save:
-            user.save()
+            try:
+                user.save()
+            except IntegrityError:
+                user.username = user.username + str(random.randint(10000, 99999))
+                user.save()
         return user
 
     def create_test_variant(self, save=True, **kwargs):

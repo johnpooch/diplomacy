@@ -33,7 +33,7 @@ class TurnManager(models.Manager):
         turn = self.create(**kwargs)
         td = timespan.get_timespan(turn.deadline).timedelta
         turn_end_dt = timezone.now() + td
-        # TurnEnd.objects.new(turn, turn_end_dt)
+        TurnEnd.objects.new(turn, turn_end_dt)
         return turn
 
 
