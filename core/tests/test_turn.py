@@ -7,6 +7,7 @@ from core.tests import DiplomacyTestCaseMixin
 
 class TestTurn(TestCase, DiplomacyTestCaseMixin):
 
+
     def setUp(self):
         self.variant = models.Variant.objects.get(id='standard')
         self.user = factories.UserFactory()
@@ -312,6 +313,9 @@ class TestLinkedTurns(TestCase):
         self.assertEqual(turn, self.game_b_spring_order_turn)
         turn = models.Turn.get_previous(turn)
         self.assertIsNone(turn)
+
+    def test_does_not_get_archived_turns(self):
+        self.assertTrue(False)
 
 
 class TestTurnManager(TestCase, DiplomacyTestCaseMixin):

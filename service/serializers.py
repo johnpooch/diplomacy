@@ -178,9 +178,11 @@ class TerritorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'type',
-            'supply_center',
             'named_coasts',
+            'nationality',
+            'neighbours',
+            'supply_center',
+            'type',
         )
 
 
@@ -275,8 +277,13 @@ class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
         """
         instance.orders_finalized = not(instance.orders_finalized)
         instance.save()
-        if instance.turn.ready_to_process:
-            process_turn(instance.turn)
+
+        # NOTE temporarily skipping this outside testing until worker is set up in prod
+        from django.conf import settings
+        if settings.TESTING:
+            if instance.turn.ready_to_process:
+                process_turn(instance.turn)
+
         return instance
 
 

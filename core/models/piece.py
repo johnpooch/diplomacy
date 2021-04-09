@@ -27,6 +27,7 @@ class Piece(HygienicModel):
         choices=PieceType.CHOICES,
         default=PieceType.ARMY,
     )
+    # TODO both of these fields should be replaced with properties
     turn_created = models.ForeignKey(
         'Turn',
         null=True,
@@ -160,7 +161,8 @@ class PieceState(PerTurnModel):
         return self.territory.source_orders.filter(
             nation=self.piece.nation,
             outcome=OutcomeType.SUCCEEDS,
-            type__in=[OrderType.MOVE, OrderType.RETREAT]
+            type__in=[OrderType.MOVE, OrderType.RETREAT],
+            turn=self.turn,
         ).first()
 
     def clean(self):
@@ -217,3 +219,15 @@ class PieceState(PerTurnModel):
             piece_data['must_retreat'] = True
             piece_data['attacker_territory'] = self.dislodged_from
         return turn.piecestates.create(**piece_data)
+
+    # TODO test
+    def restore_to_turn(self, turn):
+        self.pk = None
+        self.turn = turn
+        self.dislodged = False
+        self.dislodged_by = None
+        self.dislodged_from = None
+        self.destroyed = False
+        self.destroyed_message = None
+        self.save()
+        return self

@@ -88,20 +88,6 @@ class NationState(PerTurnModel):
     def __str__(self):
         return ' - '.join([str(self.turn), str(self.nation)])
 
-    def copy_to_new_turn(self, turn):
-        """
-        Create a copy of the instance for the next turn. Created when the turn
-        ends and a new turn is created.
-        """
-        # Set user to None if pending surrender at end of turn
-        if self.user_surrendering:
-            self.user = None
-        self.turn = turn
-        self.orders_finalized = False
-        self.pk = None
-        self.save()
-        return self
-
     @property
     def civil_disorder(self):
         """
@@ -259,6 +245,28 @@ class NationState(PerTurnModel):
             num_orders = max(self.num_builds, self.num_disbands)
             return max(0, num_orders - self.orders.count())
         return self.pieces_to_order.count() - self.orders.count()
+
+    def copy_to_new_turn(self, turn):
+        """
+        Create a copy of the instance for the next turn. Created when the turn
+        ends and a new turn is created.
+        """
+        # Set user to None if pending surrender at end of turn
+        if self.user_surrendering:
+            self.user = None
+        self.turn = turn
+        self.orders_finalized = False
+        self.pk = None
+        self.save()
+        return self
+
+    # TODO test
+    def restore_to_turn(self, turn):
+        self.pk = None
+        self.turn = turn
+        self.orders_finalized = False
+        self.save()
+        return self
 
 
 def get_combined_strength(nation_states):

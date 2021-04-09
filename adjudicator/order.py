@@ -113,7 +113,7 @@ class DummyHold(Order):
     Represents a hold order for a piece which did not receive an order. Does
     not get registered to the state.
     """
-    def __init__(self, state, nation, source):
+    def __init__(self, state, nation, source, **kwargs):
         self.nation = nation
         self.source = source
         self.state = state
@@ -370,7 +370,7 @@ class Build(Order):
         check.SourceNamedCoastNotSpecified,
     ]
 
-    def __init__(self, state, id, nation, source, piece_type, named_coast=None):
+    def __init__(self, state, id, nation, source, piece_type, named_coast=None, **kwargs):
         super().__init__(state, id, nation, source)
         self.piece_type = piece_type
         self.named_coast = named_coast
