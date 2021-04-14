@@ -124,7 +124,7 @@ class TerritorySchema(Schema):
     name = fields.String(missing=None, load_only=True)
     supply_center = fields.Boolean(missing=False, load_only=True)
     bounce_occurred = fields.Boolean(missing=False, dump_only=True)
-    captured_by = fields.Int(missing=None, dump_only=True)
+    captured_by = fields.String(missing=None, dump_only=True)
 
 
 class TurnSchema(Schema):

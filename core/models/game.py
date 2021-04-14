@@ -1,9 +1,10 @@
 import random
+from copy import copy
 
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import models
+from django.db import models, transaction
 from django.db.models.manager import Manager
 from django.utils import timezone
 
@@ -274,3 +275,55 @@ class Game(models.Model, AutoSlug):
         self.status = GameStatus.ENDED
         self.save()
         self.winners.set(nations)
+
+    @transaction.atomic
+    def restore_turn(self, turn):
+        """
+        Create a copy of the given turn and set it to be the current turn. Archive
+        the original turn and all later turns in this game.
+
+        Args:
+            *  `turn` - `Turn` -The turn to restore to.
+
+        Returns:
+            *  `Turn` - The restored turn
+        """
+        if self.status != GameStatus.ACTIVE:
+            raise ValueError('Cannot restore turn on inactive game')
+        if turn.game.id != self.id:
+            raise ValueError('Cannot restore to turn of other game')
+        if turn.current_turn:
+            raise ValueError('Cannot restore to current turn')
+
+        # Archive turns
+        self.turns \
+            .filter(archived=False, id__gte=turn.id) \
+            .update(archived=True, current_turn=False)
+
+        # Create new turn
+        restored_turn = copy(turn)
+        restored_turn.pk = None
+        restored_turn.id = None
+        restored_turn.current_turn = True
+        restored_turn.processed = False
+        restored_turn.processed_at = None
+        restored_turn.next_season = None
+        restored_turn.next_phase = None
+        restored_turn.next_year = None
+        restored_turn.archived = False
+        restored_turn.restored_from = turn
+        restored_turn.save()
+
+        # Copy over piece states
+        for piece_state in turn.piecestates.all():
+            piece_state.restore_to_turn(restored_turn)
+
+        # Copy over territory states
+        for territory_state in turn.territorystates.all():
+            territory_state.restore_to_turn(restored_turn)
+
+        # Copy over nation states
+        for nation_state in turn.nationstates.all():
+            nation_state.restore_to_turn(restored_turn)
+
+        return restored_turn

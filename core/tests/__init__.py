@@ -1,8 +1,10 @@
 import random
+from io import StringIO
 from unittest.mock import patch
 
 from celery.result import AsyncResult
 from django.contrib.auth.models import User
+from django.core.management import call_command
 from django.db import IntegrityError
 from django.utils import timezone
 
@@ -65,7 +67,7 @@ class DiplomacyTestCaseMixin:
 
     def create_test_user(self, save=True, **kwargs):
         kwargs.setdefault('username', timezone.now().isoformat() + str(random.randint(10000, 99999)))
-        kwargs.setdefault('email', timezone.now().isoformat() + '@test.com')
+        kwargs.setdefault('email', timezone.now().isoformat() + str(random.randint(10000, 99999)) + '@test.com')
         kwargs.setdefault('first_name', 'test')
         kwargs.setdefault('first_name', 'test')
         user = User(**kwargs)
@@ -229,3 +231,31 @@ class DiplomacyTestCaseMixin:
         if save:
             draw.save()
         return draw
+
+    def create_test_game_full(self, **kwargs):
+        self.user = self.create_test_user()
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            created_by=self.user,
+            variant=self.variant,
+            **kwargs
+        )
+        return self.game
+
+
+class ManagementCommandTestCaseMixin:
+
+    @property
+    def command(self):
+        raise NotImplementedError('Must specify management command')
+
+    def call_command(self, *args, **kwargs):
+        out = StringIO()
+        call_command(
+            self.command,
+            *args,
+            stdout=out,
+            stderr=StringIO(),
+            **kwargs,
+        )
+        return out.getvalue()

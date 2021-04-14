@@ -11,21 +11,17 @@ from . import validators as custom_validators
 
 
 def get_nation_state_from_draw(data):
-    return models.NationState.objects.get(
-        turn=data.get('draw').turn,
-        nation=data.get('proposed_by')
-    )
+    return models.NationState.objects.get(turn=data.get('draw').turn,
+                                          nation=data.get('proposed_by'))
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('username', 'id')
 
 
 class PieceSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Piece
         fields = (
@@ -37,7 +33,6 @@ class PieceSerializer(serializers.ModelSerializer):
 
 
 class SurrenderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Surrender
         fields = (
@@ -65,7 +60,6 @@ class SurrenderSerializer(serializers.ModelSerializer):
 
 
 class CreateDrawSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Draw
         fields = (
@@ -95,7 +89,6 @@ class CreateDrawSerializer(serializers.ModelSerializer):
 
 
 class CancelDrawSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Draw
         fields = (
@@ -116,7 +109,6 @@ class CancelDrawSerializer(serializers.ModelSerializer):
 
 
 class DrawResponseSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.DrawResponse
         fields = (
@@ -129,10 +121,8 @@ class DrawResponseSerializer(serializers.ModelSerializer):
         )
         validators = [
             custom_validators.NotSurrenderingValidator(),
-            UniqueTogetherValidator(
-                queryset=models.DrawResponse.objects.all(),
-                fields=['nation', 'draw']
-            )
+            UniqueTogetherValidator(queryset=models.DrawResponse.objects.all(),
+                                    fields=['nation', 'draw'])
         ]
         extra_kwargs = {
             'draw': {
@@ -142,7 +132,6 @@ class DrawResponseSerializer(serializers.ModelSerializer):
 
 
 class PieceStateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.PieceState
         fields = (
@@ -159,7 +148,6 @@ class PieceStateSerializer(serializers.ModelSerializer):
 
 
 class NamedCoastSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.NamedCoast
         fields = (
@@ -178,14 +166,15 @@ class TerritorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'type',
-            'supply_center',
             'named_coasts',
+            'nationality',
+            'neighbours',
+            'supply_center',
+            'type',
         )
 
 
 class TerritoryStateSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.TerritoryState
         fields = (
@@ -196,7 +185,6 @@ class TerritoryStateSerializer(serializers.ModelSerializer):
 
 
 class NationSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Nation
         fields = (
@@ -225,9 +213,7 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'num_disbands',
             'surrenders',
         )
-        read_only_fields = (
-            'nation',
-        )
+        read_only_fields = ('nation', )
 
     def get_num_supply_centers(self, nation_state):
         return nation_state.supply_centers.count()
@@ -253,7 +239,7 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
         """
         Set nation's `orders_finalized` field. Process game if turn is ready.
         """
-        instance.orders_finalized = not(instance.orders_finalized)
+        instance.orders_finalized = not (instance.orders_finalized)
         instance.save()
         if instance.turn.ready_to_process:
             instance.turn.game.process()
@@ -261,7 +247,6 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
 
 
 class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
-
     class Meta:
         model = models.NationState
         fields = (
@@ -273,15 +258,16 @@ class ToggleFinalizeOrdersSerializer(PublicNationStateSerializer):
         """
         Set nation's `orders_finalized` field. Process game if turn is ready.
         """
-        instance.orders_finalized = not(instance.orders_finalized)
+        instance.orders_finalized = not (instance.orders_finalized)
         instance.save()
+
         if instance.turn.ready_to_process:
             process_turn(instance.turn)
+
         return instance
 
 
 class ToggleSurrenderSerializer(PublicNationStateSerializer):
-
     def update(self, nation_state, validated_data):
         nation_state.turn.toggle_surrender(nation_state.user)
         return nation_state
@@ -314,8 +300,10 @@ class PrivateNationStateSerializer(serializers.ModelSerializer):
         """
         if nation_state.turn.phase != Phase.BUILD:
             return None
-        return [ts.territory.id for ts
-                in nation_state.unoccupied_controlled_home_supply_centers]
+        return [
+            ts.territory.id
+            for ts in nation_state.unoccupied_controlled_home_supply_centers
+        ]
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -336,7 +324,6 @@ class VariantSerializer(serializers.ModelSerializer):
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Game
         fields = (
@@ -357,15 +344,12 @@ class CreateGameSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         game = models.Game.objects.create(
-            created_by=self.context['request'].user,
-            **validated_data
-        )
+            created_by=self.context['request'].user, **validated_data)
         game.participants.add(self.context['request'].user)
         return game
 
 
 class OrderTurnGameSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Game
         fields = (
@@ -387,7 +371,6 @@ class OrderTurnSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Order
         fields = (
@@ -418,33 +401,25 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class DrawSerializer(serializers.ModelSerializer):
 
-    draw_responses = DrawResponseSerializer(
-        many=True,
-        source='drawresponse_set'
-    )
+    draw_responses = DrawResponseSerializer(many=True,
+                                            source='drawresponse_set')
 
     class Meta:
         model = models.Draw
-        fields = (
-            'id',
-            'turn',
-            'nations',
-            'proposed_by',
-            'proposed_by_user',
-            'status',
-            'proposed_at',
-            'resolved_at',
-            'draw_responses'
-        )
+        fields = ('id', 'turn', 'nations', 'proposed_by', 'proposed_by_user',
+                  'status', 'proposed_at', 'resolved_at', 'draw_responses')
 
 
 class TurnSerializer(serializers.ModelSerializer):
 
-    territory_states = TerritoryStateSerializer(many=True, source='territorystates')
+    territory_states = TerritoryStateSerializer(many=True,
+                                                source='territorystates')
     piece_states = PieceStateSerializer(many=True, source='piecestates')
-    nation_states = PublicNationStateSerializer(many=True, source='nationstates')
+    nation_states = PublicNationStateSerializer(many=True,
+                                                source='nationstates')
     orders = OrderSerializer(many=True, source='public_orders')
-    phase = serializers.CharField(source='get_phase_display')
+    phase_display = serializers.CharField(source='get_phase_display')
+    season_display = serializers.CharField(source='get_season_display')
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
     draws = DrawSerializer(many=True)
@@ -459,7 +434,9 @@ class TurnSerializer(serializers.ModelSerializer):
             'current_turn',
             'year',
             'season',
+            'season_display',
             'phase',
+            'phase_display',
             'territory_states',
             'piece_states',
             'nation_states',
@@ -494,8 +471,10 @@ class ListNationStatesSerializer(serializers.ModelSerializer):
 
 class ListTurnSerializer(serializers.ModelSerializer):
 
-    phase = serializers.CharField(source='get_phase_display')
-    nation_states = ListNationStatesSerializer(many=True, source='nationstates')
+    phase_display = serializers.CharField(source='get_phase_display')
+    season_display = serializers.CharField(source='get_season_display')
+    nation_states = ListNationStatesSerializer(many=True,
+                                               source='nationstates')
     turn_end = serializers.SerializerMethodField()
 
     class Meta:
@@ -504,7 +483,9 @@ class ListTurnSerializer(serializers.ModelSerializer):
             'id',
             'year',
             'season',
+            'season_display',
             'phase',
+            'phase_display',
             'nation_states',
             'turn_end',
         )
@@ -532,7 +513,6 @@ class ListVariantsSerializer(serializers.ModelSerializer):
 
 
 class LightVariantsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = models.Variant
         fields = (

@@ -25,6 +25,13 @@ possible_orders = {
 
 class TurnManager(models.Manager):
 
+    def __init__(self, *args, **kwargs):
+        self.include_archived = kwargs.pop('include_archived', False)
+        super().__init__(*args, **kwargs)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(archived=False)
+
     def new(self, **kwargs):
         """
         Create a new `Turn` instance and also create a related `TurnEnd`
@@ -80,16 +87,26 @@ class Turn(models.Model):
     processed_at = models.DateTimeField(
         null=True,
     )
+    archived = models.BooleanField(
+        default=False,
+    )
+    restored_from = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
 
     objects = TurnManager()
+    # TODO test
+    include_archived = TurnManager(include_archived=True)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['game', 'year', 'season', 'phase'],
+                fields=['game', 'year', 'season', 'phase', 'restored_from'],
                 name='unique_phase_per_game,'
             )
         ]
@@ -100,7 +117,8 @@ class Turn(models.Model):
             self.get_season_display(),
             str(self.year),
             self.get_phase_display(),
-            'Phase'
+            'Phase',
+            '({})'.format(self.id)
         ])
 
     @classmethod
