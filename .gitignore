@@ -29,4 +29,5 @@ celerybeat-schedule
 .vscode
 
 local_database
-staticfiles/
+staticfiles/*
+!staticfiles/dummy.txt
