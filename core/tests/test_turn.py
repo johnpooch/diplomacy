@@ -314,9 +314,6 @@ class TestLinkedTurns(TestCase):
         turn = models.Turn.get_previous(turn)
         self.assertIsNone(turn)
 
-    def test_does_not_get_archived_turns(self):
-        self.assertTrue(False)
-
 
 class TestTurnManager(TestCase, DiplomacyTestCaseMixin):
     def setUp(self):

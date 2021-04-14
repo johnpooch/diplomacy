@@ -298,7 +298,7 @@ class Game(models.Model, AutoSlug):
         # Archive turns
         self.turns \
             .filter(archived=False, id__gte=turn.id) \
-            .update(archived=True)
+            .update(archived=True, current_turn=False)
 
         # Create new turn
         restored_turn = copy(turn)

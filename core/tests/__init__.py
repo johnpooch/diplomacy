@@ -67,7 +67,7 @@ class DiplomacyTestCaseMixin:
 
     def create_test_user(self, save=True, **kwargs):
         kwargs.setdefault('username', timezone.now().isoformat() + str(random.randint(10000, 99999)))
-        kwargs.setdefault('email', timezone.now().isoformat() + '@test.com')
+        kwargs.setdefault('email', timezone.now().isoformat() + str(random.randint(10000, 99999)) + '@test.com')
         kwargs.setdefault('first_name', 'test')
         kwargs.setdefault('first_name', 'test')
         user = User(**kwargs)
