@@ -149,7 +149,6 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
         self.assertEqual(self.game.winners.all().count(), 0)
 
 
-
 class TestRestoreTurn(TestCase, DiplomacyTestCaseMixin):
 
     def setUp(self):
@@ -193,7 +192,3 @@ class TestRestoreTurn(TestCase, DiplomacyTestCaseMixin):
         self.assertIsNone(restored_turn.next_season)
         self.assertIsNone(restored_turn.next_phase)
         self.assertIsNone(restored_turn.next_year)
-
-    def test_multiple_later_turns(self):
-        pass
-

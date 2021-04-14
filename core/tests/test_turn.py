@@ -7,7 +7,6 @@ from core.tests import DiplomacyTestCaseMixin
 
 class TestTurn(TestCase, DiplomacyTestCaseMixin):
 
-
     def setUp(self):
         self.variant = models.Variant.objects.get(id='standard')
         self.user = factories.UserFactory()

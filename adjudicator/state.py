@@ -19,7 +19,7 @@ class State:
     def territories(self):
         from adjudicator.territory import Territory
         return [t for t in self.subscribers if isinstance(t, Territory)]
-    
+
     @property
     def land_territories(self):
         return [t for t in self.territories if not t.is_sea]
