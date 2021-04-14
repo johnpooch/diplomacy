@@ -19,11 +19,11 @@ class Nation:
 
     @property
     def controlled_territories(self):
-        return [t for t in self.state.territories if t.controlled_by == self.id]
+        return [t for t in self.state.land_territories if t.controlled_by == self.id]
 
     @property
     def captured_territories(self):
-        return [t for t in self.state.territories if t.captured_by == self.id]
+        return [t for t in self.state.land_territories if t.captured_by == self.id]
 
     @property
     def next_turn_piece_count(self):

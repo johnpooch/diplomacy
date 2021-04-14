@@ -268,6 +268,13 @@ class TestGetGameState(BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(response.data['turns'][0]['orders'])
 
+    def test_excludes_archived_turns(self):
+        self.turn.archived = True
+        self.turn.save()
+        response = self.client.get(self.url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['turns']), 0)
+
 
 class TestListOrders(BaseTestCase):
     def setUp(self):

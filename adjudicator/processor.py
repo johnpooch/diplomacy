@@ -109,16 +109,18 @@ def process(state):
         # Find all pieces that are not dislodged
         non_dislodged_pieces = [p for p in state.pieces if not p.dislodged]
         for piece in non_dislodged_pieces:
-            if piece.nation != piece.territory.nation:
-                piece.territory.captured_by = piece.nation
+            if piece.nation != getattr(piece.territory, 'controlled_by', False):
+                if not (piece.territory.is_sea):
+                    piece.territory.captured_by = piece.nation
         # Find all successful move orders
         successful_move_orders = [
             m for m in state.orders
             if m.is_move and m.outcome == Outcomes.SUCCEEDS
         ]
         for move in successful_move_orders:
-            if move.piece.nation != move.target.nation:
-                move.target.captured_by = piece.nation
+            if move.piece.nation != getattr(move.target, 'controlled_by', False):
+                if not (move.target.is_sea):
+                    move.target.captured_by = move.piece.nation
 
     # Determine the next season, phase and year.
     state.next_season, state.next_phase, state.next_year = \

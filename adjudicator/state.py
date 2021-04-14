@@ -21,6 +21,10 @@ class State:
         return [t for t in self.subscribers if isinstance(t, Territory)]
 
     @property
+    def land_territories(self):
+        return [t for t in self.territories if not t.is_sea]
+
+    @property
     def pieces(self):
         from adjudicator.piece import Piece
         return [p for p in self.subscribers if isinstance(p, Piece)]

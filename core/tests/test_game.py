@@ -147,3 +147,48 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
             self.game.set_winners(france, other_nation)
         self.assertEqual(self.game.status, GameStatus.ACTIVE)
         self.assertEqual(self.game.winners.all().count(), 0)
+
+
+class TestRestoreTurn(TestCase, DiplomacyTestCaseMixin):
+
+    def setUp(self):
+        self.create_test_game_full(status=GameStatus.ACTIVE)
+
+    def test_is_current_turn(self):
+        turn = self.create_test_turn(game=self.game)
+        with self.assertRaises(ValueError):
+            self.game.restore_turn(turn)
+
+    def test_game_is_not_active(self):
+        turn = self.create_test_turn(game=self.game, current_turn=False)
+        self.game.status = GameStatus.ENDED
+        self.game.save()
+        with self.assertRaises(ValueError):
+            self.game.restore_turn(turn)
+
+    def test_turn_of_other_game(self):
+        turn = self.create_test_turn(current_turn=False)
+        with self.assertRaises(ValueError):
+            self.game.restore_turn(turn)
+
+    def test_one_later_turn(self):
+        turn = self.create_test_turn(game=self.game, current_turn=False)
+        later_turn = self.create_test_turn(game=self.game, current_turn=True)
+
+        restored_turn = self.game.restore_turn(turn)
+        turn.refresh_from_db()
+        later_turn.refresh_from_db()
+
+        self.assertNotEqual(restored_turn.id, turn.id)
+        self.assertFalse(turn.current_turn)
+        self.assertFalse(later_turn.current_turn)
+        self.assertTrue(restored_turn.current_turn)
+        self.assertTrue(later_turn.archived)
+        self.assertTrue(turn.archived)
+        self.assertFalse(restored_turn.archived)
+        self.assertEqual(restored_turn.restored_from, turn)
+        self.assertFalse(restored_turn.processed)
+        self.assertIsNone(restored_turn.processed_at)
+        self.assertIsNone(restored_turn.next_season)
+        self.assertIsNone(restored_turn.next_phase)
+        self.assertIsNone(restored_turn.next_year)

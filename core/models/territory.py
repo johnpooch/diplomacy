@@ -51,11 +51,9 @@ class Territory(models.Model):
         max_length=10,
         choices=TerritoryType.CHOICES,
         blank=False,
-        null=False
+        null=False,
     )
-    supply_center = models.BooleanField(
-        default=False,
-    )
+    supply_center = models.BooleanField(default=False)
     initial_piece_type = models.CharField(
         max_length=50,
         null=True,
@@ -126,12 +124,8 @@ class TerritoryState(PerTurnModel):
         null=True,
         related_name='controlled_territories',
     )
-    contested = models.BooleanField(
-        default=False,
-    )
-    bounce_occurred = models.BooleanField(
-        default=False,
-    )
+    contested = models.BooleanField(default=False)
+    bounce_occurred = models.BooleanField(default=False)
     captured_by = models.ForeignKey(
         'Nation',
         on_delete=models.CASCADE,
@@ -149,5 +143,14 @@ class TerritoryState(PerTurnModel):
         self.contested = self.bounce_occurred
         self.bounce_occurred = False
         self.turn = turn
+        self.save()
+        return self
+
+    # TODO test
+    def restore_to_turn(self, turn):
+        self.pk = None
+        self.turn = turn
+        self.bounce_occurred = False
+        self.captured_by = None
         self.save()
         return self

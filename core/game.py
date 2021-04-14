@@ -14,7 +14,7 @@ from core.serializers import TurnSerializer
 logger = logging.getLogger(__name__)
 
 
-def process_turn(turn):
+def process_turn(turn, dry_run=False):
     """
     Serialize the given turn into the format the `adjudicator` expects. Pass
     the turn the adjudicator. Update the turn based on the adjudicator
@@ -24,6 +24,9 @@ def process_turn(turn):
     turn_data = TurnSerializer(turn).data
     outcome = process_game_state(turn_data)
     logger.info('Turn processed by adjudicator')
+
+    if dry_run:
+        return outcome
 
     logger.info('Updating turn based on adjudicator outcome')
     updated_turn = update_turn(turn, outcome)
