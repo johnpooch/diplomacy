@@ -90,6 +90,8 @@ WEBPACK_LOADER = {
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
+CELERY_BROKER_URL = os.environ.get('AMQP_HOST', 'diplomacy.rabbitmq')
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
