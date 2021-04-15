@@ -159,4 +159,6 @@ FIXTURE_DIRS = (
     '/code/fixtures',
 )
 
+
+CLIENT_URL = 'https://diplomacy-react.netlify.app'
 CORS_ALLOW_ALL_ORIGINS = True
