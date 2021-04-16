@@ -104,8 +104,8 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     send_mail(
         'Password Reset for {title}'.format(title='diplomacy.gg'),
         email_plaintext_message,
-        'noreply@diplomacy.gg',
-        ['to@example.com'],
+        getattr(settings, 'DIPLOMACY_EMAIL_FROM_ADDRESS', 'noreply@diplomacy.gg'),
+        [reset_password_token.user.email],
         fail_silently=False,
         html_message=email_html_message,
     )
