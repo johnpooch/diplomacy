@@ -14,6 +14,14 @@ DATABASES = {
 
 CELERY_BROKER_URL = os.environ.get('CLOUDAMQP_URL', '')
 
+# Twilio SendGrid - Used to send email reset in production
+# See https://www.twilio.com/blog/using-twilio-sendgrid-send-emails-python-django
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
