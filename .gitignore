@@ -31,3 +31,5 @@ celerybeat-schedule
 local_database
 staticfiles/*
 !staticfiles/dummy.txt
+
+.credentials
