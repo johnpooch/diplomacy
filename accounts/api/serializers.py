@@ -44,8 +44,8 @@ class LoginSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError(
-            'The username or password you entered do not match an account. '
-            'Please try again.'
+            'The {} or password you entered do not match an account. '
+            'Please try again.'.format('username' if username else 'email')
         )
 
 

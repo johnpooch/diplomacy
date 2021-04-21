@@ -9,6 +9,10 @@ EMAIL = 'email@email.com'
 PASSWORD = 'secret123password'
 
 
+def get_errors(response):
+    return json.loads(response.content.decode())
+
+
 class TestChangePassword(APITestCase):
 
     url = reverse('change_password')
@@ -22,9 +26,6 @@ class TestChangePassword(APITestCase):
             'new_password_confirm': 'NewPassword1234',
         }
 
-    def get_errors(self, response):
-        return json.loads(response.content.decode())
-
     def test_get(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 405)
@@ -37,14 +38,14 @@ class TestChangePassword(APITestCase):
     def test_passwords_not_matching(self):
         self.data['new_password_confirm'] = 'NotMatchingPassword1234'
         response = self.client.put(self.url, data=self.data)
-        errors = self.get_errors(response)
+        errors = get_errors(response)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(errors, {'new_password_confirm': ['Password fields didn\'t match']})
 
     def test_incorrect_password(self):
         self.data['current_password'] = 'WrongPassword1234'
         response = self.client.put(self.url, data=self.data)
-        errors = self.get_errors(response)
+        errors = get_errors(response)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(errors, {'current_password': ['Password is not correct']})
 
@@ -52,7 +53,7 @@ class TestChangePassword(APITestCase):
         self.data['new_password'] = 'password'
         self.data['new_password_confirm'] = 'password'
         response = self.client.put(self.url, data=self.data)
-        errors = self.get_errors(response)
+        errors = get_errors(response)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(errors, {'new_password': ['This password is too common.']})
 
@@ -78,9 +79,6 @@ class TestLogin(APITestCase):
             'password': PASSWORD,
         }
 
-    def get_errors(self, response):
-        return json.loads(response.content.decode())
-
     def test_login_using_username_and_password(self):
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(response.status_code, 200)
@@ -94,3 +92,17 @@ class TestLogin(APITestCase):
         del self.data['username']
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(response.status_code, 400)
+
+    def test_login_bad_username(self):
+        self.data['username'] = 'badusername'
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, 400)
+        errors = get_errors(response)
+        self.assertEqual(errors, {'non_field_errors': ['The username or password you entered do not match an account. Please try again.']})
+
+    def test_login_bad_email(self):
+        self.data['username'] = 'bademail@fakeemail.com'
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, 400)
+        errors = get_errors(response)
+        self.assertEqual(errors, {'non_field_errors': ['The email or password you entered do not match an account. Please try again.']})
