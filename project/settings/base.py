@@ -144,7 +144,7 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
+    'core.backends.EmailBackend',
 )
 
 # Static files (CSS, JavaScript, Images)
