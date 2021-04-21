@@ -5,6 +5,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 
 USERNAME = 'username'
+EMAIL = 'email@email.com'
 PASSWORD = 'secret123password'
 
 
@@ -60,3 +61,36 @@ class TestChangePassword(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password(self.data['new_password']))
+
+
+class TestLogin(APITestCase):
+
+    url = reverse('login')
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            USERNAME,
+            email=EMAIL,
+            password=PASSWORD
+        )
+        self.data = {
+            'username': USERNAME,
+            'password': PASSWORD,
+        }
+
+    def get_errors(self, response):
+        return json.loads(response.content.decode())
+
+    def test_login_using_username_and_password(self):
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_using_email_and_password(self):
+        self.data['username'] = EMAIL
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_no_email_or_username(self):
+        del self.data['username']
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(response.status_code, 400)
