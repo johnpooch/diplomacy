@@ -23,8 +23,8 @@ class BaseTurnSerializerTestCase(BaseSerializerTestCase):
         self.user = factories.UserFactory()
         self.england = self.variant.nations.get(name='England')
         self.france = self.variant.nations.get(name='France')
-        self.london = self.variant.territories.get(name='london')
-        self.paris = self.variant.territories.get(name='paris')
+        self.london = self.variant.territories.get(name='London')
+        self.paris = self.variant.territories.get(name='Paris')
         self.game = models.Game.objects.create(
             name='Test game',
             variant=self.variant,
