@@ -1,12 +1,16 @@
 import json
 
+
 from django.contrib.auth.models import User
 from django.urls import reverse
+from parameterized import parameterized
 from rest_framework.test import APITestCase
 
-USERNAME = 'username'
+USERNAME = 'johnpooch'
 EMAIL = 'email@email.com'
 PASSWORD = 'secret123password'
+
+FIELD_IS_REQUIRED_ERROR = 'This field is required.'
 
 
 def get_errors(response):
@@ -106,3 +110,80 @@ class TestLogin(APITestCase):
         self.assertEqual(response.status_code, 400)
         errors = get_errors(response)
         self.assertEqual(errors, {'non_field_errors': ['The email or password you entered do not match an account. Please try again.']})
+
+
+class TestRegister(APITestCase):
+
+    url = reverse('register')
+    param_list = ['username', 'email', 'password']
+
+    def setUp(self):
+        self.data = {
+            'username': USERNAME,
+            'email': EMAIL,
+            'password': PASSWORD,
+        }
+
+    @parameterized.expand([
+        ['password'],
+        ['username'],
+        ['email'],
+    ])
+    def test_params_not_provided(self, param):
+        del self.data[param]
+
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {param: [FIELD_IS_REQUIRED_ERROR]})
+
+    def test_email_already_registered(self):
+        User.objects.create_user('some username', email=EMAIL, password=PASSWORD)
+
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {'email': ['user with this email address already exists.']})
+
+    def test_username_already_registered(self):
+        User.objects.create_user(USERNAME, email='someemail@email.com', password=PASSWORD)
+
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {'username': ['A user with that username already exists.']})
+
+    def test_password_same_as_username(self):
+        self.data['password'] = USERNAME
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {'password': ['The password is too similar to the username.']})
+
+    def test_password_entirely_numeric(self):
+        self.data['password'] = '41269684126968'
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {'password': ['This password is entirely numeric.']})
+
+    def test_password_too_short(self):
+        self.data['password'] = 'aljfksh'
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {'password': ['This password is too short. It must contain at least 8 characters.']})
+
+    def test_password_too_common(self):
+        self.data['password'] = 'Password1234'
+        response = self.client.post(self.url, data=self.data)
+        errors = get_errors(response)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(errors, {'password': ['This password is too common.']})
