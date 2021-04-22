@@ -78,15 +78,18 @@ You can sign into the client and the service using these credentials.
 
 #### Prerequisites
 
-Ensure that you have installed `virtualenv` and `make`.
+Ensure that you have installed `virtualenv`, `rabbitmq`, and `make`.
 
 #### Virtual environent
 
 Create a virtual environment:
+
 ```
 python -m virtualenv venv
 ```
+
 Activate the virtual environment:
+
 ```
 # Unix
 source venv/bin/activate
@@ -130,12 +133,20 @@ python .\manage.py runserver localhost:8082
 
 To load the fixtures run `make fixtures_local` from the root directory. This builds the fixtures in
 `fixtures/dev` and creates a superuser with the following credentials:
+
 ```
 Username: admin
 Pw: admin
 ```
+
 You can sign into the client and the service using these credentials.
 
+#### Bring up rabbitmq worker
+
+You must bring up a rabbitmq instance to enable celery tasks. This is required by
+`models.TurnManager.new` which create a `models.TurnEnd` instance.
+
+On windows you can install rabbitmq using `choco install rabbitmq`. Once installed, a rabbitmq instance is automatically started on the port specified in `settings/local.example.py`.
 
 ## Running the tests
 
