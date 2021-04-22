@@ -203,10 +203,6 @@ class StandardVariantFactory(DjangoModelFactory):
                         initial_piece_type=territory['fields'].get('initial_piece_type'),
                     )
                 )
-    #
-    #
-    #     if not create:
-    #         self._prefetched_objects_cache = {'territories': territories}
 
 
 class StandardTurnFactory(DjangoModelFactory):

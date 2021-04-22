@@ -54,7 +54,7 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
         self.game.create_initial_territory_states()
         territory_states = turn.territorystates.all()
         england = models.Nation.objects.get(variant=self.game.variant, name='England')
-        london_state = turn.territorystates.get(territory__name='london')
+        london_state = turn.territorystates.get(territory__name='London')
         self.assertEqual(len(territory_states), 75)
         self.assertEqual(london_state.controlled_by, england)
 
@@ -92,7 +92,7 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
 
         territory_states = current_turn.territorystates.all()
         england = models.Nation.objects.get(variant=self.game.variant, name='England')
-        london_state = current_turn.territorystates.get(territory__name='london')
+        london_state = current_turn.territorystates.get(territory__name='London')
         self.assertEqual(len(territory_states), 75)
         self.assertEqual(london_state.controlled_by, england)
 

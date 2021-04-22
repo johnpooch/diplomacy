@@ -17,7 +17,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {
+            'email': {'required': True},
+            'password': {'write_only': True}
+        }
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -27,18 +30,31 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
 
+    def validate_password(self, password):
+        email = self.initial_data.get('email')
+        username = self.initial_data.get('username')
+        temp_user = User(email=email, username=username)
+        validate_password(password, temp_user)
+
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    email = serializers.EmailField(required=False)
+    username = serializers.CharField(required=False)
     password = serializers.CharField()
 
     def validate(self, data):
+        email = data.get('email')
+        username = data.get('username')
+        if not (email or username):
+            raise serializers.ValidationError(
+                'Must provide either email or username. Please try again.'
+            )
         user = authenticate(**data)
         if user and user.is_active:
             return user
         raise serializers.ValidationError(
-            'The username or password you entered do not match an account. '
-            'Please try again.'
+            'The {} or password you entered do not match an account. '
+            'Please try again.'.format('username' if username else 'email')
         )
 
 

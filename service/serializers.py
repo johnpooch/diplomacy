@@ -423,6 +423,7 @@ class TurnSerializer(serializers.ModelSerializer):
     next_turn = serializers.SerializerMethodField()
     previous_turn = serializers.SerializerMethodField()
     draws = DrawSerializer(many=True)
+    turn_end = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Turn
@@ -442,7 +443,7 @@ class TurnSerializer(serializers.ModelSerializer):
             'nation_states',
             'orders',
             'draws',
-            'turnend',
+            'turn_end',
         )
 
     def get_next_turn(self, obj):
@@ -452,6 +453,11 @@ class TurnSerializer(serializers.ModelSerializer):
     def get_previous_turn(self, obj):
         turn = models.Turn.get_previous(obj)
         return getattr(turn, 'id', None)
+
+    def get_turn_end(self, turn):
+        if turn.turn_end:
+            return turn.turn_end.datetime
+        return None
 
 
 class ListNationStatesSerializer(serializers.ModelSerializer):

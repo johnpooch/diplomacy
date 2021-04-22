@@ -1,14 +1,16 @@
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from rest_framework import exceptions, filters, generics, status, views
 from rest_framework.response import Response
 
 from core import models
 from core.models.base import DrawStatus, GameStatus, SurrenderStatus
 from service import serializers
-from service.permissions import IsAuthenticated
+from service.decorators import convert_query_params_to_snake_case
 from service.mixins import CamelCase
+from service.permissions import IsAuthenticated
 
 
 # NOTE this could possibly be replaced by using options
@@ -46,6 +48,7 @@ class BaseMixin:
         )
 
 
+@method_decorator(convert_query_params_to_snake_case, 'dispatch')
 class ListGames(CamelCase, generics.ListAPIView):
 
     permission_classes = [IsAuthenticated]

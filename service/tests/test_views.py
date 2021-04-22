@@ -28,15 +28,16 @@ class BaseTestCase(APITestCase, DiplomacyTestCaseMixin):
     pass
 
 
-class TestGetGames(BaseTestCase):
+class TestListGames(BaseTestCase):
 
     max_diff = None
 
     def setUp(self):
-        user = factories.UserFactory()
-        self.client.force_authenticate(user=user)
+        self.user = factories.UserFactory()
+        self.variant = models.Variant.objects.get(id='standard')
+        self.client.force_authenticate(user=self.user)
 
-    def test_get_all_games_unauthenticated(self):
+    def test_list_games_unauthenticated(self):
         """
         Cannot get all games if not authenticated.
         """
@@ -44,6 +45,23 @@ class TestGetGames(BaseTestCase):
         url = reverse('list-games')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_games_converts_camel_to_snake_query_params(self):
+        self.game = models.Game.objects.create(
+            status=GameStatus.PENDING,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
+
+        url = reverse('list-games') + '?numPlayers=1'
+        response = self.client.get(url)
+        self.assertEqual(response.data, [])
+
+        url = reverse('list-games') + '?numPlayers=7'
+        response = self.client.get(url)
+        self.assertEqual(len(response.data), 1)
 
 
 class TestGetCreateGame(BaseTestCase):

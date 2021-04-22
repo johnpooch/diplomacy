@@ -44,6 +44,9 @@ FIXTURE_DIRS = (
 
 CLIENT_URL = 'http://localhost:8000'
 
+# Tested on windows
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672'
+
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_AGE = 86400  # sec
