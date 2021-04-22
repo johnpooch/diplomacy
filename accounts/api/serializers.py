@@ -38,16 +38,23 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    email = serializers.EmailField(required=False)
+    username = serializers.CharField(required=False)
     password = serializers.CharField()
 
     def validate(self, data):
+        email = data.get('email')
+        username = data.get('username')
+        if not (email or username):
+            raise serializers.ValidationError(
+                'Must provide either email or username. Please try again.'
+            )
         user = authenticate(**data)
         if user and user.is_active:
             return user
         raise serializers.ValidationError(
-            'The username or password you entered do not match an account. '
-            'Please try again.'
+            'The {} or password you entered do not match an account. '
+            'Please try again.'.format('username' if username else 'email')
         )
 
 
