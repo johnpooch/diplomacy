@@ -16,5 +16,6 @@ lxml
 marshmallow>=3.9.1,<4.0
 mysqlclient
 gunicorn
+parameterized
 psycopg2-binary
 whitenoise
