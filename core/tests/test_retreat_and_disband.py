@@ -54,7 +54,7 @@ class TestRetreatAndDisband(TestCase):
 
     def test_pieces_which_are_disbanded_are_removed_from_the_game(self):
         france = self.variant.nations.get(name='France')
-        paris = self.variant.territories.get(name='paris')
+        paris = self.variant.territories.get(name='Paris')
         nation_state = models.NationState.objects.create(
             turn=self.retreat_turn,
             nation=france,

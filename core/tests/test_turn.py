@@ -76,11 +76,8 @@ class TestTurn(TestCase, DiplomacyTestCaseMixin):
             nation=france,
             user=self.user
         )
-        territory = models.Territory.objects.create(
-            variant=self.variant,
+        territory = models.Territory.objects.get(
             name='Marseilles',
-            nationality=france,
-            supply_center=True,
         )
         models.TerritoryState.objects.create(
             turn=build_turn,
