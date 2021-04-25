@@ -154,6 +154,11 @@ class ToggleJoinGame(generics.UpdateAPIView):
                 raise exceptions.PermissionDenied(
                     detail='Game is not pending.'
                 )
+        else:
+            if obj.status != GameStatus.PENDING:
+                raise exceptions.PermissionDenied(
+                    detail='Cannot leave game.'
+                )
 
 
 class CreateOrderView(CamelCase, BaseMixin, generics.CreateAPIView, generics.DestroyAPIView):

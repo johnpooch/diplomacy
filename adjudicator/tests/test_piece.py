@@ -84,8 +84,8 @@ class TestCanReachFleet(AdjudicatorTestCaseMixin, unittest.TestCase):
         self.marseilles = CoastalTerritory(self.state, 12, 'Marseilles', 'France', [10], [10])
         self.mid_atlantic = SeaTerritory(self.state, 13, 'Mid Atlantic', [10])
         self.gulf_of_lyon = SeaTerritory(self.state, 14, 'Gulf of Lyon', [10])
-        self.spain_north_coast = NamedCoast(self.state, 1, 'North Coast', self.spain, [self.gascony, self.mid_atlantic])
-        self.spain_south_coast = NamedCoast(self.state, 2, 'South Coast', self.spain, [self.marseilles, self.gulf_of_lyon, self.marseilles])
+        self.spain_north_coast = NamedCoast(self.state, 1, 'North Coast', self.spain, [self.gascony.id, self.mid_atlantic.id])
+        self.spain_south_coast = NamedCoast(self.state, 2, 'South Coast', self.spain, [self.marseilles.id, self.gulf_of_lyon.id, self.marseilles.id])
 
         to_register = [self.paris, self.london, self.wales,
                        self.english_channel, self.brest, self.rome,

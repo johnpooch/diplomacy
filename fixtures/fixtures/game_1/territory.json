@@ -3,7 +3,7 @@
     "model": "core.territory",
     "pk": 1,
     "fields": {
-        "name": "adriatic sea",
+        "name": "Adriatic Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -24,7 +24,7 @@
     "model": "core.territory",
     "pk": 2,
     "fields": {
-        "name": "aegean sea",
+        "name": "Aegean Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -46,7 +46,7 @@
     "model": "core.territory",
     "pk": 3,
     "fields": {
-        "name": "baltic sea",
+        "name": "Baltic Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -69,7 +69,7 @@
     "model": "core.territory",
     "pk": 4,
     "fields": {
-        "name": "barents sea",
+        "name": "Barents Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -88,7 +88,7 @@
     "model": "core.territory",
     "pk": 5,
     "fields": {
-        "name": "black sea",
+        "name": "Black Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -109,7 +109,7 @@
     "model": "core.territory",
     "pk": 6,
     "fields": {
-        "name": "gulf of bothnia",
+        "name": "Gulf Of Bothnia",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -130,7 +130,7 @@
     "model": "core.territory",
     "pk": 7,
     "fields": {
-        "name": "eastern mediterranean",
+        "name": "Eastern Mediterranean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -150,7 +150,7 @@
     "model": "core.territory",
     "pk": 8,
     "fields": {
-        "name": "english channel",
+        "name": "English Channel",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -174,7 +174,7 @@
     "model": "core.territory",
     "pk": 9,
     "fields": {
-        "name": "gulf of lyon",
+        "name": "Gulf Of Lyon",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -198,7 +198,7 @@
     "model": "core.territory",
     "pk": 10,
     "fields": {
-        "name": "helgoland bight",
+        "name": "Helgoland Bight",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -218,7 +218,7 @@
     "model": "core.territory",
     "pk": 11,
     "fields": {
-        "name": "ionian sea",
+        "name": "Ionian Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -243,7 +243,7 @@
     "model": "core.territory",
     "pk": 12,
     "fields": {
-        "name": "irish sea",
+        "name": "Irish Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -265,7 +265,7 @@
     "model": "core.territory",
     "pk": 13,
     "fields": {
-        "name": "mid-atlantic ocean",
+        "name": "Mid-Atlantic Ocean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -292,7 +292,7 @@
     "model": "core.territory",
     "pk": 14,
     "fields": {
-        "name": "north atlantic ocean",
+        "name": "North Atlantic Ocean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -313,7 +313,7 @@
     "model": "core.territory",
     "pk": 15,
     "fields": {
-        "name": "norwegian sea",
+        "name": "Norwegian Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -335,7 +335,7 @@
     "model": "core.territory",
     "pk": 16,
     "fields": {
-        "name": "north sea",
+        "name": "North Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -362,7 +362,7 @@
     "model": "core.territory",
     "pk": 17,
     "fields": {
-        "name": "skagerrak",
+        "name": "Skagerrak",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -382,7 +382,7 @@
     "model": "core.territory",
     "pk": 18,
     "fields": {
-        "name": "tyrrhenian sea",
+        "name": "Tyrrhenian Sea",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -406,7 +406,7 @@
     "model": "core.territory",
     "pk": 19,
     "fields": {
-        "name": "western mediterranean",
+        "name": "Western Mediterranean",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -428,7 +428,7 @@
     "model": "core.territory",
     "pk": 20,
     "fields": {
-        "name": "albania",
+        "name": "Albania",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -452,7 +452,7 @@
     "model": "core.territory",
     "pk": 21,
     "fields": {
-        "name": "ankara",
+        "name": "Ankara",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -475,7 +475,7 @@
     "model": "core.territory",
     "pk": 22,
     "fields": {
-        "name": "apulia",
+        "name": "Apulia",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -499,7 +499,7 @@
     "model": "core.territory",
     "pk": 23,
     "fields": {
-        "name": "armenia",
+        "name": "Armenia",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -522,7 +522,7 @@
     "model": "core.territory",
     "pk": 24,
     "fields": {
-        "name": "berlin",
+        "name": "Berlin",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -546,7 +546,7 @@
     "model": "core.territory",
     "pk": 25,
     "fields": {
-        "name": "belgium",
+        "name": "Belgium",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -571,7 +571,7 @@
     "model": "core.territory",
     "pk": 26,
     "fields": {
-        "name": "brest",
+        "name": "Brest",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -595,7 +595,7 @@
     "model": "core.territory",
     "pk": 27,
     "fields": {
-        "name": "clyde",
+        "name": "Clyde",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -619,7 +619,7 @@
     "model": "core.territory",
     "pk": 28,
     "fields": {
-        "name": "constantinople",
+        "name": "Constantinople",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -644,7 +644,7 @@
     "model": "core.territory",
     "pk": 29,
     "fields": {
-        "name": "denmark",
+        "name": "Denmark",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -669,7 +669,7 @@
     "model": "core.territory",
     "pk": 30,
     "fields": {
-        "name": "edinburgh",
+        "name": "Edinburgh",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -693,7 +693,7 @@
     "model": "core.territory",
     "pk": 31,
     "fields": {
-        "name": "finland",
+        "name": "Finland",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -716,7 +716,7 @@
     "model": "core.territory",
     "pk": 32,
     "fields": {
-        "name": "gascony",
+        "name": "Gascony",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -741,7 +741,7 @@
     "model": "core.territory",
     "pk": 33,
     "fields": {
-        "name": "greece",
+        "name": "Greece",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -765,7 +765,7 @@
     "model": "core.territory",
     "pk": 34,
     "fields": {
-        "name": "holland",
+        "name": "Holland",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -789,7 +789,7 @@
     "model": "core.territory",
     "pk": 35,
     "fields": {
-        "name": "kiel",
+        "name": "Kiel",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -816,7 +816,7 @@
     "model": "core.territory",
     "pk": 36,
     "fields": {
-        "name": "london",
+        "name": "London",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -839,7 +839,7 @@
     "model": "core.territory",
     "pk": 37,
     "fields": {
-        "name": "livonia",
+        "name": "Livonia",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -864,7 +864,7 @@
     "model": "core.territory",
     "pk": 38,
     "fields": {
-        "name": "liverpool",
+        "name": "Liverpool",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -889,7 +889,7 @@
     "model": "core.territory",
     "pk": 39,
     "fields": {
-        "name": "marseilles",
+        "name": "Marseilles",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -913,7 +913,7 @@
     "model": "core.territory",
     "pk": 40,
     "fields": {
-        "name": "north africa",
+        "name": "North Africa",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -934,7 +934,7 @@
     "model": "core.territory",
     "pk": 41,
     "fields": {
-        "name": "naples",
+        "name": "Naples",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -957,7 +957,7 @@
     "model": "core.territory",
     "pk": 42,
     "fields": {
-        "name": "norway",
+        "name": "Norway",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -983,7 +983,7 @@
     "model": "core.territory",
     "pk": 43,
     "fields": {
-        "name": "picardy",
+        "name": "Picardy",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -1007,7 +1007,7 @@
     "model": "core.territory",
     "pk": 44,
     "fields": {
-        "name": "piedmont",
+        "name": "Piedmont",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1031,7 +1031,7 @@
     "model": "core.territory",
     "pk": 45,
     "fields": {
-        "name": "portugal",
+        "name": "Portugal",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1051,7 +1051,7 @@
     "model": "core.territory",
     "pk": 46,
     "fields": {
-        "name": "rome",
+        "name": "Rome",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1075,7 +1075,7 @@
     "model": "core.territory",
     "pk": 47,
     "fields": {
-        "name": "rumania",
+        "name": "Rumania",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1102,7 +1102,7 @@
     "model": "core.territory",
     "pk": 48,
     "fields": {
-        "name": "prussia",
+        "name": "Prussia",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1126,7 +1126,7 @@
     "model": "core.territory",
     "pk": 49,
     "fields": {
-        "name": "sevastopol",
+        "name": "Sevastopol",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1150,7 +1150,7 @@
     "model": "core.territory",
     "pk": 50,
     "fields": {
-        "name": "smyrna",
+        "name": "Smyrna",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -1175,7 +1175,7 @@
     "model": "core.territory",
     "pk": 51,
     "fields": {
-        "name": "sweden",
+        "name": "Sweden",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1201,7 +1201,7 @@
     "model": "core.territory",
     "pk": 52,
     "fields": {
-        "name": "syria",
+        "name": "Syria",
         "controlled_by_initial": 7,
         "variant": 1,
         "nationality": 7,
@@ -1223,7 +1223,7 @@
     "model": "core.territory",
     "pk": 53,
     "fields": {
-        "name": "trieste",
+        "name": "Trieste",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1250,7 +1250,7 @@
     "model": "core.territory",
     "pk": 54,
     "fields": {
-        "name": "tunis",
+        "name": "Tunis",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1272,7 +1272,7 @@
     "model": "core.territory",
     "pk": 55,
     "fields": {
-        "name": "tuscany",
+        "name": "Tuscany",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1296,7 +1296,7 @@
     "model": "core.territory",
     "pk": 56,
     "fields": {
-        "name": "venice",
+        "name": "Venice",
         "controlled_by_initial": 5,
         "variant": 1,
         "nationality": 5,
@@ -1323,7 +1323,7 @@
     "model": "core.territory",
     "pk": 57,
     "fields": {
-        "name": "wales",
+        "name": "Wales",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -1347,7 +1347,7 @@
     "model": "core.territory",
     "pk": 58,
     "fields": {
-        "name": "yorkshire",
+        "name": "Yorkshire",
         "controlled_by_initial": 1,
         "variant": 1,
         "nationality": 1,
@@ -1371,7 +1371,7 @@
     "model": "core.territory",
     "pk": 59,
     "fields": {
-        "name": "bohemia",
+        "name": "Bohemia",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1392,7 +1392,7 @@
     "model": "core.territory",
     "pk": 60,
     "fields": {
-        "name": "budapest",
+        "name": "Budapest",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1413,7 +1413,7 @@
     "model": "core.territory",
     "pk": 61,
     "fields": {
-        "name": "burgundy",
+        "name": "Burgundy",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -1436,7 +1436,7 @@
     "model": "core.territory",
     "pk": 62,
     "fields": {
-        "name": "galicia",
+        "name": "Galicia",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1459,7 +1459,7 @@
     "model": "core.territory",
     "pk": 63,
     "fields": {
-        "name": "moscow",
+        "name": "Moscow",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1481,7 +1481,7 @@
     "model": "core.territory",
     "pk": 64,
     "fields": {
-        "name": "munich",
+        "name": "Munich",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1504,7 +1504,7 @@
     "model": "core.territory",
     "pk": 65,
     "fields": {
-        "name": "paris",
+        "name": "Paris",
         "controlled_by_initial": 2,
         "variant": 1,
         "nationality": 2,
@@ -1524,7 +1524,7 @@
     "model": "core.territory",
     "pk": 66,
     "fields": {
-        "name": "ruhr",
+        "name": "Ruhr",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1545,7 +1545,7 @@
     "model": "core.territory",
     "pk": 67,
     "fields": {
-        "name": "serbia",
+        "name": "Serbia",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1567,7 +1567,7 @@
     "model": "core.territory",
     "pk": 68,
     "fields": {
-        "name": "silesia",
+        "name": "Silesia",
         "controlled_by_initial": 3,
         "variant": 1,
         "nationality": 3,
@@ -1589,7 +1589,7 @@
     "model": "core.territory",
     "pk": 69,
     "fields": {
-        "name": "tyrolia",
+        "name": "Tyrolia",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1611,7 +1611,7 @@
     "model": "core.territory",
     "pk": 70,
     "fields": {
-        "name": "ukraine",
+        "name": "Ukraine",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1632,7 +1632,7 @@
     "model": "core.territory",
     "pk": 71,
     "fields": {
-        "name": "vienna",
+        "name": "Vienna",
         "controlled_by_initial": 4,
         "variant": 1,
         "nationality": 4,
@@ -1653,7 +1653,7 @@
     "model": "core.territory",
     "pk": 72,
     "fields": {
-        "name": "warsaw",
+        "name": "Warsaw",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
@@ -1675,7 +1675,7 @@
     "model": "core.territory",
     "pk": 73,
     "fields": {
-        "name": "bulgaria",
+        "name": "Bulgaria",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1701,7 +1701,7 @@
     "model": "core.territory",
     "pk": 74,
     "fields": {
-        "name": "spain",
+        "name": "Spain",
         "controlled_by_initial": null,
         "variant": 1,
         "nationality": null,
@@ -1729,7 +1729,7 @@
     "model": "core.territory",
     "pk": 75,
     "fields": {
-        "name": "st. petersburg",
+        "name": "St. Petersburg",
         "controlled_by_initial": 6,
         "variant": 1,
         "nationality": 6,
