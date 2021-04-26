@@ -109,6 +109,9 @@ def process(state):
         # Find all pieces that are not dislodged
         non_dislodged_pieces = [p for p in state.pieces if not p.dislodged]
         for piece in non_dislodged_pieces:
+            # Ignore pieces that move successfully
+            if piece.order.is_move and piece.order.outcome == Outcomes.SUCCEEDS:
+                continue
             if piece.nation != getattr(piece.territory, 'controlled_by', False):
                 if not (piece.territory.is_sea):
                     piece.territory.captured_by = piece.nation

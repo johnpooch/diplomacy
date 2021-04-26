@@ -112,7 +112,6 @@
             31,
             37,
             51,
-            75,
             75
          ],
          "shared_coasts":[
@@ -761,7 +760,6 @@
             34
          ],
          "controlled_by_initial":3,
-         "nationality":3,
          "nationality":3,
          "type":"coastal"
       }

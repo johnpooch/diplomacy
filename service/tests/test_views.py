@@ -203,6 +203,36 @@ class TestJoinGame(BaseTestCase):
         mock_initialize.assert_called()
 
 
+class TestLeaveGame(BaseTestCase):
+
+    def setUp(self):
+        self.data = {}
+        self.user = factories.UserFactory()
+        self.variant = models.Variant.objects.get(id='standard')
+        self.game = models.Game.objects.create(
+            status=GameStatus.PENDING,
+            variant=self.variant,
+            name='Test Game',
+            created_by=self.user,
+            num_players=7
+        )
+        self.url = reverse('toggle-join-game', args=[self.game.slug])
+        self.game.participants.add(self.user)
+        self.client.force_authenticate(user=self.user)
+
+    def test_leave_game_success(self):
+        response = self.client.patch(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.user in self.game.participants.all())
+
+    def test_leave_game_already_started(self):
+        self.game.status = GameStatus.ACTIVE
+        self.game.save()
+        response = self.client.patch(self.url, self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(self.user in self.game.participants.all())
+
+
 class TestGetGameState(BaseTestCase):
 
     def setUp(self):
