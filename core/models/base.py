@@ -16,6 +16,7 @@ class NationChoiceMode:
 
 
 class DeadlineFrequency:
+    NONE = None
     TWELVE_HOURS = timespans.TWELVE_HOURS.db_string
     TWENTY_FOUR_HOURS = timespans.TWENTY_FOUR_HOURS.db_string
     TWO_DAYS = timespans.TWO_DAYS.db_string
@@ -23,6 +24,7 @@ class DeadlineFrequency:
     FIVE_DAYS = timespans.FIVE_DAYS.db_string
     SEVEN_DAYS = timespans.SEVEN_DAYS.db_string
     CHOICES = (
+        (NONE, 'None'),
         timespans.TWELVE_HOURS.as_choice,
         timespans.TWENTY_FOUR_HOURS.as_choice,
         timespans.TWO_DAYS.as_choice,

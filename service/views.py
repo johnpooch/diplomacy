@@ -19,7 +19,7 @@ def get_game_filter_choices():
         'gameStatuses': models.base.GameStatus.CHOICES,
         'nationChoiceModes': models.base.NationChoiceMode.CHOICES,
         'deadlines': models.base.DeadlineFrequency.CHOICES,
-        'variants': [(v.uid, str(v)) for v in models.Variant.objects.all()],
+        'variants': [(v.id, str(v)) for v in models.Variant.objects.all()],
     }
 
 

@@ -83,7 +83,7 @@ class Game(models.Model, AutoSlug):
         max_length=100,
     )
     order_deadline = models.CharField(
-        null=False,
+        null=True,
         choices=DeadlineFrequency.CHOICES,
         default=DeadlineFrequency.TWENTY_FOUR_HOURS,
         max_length=100,
