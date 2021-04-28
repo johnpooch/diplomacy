@@ -2,9 +2,9 @@
 
 A web browser version of the classic strategy board game Diplomacy.
 
-We are massive fans of the game and have been happily using some of the
+We are fans of the game and enjoy playing on the
 existing web versions like [Play Diplomacy][play diplomacy],
-[Backstabbr][backstabbr], and others for years. We decided to build a new
+[Backstabbr][backstabbr], and others. We decided to build a new
 version of the game to try to bring together and improve on some of the
 features of the existing versions. We also wanted to make the project open
 source so that it could be maintained by an enthusiastic community of diplomacy
