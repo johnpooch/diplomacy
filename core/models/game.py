@@ -85,19 +85,16 @@ class Game(models.Model, AutoSlug):
     order_deadline = models.CharField(
         null=True,
         choices=DeadlineFrequency.CHOICES,
-        default=DeadlineFrequency.TWENTY_FOUR_HOURS,
         max_length=100,
     )
     retreat_deadline = models.CharField(
-        null=False,
+        null=True,
         choices=DeadlineFrequency.CHOICES,
-        default=DeadlineFrequency.TWENTY_FOUR_HOURS,
         max_length=100,
     )
     build_deadline = models.CharField(
-        null=False,
+        null=True,
         choices=DeadlineFrequency.CHOICES,
-        default=DeadlineFrequency.TWELVE_HOURS,
         max_length=100,
     )
     process_on_finalized_orders = models.BooleanField(

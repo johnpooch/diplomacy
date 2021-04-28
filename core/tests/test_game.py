@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from core import factories, models
-from core.models.base import GameStatus, Phase, Season
+from core.models.base import DeadlineFrequency, GameStatus, Phase, Season
 from core.tests import DiplomacyTestCaseMixin
 
 
@@ -18,6 +18,9 @@ class TestGame(TestCase, DiplomacyTestCaseMixin):
             variant=self.variant,
             num_players=7,
             created_by=self.users[0],
+            order_deadline=DeadlineFrequency.TWENTY_FOUR_HOURS,
+            retreat_deadline=DeadlineFrequency.TWELVE_HOURS,
+            build_deadline=DeadlineFrequency.TWELVE_HOURS,
         )
         self.game.participants.add(*self.users)
         self.patch_process_turn_apply_async()

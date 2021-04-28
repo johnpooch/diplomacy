@@ -14,6 +14,7 @@ from core.utils.date import timespan
 
 
 apply_async_path = 'core.tasks.process_turn.apply_async'
+revoke_task_on_delete_path = 'celery.app.control.Control.revoke'
 
 
 set_status_path = 'core.models.Draw.set_status'
@@ -54,6 +55,11 @@ class DiplomacyTestCaseMixin:
         apply_async = patch(apply_async_path)
         self.apply_async = apply_async.start()
         self.apply_async.return_value = AsyncResult(id=self.dummy_task_id)
+
+    def patch_revoke_task_on_delete(self):
+        self.revoke_task_on_delete_patcher = patch(revoke_task_on_delete_path)
+        self.revoke_task_on_delete_patch = self.revoke_task_on_delete_patcher.start()
+        self.addCleanup(self.revoke_task_on_delete_patcher.stop)
 
     def patch_set_status(self):
         self.set_status_patcher = patch(set_status_path)

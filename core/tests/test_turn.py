@@ -135,11 +135,6 @@ class TestTurn(TestCase, DiplomacyTestCaseMixin):
         turn = self.create_test_turn(game=self.game)
         self.assertIsNone(turn.turn_end)
 
-    def test_turn_end(self):
-        turn = self.create_test_turn(game=self.game, turn_end=True)
-        turn_end = models.TurnEnd.objects.get()
-        self.assertEqual(turn.turn_end, turn_end)
-
     def test_deadline_order(self):
         self.game.order_deadline = DeadlineFrequency.SEVEN_DAYS
         self.game.save()
@@ -317,9 +312,12 @@ class TestTurnManager(TestCase, DiplomacyTestCaseMixin):
         self.user = factories.UserFactory()
         self.game = self.create_test_game()
         self.game.participants.add(self.user)
+        self.patch_process_turn_apply_async()
 
     def test_new(self):
         self.assertEqual(models.TurnEnd.objects.count(), 0)
+        self.game.retreat_deadline = DeadlineFrequency.FIVE_DAYS
+        self.game.save()
         turn = models.Turn.objects.new(
             game=self.game,
             phase=Phase.RETREAT,
@@ -329,3 +327,16 @@ class TestTurnManager(TestCase, DiplomacyTestCaseMixin):
         turn_end = models.TurnEnd.objects.get()
         self.assertEqual(turn_end.turn, turn)
         self.assertSimilarTimestamp(turn_end.datetime, self.tomorrow)
+
+    def test_new_no_deadline(self):
+        self.assertEqual(models.TurnEnd.objects.count(), 0)
+        self.game.order_deadline = None
+        self.game.save()
+        turn = models.Turn.objects.new(
+            game=self.game,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+            year=1901,
+        )
+        with self.assertRaises(models.TurnEnd.DoesNotExist):
+            turn.turnend
