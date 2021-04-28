@@ -12,6 +12,7 @@ from core import models
 from core.models.base import DrawStatus, GameStatus
 from core.models.mixins import AutoSlug
 from core.utils.models import super_receiver
+from project.celery import app
 
 
 def set_id(instance):
@@ -70,6 +71,11 @@ def set_game_state_if_draw_accepted(sender, instance, **kwargs):
     if instance.status == DrawStatus.ACCEPTED and game.status != GameStatus.ENDED:
         nations = [*instance.nations.all(), instance.proposed_by]
         game.set_winners(*nations)
+
+
+@receiver(signals.pre_delete, sender=models.TurnEnd)
+def revoke_task_on_delete(sender, instance, **kwargs):
+    app.control.revoke(instance.task_id)
 
 
 @receiver(reset_password_token_created)

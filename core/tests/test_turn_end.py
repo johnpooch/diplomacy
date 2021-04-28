@@ -7,7 +7,7 @@ from django.utils import timezone
 from core import factories, models
 from core.tasks import process_turn
 from core.tests import DiplomacyTestCaseMixin
-from core.models.base import Phase, Season
+from core.models.base import DeadlineFrequency, Phase, Season
 
 
 process_path = 'core.tasks._process_turn'
@@ -23,8 +23,12 @@ class TestTurnEnd(TestCase, DiplomacyTestCaseMixin):
             variant=self.variant,
             num_players=7,
             created_by=self.user,
+            order_deadline=DeadlineFrequency.TWENTY_FOUR_HOURS,
+            retreat_deadline=DeadlineFrequency.TWELVE_HOURS,
+            build_deadline=DeadlineFrequency.TWELVE_HOURS,
         )
         self.patch_process_turn_apply_async()
+        self.patch_revoke_task_on_delete()
 
     def create_turn(self):
         return models.Turn.objects.create(

@@ -186,29 +186,29 @@ class Territories:
 class NamedCoasts:
     def __init__(self, state, territories):
         self.SPAIN_SC = NamedCoast(state, 1, 'spain sc', territories.SPAIN, [
-            territories.MARSEILLES, territories.PORTUGAL,
-            territories.MID_ATLANTIC,
-            territories.WESTERN_MEDITERRANEAN, territories.GULF_OF_LYON
+            territories.MARSEILLES.id, territories.PORTUGAL.id,
+            territories.MID_ATLANTIC.id,
+            territories.WESTERN_MEDITERRANEAN.id, territories.GULF_OF_LYON.id
         ])
         self.SPAIN_NC = NamedCoast(state, 2, 'spain nc', territories.SPAIN, [
-            territories.PORTUGAL, territories.MID_ATLANTIC, territories.GASCONY
+            territories.PORTUGAL.id, territories.MID_ATLANTIC.id, territories.GASCONY.id
         ])
         self.BULGARIA_EC = NamedCoast(state, 3, 'bulgaria ec', territories.BULGARIA, [
-            territories.BLACK_SEA, territories.RUMANIA,
-            territories.CONSTANTINOPLE,
+            territories.BLACK_SEA.id, territories.RUMANIA.id,
+            territories.CONSTANTINOPLE.id,
         ])
         self.BULGARIA_SC = NamedCoast(state, 4, 'bulgaria sc', territories.BULGARIA, [
-            territories.CONSTANTINOPLE, territories.AEGEAN_SEA,
-            territories.GREECE
+            territories.CONSTANTINOPLE.id, territories.AEGEAN_SEA.id,
+            territories.GREECE.id
         ])
         self.ST_PETERSBURG_NC = NamedCoast(state, 5, 'st petersburg nc',
                                            territories.ST_PETERSBURG, [
-                                               territories.BARRENTS_SEA,
-                                               territories.NORWAY
+                                               territories.BARRENTS_SEA.id,
+                                               territories.NORWAY.id
                                            ])
         self.ST_PETERSBURG_SC = NamedCoast(state, 6, 'st petersburg nc',
                                            territories.ST_PETERSBURG, [
-                                               territories.FINLAND,
-                                               territories.LIVONIA,
-                                               territories.GULF_OF_BOTHNIA
+                                               territories.FINLAND.id,
+                                               territories.LIVONIA.id,
+                                               territories.GULF_OF_BOTHNIA.id
                                            ])
