@@ -1,10 +1,10 @@
 from django.test import TestCase
 
-from adjudicator.base import Phase, Season
+from adjudicator.base import OrderType, PieceType, Phase, Season
 from adjudicator.nation import Nation
 from adjudicator.order import Hold
 from adjudicator.piece import Army
-from adjudicator.schema import TurnSchema
+from adjudicator.schema import OrderSchema, TurnSchema
 from adjudicator.territory import CoastalTerritory
 from .base import AdjudicatorTestCaseMixin
 
@@ -61,3 +61,17 @@ class TestSerializeTurn(AdjudicatorTestCaseMixin, TestCase):
             ['id', 'next_turn_piece_count', 'next_turn_supply_center_count',
              'next_turn_supply_delta']
         )
+
+
+class TestDeserializeOrder(AdjudicatorTestCaseMixin, TestCase):
+
+    def test_deserialize_build_with_target_coast(self):
+        data = {
+            'id': 1,
+            'type': OrderType.BUILD,
+            'nation': 'standard-russia',
+            'source': 'standard-st-petersburg',
+            'target_coast': 'standard-st-petersburg-north-coast',
+            'piece_type': PieceType.FLEET,
+        }
+        OrderSchema().load(data)

@@ -83,7 +83,7 @@ class OrderSchema(Schema):
     source = Territory(required=True, load_only=True)
     target = Territory(missing=None, load_only=True)
     aux = Territory(missing=None, load_only=True)
-    target_coast = fields.Int(missing=None, load_only=True)
+    target_coast = fields.String(missing=None, load_only=True)
     via_convoy = fields.Boolean(missing=False, load_only=True)
     illegal = fields.Boolean(missing=False, dump_only=True)
     illegal_code = fields.String(missing=None, dump_only=True)
