@@ -190,6 +190,7 @@ class NationSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'variant',
         )
 
 
@@ -384,6 +385,10 @@ class OrderSerializer(serializers.ModelSerializer):
             'piece_type',
             'via_convoy',
             'turn',
+            'outcome',
+            'illegal',
+            'illegal_code',
+            'illegal_verbose',
         )
         read_only_fields = (
             'nation',

@@ -20,6 +20,12 @@ def process_turn(turn, dry_run=False):
     the turn the adjudicator. Update the turn based on the adjudicator
     response.
     """
+    # Remove pending turnend
+    try:
+        turn.turnend.delete()
+    except models.TurnEnd.DoesNotExist:
+        pass
+
     logger.info('Processing turn: {}'.format(turn))
     turn_data = TurnSerializer(turn).data
     outcome = process_game_state(turn_data)
@@ -40,6 +46,7 @@ def process_turn(turn, dry_run=False):
     winning_nation = new_turn.check_for_winning_nation()
     if winning_nation:
         turn.game.set_winner(winning_nation)
+
     return new_turn
 
 

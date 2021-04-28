@@ -35,6 +35,7 @@ class TestSetTurnEnd(TestCase, DiplomacyTestCaseMixin):
         self.yesterday_string = self.yesterday.strftime(self.date_format)
 
         self.patch_process_turn_apply_async()
+        self.patch_revoke_task_on_delete()
 
     def call_command(self, slug, date_string):
         call_command(self.command, slug, date_string, stdout=self.out)
