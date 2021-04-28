@@ -9,8 +9,8 @@ from rest_framework.test import APITestCase
 from core import factories, models
 from core.tests import DiplomacyTestCaseMixin
 from core.models.base import (
-    DrawStatus, DrawResponse, GameStatus, OrderType, Phase, PieceType, Season,
-    SurrenderStatus
+    DeadlineFrequency, DrawStatus, DrawResponse, GameStatus, OrderType, Phase, PieceType,
+    Season, SurrenderStatus
 )
 from service import validators
 
@@ -64,12 +64,9 @@ class TestListGames(BaseTestCase):
         self.assertEqual(len(response.data), 1)
 
 
-class TestGetCreateGame(BaseTestCase):
+class TestCreateGame(BaseTestCase):
 
     def test_get_create_game(self):
-        """
-        Get create game returns a form.
-        """
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
 
@@ -81,15 +78,9 @@ class TestGetCreateGame(BaseTestCase):
         )
 
     def test_get_create_game_unauthenticated(self):
-        """
-        Cannot get create game when unauthenticated.
-        """
         url = reverse('create-game')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-class TestCreateGame(BaseTestCase):
 
     def test_post_invalid_game(self):
         """
@@ -104,17 +95,15 @@ class TestCreateGame(BaseTestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_post_valid_game(self):
-        """
-        Posting valid game data creates a game instance and redirects to
-        `user-games` view. The user is automatically added as a participant of
-        the game.
-        """
         user = factories.UserFactory()
         self.client.force_authenticate(user=user)
         variant = models.Variant.objects.get(id='standard')
 
         data = {
             'name': 'Test Game',
+            'order_deadline': DeadlineFrequency.TWENTY_FOUR_HOURS,
+            'retreat_deadline': DeadlineFrequency.TWELVE_HOURS,
+            'build_deadline': DeadlineFrequency.TWELVE_HOURS,
         }
         url = reverse('create-game')
         response = self.client.post(url, data, format='json')
@@ -126,6 +115,9 @@ class TestCreateGame(BaseTestCase):
                 created_by=user,
                 variant=variant,
                 participants=user,
+                order_deadline=DeadlineFrequency.TWENTY_FOUR_HOURS,
+                retreat_deadline=DeadlineFrequency.TWELVE_HOURS,
+                build_deadline=DeadlineFrequency.TWELVE_HOURS,
             )
         )
 
