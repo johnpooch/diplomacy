@@ -185,3 +185,41 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
         new_bulgaria_state = new_turn.territorystates.get(territory=bulgaria)
         self.assertIsNone(old_bulgaria_state.captured_by)
         self.assertIsNone(new_bulgaria_state.controlled_by)
+
+    def test_build_fleet_st_petersburg_north_coast(self):
+        self.turn.season = Season.FALL
+        self.turn.phase = Phase.BUILD
+        self.turn.save()
+        st_petersburg = models.Territory.objects.get(id='standard-st-petersburg')
+        st_petersburg_north_coast = models.NamedCoast.objects.get(id='standard-st-petersburg-north-coast')
+        for nation in models.Nation.objects.all():
+            models.NationState.objects.create(
+                nation=nation,
+                turn=self.turn,
+            )
+        models.TerritoryState.objects.create(
+            controlled_by=self.russia,
+            territory=st_petersburg,
+            turn=self.turn,
+        )
+        for territory in models.Territory.objects.exclude(id=st_petersburg.id):
+            models.TerritoryState.objects.create(
+                territory=territory,
+                turn=self.turn,
+            )
+        order = models.Order.objects.create(
+            nation=self.russia,
+            source=st_petersburg,
+            piece_type=PieceType.FLEET,
+            target_coast=st_petersburg_north_coast,
+            turn=self.turn,
+            type=OrderType.BUILD,
+        )
+        new_turn = process_turn(self.turn)
+        order.refresh_from_db()
+        self.assertFalse(order.illegal)
+        new_turn.piecestates.get(
+            territory=st_petersburg,
+            named_coast=st_petersburg_north_coast,
+            piece__nation=self.russia
+        )

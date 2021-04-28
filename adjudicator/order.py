@@ -370,10 +370,10 @@ class Build(Order):
         check.SourceNamedCoastNotSpecified,
     ]
 
-    def __init__(self, state, id, nation, source, piece_type, named_coast=None, **kwargs):
+    def __init__(self, state, id, nation, source, piece_type, target_coast=None, **kwargs):
         super().__init__(state, id, nation, source)
         self.piece_type = piece_type
-        self.named_coast = named_coast
+        self.named_coast = target_coast
 
     def __str__(self):
         order_type = self.__class__.__name__.upper()
