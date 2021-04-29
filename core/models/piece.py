@@ -51,6 +51,16 @@ class Piece(HygienicModel):
             'be a retreat/disband phase or a build/disband phase.'
         )
     )
+    turn_destroyed = models.ForeignKey(
+        'Turn',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='+',
+        help_text=_(
+            'The turn during which this piece was destroyed.'
+        )
+    )
 
     def __str__(self):
         return f'{self.type} ({self.nation}) {self.id}'
