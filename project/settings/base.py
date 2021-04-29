@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -164,3 +165,7 @@ FIXTURE_DIRS = (
 
 CLIENT_URL = 'https://diplomacy-react.netlify.app'
 CORS_ALLOW_ALL_ORIGINS = True
+
+REST_KNOX = {
+    'TOKEN_TTL': timedelta(days=30),
+}
