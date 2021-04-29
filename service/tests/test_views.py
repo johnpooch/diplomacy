@@ -1,4 +1,4 @@
-from unittest import mock, skip
+from unittest import mock
 from unittest.mock import patch
 
 from django.urls import reverse
