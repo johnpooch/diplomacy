@@ -117,7 +117,12 @@ class DummyHold(Order):
         self.nation = nation
         self.source = source
         self.state = state
-        self.outcome = Outcomes.SUCCEEDS
+
+    @property
+    def outcome(self):
+        if self.piece.retreating:
+            return Outcomes.FAILS
+        return Outcomes.SUCCEEDS
 
 
 class Hold(Order):
