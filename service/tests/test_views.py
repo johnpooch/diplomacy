@@ -1,4 +1,4 @@
-from unittest import mock
+from unittest import mock, skip
 from unittest.mock import patch
 
 from django.urls import reverse
@@ -25,7 +25,9 @@ def set_processed(self, processed_at=None):
 
 
 class BaseTestCase(APITestCase, DiplomacyTestCaseMixin):
-    pass
+
+    def get_url(self, *args, **kwargs):
+        return reverse(self.url_name, args=args, kwargs=kwargs)
 
 
 class TestListGames(BaseTestCase):
@@ -1562,3 +1564,197 @@ class TestCancelDrawResponse(BaseTestCase, DiplomacyTestCaseMixin):
         response = self.client.delete(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(models.DrawResponse.objects.count(), 0)
+
+
+class TestNationStateOrdersFinalized(BaseTestCase):
+
+    url_name = 'nation_state_orders_finalized'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+
+    def test_get_authorized(self):
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['orders_finalized'], False)
+
+    def test_get_unauthorized(self):
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_user_nation(self):
+        other_user = self.create_test_user()
+        self.nation_state.user = other_user
+        self.nation_state.save()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_not_found(self):
+        self.nation_state.delete()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class TestNationStateOrdersStatus(BaseTestCase):
+
+    url_name = 'nation_state_orders_status'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+
+    def test_get_authorized(self):
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+
+    def test_get_unauthorized(self):
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_user_nation(self):
+        other_user = self.create_test_user()
+        self.nation_state.user = other_user
+        self.nation_state.save()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_not_found(self):
+        self.nation_state.delete()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class TestGameStateViewOptimization(BaseTestCase):
+
+    expected_num_queries = 14
+
+    def setUp(self):
+        self.user = factories.UserFactory()
+        self.client.force_authenticate(user=self.user)
+        self.variant = self.create_test_variant(name='test')
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+            created_by=self.user,
+        )
+        self.nation = self.create_test_nation(
+            variant=self.variant,
+        )
+        self.territory = self.create_test_territory(
+            variant=self.variant,
+        )
+        self.piece = self.create_test_piece(
+            game=self.game,
+            nation=self.nation,
+        )
+        self.url = reverse('game-state', args=[self.game.slug])
+
+    def create_turn(self):
+        turn = self.create_test_turn(
+            game=self.game,
+            phase=Phase.ORDER,
+            season=Season.SPRING,
+        )
+        self.create_test_order(
+            turn=turn,
+            nation=self.nation,
+            source=self.territory,
+        )
+        self.create_test_order(
+            turn=turn,
+            nation=self.nation,
+            source=self.territory,
+        )
+        self.create_test_piece_state(
+            turn=turn,
+            piece=self.piece,
+            territory=self.territory,
+        )
+        self.create_test_piece_state(
+            turn=turn,
+            piece=self.piece,
+            territory=self.territory,
+            must_retreat=True,
+        )
+        self.create_test_territory_state(
+            territory=self.territory,
+            turn=turn,
+        )
+        self.create_test_territory_state(
+            territory=self.territory,
+            turn=turn,
+        )
+        self.create_test_nation_state(
+            nation=self.nation,
+            turn=turn,
+            user=self.user,
+        )
+        self.create_test_nation_state(
+            nation=self.nation,
+            turn=turn,
+            user=self.user,
+        )
+        self.create_test_draw(
+            turn=turn,
+            proposed_by=self.nation,
+            proposed_by_user=self.user,
+        )
+        self.create_test_draw(
+            turn=turn,
+            proposed_by=self.nation,
+            proposed_by_user=self.user,
+        )
+
+    @skip
+    def test_get_game_state(self):
+        self.create_turn()
+        with self.assertNumQueries(self.expected_num_queries):
+            response = self.client.get(self.url, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @skip
+    def test_get_game_state_multiple_turns(self):
+        self.create_turn()
+        self.create_turn()
+        self.create_turn()
+        with self.assertNumQueries(self.expected_num_queries):
+            response = self.client.get(self.url, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)

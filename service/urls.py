@@ -50,6 +50,16 @@ urlpatterns = [
         views.GameStateView.as_view(),
         name='game-state'
     ),
+    re_path(
+        r'game/(?P<pk>[0-9]+)/orders_finalized$',
+        views.NationStateOrdersFinalized.as_view(),
+        name='nation_state_orders_finalized'
+    ),
+    re_path(
+        r'game/(?P<pk>[0-9]+)/orders_status$',
+        views.NationStateOrdersStatus.as_view(),
+        name='nation_state_orders_status'
+    ),
     path(
         'variants',
         views.ListVariants.as_view(),

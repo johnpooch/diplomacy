@@ -10,7 +10,7 @@ from core.models.base import DrawStatus, GameStatus, SurrenderStatus
 from service import serializers
 from service.decorators import convert_query_params_to_snake_case
 from service.mixins import CamelCase
-from service.permissions import IsAuthenticated
+from service.permissions import IsAuthenticated, UserIsNationState
 
 
 # NOTE this could possibly be replaced by using options
@@ -111,28 +111,23 @@ class CreateGameView(CamelCase, generics.CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class GameStateView(CamelCase, BaseMixin, generics.RetrieveAPIView):
-
-    previous_orders = models.Order.objects.filter(
-        turn__current_turn=False,
-    )
+class GameStateView(CamelCase, generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = serializers.GameStateSerializer
     queryset = (
         models.Game.objects.all()
+        .select_related('variant')
         .prefetch_related(
             'participants',
             'pieces',
-            'turns__nationstates__user',
+            'turns__draws__drawresponse_set',
+            'turns__draws__nations',
+            'turns__orders',
             'turns__nationstates__surrenders',
+            'turns__nationstates__user',
             'turns__piecestates',
-            'turns__territorystates__territory',
+            'turns__territorystates',
             'turns__turnend',
-            Prefetch(
-                'turns__orders',
-                queryset=previous_orders,
-                to_attr='previous_orders'
-            ),
         )
     )
     lookup_field = 'slug'
@@ -248,7 +243,7 @@ class ToggleFinalizeOrdersView(CamelCase, generics.UpdateAPIView):
     def check_object_permissions(self, request, obj):
         if request.user != obj.user:
             raise exceptions.PermissionDenied(
-                detail='Cannot finalize orders for other nation.'
+                'Cannot finalize orders for other nation.'
             )
 
 
@@ -400,3 +395,22 @@ class DrawResponse(CamelCase, generics.CreateAPIView, generics.DestroyAPIView):
             raise exceptions.PermissionDenied(
                 detail='Cannot cancel another nation\'s draw response.'
             )
+
+
+class NationStateFromTurnMixin:
+    permission_classes = [IsAuthenticated, UserIsNationState]
+    queryset = models.NationState.objects.all()
+    lookup_field = 'turn__id'
+    lookup_url_kwarg = 'pk'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(user=self.request.user)
+
+
+class NationStateOrdersFinalized(CamelCase, NationStateFromTurnMixin, generics.RetrieveAPIView):
+    serializer_class = serializers.NationStateOrdersFinalizedSerializer
+
+
+class NationStateOrdersStatus(CamelCase, NationStateFromTurnMixin, generics.RetrieveAPIView):
+    serializer_class = serializers.NationStateOrdersStatusSerializer
