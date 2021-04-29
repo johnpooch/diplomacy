@@ -22,3 +22,9 @@ class IsCreatedByOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.created_by == request.user
+
+
+class UserIsNationState(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj.user

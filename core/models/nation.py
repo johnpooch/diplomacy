@@ -2,6 +2,7 @@ import json
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.functional import cached_property
 
 from core.models.base import PerTurnModel, Phase, SurrenderStatus
 
@@ -160,6 +161,14 @@ class NationState(PerTurnModel):
             territory__supply_center=True
         )
 
+    @cached_property
+    def num_supply_centers(self):
+        return self.supply_centers.count()
+
+    @cached_property
+    def num_pieces(self):
+        return self.pieces.count()
+
     @property
     def unoccupied_controlled_home_supply_centers(self):
         """
@@ -187,7 +196,7 @@ class NationState(PerTurnModel):
         Returns:
             * `int`
         """
-        return self.supply_centers.count() - self.pieces.count()
+        return self.num_supply_centers - self.num_pieces
 
     @property
     def num_builds(self):
@@ -233,18 +242,22 @@ class NationState(PerTurnModel):
             raise Exception('Should not be called during build phase')
         return self.turn.piecestates.filter(piece__nation=self.nation)
 
+    @cached_property
+    def num_pieces_to_order(self):
+        return self.pieces_to_order.count()
+
     @property
     def num_orders(self):
         if self.turn.phase == Phase.BUILD:
             return max(self.num_builds, self.num_disbands)
-        return self.pieces_to_order.count()
+        return self.num_pieces_to_order
 
     @property
     def num_orders_remaining(self):
         if self.turn.phase == Phase.BUILD:
             num_orders = max(self.num_builds, self.num_disbands)
             return max(0, num_orders - self.orders.count())
-        return self.pieces_to_order.count() - self.orders.count()
+        return self.num_pieces_to_order - self.orders.count()
 
     def copy_to_new_turn(self, turn):
         """

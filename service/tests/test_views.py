@@ -25,7 +25,9 @@ def set_processed(self, processed_at=None):
 
 
 class BaseTestCase(APITestCase, DiplomacyTestCaseMixin):
-    pass
+
+    def get_url(self, *args, **kwargs):
+        return reverse(self.url_name, args=args, kwargs=kwargs)
 
 
 class TestListGames(BaseTestCase):
@@ -1562,3 +1564,99 @@ class TestCancelDrawResponse(BaseTestCase, DiplomacyTestCaseMixin):
         response = self.client.delete(self.url, self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(models.DrawResponse.objects.count(), 0)
+
+
+class TestNationStateOrdersFinalized(BaseTestCase):
+
+    url_name = 'nation_state_orders_finalized'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+
+    def test_get_authorized(self):
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['orders_finalized'], False)
+
+    def test_get_unauthorized(self):
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_user_nation(self):
+        other_user = self.create_test_user()
+        self.nation_state.user = other_user
+        self.nation_state.save()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_not_found(self):
+        self.nation_state.delete()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class TestNationStateOrdersStatus(BaseTestCase):
+
+    url_name = 'nation_state_orders_status'
+
+    def setUp(self):
+        self.variant = self.create_test_variant()
+        self.game = self.create_test_game(
+            variant=self.variant,
+            status=GameStatus.ACTIVE,
+        )
+        self.nation = self.create_test_nation(variant=self.variant)
+        self.turn = self.create_test_turn(game=self.game)
+        self.user = self.create_test_user()
+        self.nation_state = self.create_test_nation_state(
+            nation=self.nation,
+            turn=self.turn,
+            user=self.user,
+        )
+
+    def test_get_authorized(self):
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data)
+
+    def test_get_unauthorized(self):
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_user_nation(self):
+        other_user = self.create_test_user()
+        self.nation_state.user = other_user
+        self.nation_state.save()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_not_found(self):
+        self.nation_state.delete()
+        self.client.force_authenticate(user=self.user)
+        url = self.get_url(pk=self.turn.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

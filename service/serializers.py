@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueTogetherValidator
 
 from core import models
 from core.game import process_turn
-from core.models.base import DrawStatus, OrderType, Phase, SurrenderStatus
+from core.models.base import DrawStatus, OrderType, SurrenderStatus
 
 from . import validators as custom_validators
 
@@ -196,8 +196,6 @@ class NationSerializer(serializers.ModelSerializer):
 
 class PublicNationStateSerializer(serializers.ModelSerializer):
 
-    orders_finalized = serializers.SerializerMethodField()
-    num_supply_centers = serializers.SerializerMethodField()
     surrenders = SurrenderSerializer(many=True, read_only=True)
 
     class Meta:
@@ -206,35 +204,11 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'nation',
-            'orders_finalized',
-            'num_orders',
-            'num_supply_centers',
-            'supply_delta',
-            'num_builds',
-            'num_disbands',
             'surrenders',
         )
-        read_only_fields = ('nation', )
-
-    def get_num_supply_centers(self, nation_state):
-        return nation_state.supply_centers.count()
-
-    # TODO make orders finalized a separate view
-    def get_orders_finalized(self, nation_state):
-        request = self.context.get('request')
-        if request:
-            user = request.user
-            if user.id == nation_state.user.id:
-                return nation_state.orders_finalized
-        return None
-
-    def get_num_orders_remaining(self, nation_state):
-        request = self.context.get('request')
-        if request:
-            user = request.user
-            if user.id == nation_state.user.id:
-                return nation_state.num_orders_remaining
-        return None
+        read_only_fields = (
+            'nation',
+        )
 
     def update(self, instance, validated_data):
         """
@@ -272,39 +246,6 @@ class ToggleSurrenderSerializer(PublicNationStateSerializer):
     def update(self, nation_state, validated_data):
         nation_state.turn.toggle_surrender(nation_state.user)
         return nation_state
-
-
-class PrivateNationStateSerializer(serializers.ModelSerializer):
-
-    build_territories = serializers.SerializerMethodField()
-    surrenders = SurrenderSerializer(many=True)
-
-    class Meta:
-        model = models.NationState
-        fields = (
-            'id',
-            'user',
-            'nation',
-            'orders_finalized',
-            'num_orders_remaining',
-            'supply_delta',
-            'build_territories',
-            'num_builds',
-            'num_disbands',
-            'surrenders',
-        )
-
-    def get_build_territories(self, nation_state):
-        """
-        Get a list of territory ids for each territory in which the user can
-        build.
-        """
-        if nation_state.turn.phase != Phase.BUILD:
-            return None
-        return [
-            ts.territory.id
-            for ts in nation_state.unoccupied_controlled_home_supply_centers
-        ]
 
 
 class VariantSerializer(serializers.ModelSerializer):
@@ -406,38 +347,63 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class DrawSerializer(serializers.ModelSerializer):
 
-    draw_responses = DrawResponseSerializer(many=True,
-                                            source='drawresponse_set')
+    draw_responses = DrawResponseSerializer(
+        many=True,
+        source='drawresponse_set',
+    )
 
     class Meta:
         model = models.Draw
-        fields = ('id', 'turn', 'nations', 'proposed_by', 'proposed_by_user',
-                  'status', 'proposed_at', 'resolved_at', 'draw_responses')
+        fields = (
+            'id',
+            'turn',
+            'nations',
+            'proposed_by',
+            'proposed_by_user',
+            'status',
+            'proposed_at',
+            'resolved_at',
+            'draw_responses'
+        )
 
 
 class TurnSerializer(serializers.ModelSerializer):
 
-    territory_states = TerritoryStateSerializer(many=True,
-                                                source='territorystates')
-    piece_states = PieceStateSerializer(many=True, source='piecestates')
-    nation_states = PublicNationStateSerializer(many=True,
-                                                source='nationstates')
-    orders = OrderSerializer(many=True, source='public_orders')
-    phase_display = serializers.CharField(source='get_phase_display')
-    season_display = serializers.CharField(source='get_season_display')
-    next_turn = serializers.SerializerMethodField()
-    previous_turn = serializers.SerializerMethodField()
+    territory_states = TerritoryStateSerializer(
+        many=True,
+        source='territorystates'
+    )
+    piece_states = PieceStateSerializer(
+        many=True,
+        source='piecestates'
+    )
+    nation_states = PublicNationStateSerializer(
+        many=True,
+        source='nationstates'
+    )
+    orders = OrderSerializer(
+        many=True,
+        source='public_orders'
+    )
+    phase_display = serializers.CharField(
+        source='get_phase_display'
+    )
+    season_display = serializers.CharField(
+        source='get_season_display'
+    )
     draws = DrawSerializer(many=True)
     turn_end = serializers.SerializerMethodField()
+    next_turn = serializers.SerializerMethodField()
+    previous_turn = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Turn
         fields = (
             'id',
             'game',
+            'current_turn',
             'next_turn',
             'previous_turn',
-            'current_turn',
             'year',
             'season',
             'season_display',
@@ -451,6 +417,11 @@ class TurnSerializer(serializers.ModelSerializer):
             'turn_end',
         )
 
+    def get_turn_end(self, turn):
+        if turn.turn_end:
+            return turn.turn_end.datetime
+        return None
+
     def get_next_turn(self, obj):
         turn = models.Turn.get_next(obj)
         return getattr(turn, 'id', None)
@@ -458,11 +429,6 @@ class TurnSerializer(serializers.ModelSerializer):
     def get_previous_turn(self, obj):
         turn = models.Turn.get_previous(obj)
         return getattr(turn, 'id', None)
-
-    def get_turn_end(self, turn):
-        if turn.turn_end:
-            return turn.turn_end.datetime
-        return None
 
 
 class ListNationStatesSerializer(serializers.ModelSerializer):
@@ -648,4 +614,28 @@ class GameStateSerializer(serializers.ModelSerializer):
             'pieces',
             'status',
             'participants',
+        )
+
+
+class NationStateOrdersFinalizedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.NationState
+        fields = (
+            'id',
+            'orders_finalized',
+        )
+
+
+class NationStateOrdersStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.NationState
+        fields = (
+            'id',
+            'num_orders',
+            'num_supply_centers',
+            'supply_delta',
+            'num_builds',
+            'num_disbands',
         )
