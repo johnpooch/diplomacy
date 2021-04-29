@@ -102,6 +102,14 @@ def process(state):
         else:
             build.outcome = Outcomes.FAILS
 
+    if state.phase == Phase.RETREAT:
+        for piece in state.pieces:
+            if piece.retreating and (piece.order.outcome == Outcomes.FAILS):
+                piece.destroyed = True
+                piece.destroyed_message = (
+                    'Destroyed because piece must retreat but retreat order failed.'
+                )
+
     # TODO test
     # TODO split into sub function
     # Set captured_by for territories if fall orders
