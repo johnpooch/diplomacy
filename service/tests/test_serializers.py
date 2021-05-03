@@ -5,6 +5,33 @@ from core.tests import DiplomacyTestCaseMixin
 from core.models.base import GameStatus
 
 
+class TestTerritorySerializer(TestCase, DiplomacyTestCaseMixin):
+
+    serializer_class = serializers.TerritorySerializer
+
+    def setUp(self):
+        variant = self.create_test_variant()
+        self.territory = self.create_test_territory(variant=variant)
+        neighbour = self.create_test_territory(variant=variant)
+        self.territory.neighbours.add(neighbour)
+        shared_coast = self.create_test_territory(variant=variant)
+        self.territory.shared_coasts.add(shared_coast)
+        self.create_test_named_coast(parent=self.territory)
+
+    def serialize_object(self, obj):
+        return self.serializer_class(obj).data
+
+    def test_serialize(self):
+        data = self.serialize_object(self.territory)
+        self.assertEqual(data['id'], self.territory.id)
+        self.assertEqual(data['name'], self.territory.name)
+        self.assertEqual(data['nationality'], self.territory.nationality)
+        self.assertEqual(data['neighbours'], list(self.territory.neighbours.values_list('id', flat=True)))
+        self.assertEqual(data['shared_coasts'], list(self.territory.shared_coasts.values_list('id', flat=True)))
+        self.assertEqual(data['supply_center'], self.territory.supply_center)
+        self.assertEqual(data['type'], self.territory.type)
+
+
 class TesNationStateOrdersStatusSerializer(TestCase, DiplomacyTestCaseMixin):
 
     expected_num_queries = 4
