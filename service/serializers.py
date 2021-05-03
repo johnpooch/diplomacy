@@ -169,6 +169,7 @@ class TerritorySerializer(serializers.ModelSerializer):
             'named_coasts',
             'nationality',
             'neighbours',
+            'shared_coasts',
             'supply_center',
             'type',
         )
