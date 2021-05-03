@@ -136,7 +136,7 @@ class DiplomacyTestCaseMixin:
     def create_test_territory(self, save=True, **kwargs):
         if 'variant' not in kwargs:
             kwargs['variant'] = self.create_test_variant()
-        kwargs.setdefault('name', 'Belgium')
+        kwargs.setdefault('name', 'Belgium' + str(random.randint(10000, 99999)))
         kwargs.setdefault('controlled_by_initial', None)
         kwargs.setdefault('nationality', None)
         kwargs.setdefault('type', base.TerritoryType.COASTAL)
