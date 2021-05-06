@@ -34,13 +34,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
         self.st_petersburg_south_coast = models.NamedCoast.objects.get(id='standard-st-petersburg-south-coast')
         self.st_petersburg_north_coast = models.NamedCoast.objects.get(id='standard-st-petersburg-north-coast')
 
-    def test_move_st_petersburg_south_coast_to_gulf_of_bothnia(self):
-        piece = models.Piece.objects.create(
-            game=self.game,
-            type=PieceType.FLEET,
-            nation=self.russia,
-        )
-        gulf_of_bothnia = models.Territory.objects.get(id='standard-gulf-of-bothnia')
         for nation in models.Nation.objects.all():
             models.NationState.objects.create(
                 nation=nation,
@@ -51,6 +44,14 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
                 territory=territory,
                 turn=self.turn,
             )
+
+    def test_move_st_petersburg_south_coast_to_gulf_of_bothnia(self):
+        piece = models.Piece.objects.create(
+            game=self.game,
+            type=PieceType.FLEET,
+            nation=self.russia,
+        )
+        gulf_of_bothnia = models.Territory.objects.get(id='standard-gulf-of-bothnia')
         models.PieceState.objects.create(
             named_coast=self.st_petersburg_south_coast,
             piece=piece,
@@ -81,16 +82,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
             type=PieceType.FLEET,
             nation=self.russia,
         )
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         models.PieceState.objects.create(
             named_coast=self.st_petersburg_north_coast,
             piece=piece,
@@ -116,16 +107,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
         )
         liverpool = models.Territory.objects.get(id='standard-liverpool')
         london = models.Territory.objects.get(id='standard-london')
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         models.PieceState.objects.create(
             piece=piece,
             territory=liverpool,
@@ -154,16 +135,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
         )
         bulgaria = models.Territory.objects.get(id='standard-bulgaria')
         greece = models.Territory.objects.get(id='standard-greece')
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         models.PieceState.objects.create(
             piece=piece,
             territory=bulgaria,
@@ -188,21 +159,11 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
         self.turn.season = Season.FALL
         self.turn.phase = Phase.BUILD
         self.turn.save()
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
         models.TerritoryState.objects.create(
             controlled_by=self.russia,
             territory=self.st_petersburg,
             turn=self.turn,
         )
-        for territory in models.Territory.objects.exclude(id=self.st_petersburg.id):
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         order = models.Order.objects.create(
             nation=self.russia,
             source=self.st_petersburg,
@@ -223,16 +184,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
     def test_illegal_retreat_removes_piece(self):
         self.turn.phase = Phase.RETREAT
         self.turn.save()
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         piece = models.Piece.objects.create(
             game=self.game,
             type=PieceType.ARMY,
@@ -264,16 +215,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
     def test_contested_retreat_removes_piece(self):
         self.turn.phase = Phase.RETREAT
         self.turn.save()
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         st_petersburg_state = models.TerritoryState.objects.get(territory=self.st_petersburg)
         st_petersburg_state.contested = True
         st_petersburg_state.save()
@@ -309,16 +250,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
     def test_failed_retreat_removes_piece(self):
         self.turn.phase = Phase.RETREAT
         self.turn.save()
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         piece_norway = models.Piece.objects.create(
             game=self.game,
             type=PieceType.ARMY,
@@ -376,16 +307,6 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
     def test_no_order_removes_piece(self):
         self.turn.phase = Phase.RETREAT
         self.turn.save()
-        for nation in models.Nation.objects.all():
-            models.NationState.objects.create(
-                nation=nation,
-                turn=self.turn,
-            )
-        for territory in models.Territory.objects.all():
-            models.TerritoryState.objects.create(
-                territory=territory,
-                turn=self.turn,
-            )
         st_petersburg_state = models.TerritoryState.objects.get(territory=self.st_petersburg)
         st_petersburg_state.contested = True
         st_petersburg_state.save()
@@ -406,4 +327,33 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
 
         self.assertTrue(piece_state.destroyed)
         self.assertTrue(piece.turn_destroyed, self.turn)
+        self.assertEqual(new_turn.piecestates.count(), 0)
+
+    def test_disband(self):
+        self.turn.phase = Phase.BUILD
+        self.turn.save()
+        piece = models.Piece.objects.create(
+            game=self.game,
+            type=PieceType.ARMY,
+            nation=self.russia,
+        )
+        piece_state = models.PieceState.objects.create(
+            piece=piece,
+            territory=self.st_petersburg,
+            turn=self.turn,
+            must_retreat=True,
+        )
+        order_st_petersburg = models.Order.objects.create(
+            nation=self.russia,
+            source=self.st_petersburg,
+            turn=self.turn,
+            type=OrderType.DISBAND,
+        )
+        new_turn = process_turn(self.turn)
+        order_st_petersburg.refresh_from_db()
+        piece.refresh_from_db()
+        piece_state.refresh_from_db()
+
+        self.assertEqual(order_st_petersburg.outcome, OutcomeType.SUCCEEDS)
+        self.assertTrue(piece.turn_disbanded, self.turn)
         self.assertEqual(new_turn.piecestates.count(), 0)
