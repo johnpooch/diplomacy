@@ -110,7 +110,7 @@ class PieceState(PerTurnModel):
         on_delete=models.CASCADE,
         related_name='piece_dislodged',
     )
-    dislodged_from = models.OneToOneField(
+    dislodged_from = models.ForeignKey(
         'Territory',
         blank=True,
         null=True,
