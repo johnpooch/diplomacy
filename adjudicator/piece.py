@@ -123,7 +123,7 @@ class Piece:
         """
         for territory in self.territory.neighbours:
             accessible = territory.accessible_by_piece_type(self)
-            unoccupied = not territory.occupied
+            unoccupied = not territory.occupied_after_processing
             uncontested = not territory.bounce_occurred
             if accessible and unoccupied and uncontested:
                 return True
