@@ -23,10 +23,21 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
             season=Season.SPRING,
             year=1900,
         )
+        self.austria = models.Nation.objects.get(id='standard-austria-hungary')
         self.england = models.Nation.objects.get(id='standard-england')
+        self.italy = models.Nation.objects.get(id='standard-italy')
         self.russia = models.Nation.objects.get(id='standard-russia')
         self.turkey = models.Nation.objects.get(id='standard-turkey')
         self.patch_process_turn_apply_async()
+
+        self.adriatic_sea = models.Territory.objects.get(id='standard-adriatic-sea')
+        self.apulia = models.Territory.objects.get(id='standard-apulia')
+        self.rome = models.Territory.objects.get(id='standard-rome')
+        self.naples = models.Territory.objects.get(id='standard-naples')
+        self.piedmont = models.Territory.objects.get(id='standard-piedmont')
+        self.tuscany = models.Territory.objects.get(id='standard-tuscany')
+        self.tyrrhenian_sea = models.Territory.objects.get(id='standard-tyrrhenian-sea')
+        self.venice = models.Territory.objects.get(id='standard-venice')
 
         self.livonia = models.Territory.objects.get(id='standard-livonia')
         self.norway = models.Territory.objects.get(id='standard-norway')
@@ -357,3 +368,94 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
         self.assertEqual(order_st_petersburg.outcome, OutcomeType.SUCCEEDS)
         self.assertTrue(piece.turn_disbanded, self.turn)
         self.assertEqual(new_turn.piecestates.count(), 0)
+
+    def test_retreat_rome_not_auto_destroy(self):
+        self.turn.phase = Phase.ORDER
+        self.turn.save()
+        army_rome = self.turn.piecestates.create(
+            piece=models.Piece.objects.create(
+                game=self.game,
+                nation=self.austria,
+                type=PieceType.ARMY
+            ),
+            territory=self.rome,
+        )
+        self.turn.piecestates.create(
+            piece=models.Piece.objects.create(
+                game=self.game,
+                nation=self.italy,
+                type=PieceType.ARMY
+            ),
+            territory=self.naples,
+        )
+        self.turn.piecestates.create(
+            piece=models.Piece.objects.create(
+                game=self.game,
+                nation=self.italy,
+                type=PieceType.FLEET
+            ),
+            territory=self.tyrrhenian_sea,
+        )
+        self.turn.piecestates.create(
+            piece=models.Piece.objects.create(
+                game=self.game,
+                nation=self.austria,
+                type=PieceType.ARMY
+            ),
+            territory=self.tuscany,
+        )
+        self.turn.piecestates.create(
+            piece=models.Piece.objects.create(
+                game=self.game,
+                nation=self.austria,
+                type=PieceType.FLEET
+            ),
+            territory=self.apulia,
+        )
+        self.turn.piecestates.create(
+            piece=models.Piece.objects.create(
+                game=self.game,
+                nation=self.austria,
+                type=PieceType.FLEET
+            ),
+            territory=self.venice,
+        )
+        self.turn.orders.create(
+            nation=self.austria,
+            source=self.apulia,
+            target=self.adriatic_sea,
+            type=OrderType.MOVE,
+        )
+        self.turn.orders.create(
+            nation=self.austria,
+            source=self.rome,
+            type=OrderType.HOLD,
+        )
+        self.turn.orders.create(
+            nation=self.austria,
+            source=self.venice,
+            type=OrderType.HOLD,
+        )
+        self.turn.orders.create(
+            nation=self.italy,
+            source=self.tuscany,
+            target=self.piedmont,
+            type=OrderType.MOVE,
+        )
+        self.turn.orders.create(
+            nation=self.italy,
+            source=self.apulia,
+            target=self.rome,
+            type=OrderType.MOVE,
+        )
+        self.turn.orders.create(
+            nation=self.italy,
+            source=self.tyrrhenian_sea,
+            target=self.rome,
+            aux=self.naples,
+            type=OrderType.SUPPORT,
+        )
+        process_turn(self.turn)
+        army_rome.refresh_from_db()
+        self.assertFalse(army_rome.destroyed)
+        self.assertIsNone(army_rome.destroyed_message)

@@ -1,3 +1,4 @@
+from adjudicator.decisions.base import Outcomes
 from . import decisions
 from .state import register
 
@@ -74,6 +75,21 @@ class Territory:
     @property
     def occupied(self):
         return bool(self.piece)
+
+    @property
+    def occupied_after_processing(self):
+        """
+        Whether the territory will be occupied after orders are processed.
+        Used to determine if pieces can retreat here.
+        """
+        if any([p.order.outcome == Outcomes.SUCCEEDS for p in self.attacking_pieces]):
+            return False
+        if self.piece:
+            return not (
+                (self.piece.order.is_move and self.piece.order.outcome == Outcomes.SUCCEEDS)
+                or (self.piece.destroyed)
+            )
+        return False
 
     def adjacent_to(self, territory):
         return territory in self.neighbours
