@@ -396,7 +396,7 @@ class TestAdjudicator(TestCase, DiplomacyTestCaseMixin):
             ),
             territory=self.tyrrhenian_sea,
         )
-        army_tuscany = self.turn.piecestates.create(
+        self.turn.piecestates.create(
             piece=models.Piece.objects.create(
                 game=self.game,
                 nation=self.austria,
