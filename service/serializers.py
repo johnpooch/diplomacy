@@ -152,6 +152,7 @@ class NamedCoastSerializer(serializers.ModelSerializer):
         model = models.NamedCoast
         fields = (
             'id',
+            'map_abbreviation',
             'parent',
             'name',
         )
@@ -205,6 +206,7 @@ class PublicNationStateSerializer(serializers.ModelSerializer):
             'id',
             'user',
             'nation',
+            'num_supply_centers',
             'surrenders',
         )
         read_only_fields = (
@@ -328,6 +330,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'via_convoy',
             'turn',
             'outcome',
+            'outcome_verbose',
             'illegal',
             'illegal_code',
             'illegal_verbose',
@@ -507,25 +510,26 @@ class ListGamesSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Game
         fields = (
-            'id',
-            'name',
-            'slug',
-            'description',
-            'variant',
-            'private',
-            'password',
-            'order_deadline',
-            'retreat_deadline',
             'build_deadline',
-            'process_on_finalized_orders',
-            'nation_choice_mode',
-            'num_players',
-            'participants',
             'created_at',
             'created_by',
-            'initialized_at',
-            'status',
             'current_turn',
+            'description',
+            'id',
+            'initialized_at',
+            'joinable',
+            'name',
+            'nation_choice_mode',
+            'num_players',
+            'order_deadline',
+            'participants',
+            'password',
+            'private',
+            'process_on_finalized_orders',
+            'retreat_deadline',
+            'slug',
+            'status',
+            'variant',
         )
 
     def get_current_turn(self, game):
