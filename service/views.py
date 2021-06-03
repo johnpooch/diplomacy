@@ -70,7 +70,7 @@ class ListGames(CamelCase, generics.ListAPIView):
     ]
     search_fields = [
         'name',
-        'created_by__username'
+        'created_by__username',
     ]
     filterset_fields = [
         'variant',
@@ -80,6 +80,7 @@ class ListGames(CamelCase, generics.ListAPIView):
         'order_deadline',
         'retreat_deadline',
         'build_deadline',
+        'participants',
     ]
     ordering_fields = [
         'created_at',
