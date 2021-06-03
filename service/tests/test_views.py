@@ -12,7 +12,7 @@ from core.models.base import (
     DeadlineFrequency, DrawStatus, DrawResponse, GameStatus, OrderType, Phase, PieceType,
     Season, SurrenderStatus
 )
-from service import validators
+from service import serializers, validators
 
 
 serializer_process_turn_path = 'service.serializers.process_turn'
@@ -33,6 +33,7 @@ class BaseTestCase(APITestCase, DiplomacyTestCaseMixin):
 class TestListGames(BaseTestCase):
 
     max_diff = None
+    url_name = 'list-games'
 
     def setUp(self):
         self.user = factories.UserFactory()
@@ -44,7 +45,7 @@ class TestListGames(BaseTestCase):
         Cannot get all games if not authenticated.
         """
         self.client.logout()
-        url = reverse('list-games')
+        url = reverse(self.url_name)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -57,14 +58,28 @@ class TestListGames(BaseTestCase):
             num_players=7
         )
 
-        url = reverse('list-games') + '?numPlayers=1'
+        url = reverse(self.url_name) + '?numPlayers=1'
         response = self.client.get(url)
         self.assertEqual(response.data, [])
 
-        url = reverse('list-games') + '?numPlayers=7'
+        url = reverse(self.url_name) + '?numPlayers=7'
         response = self.client.get(url)
         self.assertEqual(len(response.data), 1)
 
+
+    def test_list_users_games(self):
+        game_user_is_participant = self.create_test_game(variant=self.variant)
+        self.create_test_game(variant=self.variant)
+        game_user_is_participant.participants.add(self.user)
+
+        url = reverse(self.url_name) + '?participants={}'.format(self.user.id)
+        response = self.client.get(url)
+
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(
+            response.data,
+            [serializers.ListGamesSerializer(game_user_is_participant).data]
+        )
 
 class TestCreateGame(BaseTestCase):
 
